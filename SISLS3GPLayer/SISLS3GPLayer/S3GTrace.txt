@@ -1,0 +1,235 @@
+
+DateTime         : 7/10/2014 2:45:23 PM
+USER_ID          : 
+ERROR_MESSAGE    : File does not exist.
+PRIORITY         : -1
+EVENT_ID         : 0
+TITLE            : 
+MACHINE          : S3G-RMANIK
+PROCESS_ID       : 2232
+THREAD_NAME      : 2640
+WIN32_THREADID   : 2640
+METHOD           : ExecuteStep
+LINE_NUMBER      : 0
+SUB_METHOD       : System.Web.HttpApplication.IExecutionStep.Execute
+
+DateTime         : 7/10/2014 2:45:23 PM
+USER_ID          : 
+ERROR_MESSAGE    : File does not exist.
+PRIORITY         : -1
+EVENT_ID         : 0
+TITLE            : 
+MACHINE          : S3G-RMANIK
+PROCESS_ID       : 2232
+THREAD_NAME      : 5740
+WIN32_THREADID   : 5740
+METHOD           : ExecuteStep
+LINE_NUMBER      : 0
+SUB_METHOD       : System.Web.HttpApplication.IExecutionStep.Execute
+
+DateTime         : 7/10/2014 2:45:38 PM
+USER_ID          : 
+ERROR_MESSAGE    : Thread was being aborted.
+PRIORITY         : -1
+EVENT_ID         : 0
+TITLE            : 
+MACHINE          : S3G-RMANIK
+PROCESS_ID       : 2232
+THREAD_NAME      : 5740
+WIN32_THREADID   : 5740
+FILE             : d:\Manikandan\S3G_ORACLE\SISLS3GPLayer_Ora_Latest8\SISLS3GPLayer\Origination\S3GORGTransLander.aspx.cs
+METHOD           : btnCreate_Click
+LINE_NUMBER      : 2210
+SUB_METHOD       : Redirect
+
+DateTime         : 7/10/2014 2:45:52 PM
+USER_ID          : 
+ERROR_MESSAGE    : File does not exist.
+PRIORITY         : -1
+EVENT_ID         : 0
+TITLE            : 
+MACHINE          : S3G-RMANIK
+PROCESS_ID       : 2232
+THREAD_NAME      : 2640
+WIN32_THREADID   : 2640
+METHOD           : ExecuteStep
+LINE_NUMBER      : 0
+SUB_METHOD       : System.Web.HttpApplication.IExecutionStep.Execute
+
+DateTime         : 7/10/2014 2:45:56 PM
+USER_ID          : 
+ERROR_MESSAGE    : The state information is invalid for this page and might be corrupted.
+PRIORITY         : -1
+EVENT_ID         : 0
+TITLE            : 
+MACHINE          : S3G-RMANIK
+PROCESS_ID       : 2232
+THREAD_NAME      : 5740
+WIN32_THREADID   : 5740
+METHOD           : ExecuteStep
+LINE_NUMBER      : 0
+SUB_METHOD       : System.Web.HttpApplication.IExecutionStep.Execute
+
+DateTime         : 7/10/2014 2:50:19 PM
+USER_ID          : 
+ERROR_MESSAGE    : Thread was being aborted.
+PRIORITY         : -1
+EVENT_ID         : 0
+TITLE            : 
+MACHINE          : S3G-RMANIK
+PROCESS_ID       : 2232
+THREAD_NAME      : 5740
+WIN32_THREADID   : 5740
+FILE             : d:\Manikandan\S3G_ORACLE\SISLS3GPLayer_Ora_Latest8\SISLS3GPLayer\Origination\S3GORGTransLander.aspx.cs
+METHOD           : btnCreate_Click
+LINE_NUMBER      : 2210
+SUB_METHOD       : Redirect
+
+DateTime         : 7/10/2014 2:50:28 PM
+USER_ID          : 
+ERROR_MESSAGE    : File does not exist.
+PRIORITY         : -1
+EVENT_ID         : 0
+TITLE            : 
+MACHINE          : S3G-RMANIK
+PROCESS_ID       : 2232
+THREAD_NAME      : 2640
+WIN32_THREADID   : 2640
+METHOD           : ExecuteStep
+LINE_NUMBER      : 0
+SUB_METHOD       : System.Web.HttpApplication.IExecutionStep.Execute
+
+DateTime         : 7/10/2014 2:50:32 PM
+USER_ID          : 
+ERROR_MESSAGE    : The state information is invalid for this page and might be corrupted.
+PRIORITY         : -1
+EVENT_ID         : 0
+TITLE            : 
+MACHINE          : S3G-RMANIK
+PROCESS_ID       : 2232
+THREAD_NAME      : 5740
+WIN32_THREADID   : 5740
+METHOD           : ExecuteStep
+LINE_NUMBER      : 0
+SUB_METHOD       : System.Web.HttpApplication.IExecutionStep.Execute
+
+DateTime         : 7/10/2014 2:50:57 PM
+USER_ID          : 
+ERROR_MESSAGE    : File does not exist.
+PRIORITY         : -1
+EVENT_ID         : 0
+TITLE            : 
+MACHINE          : S3G-RMANIK
+PROCESS_ID       : 2232
+THREAD_NAME      : 2640
+WIN32_THREADID   : 2640
+METHOD           : ExecuteStep
+LINE_NUMBER      : 0
+SUB_METHOD       : System.Web.HttpApplication.IExecutionStep.Execute
+
+DateTime         : 7/10/2014 2:50:57 PM
+USER_ID          : 
+ERROR_MESSAGE    : File does not exist.
+PRIORITY         : -1
+EVENT_ID         : 0
+TITLE            : 
+MACHINE          : S3G-RMANIK
+PROCESS_ID       : 2232
+THREAD_NAME      : 5740
+WIN32_THREADID   : 5740
+METHOD           : ExecuteStep
+LINE_NUMBER      : 0
+SUB_METHOD       : System.Web.HttpApplication.IExecutionStep.Execute
+
+DateTime         : 7/10/2014 2:51:03 PM
+USER_ID          : 
+ERROR_MESSAGE    : Thread was being aborted.
+PRIORITY         : -1
+EVENT_ID         : 0
+TITLE            : 
+MACHINE          : S3G-RMANIK
+PROCESS_ID       : 2232
+THREAD_NAME      : 5740
+WIN32_THREADID   : 5740
+FILE             : d:\Manikandan\S3G_ORACLE\SISLS3GPLayer_Ora_Latest8\SISLS3GPLayer\Origination\S3GORGTransLander.aspx.cs
+METHOD           : btnCreate_Click
+LINE_NUMBER      : 2210
+SUB_METHOD       : Redirect
+
+DateTime         : 7/10/2014 2:51:08 PM
+USER_ID          : 
+ERROR_MESSAGE    : File does not exist.
+PRIORITY         : -1
+EVENT_ID         : 0
+TITLE            : 
+MACHINE          : S3G-RMANIK
+PROCESS_ID       : 2232
+THREAD_NAME      : 5740
+WIN32_THREADID   : 5740
+METHOD           : ExecuteStep
+LINE_NUMBER      : 0
+SUB_METHOD       : System.Web.HttpApplication.IExecutionStep.Execute
+
+DateTime         : 7/10/2014 2:51:12 PM
+USER_ID          : 
+ERROR_MESSAGE    : The state information is invalid for this page and might be corrupted.
+PRIORITY         : -1
+EVENT_ID         : 0
+TITLE            : 
+MACHINE          : S3G-RMANIK
+PROCESS_ID       : 2232
+THREAD_NAME      : 5740
+WIN32_THREADID   : 5740
+METHOD           : ExecuteStep
+LINE_NUMBER      : 0
+SUB_METHOD       : System.Web.HttpApplication.IExecutionStep.Execute
+DateTime : 7/10/2014 2:52:45 PMORA-01422: exact fetch returns more than requested number of rows
+ORA-06512: at "S3GSTUORA.CN_INS_FLWUP", line 50
+ORA-06512: at "S3GSTUORA.S3G_COMMON_CREATEFOLLOWUPENT", line 288
+ORA-06512: at "S3GSTUORA.S3G_OR_INS_APPDET", line 987
+ORA-06512: at line 1
+DateTime : 7/10/2014 2:54:04 PMCommandText property has not been initialized.
+DateTime         : 7/10/2014 2:54:19 PM
+User_ID          : 
+Error_Message    : CommandText property has not been initialized.
+Category_Name    : 
+Priority         : 
+Event_ID         : 
+Severity         : 
+Title            : 
+Machine          : S3G-RMANIK
+App_Domain       : 97f23294-7-130494576523147290
+Process_ID       : 4524
+Process_Name     : C:\Program Files (x86)\Common Files\Microsoft Shared\DevServer\11.0\WebDev.WebServer20.exe
+Thread_Name      : 5252
+Win32_ThreadID   : 
+Extended_Properties: 
+
+DateTime         : 7/10/2014 2:54:41 PM
+USER_ID          : 
+ERROR_MESSAGE    : Thread was being aborted.
+PRIORITY         : -1
+EVENT_ID         : 0
+TITLE            : 
+MACHINE          : S3G-RMANIK
+PROCESS_ID       : 2232
+THREAD_NAME      : 5740
+WIN32_THREADID   : 5740
+FILE             : d:\Manikandan\S3G_ORACLE\SISLS3GPLayer_Ora_Latest8\SISLS3GPLayer\Origination\S3GORGTransLander.aspx.cs
+METHOD           : btnCreate_Click
+LINE_NUMBER      : 2210
+SUB_METHOD       : Redirect
+
+DateTime         : 7/10/2014 2:54:46 PM
+USER_ID          : 
+ERROR_MESSAGE    : File does not exist.
+PRIORITY         : -1
+EVENT_ID         : 0
+TITLE            : 
+MACHINE          : S3G-RMANIK
+PROCESS_ID       : 2232
+THREAD_NAME      : 2640
+WIN32_THREADID   : 2640
+METHOD           : ExecuteStep
+LINE_NUMBER      : 0
+SUB_METHOD       : System.Web.HttpApplication.IExecutionStep.Execute

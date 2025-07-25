@@ -1,0 +1,413 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/Common/FAMasterPageCollapse.master" AutoEventWireup="true"
+    CodeFile="FADimensionMaster_Add.aspx.cs" Inherits="System_Admin_FADimensionMaster_Add"
+    Title="Dimension Master" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+    <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+        <ContentTemplate>
+            <table width="100%" align="center" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td class="stylePageHeading">
+                        <asp:Label runat="server" ID="lblHeading" CssClass="styleDisplayLabel">
+                        </asp:Label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table width="100%">
+                            <tr>
+                                <td>
+                                    <table cellpadding="0" cellspacing="0" style="width: 100%">
+                                        <tr>
+                                            <td>
+                                                <table width="100%" cellpadding="0" cellspacing="0">
+                                                    <tr width="100%">
+                                                        <td style="width: 50%" valign="top">
+                                                            <table width="100%" cellpadding="0" cellspacing="0">
+                                                                <tr width="100%">
+                                                                    <td>
+                                                                        <asp:Panel ID="pnlDimension" Width="98%" runat="server" CssClass="stylePanel"
+                                                                            GroupingText="Dimension Details">
+                                                                            <div style="overflow: auto; height: 300px">
+                                                                                <table width="100%">
+                                                                                    <tr>
+                                                                                        <td class="styleFieldLabel" style="width: 25%">
+                                                                                            &nbsp;
+                                                                                        </td>
+                                                                                        <td class="styleFieldAlign" align="left" style="width: 25%">
+                                                                                            &nbsp;
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                      <td class="styleFieldLabel">
+                                        <span class="styleReqFieldLabel">Activity</span>
+                                    </td>
+                                                                                     <td class="styleFieldAlign">
+                                        <asp:DropDownList ID="ddlActivity" runat="server" AutoPostBack="True" onmouseover="ddl_itemchanged(this)"
+                                            OnSelectedIndexChanged="ddlActivity_SelectedIndexChanged">
+                                        </asp:DropDownList>
+                                        <asp:RequiredFieldValidator ID="rfvActivity" CssClass="styleMandatoryLabel" runat="server"
+                                            SetFocusOnError="true" InitialValue="0" ControlToValidate="ddlActivity" Text="Select the Activity"
+                                            ErrorMessage="Select the Activity" Display="None" ValidationGroup="BtnSave">
+                                        </asp:RequiredFieldValidator>
+                                    </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                                 <td class="styleFieldLabel">
+                                        <asp:Label runat="server" Text="Dimension Type" CssClass="styleReqFieldLabel" ID="lblDimensiontype">
+                                        </asp:Label>
+                                    </td>
+                                                                                            <td class="styleFieldAlign">
+                                        <asp:DropDownList ID="ddlDimensionType" runat="server" onmouseover="ddl_itemchanged(this)"
+                                        AutoPostBack="true" OnSelectedIndexChanged="ddlDimensionType_SelectedIndexChanged">
+                                        </asp:DropDownList>
+                                        <asp:RequiredFieldValidator ID="rfvDimensionType" CssClass="styleMandatoryLabel"
+                                            SetFocusOnError="true" runat="server" InitialValue="0" ControlToValidate="ddlDimensionType"
+                                            Text="Select Dimension Type" ErrorMessage="Select Dimension Type" Display="None"
+                                            ValidationGroup="BtnSave">
+                                        </asp:RequiredFieldValidator>
+                                    </td>
+                                                                                    </tr>
+                                                                                      <tr>
+                                                                                                 <td class="styleFieldLabel">
+                                        <asp:Label runat="server" Text="Dimension Type Description" CssClass="styleReqFieldLabel" ID="lblDimensiontypedescription">
+                                        </asp:Label>
+                                    </td>
+                                                       <td class="styleFieldAlign">
+                                        <asp:TextBox ID="txtdescriptiontypeddescription" runat="server" MaxLength="70" 
+                                            onmouseover="txt_MouseoverTooltip(this)"></asp:TextBox>                                    
+                                 <asp:RequiredFieldValidator ID="rfvdescriptiontypedescription" CssClass="styleMandatoryLabel"
+                                            SetFocusOnError="true" runat="server" InitialValue="0" ControlToValidate="txtdescriptiontypeddescription"
+                                            Text="Enter Dimension Type Description" ErrorMessage="Enter Dimension Type Description" Display="None"
+                                            ValidationGroup="BtnSave">
+                                        </asp:RequiredFieldValidator>
+                                    </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                         <td class="styleFieldLabel">
+                                                                              <asp:Label ID="lblDimRef" runat =server Text ="Dimension1 Ref" CssClass ="styleReqFieldLabel" Visible ="false"  />
+                                    </td>
+                                                                                     <td class="styleFieldAlign">
+                                        <asp:DropDownList ID="ddlDimRefNo" runat="server" onmouseover="ddl_itemchanged(this)" Visible ="false" >
+                                        </asp:DropDownList>
+                                        <asp:RequiredFieldValidator ID="rfvDimRefNo" CssClass="styleMandatoryLabel" SetFocusOnError="true"
+                                            runat="server" InitialValue="0" ControlToValidate="ddlDimRefNo" Text="Select Dimension1 Ref"
+                                            ErrorMessage="Select Dimension1 Ref" Display="None" ValidationGroup="BtnSave">
+                                        </asp:RequiredFieldValidator>
+                                    </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td class="styleFieldLabel">
+                                        <asp:Label runat="server" Text="Dimension Code" CssClass="styleReqFieldLabel" ID="lblDimensionCode">
+                                        </asp:Label>
+                                    </td>
+                                                                                        <td class="styleFieldAlign">
+                                        <asp:TextBox ID="txtDimensionCode" runat="server" MaxLength="4" Style="width: 70px"
+                                            onmouseover="txt_MouseoverTooltip(this)"></asp:TextBox>
+                                             <asp:LinkButton ID="lnkView" runat="server" Text="View" OnClick="lnkView_Click"></asp:LinkButton>
+                                        <asp:RequiredFieldValidator ID="rfvDimensionCode" CssClass="styleMandatoryLabel"
+                                            runat="server" ControlToValidate="txtDimensionCode" Text="Enter Dimension Code"
+                                            ErrorMessage="Enter Dimension Code" Display="None" ValidationGroup="BtnSave">
+                                        </asp:RequiredFieldValidator>
+                                        <cc1:FilteredTextBoxExtender ID="FilteredTextBoxExtender2" runat="server" TargetControlID="txtDimensionCode"
+                                            FilterType="UppercaseLetters, LowercaseLetters, Numbers" ValidChars="" Enabled="True">
+                                        </cc1:FilteredTextBoxExtender>
+                                    </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                     <td class="styleFieldLabel">
+                                       <asp:Label ID="lblDimensiondescription" runat="server" Text="Dimension Description"
+                                                        CssClass="styleReqFieldLabel"></asp:Label>
+                                       
+                                    </td>
+                                                                                     <td class="styleFieldAlign">
+                                        <asp:TextBox ID="txtDimensionDescription" runat="server" MaxLength="40" Style="width: 200px"
+                                            onmouseover="txt_MouseoverTooltip(this)"></asp:TextBox>
+                                        <asp:RequiredFieldValidator ID="rfvDimensionDescription" CssClass="styleMandatoryLabel"
+                                            runat="server" ControlToValidate="txtDimensionDescription" Text="Enter Dimension Description"
+                                            ErrorMessage="Enter Dimension Description" Display="None" ValidationGroup="BtnSave">
+                                        </asp:RequiredFieldValidator>
+                                        <cc1:FilteredTextBoxExtender ID="FilteredTextBoxExtender1" runat="server" TargetControlID="txtDimensionDescription"
+                                            FilterType="UppercaseLetters, LowercaseLetters,numbers, custom" ValidChars=" " Enabled="True">
+                                        </cc1:FilteredTextBoxExtender>
+                                    </td>
+                                  
+                                   
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                       <td class="styleFieldLabel">
+                                        <span class="styleReqFieldLabel">Dimension Pattern</span>
+                                    </td>
+                                                                                       <td class="styleFieldAlign">
+                                        <asp:RadioButtonList ID="rblDimensionPattern" runat="server" RepeatDirection="Horizontal"
+                                          AutoPostBack ="true" OnSelectedIndexChanged ="rblDimensionPattern_SelectedIndexChanged"  BorderColor="White" BorderWidth="0" BorderStyle="None" CellPadding="0" CellSpacing="0"
+                                            BackColor="White">
+                                        </asp:RadioButtonList>
+                                        <asp:RequiredFieldValidator ID="rfvDimensionPattern" CssClass="styleMandatoryLabel"
+                                            runat="server" ControlToValidate="rblDimensionPattern" Text="Select Dimension Pattern"
+                                            ErrorMessage="Select Dimension Pattern" Display="None" ValidationGroup="BtnSave">
+                                        </asp:RequiredFieldValidator>
+                                    </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                           <td class="styleFieldLabel">
+                                        <asp:Label runat="server" Text="Active" ID="lblActive">
+                                        </asp:Label>
+                                    </td>
+                                                                                           <td class="styleFieldAlign" >
+                                        <asp:CheckBox Checked="true" ID="chkActive" ToolTip="Active" runat="server" />
+                                    </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td colspan="2">
+                                                                                            &nbsp;
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </table>
+                                                                            </div>
+                                                                        </asp:Panel>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                        <td valign="top">
+                                                            <asp:Panel ID="pnlLocation" Width="98%" runat="server" CssClass="stylePanel" GroupingText="Location">
+                                                                <div style="overflow: auto; height: 300px">
+                                                                    <asp:TreeView ID="treeview" runat="server" ImageSet="Simple" ShowCheckBoxes="Parent,Leaf"
+                                                                        ShowLines="True" OnPreRender="treeview_PreRender" DataSourceID="XmlDataSource1">
+                                                                        <DataBindings>
+                                                                            <asp:TreeNodeBinding DataMember="MenuItem" TextField="title" ToolTipField="title"
+                                                                                ValueField="Location_ID" SelectAction="Expand" />
+                                                                        </DataBindings>
+                                                                    </asp:TreeView>
+                                                                    &nbsp;
+                                                                    <asp:XmlDataSource ID="XmlDataSource1" runat="server" TransformFile="~/TransformXSLTAcctcard.xsl"
+                                                                        EnableCaching="False"></asp:XmlDataSource>
+                                                                </div>
+                                                            </asp:Panel>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                 <td>
+                                                <asp:Panel ID="Pnlhistory" runat="server" BackColor="White" BorderStyle="Solid"
+                                                    BorderWidth="1px" Style="display: none; vertical-align: middle" Width="50%">
+                                                    <table width="100%">
+                                                        <tr>
+                                                            <td class="stylePageHeading">
+                                                                <asp:Label runat="server" Text="Dimension2 ID="Label1" CssClass="styleDisplayLabel">
+                                                                </asp:Label>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td height="10px">
+                                                            </td>
+                                                        </tr>
+                                                        <tr width="100%">
+                                                            <td width="100%">
+                                                                <asp:Panel ID="pnlDim2" runat="server" BackColor="White" Width="50%">
+                                                                    <div id="divdim2" title="Dimension2"  style="height: 250px; overflow: auto" >
+                                                                        <asp:Label ID="lblempty" runat="server" Font-Bold="False" Font-Size="Small" Text="No Dim2 records found Found"
+                                                                            Visible="False" />
+                                                                            <table width="100%">
+                                                                            <tr>
+                                                                            <td align="center">
+                                                                        <asp:GridView ID="grvdim2" runat="server" AutoGenerateColumns="False" Width="100%">
+                                                                            <Columns>
+                                                                                <asp:TemplateField HeaderText="Sl No">
+                                                                                    <ItemTemplate>
+                                                                                        <asp:Label ID="lblSerialNo" runat="server" Text="<%#Container.DataItemIndex+1%>"></asp:Label>
+                                                                                    </ItemTemplate>
+                                                                                    <ItemStyle HorizontalAlign="Left" />
+                                                                                </asp:TemplateField>
+                                                                                <asp:TemplateField HeaderText="Dimension Code">
+                                                                                    <ItemTemplate>
+                                                                                        <asp:Label ID="lbldim2code" runat="server" Text='<%#Eval("Dim_code") %>' />
+                                                                                    </ItemTemplate>
+                                                                                    <ItemStyle HorizontalAlign="Left" />
+                                                                                </asp:TemplateField>
+                                                                                <asp:TemplateField HeaderText="Dimension Deacription">
+                                                                                    <ItemTemplate>
+                                                                                        <asp:Label ID="lblDimensiondescription" runat="server" Text='<%#Eval("Dim_Desc") %>' />
+                                                                                    </ItemTemplate>
+                                                                                    <ItemStyle HorizontalAlign="Left" />
+                                                                                </asp:TemplateField>
+                                                                            </Columns>
+                                                                        </asp:GridView>
+                                                                        </td>
+                                                                        </tr>
+                                                                        
+                                                                        
+                                                       <tr>
+                                                            <td align="center">
+                                                                <asp:Label ID="lblmodalerror" runat="server" Visible="false"/>
+                                                                <br />
+                                                                <a id="hideModalPopupClientButton" href="#" onclick="hideModalPopupViaClient();">Close</a>
+                                                            </td>
+                                                        </tr>
+                                                        </table>
+                                                        <asp:Label ID="lblmodal_Count" runat="server" Font-Bold="False" Font-Size="Small"
+                                                                            Visible="True" />
+                                                                    </div>
+                                                                </asp:Panel>
+                                                                
+                                                                <cc1:ModalPopupExtender ID="ModalPopupExtenderdim" runat="server" BackgroundCssClass="styleModalBackground"
+                                                                    BehaviorID="programmaticModalPopupBehavior" DynamicServicePath="" Enabled="True"
+                                                                    PopupControlID="pnlDim2" TargetControlID="btnModal">
+                                                                </cc1:ModalPopupExtender>
+                                                               <asp:Label ID="lblPendings" runat="server" Font-Bold="False" Font-Size="Small" Visible="True" />
+                                                            </td>
+                                                        </tr>
+                                                       
+                                                    </table>
+                                                </asp:Panel>
+                                                <asp:Button ID="btnModal" runat="server" Style="display: none" />
+                                                <table>
+                                                    <tr class="styleButtonArea">
+                                                        <td align="center">
+                                                            <span id="lblErrorMessage" runat="server" style="color: Red; font-size: medium">
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            </tr>
+            </table>
+        </ContentTemplate>
+    </asp:UpdatePanel>
+    <table align="center">
+        <tr class="styleButtonArea" style="padding-left: 4px; margin-top: 10px;" align="center">
+            <td colspan="4">
+                <%--<asp:UpdatePanel ID="upButton" runat="server">
+                    <ContentTemplate>--%>
+                <asp:Button runat="server" ID="btnSave" OnClientClick="return fnCheckPageValidators();"
+                    CssClass="styleSubmitButton" Text="Save" ToolTip="Save" OnClick="btnSave_Click"
+                    ValidationGroup="BtnSave" />
+                <asp:Button runat="server" ID="btnClear" CssClass="styleSubmitButton" CausesValidation="false"
+                    Text="Clear_FA" ToolTip="Clear_FA" OnClick="btnClear_Click" />
+                <cc1:ConfirmButtonExtender ID="btnClear_ConfirmButtonExtender" runat="server" ConfirmText="Are you sure you want to Clear_FA?"
+                    Enabled="True" TargetControlID="btnClear">
+                </cc1:ConfirmButtonExtender>
+                <asp:Button runat="server" ID="btnCancel" Text="Cancel" CausesValidation="false"
+                    CssClass="styleSubmitButton" ToolTip="Cancel" OnClick="btnCancel_Click" />
+                <%-- </ContentTemplate>
+                </asp:UpdatePanel>--%>
+            </td>
+        </tr>
+        <table align="left">
+            <tr>
+                <td align="left">
+                    <asp:ValidationSummary CssClass="styleMandatoryLabel" runat="server" ID="vsDimension"
+                        ValidationGroup="BtnSave" HeaderText="Correct the following validation(s):  "
+                        ShowSummary="true" ShowMessageBox="false" />
+                    <asp:CustomValidator ID="cvDim" runat="server" CssClass="styleMandatoryLabel" Enabled="true"></asp:CustomValidator>
+                    <asp:HiddenField ID="hdnLocString" runat="server" />
+                </td>
+            </tr>
+        </table>
+    </table>
+     <script type="text/javascript" language="javascript"> 
+    
+    function onloadByObject(strLocString)
+    {
+        if(strLocString != null)
+        {
+            var strlen=strLocString.split(',').length;
+            for(var i=1; i<=strlen;i++)
+            {
+                if(strLocString.split(',')[i-1].length > 0)
+                {
+                    var x = document.getElementById('ctl00_ContentPlaceHolder1_treeviewn' + strLocString.split(',')[i - 1] + 'CheckBox');
+                       x.disabled=true;
+                }
+            }
+        }
+           
+    }
+    
+    function onloadByObjectD(strLocString)
+    {
+   
+        if(strLocString != null)
+        {
+            var strlen=strLocString.split(',').length;
+            for(var i=1; i<=strlen;i++)
+            {
+                if(strLocString.split(',')[i-1].length > 0)
+                {
+                    var x = document.getElementById('ctl00_ContentPlaceHolder1_treeviewn' + strLocString.split(',')[i - 1] + 'CheckBox');
+                       x.disabled=true;
+                }
+            }
+        }
+
+    }
+
+    function postBackByObject() {
+        var obj = window.event.srcElement;
+        var treeNodeFound = false;
+        var checkedState;
+
+        if (obj.tagName == "INPUT" && obj.type == "checkbox") {
+            var treeNode = obj;
+            checkedState = treeNode.checked;
+            do {
+                obj = obj.parentElement;
+            } while (obj.tagName != "TABLE")
+            var parentTreeLevel = obj.rows[0].cells.length;
+            var parentTreeNode = obj.rows[0].cells[0];
+            var tables = obj.parentElement.getElementsByTagName("TABLE");
+            var numTables = tables.length
+            if (numTables >= 1) {
+                for (i = 0; i < numTables; i++) {
+                    if (tables[i] == obj) {
+                        treeNodeFound = true;
+                        i++;
+                        if (i == numTables) {
+                            return;
+                        }
+                    }
+                    if (treeNodeFound == true) {
+                        var childTreeLevel = tables[i].rows[0].cells.length;
+                        if (childTreeLevel > parentTreeLevel) {
+                            var cell = tables[i].rows[0].cells[childTreeLevel - 1];
+                            var inputs = cell.getElementsByTagName("INPUT");
+                            if (!inputs[0].disabled) {
+                                inputs[0].checked = checkedState;
+                            }
+                        }
+                        else {
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    function pageLoad() {
+        $addHandler($get("hideModalPopupClientButton"), 'click', hideModalPopupViaClient);
+
+    }
+    function hideModalPopupViaClient() {
+        //ev.preventDefault();        
+        var modalPopupBehavior = $find('programmaticModalPopupBehavior');
+        modalPopupBehavior.hide();
+    }
+    </script>
+</asp:Content>

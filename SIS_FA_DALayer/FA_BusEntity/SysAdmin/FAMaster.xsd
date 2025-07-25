@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="FAMaster" targetNamespace="http://tempuri.org/FAMaster.xsd" xmlns:mstns="http://tempuri.org/FAMaster.xsd" xmlns="http://tempuri.org/FAMaster.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="FAMaster" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_DataSetName="FAMaster" msprop:Generator_UserDSName="FAMaster" msprop:EnableTableAdapterManager="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="FA_SYS_DimensionMaster" msprop:Generator_UserTableName="FA_SYS_DimensionMaster" msprop:Generator_RowDeletedName="FA_SYS_DimensionMasterRowDeleted" msprop:Generator_TableClassName="FA_SYS_DimensionMasterDataTable" msprop:Generator_RowChangedName="FA_SYS_DimensionMasterRowChanged" msprop:Generator_RowClassName="FA_SYS_DimensionMasterRow" msprop:Generator_RowChangingName="FA_SYS_DimensionMasterRowChanging" msprop:Generator_RowEvArgName="FA_SYS_DimensionMasterRowChangeEvent" msprop:Generator_RowEvHandlerName="FA_SYS_DimensionMasterRowChangeEventHandler" msprop:Generator_TablePropName="FA_SYS_DimensionMaster" msprop:Generator_TableVarName="tableFA_SYS_DimensionMaster" msprop:Generator_RowDeletingName="FA_SYS_DimensionMasterRowDeleting">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Dim_ID" msprop:Generator_UserColumnName="Dim_ID" msprop:Generator_ColumnPropNameInRow="Dim_ID" msprop:Generator_ColumnVarNameInTable="columnDim_ID" msprop:Generator_ColumnPropNameInTable="Dim_IDColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="Company_ID" msprop:Generator_UserColumnName="Company_ID" msprop:Generator_ColumnPropNameInRow="Company_ID" msprop:Generator_ColumnVarNameInTable="columnCompany_ID" msprop:Generator_ColumnPropNameInTable="Company_IDColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="Dim_Type" msprop:Generator_UserColumnName="Dim_Type" msprop:Generator_ColumnPropNameInRow="Dim_Type" msprop:Generator_ColumnVarNameInTable="columnDim_Type" msprop:Generator_ColumnPropNameInTable="Dim_TypeColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="Dim_Code" msprop:Generator_UserColumnName="Dim_Code" msprop:Generator_ColumnPropNameInRow="Dim_Code" msprop:Generator_ColumnVarNameInTable="columnDim_Code" msprop:Generator_ColumnPropNameInTable="Dim_CodeColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="Dim_Desc" msprop:Generator_UserColumnName="Dim_Desc" msprop:Generator_ColumnPropNameInRow="Dim_Desc" msprop:Generator_ColumnVarNameInTable="columnDim_Desc" msprop:Generator_ColumnPropNameInTable="Dim_DescColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="Dim_Pattern" msprop:Generator_UserColumnName="Dim_Pattern" msprop:Generator_ColumnPropNameInRow="Dim_Pattern" msprop:Generator_ColumnVarNameInTable="columnDim_Pattern" msprop:Generator_ColumnPropNameInTable="Dim_PatternColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="User_ID" msprop:Generator_UserColumnName="User_ID" msprop:Generator_ColumnPropNameInRow="User_ID" msprop:Generator_ColumnVarNameInTable="columnUser_ID" msprop:Generator_ColumnPropNameInTable="User_IDColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="Trans_Date" msprop:Generator_UserColumnName="Trans_Date" msprop:Generator_ColumnPropNameInRow="Trans_Date" msprop:Generator_ColumnVarNameInTable="columnTrans_Date" msprop:Generator_ColumnPropNameInTable="Trans_DateColumn" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

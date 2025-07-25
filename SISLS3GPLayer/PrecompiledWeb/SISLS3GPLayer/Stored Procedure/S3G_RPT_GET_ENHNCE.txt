@@ -1,0 +1,1058 @@
+﻿create or replace
+PROCEDURE "S3G_RPT_GET_ENHNCE" 
+(
+    P_COMPANY_ID in number default null,          
+    P_USER_ID in number default null ,   
+    P_PROGRAM_ID in number default null,                
+    P_LOB_ID in number default null,
+    P_Location in number:=null,
+    P_FROMDATE varchar2 default null,
+    P_TODATE varchar2 default null,
+    P_REPORT_CODE varchar2 default null,
+    P_REPORT_DATE varchar2 default null,
+    P_IS_EXCEL_EXPRT in number default null,  
+    P_Entity_Code in varchar2 default null,
+    P_Product In Varchar2 default null,
+    P_Asset_Class In Varchar2 Default null,
+    ------Paging Part-----------
+    P_CURRENTPAGE number default null,                                                  
+    P_PAGESIZE number default null,                                                    
+    P_SEARCHVALUE varchar2 default null,                                                   
+    P_ORDERBY varchar2 default null,  
+    P_TotalRecords OUT NUMBER,
+    P_OUTTBL OUT SYS_REFCURSOR--,
+  
+)
+AS 
+  D_FROMDATE date;
+  D_TODATE date;
+  D_LOCATION_CODE VARCHAR2(50);     
+  D_LOB_ID NUMBER;
+  D_COUNT NUMBER;
+  D_CONDITION VARCHAR2(5000);
+  D_TBLVALUE VARCHAR2(8000);
+  D_PivotStatement_YA varchar2(8000);
+  D_PivotStatement_YU varchar2(8000);
+  D_PivotStatement_MA varchar2(8000);
+  D_PivotStatement_MU varchar2(8000);
+  d_strQuery VARCHAR2(8000);
+  D_Pivot_Query Varchar2(8000);
+  D_Pivot_Query1 Varchar2(8000);
+  d_strQuery1 VARCHAR2(8000);
+  d_Total_count Varchar2(8000);
+  D_Entity_ID NUMBER;
+  D_LOCATION_ID NUMBER;
+BEGIN
+
+/*DELETE FROM TMP_OR_RDR;
+DELETE FROM TMP_OR_PSP;
+DELETE FROM TMP_OR_LPP;
+--DELETE FROM TMP_OR_AIC;
+DELETE FROM TMP_OR_CIP;
+DELETE FROM TMP_OR_CBR;
+DELETE FROM TMP_OR_CR_EXPIRY;*/
+
+
+IF(P_FROMDATE IS NOT NULL) THEN
+BEGIN
+  D_FROMDATE:=FN_TODATE(P_FROMDATE);
+END;
+END IF;
+IF(P_TODATE IS NOT NULL) THEN
+BEGIN
+  D_TODATE:=FN_TODATE(P_TODATE);
+END;
+END IF;
+
+
+
+IF(P_LOCATION = '0' OR P_LOCATION IS NULL) THEN                   
+begin                  
+    D_LOCATION_CODE := null;
+    D_LOCATION_ID := null;  
+END;                  
+ELSE                  
+begin                  
+    select FN_GET_LOCATIONCODE(P_LOCATION) into D_LOCATION_CODE from DUAL; 
+    D_LOCATION_ID:=P_LOCATION;
+end;       
+END IF;
+
+d_LOB_ID:=case when p_LOB_ID is null or p_LOB_ID='0' then null else p_LOB_ID end;
+
+d('D_lob_id==>'||D_lob_id);
+d('d_LOCATION_id==>'||d_LOCATION_id);
+
+
+IF (P_REPORT_CODE='RDR') THEN--Rejected Deals
+BEGIN
+      DELETE FROM TMP_OR_RDR;
+      INSERT INTO TMP_OR_RDR
+      (
+        RM,
+        LEAD_NO,
+        CREATED_ON,
+        PRODUCT_NAME,
+        APPRAISAL_TYPE,
+        REJECTED_ON,
+        BRANCH,
+        INDUSTRY_NAME,
+        CUSTOMER_NAME,
+        CUSTOMER_CODE,
+        BUSINESS_SOURCE,
+        DEALER_NAME,
+        FACILITY_TYPE,
+        ASSET_TYPE,
+        FINANCE_AMOUNT,
+        RATE,
+        TENURE,
+        ASSET_DESCRIPTION,
+        REJECTED_BY,
+        SALES_PERSON_NAME,
+        REMARKS,
+        PRODCUT_ID,
+        LOCATION_CODE,
+        REJECTED_FROM
+      )
+      
+      SELECT ROWNUM AS RM,MT.* 
+      FROM 
+           ( 
+                   select 
+                   LEAD.LEAD_NO
+                  ,LEAD.CREATED_ON
+                  ,PM.PRODUCT_NAME
+                  ,LOBM.LOB_NAME as APPRAISAL_TYPE
+                  ,trunc(LEAD.modified_ON) as REJECTED_ON
+                  ,LC.LOCATIONCAT_DESCRIPTION as BRANCH  
+                  ,INDUS.DESCRIPTION as INDUSTRY_NAME
+                  ,CASE WHEN LEAD.PROSPECT_ID is not null THEN PRSPECT.PROSPECT_NAME ELSE  CM.CUSTOMER_NAME END AS CUSTOMER_NAME
+                  ,CASE WHEN LEAD.PROSPECT_ID is not null THEN PRSPECT.PROSPECT_CODE ELSE  CM.CUSTOMER_CODE END AS CUSTOMER_CODE
+                  ,SOURCETYPE.LEAD_SOURCE_TYPE as BUSINESS_SOURCE
+                  ,case when EM.ENTITY_ID is not null then EM.ENTITY_CODE||' - '||EM.ENTITY_NAME else EMPL.USer_code||'-'||EMPL.USer_name end as DEALER_NAME
+                  ,LOBM.LOB_NAME as FACILITY_TYPE
+                  ,CASE WHEN Mod(tbl2.ASSET_CATEGORY_ID,2)=0 THEN 'USED' ELSE 'NEW' END as ASSET_TYPE
+                  ,PRODUCT.FINANCE_AMOUNT AS FINANCE_AMOUNT
+                  ,PRODUCT.ROI as RATE
+                  ,PRODUCT.TENURE
+                  ,tbl2.asset as ASSET_DESCRIPTION
+                  ,UMAPPROVER.USER_NAME||'-'||UMAPPROVER.USER_NAME as REJECTED_BY
+                  ,SALES_PERSON as SALES_PERSON_NAME
+                  ,LEADAPPR.APPROVER_REMARKS
+                  ,PRODUCT.PRODUCT_ID
+                  ,LC.LOCATION_CODE
+                  ,'CRM'
+          from SYN_CRM_LEAD LEAD
+          inner join SYS_CRM_LEAD_APPROVAL_DETAIL LEADAPPR
+          on LEADAPPR.LEAD_ID=LEAD.LEAD_ID
+          INNER JOIN S3G_SYSAD_LOCATIONMASTER LM
+          on LM.LOCATION_ID=LEAD.LOCATION_ID
+          INNER JOIN S3G_SYSAD_LOCATIONCATEGORY LC
+          on LM.LOCATION_CATEGORY_ID=LC.LOCATION_CATEGORY_ID
+          inner join SYN_CRM_LEAD_FACILITY PRODUCT
+          on PRODUCT.LEAD_ID=LEAD.LEAD_ID
+          inner join S3G_SYSAD_PRODUCTMASTER PM
+          ON PM.PRODUCT_ID=PRODUCT.PRODUCT_ID
+          inner join S3G_SYSAD_USERMASTER UMAPPROVER
+          on UMAPPROVER.USER_ID=LEAD.LEAD_APPROVER_ID
+          
+--          LEFT join SYN_CRM_LEAD_ASSET_DETAIL LEADASSET
+--          on LEADASSET.LEAD_ID=LEAD.LEAD_ID
+--          left join S3G_ORG_ASSETMASTER AM
+--          on AM.ASSET_ID=LEADASSET.ASSET_ID
+          
+          
+          LEFT  JOIN (SELECT T2.ASSET_CATEGORY_ID,  T2.LEAD_ASSET_DETAIL_ID AS PRICING_ASSET_ID,T2.LEAD_ID AS LEAD_ID,AM2.asset_code||'-'||AM2.asset_description AS asset FROM 
+                  (select MIN(PRASSET.LEAD_ASSET_DETAIL_ID) as LEAD_ASSET_DETAIL_ID,PRASSET.LEAD_ID from SYN_CRM_LEAD_ASSET_DETAIL PRASSET
+                      --WHERE PRASSET.PRICING_ID=38627
+                      group by  PRASSET.LEAD_ID)T1
+                      INNER JOIN SYN_CRM_LEAD_ASSET_DETAIL T2
+                      ON T2.LEAD_ASSET_DETAIL_ID=T1.LEAD_ASSET_DETAIL_ID
+                      INNER JOIN s3g_org_assetmaster AM2
+                      ON AM2.asset_id=t2.asset_id
+                  )tbl2 ON tbl2.LEAD_ID=LEAD.LEAD_ID
+
+          
+          inner join S3G_SYSAD_LOBMASTER LOBM
+          on LOBM.LOB_ID=PRODUCT.LOB_ID
+          left join SYN_CRM_LEAD_SOURCE_TYPE SOURCETYPE
+          on SOURCETYPE.LEAD_SOURCE_TYPE_ID=LEAD.LEAD_SOURCE_TYPE_ID
+          left join S3G_ORG_ENTITYMASTER EM
+          on (EM.ENTITY_ID=LEAD.LEAD_SOURCE_REF_ID AND LEAD.LEAD_SOURCE_TYPE_ID in(5))--4-Employee 5 DEALER
+          left join s3g_sysad_usermaster EMPL
+          on (EMPL.USER_ID=LEAD.LEAD_SOURCE_REF_ID AND LEAD.LEAD_SOURCE_TYPE_ID in(4))--4-Employee 5 DEALER
+          left join S3G_ORG_CUSTMASTER CM
+          on CM.CUSTOMER_ID=LEAD.CUSTOMER_ID
+          left JOIN S3G_ORG_GROUP_INDUSTRY_TYPE INDUS
+          ON (INDUS.VALUE=CM.INDUSTRY_ID
+          and INDUS.type ='INDUSTRY' )
+          left join SYN_CRM_PROSPECT_MASTER PRSPECT
+          ON PRSPECT.PROSPECT_ID=LEAD.PROSPECT_ID
+          WHERE LEAD.LEAD_APPROVAL_STATUS_ID = 5--CRM LEAD REJECTED
+          AND LEAD.LOCATION_ID=NVL(D_LOCATION_ID,LEAD.LOCATION_ID)
+          AND PRODUCT.lob_id       =NVL(D_lob_id,PRODUCT.lob_id)
+          AND trunc(LEAD.modified_ON) BETWEEN fn_todate(P_FROMDATE) AND fn_todate(P_TODATE)
+
+          UNION 
+
+          select 
+            PC.BUSINESS_OFFER_NUMBER,
+            PC.OFFER_DATE,
+            PM.PRODUCT_NAME ,
+            LB.LOB_NAME AS APPRAISAL_TYPE,
+            trunc(PC.MODIFIED_ON),
+            lc.locationcat_description AS Branch ,
+            INDUS.DESCRIPTION,
+            cm.customer_name,
+            cm.customer_code ,
+            NULL            AS Business_Source ,
+            case when ETM.ENTITY_ID is not null then ETM.ENTITY_CODE||' - '||ETM.ENTITY_NAME else '' end as DEALER_NAME,
+            LB.LOB_NAME ,
+            case when tbl2.IS_NEW=1 THEN 'New' else 'Used' end AS Asset_Type ,
+            pc.facility_amount,
+            pc.accounting_irr,
+            pc.tenure ,
+            tbl2.asset ,
+            UM1.USER_CODE||'-'|| UM1.USER_NAME as MODIFIED_BY,
+            MO.USER_CODE||'-'||MO.USER_NAME         AS SALES_PERSON_ID,
+            tbl.REMARKS    AS REMARKS ,
+            PM.PRODUCT_ID ,
+            PC.LOCATION_CODE,
+            'CHECKLIST FOR DEAL PROCESSING'
+          FROM S3G_ORG_PRICING PC
+          LEFT OUTER JOIN S3G_ORG_CUSTMASTER CM
+          ON PC.CUSTOMER_ID=CM.CUSTOMER_ID
+          INNER JOIN S3G_ORG_GROUP_INDUSTRY_TYPE INDUS
+          ON (INDUS.VALUE=CM.INDUSTRY_ID
+          AND INDUS.TYPE ='INDUSTRY' )
+         
+          LEFT  JOIN (SELECT T2.is_new as is_new, T2.PRICING_ASSET_ID AS PRICING_ASSET_ID,T2.PRICING_ID AS PRICING_ID,AM2.asset_code||'-'||AM2.asset_description AS asset FROM 
+          (select MIN(PRASSET.PRICING_ASSET_ID) as PRICING_ASSET_ID,PRASSET.PRICING_ID from S3G_ORG_PRICINGASSETDET PRASSET
+              --WHERE PRASSET.PRICING_ID=38627
+              group by  PRASSET.PRICING_ID)T1
+              INNER JOIN S3G_ORG_PRICINGASSETDET T2
+              ON T2.PRICING_ASSET_ID=T1.PRICING_ASSET_ID
+              INNER JOIN s3g_org_assetmaster AM2
+              ON AM2.asset_id=t2.asset_id
+          )tbl2 ON tbl2.PRICING_ID=PC.PRICING_ID
+         
+          JOIN S3G_SYSAD_LOCATIONMASTER LM
+          ON PC.LOCATION_CODE=LM.LOCATION_CODE
+          JOIN S3G_SYSAD_LOCATIONCATEGORY LC
+          ON LM.LOCATION_CATEGORY_ID=LC.LOCATION_CATEGORY_ID
+          left outer join S3G_ORG_ENTITYMASTER ETM
+          ON ETM.ENTITY_ID=PC.DEALER_ID
+          LEFT OUTER JOIN S3G_SYSAD_LOBMASTER LB
+          on PC.LOB_ID=LB.LOB_ID
+          INNER  JOIN S3G_SYSAD_PRODUCTMASTER PM
+          on PC.PRODUCT_ID=PM.PRODUCT_ID
+          inner join S3G_SYSAD_USERMASTER MO
+          on MO.USER_ID=PC.SALES_PERSON_ID
+          INNER JOIN
+            (select PRICING_ID,
+              MAX(APPROVER_ID) AS approver_ID,max(REMARKS) as REMARKS
+            from S3G_ORG_PRICINGAPPROVAL
+            WHERE ACTION_ID=4--REJECTED
+            GROUP BY PRICING_ID
+            )tbl
+          ON PC.PRICING_ID=tbl.PRICING_ID
+          LEFT  JOIN S3G_SYSAD_USERMASTER UM1
+          ON UM1.USER_ID      =tbl.approver_ID
+          WHERE STATUS_ID     =4
+          AND pc.LOCATION_id=NVL(d_LOCATION_id,pc.LOCATION_id)
+          AND pc.lob_id       =NVL(D_lob_id,pc.lob_id)
+          AND trunc(PC.MODIFIED_ON) BETWEEN fn_todate(P_FROMDATE) AND fn_todate(P_TODATE)
+
+          union 
+
+                    SELECT 
+                      AP.APPLICATION_NUMBER,
+                      AP.APPLICAION_PROCESS_DATE,
+                      PM.PRODUCT_NAME ,
+                      LB.LOB_NAME AS APPRAISAL_TYPE,
+                      trunc(AP.MODIFIED_ON),
+                      lc.locationcat_description AS Branch ,
+                      INDUS.DESCRIPTION,
+                      cm.customer_name,
+                      cm.customer_code ,
+                      LOOKBUSINESSSOURCE.NAME            AS Business_Source ,
+                      case when ETM.ENTITY_ID is not null then ETM.ENTITY_CODE||' - '||ETM.ENTITY_NAME else '' end as DEALER_NAME,
+                      LB.lob_name     AS Facility_Type ,
+                      case when tbl2.IS_NEW=1 THEN 'New' else 'Used' end AS  Asset_Type ,
+                      ap.finance_amount ,
+                      ap.accounting_irr,
+                      ap.tenure ,
+                      tbl2.asset,
+                      UM2.USER_Code||'-'|| um2.user_name AS Modified_By ,
+                      UM.USER_Code||'-'||UM.USER_NAME  AS SALES_PERSON_ID,
+                      tbl.REMARKS   AS REMARKS ,
+                      PM.PRODUCT_ID ,
+                      AP.LOCATION_CODE,
+                      'PROPOSAL ENTRY'
+                    FROM S3G_ORG_APPPROC AP
+                    inner  JOIN S3G_ORG_CUSTMASTER CM
+                    ON AP.CUSTOMER_ID=CM.CUSTOMER_ID
+                    inner JOIN S3G_ORG_GROUP_INDUSTRY_TYPE INDUS
+                    ON (INDUS.VALUE=CM.INDUSTRY_ID
+                    and INDUS.type ='INDUSTRY' )
+--                    INNER  JOIN S3G_ORG_APPPROCASSETDET AST
+--                    on AP.APPLICATION_PROCESS_ID=AST.APPLICATION_PROCESS_ID
+--                    INNER JOIN S3G_ORG_ASSETMASTER AM
+--                    ON ast.asset_code=AM.Asset_Code
+                      LEFT  JOIN (SELECT T2.is_new as is_new, T2.APPLICATION_PROCESS_ASSET_ID AS PRICING_ASSET_ID,T2.APPLICATION_PROCESS_ID AS APPLICATION_PROCESS_ID,AM2.asset_code||'-'||AM2.asset_description AS asset FROM 
+                      (select MIN(PRASSET.APPLICATION_PROCESS_ASSET_ID) as PRICING_ASSET_ID,PRASSET.APPLICATION_PROCESS_ID from S3G_ORG_APPPROCASSETDET PRASSET
+                          --WHERE PRASSET.PRICING_ID=38627
+                          group by  PRASSET.APPLICATION_PROCESS_ID)T1
+                          INNER JOIN S3G_ORG_APPPROCASSETDET T2
+                          ON T2.APPLICATION_PROCESS_ID=T1.APPLICATION_PROCESS_ID
+                          INNER JOIN s3g_org_assetmaster AM2
+                          ON AM2.asset_id=t2.asset_id
+                      )tbl2 ON tbl2.APPLICATION_PROCESS_ID=AP.APPLICATION_PROCESS_ID
+
+
+                    LEFT JOIN S3G_SYSAD_USERMASTER UM
+                    ON ap.sales_person_id=um.user_id
+                    LEFT JOIN S3G_SYSAD_USERMASTER UM1
+                    ON ap.modified_by=um1.user_id
+                    JOIN S3G_SYSAD_LOCATIONMASTER LM
+                    ON ap.location_code=lm.location_code
+                    JOIN S3G_SYSAD_LOCATIONCATEGORY LC
+                    ON lm.location_category_id=lc.location_category_id
+                    left  join S3G_ORG_ENTITYMASTER ETM
+                    ON ETm.Entity_ID=AP.DEALER_ID
+                    LEFT  JOIN S3G_SYSAD_LOBMASTER LB
+                    ON ap.lob_id=lb.lob_id
+                    INNER JOIN
+                      (select APPLICATION_PROCESS_ID AS APPLICATION_PROCESS_ID,
+                        MAX(APPROVER_ID) AS approver_ID,max(REMARKS) as REMARKS
+                      from S3G_ORG_APPAPPROVAL
+                      WHERE ACTION_ID=4--REJECTED
+                      GROUP BY APPLICATION_PROCESS_ID
+                      )tbl
+                    ON AP.APPLICATION_PROCESS_ID=tbl.APPLICATION_PROCESS_ID
+                    LEFT  JOIN S3G_SYSAD_USERMASTER UM2
+                    ON UM2.USER_ID      =tbl.approver_ID
+                    LEFT  JOIN S3G_SYSAD_PRODUCTMASTER PM
+                    ON AP.product_id  =PM.product_id
+                    LEFT JOIN S3G_ORG_LOOKUP LOOKBUSINESSSOURCE
+                    ON (LOOKBUSINESSSOURCE.VALUE=AP.BUSINESS_SOURCE AND LOOKBUSINESSSOURCE.TYPE='BUSINESS_SOURCE')
+                    
+                    WHERE AP.STATUS_ID=4 --Rejected
+                    AND trunc(AP.MODIFIED_ON) BETWEEN fn_todate(P_FROMDATE) AND fn_todate(P_TODATE)
+                    AND AP.LOCATION_id=NVL(D_LOCATION_id, AP.LOCATION_id)
+                    and AP.LOB_ID       =NVL(D_LOB_ID,AP.LOB_ID)
+                    ) MT;
+
+select count(1) into d_count from TMP_OR_RDR;
+IF(P_IS_EXCEL_EXPRT=1) THEN
+BEGIN
+OPEN P_OUTTBL FOR 
+
+        select RM as "S.No",LEAD_NO as "Proposal Number",
+        GETUSERDATEFORMAT(CREATED_ON,P_COMPANY_ID) AS "Application Date",
+        PRODUCT_NAME as "Scheme",APPRAISAL_TYPE as "Appraisal Type",
+        GETUSERDATEFORMAT(REJECTED_ON,P_COMPANY_ID) as "Rejected Date",BRANCH as "Branch Name",INDUSTRY_NAME as "Industry",
+        CUSTOMER_CODE||'-'||CUSTOMER_NAME AS "Customer Name",
+        BUSINESS_SOURCE AS "Business Source",DEALER_NAME AS "Dealer Name/Employee",
+        --FACILITY_TYPE as "Facility Type",
+        ASSET_TYPE as "Asset Type",
+        S3G_FN_GETGPSDECIMALFORMAT(FINANCE_AMOUNT,P_COMPANY_ID) AS "Finance Amount",RATE as "Yield",TENURE as "Tenor",
+        ASSET_DESCRIPTION as "Asset Description",REJECTED_BY as "Rejected By",
+        SALES_PERSON_NAME as "Marketing Officer",REMARKS as "Remarks",
+        REJECTED_FROM AS "Rejected From"
+        FROM TMP_OR_RDR ;
+
+END;
+ELSE 
+BEGIN
+        --d('Came to RDR ELSE');
+        IF(d_count>0)THEN
+        open P_OUTTBL for 
+          select RM as "S.No",LEAD_NO as "Proposal Number",
+          GETUSERDATEFORMAT(CREATED_ON,P_COMPANY_ID) AS "Application Date",
+          PRODUCT_NAME as "Scheme",APPRAISAL_TYPE as "Appraisal Type",
+          GETUSERDATEFORMAT(REJECTED_ON,P_COMPANY_ID) as "Rejected Date",BRANCH as "Branch Name",INDUSTRY_NAME as "Industry",
+          --CUSTOMER_CODE as "Customer Code",
+          CUSTOMER_CODE||'-'||CUSTOMER_NAME AS "Customer Name",
+          BUSINESS_SOURCE AS "Business Source",DEALER_NAME AS "Dealer Name/Employee",
+          --FACILITY_TYPE as "Facility Type",
+          ASSET_TYPE as "Asset Type",
+          S3G_FN_GETGPSDECIMALFORMAT(FINANCE_AMOUNT,P_COMPANY_ID) AS "Finance Amount",RATE as "Yield",TENURE as "Tenor",
+          ASSET_DESCRIPTION as "Asset Description",REJECTED_BY as "Rejected By",
+          SALES_PERSON_NAME as "Marketing Officer",REMARKS as "Remarks",
+          REJECTED_FROM AS "Rejected From"
+          FROM TMP_OR_RDR 
+          where RM between (P_CURRENTPAGE-1)* P_PAGESIZE + 1  
+          and (P_CURRENTPAGE)*P_PAGESIZE;
+        ELSE 
+           open P_OUTTBL for  select NULL as "S.No",NULL "Proposal Number",
+          null AS "Application Date",
+          null as "Scheme",null as "Appraisal Type",
+          null as "Rejected Date",null as "Branch Name",null as "Industry",
+          null AS "Customer Name",
+          null as "Business Source",null as "Dealer Name/Employee",
+          --null as "Facility Type",
+          null as "Asset Type",
+          NULL as "Finance Amount",
+          null as "Yield",null as "Tenor",
+          null as "Asset Description",null as "Rejected By",
+          null as "Marketing Officer",
+          null as "Remarks" FROM DUAL WHERE 1=2;
+        
+        END IF;
+        select count(1) into P_TotalRecords from TMP_OR_RDR;
+END;
+END IF;  
+END;
+END IF;
+
+IF (P_REPORT_CODE='PSP') THEN
+BEGIN
+
+  D_Entity_ID := to_number(P_Entity_Code);
+
+  DELETE FROM TMP_OR_PSP;
+  
+  INSERT INTO TMP_OR_PSP (RM,ACCOUNT_NUMBER,VENDOR_ID,DEALER_NAME,
+    BRANCH_NAME,CREATED_ON,CREATION_DATE,CUSTOMER_NAME,ASSET_NAME,
+    LPO_NUMBER,LPO_DATE,LPO_AMOUNT,CREDIT_DAYS,PA_SA_REF_ID)
+    select rownum as RM,AC.PANUM as ACCOUNT_NUMBER,
+      dlv.vendor_id,em.entity_Code||'-'||em.entity_name as Dealer_Name,
+      lc.locationcat_description as Branch_Name,
+      AC.CREATED_ON,AC.CREATION_DATE,
+      CM.CUSTOMER_CODE||'-'||CM.CUSTOMER_NAME as CUSTOMER_NAME,
+      am.asset_Code||'-'||am.asset_description as Asset_Name,
+      dlv.di_no as LPO_Number,dlv.di_date as LPO_Date,
+      di.asset_value as LPO_Amount,
+      EM.CREDIT_PERIOD_ALLOWED as Credit_Days,pa.PA_SA_REF_ID
+        from S3G_LAD_ACCCREATION AC 
+        Inner join s3g_lad_accpasadet pa on pa.ACCOUNT_CREATION_ID = ac.ACCOUNT_CREATION_ID 
+        Inner Join S3G_LAD_DELIVRYINSTRU DLV on pa.PA_SA_REF_ID = dlv.PA_SA_REF_ID 
+        Inner Join S3G_LAD_DELIVRYINSTRUDET DI on dlv.di_id=di.deliveryinstruction_id 
+        Inner join s3g_lad_accastdet aa on aa.PA_SA_REF_ID = pa.PA_SA_REF_ID 
+        and aa.ASSET_NUMBER = DI.ASSET_NUMBER
+        Inner Join S3G_ORG_ENTITYMASTER  EM on dlv.vendor_id = em.entity_id 
+        Join S3G_SYSAD_LOCATIONMASTER LM on Ac.LOCATION_ID = lm.location_ID 
+        Join S3G_SYSAD_LOCATIONCATEGORY LC On lm.location_category_id = lc.location_category_id 
+        Inner Join S3G_ORG_CUSTMASTER CM on dlv.customer_id = cm.customer_id 
+        Inner Join S3g_Org_Assetmaster Am On Di.Asset_Id = Am.Asset_Id 
+        Where --(aa.AMOUNT_FINANCED - nvl(PAID_AMOUNT,0)) > 0 
+        --and 
+        DLV.DI_STATUS_CODE=1 AND DLV.IS_DIGENERATION=1
+        And Em.Entity_Id = Nvl(D_Entity_Id,Em.Entity_Id)
+        and  trunc(dlv.di_date) BETWEEN D_Fromdate AND D_TODATE
+        and AC.LOB_ID = nvl(d_LOB_ID,AC.LOB_ID)
+        And Ac.Location_Id = Nvl(D_Location_Id,Ac.Location_Id)
+        and  pa.Pa_Sa_Ref_Id in (Select B.Pa_Sa_Ref_Id From S3g_Lad_Pymntreqst A 
+        Inner Join S3g_Lad_Paymentreqstdet B
+        On (B.Request_No=A.Request_No and a.pmt_voucher_status=1))--pending
+ 
+        ;
+        
+        
+        
+        Merge into TMP_OR_PSP T1 using (
+        Select ac.PA_SA_REF_ID,t.vendor_id,min(ac.CASHFLOW_DATE) as CASHFLOW_DATE 
+        from TMP_OR_PSP t        
+        Inner join S3G_LAD_ACCCASHFLOWDET AC on ac.PA_SA_REF_ID = t.PA_SA_REF_ID 
+        and t.vendor_id = ac.cashflow_entity_code and ac.CASHFLOW_TYPE = 55
+        and CASHFLOW_ENTITY_TYPE = 145
+        Group by ac.PA_SA_REF_ID,t.vendor_id  ) T2 on 
+        (t1.PA_SA_REF_ID = t2.PA_SA_REF_ID and t2.vendor_id = t2.vendor_id)
+        When matched then update set t1.CASHFLOW_DATE = t2.CASHFLOW_DATE;
+        
+        
+  IF(P_IS_EXCEL_EXPRT=1) THEN
+       BEGIN    
+              OPEN P_OUTTBL FOR
+             select RM as "S.No",ACCOUNT_NUMBER as "Account Number",
+              --VENDOR_ID AS "Vendor Id",
+              DEALER_NAME as "Dealer Name",BRANCH_NAME as "Branch",
+              --CREATED_ON AS "Created On",
+             
+              CUSTOMER_NAME as "Customer Name",ASSET_NAME as "Asset",
+              LPO_NUMBER AS "LPO Number",
+              GETUSERDATEFORMAT(LPO_DATE,P_COMPANY_ID) AS "LPO Date",
+              S3G_FN_GETGPSDECIMALFORMAT(LPO_AMOUNT,P_COMPANY_ID) as "LPO Amount",
+              GETUSERDATEFORMAT(CREATION_DATE,P_COMPANY_ID) as "Accounting Date",
+              CASE WHEN CREDIT_DAYS >0 THEN CREDIT_DAYS ELSE 0 END AS"Credit Days",
+              GETUSERDATEFORMAT(CASHFLOW_DATE,P_COMPANY_ID) as "Payment Due Date"
+              FROM TMP_OR_PSP 
+              order by RM
+              
+              ;
+       END;
+  ELSE 
+      BEGIN
+              open P_OUTTBL for
+              select RM as "S.No",ACCOUNT_NUMBER as "Account Number",
+              --VENDOR_ID AS "Vendor Id",
+              DEALER_NAME as "Dealer Name",BRANCH_NAME as "Location",
+              --CREATED_ON AS "Created On",
+             
+              CUSTOMER_NAME as "Customer Name",ASSET_NAME as "Asset",
+              LPO_NUMBER AS "LPO Number",GETUSERDATEFORMAT(LPO_DATE,P_COMPANY_ID) AS "LPO Date",
+              S3G_FN_GETGPSDECIMALFORMAT(LPO_AMOUNT,P_COMPANY_ID) as "LPO Amount",
+              GETUSERDATEFORMAT(CREATION_DATE,P_COMPANY_ID) as "Accounting Date",
+              CASE WHEN CREDIT_DAYS >0 THEN CREDIT_DAYS ELSE 0 END AS"Credit Days",
+              GETUSERDATEFORMAT(CASHFLOW_DATE,P_COMPANY_ID) as "Payment Due Date"
+              FROM TMP_OR_PSP 
+              where RM between (P_CURRENTPAGE-1)* P_PAGESIZE + 1 
+              and (P_CURRENTPAGE)*P_PAGESIZE;
+              select count(1) into P_TotalRecords from TMP_OR_PSP;
+            
+      END;
+END IF;
+END;
+END IF;
+
+IF (P_REPORT_CODE='LPP') THEN
+
+  BEGIN
+    DELETE FROM TMP_OR_LPP;
+    INSERT INTO TMP_OR_LPP
+    SELECT DISTINCT   ROW_NUMBER() OVER (ORDER BY AC.PANUM) AS  RM,AC.PANUM AS ACCOUNT_NUMBER,
+    P.BUSINESS_OFFER_NUMBER AS PRICING_NUMBER ,AP.APPLICATION_NUMBER,
+    PA.APPROVAL_DATE as PRICING_APPROVAL_DATE,
+    AP.APPLICAION_PROCESS_DATE as APPLICATION_DATE,CM.CUSTOMER_CODE||'-'||CM.CUSTOMER_NAME,
+    EM.ENTITY_CODE||'-'||EM.ENTITY_NAME AS DEALER_NAME,DLI.ASSET_VALUE AS ASSET_COST,
+    DLI.MODEL_DESCRIPTION AS ASSET_SHORT_DESCRIPTION
+    FROM S3G_LAD_ACCCREATION AC 
+    JOIN S3G_ORG_APPPROC AP ON AC.APPLICATION_PROCESS_ID=AP.APPLICATION_PROCESS_ID
+    left join S3G_ORG_PRICING P on AP.PRICING_ID=P.PRICING_ID
+    left join  (select PRICING_ID,max(APPROVAL_DATE) as APPROVAL_DATE
+    from s3g_org_pricingapproval PRI 
+    GROUP BY PRICING_ID
+    )PA ON PA.PRICING_ID=AP.PRICING_ID
+    JOIN S3G_LAD_DELIVRYINSTRU DL ON AC.PANUM=DL.PANUM
+    JOIN S3G_LAD_DELIVRYINSTRUDET DLI ON DL.DI_ID=DLI.DELIVERYINSTRUCTION_ID
+    JOIN S3G_ORG_CUSTMASTER CM ON AC.CUSTOMER_ID=CM.CUSTOMER_ID
+    JOIN S3G_LAD_ACCCASHFLOWDET CSH ON AC.PANUM=CSH.PANUM
+    JOIN S3G_ORG_ENTITYMASTER EM ON CSH.CASHFLOW_ENTITY_CODE=EM.ENTITY_ID
+    JOIN S3G_SYSAD_LOCATIONMASTER LM ON AC.LOCATION_CODE=LM.LOCATION_CODE
+    JOIN S3G_SYSAD_LOCATIONCATEGORY LCT ON LM.LOCATION_CATEGORY_ID=LCT.LOCATION_CATEGORY_ID
+    and CSH.CASHFLOW_ENTITY_TYPE=145
+    and DL.DI_DATE between FN_TODATE(P_FROMDATE) and FN_TODATE(P_TODATE)
+    AND AC.LOCATION_CODE=nvl(D_LOCATION_CODE,AC.LOCATION_CODE)
+    AND ac.lob_id=NVL(D_lob_id,ac.lob_id)
+    AND IS_DIGENERATION IS NULL
+--    group by rownum,AC.PANUM,BUSINESS_OFFER_NUMBER,APPLICATION_NUMBER,
+--    CUSTOMER_NAME,APPLICAION_PROCESS_DATE,ENTITY_NAME,ASSET_VALUE,MODEL_DESCRIPTION,CM.CUSTOMER_CODE
+--    ,EM.ENTITY_CODE
+    ;
+    
+    IF(P_IS_EXCEL_EXPRT=1) THEN
+    BEGIN    
+        OPEN P_OUTTBL FOR
+          SELECT RM AS "S.No",ACCOUNT_NUMBER AS "Account Number",PRICING_NUMBER AS "Pricing Number",
+        APPLICATION_NUMBER as "Application Number",
+        GETUSERDATEFORMAT(PRICING_APPROVAL_DATE,P_COMPANY_ID) as "Pricing Approval Date",
+        GETUSERDATEFORMAT(APPLICATION_DATE,P_COMPANY_ID) AS "Appl.Date",
+        CUSTOMER_NAME as "Customer Name",
+        DEALER_NAME AS "Dealer Name",
+        S3G_FN_GETGPSDECIMALFORMAT(ASSET_COST,P_COMPANY_ID) AS "Asset Cost",
+        ASSET_SHORT_DESCRIPTION as "Asset Short Description"
+        from TMP_OR_LPP;
+    END;    
+    ELSE
+    BEGIN
+        open P_OUTTBL for
+        SELECT RM AS "S.No",ACCOUNT_NUMBER AS "Account Number",PRICING_NUMBER AS "Pricing Number",
+        APPLICATION_NUMBER as "Application Number",
+        GETUSERDATEFORMAT(PRICING_APPROVAL_DATE,P_COMPANY_ID) as "Pricing Approval Date",
+        GETUSERDATEFORMAT(APPLICATION_DATE,P_COMPANY_ID) as "Appl.Date",CUSTOMER_NAME as "Customer Name",
+        DEALER_NAME AS "Dealer Name",S3G_FN_GETGPSDECIMALFORMAT(ASSET_COST,P_COMPANY_ID) AS "Asset Cost",
+        ASSET_SHORT_DESCRIPTION as "Asset Short Description"
+        from TMP_OR_LPP
+        where RM between (P_CURRENTPAGE-1)* P_PAGESIZE + 1 and (P_CURRENTPAGE)*P_PAGESIZE;
+         select count(1) into P_TotalRecords from TMP_OR_LPP;
+        
+    END;
+  END IF;
+END;
+END IF;
+
+IF (P_REPORT_CODE='AIC') THEN--
+BEGIN
+  DELETE FROM TMP_OR_AIC;
+  INSERT INTO TMP_OR_AIC
+    SELECT ROWNUM AS RM,AIC.* FROM 
+    (SELECT DISTINCT 
+    CUS.CUSTOMER_CODE,CUS.CUSTOMER_NAME,LCT.LOCATIONCAT_DESCRIPTION AS BRANCH,
+    AM.ASSET_DESCRIPTION as Asset_Desc,ACA.ASSET_COST,
+    case when CSH.CASHFLOW_ENTITY_TYPE=145 then EM.ENTITY_NAME else '' end AS DEALER
+   
+    FROM S3G_LAD_ACCCREATION AC JOIN S3G_ORG_CUSTMASTER CUS ON AC.CUSTOMER_ID=CUS.CUSTOMER_ID
+    JOIN S3G_LAD_ACCPASADET ACP ON AC.PANUM=ACP.PANUM
+    JOIN S3G_LAD_ACCASTDET ACA ON ACP.PA_SA_REF_ID=ACA.PA_SA_REF_ID
+    JOIN S3G_ORG_ASSETMASTER AM ON ACA.ASSET_CODE=AM.ASSET_CODE
+    JOIN S3G_LAD_ACCCASHFLOWDET CSH ON AC.PANUM=CSH.PANUM
+    left join  S3G_ORG_ENTITYMASTER EM ON (CSH.CASHFLOW_ENTITY_CODE=EM.ENTITY_ID and CSH.CASHFLOW_ENTITY_TYPE=145 and CSH.CASHFLOW_TYPE=55)
+    JOIN S3G_SYSAD_LOCATIONMASTER LM ON AC.LOCATION_CODE=LM.LOCATION_CODE
+    JOIN S3G_SYSAD_LOCATIONCATEGORY LCT ON LM.LOCATION_CATEGORY_ID=LCT.LOCATION_CATEGORY_ID
+    where CSH.CASHFLOW_TYPE=55--OutFlow
+    AND 
+    AC.CREATION_DATE BETWEEN FN_TODATE(P_FROMDATE) AND FN_TODATE(P_TODATE)
+    AND PA_STATUS_CODE<>0
+   -- and CSH.PANUM in('ACC17/76','ACC17/77')
+    )AIC;
+    
+ IF(P_IS_EXCEL_EXPRT=1) THEN
+   BEGIN    
+    OPEN 
+    P_OUTTBL FOR
+     select RM as "S.No",CUSTOMER_CODE as "Customer Code",CUSTOMER_NAME as "Customer Name",
+    BRANCH AS "Location",ASSET_DESC AS "Asset Description",
+    S3G_FN_GETGPSDECIMALFORMAT(ASSET_COST,P_COMPANY_ID) as "Asset Cost",DEALER  as "Dealer"
+    FROM TMP_OR_AIC ;  
+   END;
+ELSE 
+  BEGIN
+    --d('Came to AIC ELSE');
+    open P_OUTTBL for
+    select RM as "S.No",CUSTOMER_CODE as "Customer Code",CUSTOMER_NAME as "Customer Name",
+    BRANCH as "Location",ASSET_DESC AS "Asset Description",S3G_FN_GETGPSDECIMALFORMAT(ASSET_COST,P_COMPANY_ID) AS "Asset Cost",DEALER  as "Dealer" 
+    FROM TMP_OR_AIC 
+    where RM between (P_CURRENTPAGE-1)* P_PAGESIZE + 1 and (P_CURRENTPAGE)*P_PAGESIZE;
+     select count(1) into P_TotalRecords from TMP_OR_AIC;
+    RETURN;
+  END;
+  END IF;
+END;
+end if;
+
+IF (P_REPORT_CODE='CIP') THEN
+  BEGIN
+      DELETE FROM TMP_OR_CIP;
+      INSERT INTO TMP_OR_CIP
+      SELECT MT.ROWNUMBER,ASSET_CATEGORY,EXECUTIVE_NAME,
+            Sum(CHECKLIST_ISSUED) as CHECKLIST_ISSUED
+            ,Sum(CHECKLIST_PENDING) as CHECKLIST_PENDING
+            ,Sum(CHECKLIST_CANCELED) as CHECKLIST_CANCELED
+            ,(SUM(CHECKLIST_ISSUED)/
+            (Sum(CHECKLIST_ISSUED)+Sum(CHECKLIST_PENDING)+Sum(CHECKLIST_CANCELED)))*100 AS Conversion
+      FROM 
+      (Select Rownum as ROWNUMBER,LD.lead_id,LD.pricing_id,ld.sales_person 
+             ,um.user_name as Executive_Name
+             ,LP.Name as Asset_Category
+             ,Case when PC.Status_ID=47 then PC.Facility_Amount else Null end as CHECKLIST_ISSUED
+             ,Case when PC.Status_ID=44 then PC.Facility_Amount else Null end as CHECKLIST_PENDING
+             ,Case when PC.Status_ID=120 then PC.Facility_Amount else Null end as CHECKLIST_CANCELED
+      from S3G_CLN_CRM_LEAD LD
+      Left Outer Join S3G_SYSAD_USERMASTER UM on ld.sales_person=um.user_id
+      Left Outer Join S3G_ORG_PRICINGASSETDET PAD on ld.pricing_id=pad.pricing_id
+      Left Outer Join s3g_org_assetmaster AM on pad.asset_code=am.asset_code
+      Left Outer Join S3G_STATUS_LOOKUP LP On am.assettype_id=LP.Id and LP.Type like '%Asset%'
+      LEFT OUTER JOIN S3G_ORG_PRICING PC ON LD.PRICING_ID=PC.PRICING_ID 
+      Where TRUNC(pc.created_on) between FN_TODATE(P_FROMDATE) and FN_TODATE(P_TODATE)
+      )  MT
+      GROUP BY MT.ROWNUMBER,ASSET_CATEGORY,EXECUTIVE_NAME;
+
+  IF(P_IS_EXCEL_EXPRT=0) THEN
+    BEGIN
+          OPEN P_OUTTBL FOR
+          SELECT ROWNUMBER,ASSET_CATEGORY AS "Asset Category",
+          EXECUTIVE_NAME AS "Executive Name",CHECKLIST_ISSUED AS "Checklist Issued",
+          CHECKLIST_PENDING AS "Checklist Pending",
+          CHECKLIST_CANCELED AS "Checklist Cancelled",CONVERSION FROM TMP_OR_CIP;
+    END;
+    ELSE
+    BEGIN
+          OPEN P_OUTTBL FOR 
+          SELECT ROWNUMBER,ASSET_CATEGORY AS "Asset Category",
+          EXECUTIVE_NAME AS "Executive Name",CHECKLIST_ISSUED AS "Checklist Issued",
+          CHECKLIST_PENDING AS "Checklist Pending",
+          CHECKLIST_CANCELED AS "Checklist Cancelled",CONVERSION FROM TMP_OR_CIP
+          WHERE ROWNUMBER BETWEEN (P_CURRENTPAGE-1)* P_PAGESIZE + 1  AND (P_CURRENTPAGE)*P_PAGESIZE; 
+     END; 
+    END IF;
+  END; 
+END IF;
+
+IF (P_REPORT_CODE='CBR') THEN 
+BEGIN
+        DELETE FROM TMP_OR_CBR;
+        INSERT INTO TMP_OR_CBR
+        SELECT ROWNUM AS ROWNUMBER,BIL.LOCATION_NAME AS BRANCH,
+              bil.billing_type as Product
+              ,bh.billing_date as Date1
+              ,bil.debit_amount as Amount 
+        from s3g_lad_billctrldatadet Bil
+        JOIN S3G_LAD_BILLHDR BH ON BIL.BILLING_ID=BH.BILLING_ID
+        WHERE TO_CHAR(BH.BILLING_DATE,'YYYYMM')=TO_CHAR(TO_DATE(P_REPORT_DATE,'DD-MM-YY'),'YYYYMM')
+        AND BIL.BILLING_TYPE IN P_PRODUCT;
+
+IF(P_IS_EXCEL_EXPRT=0) THEN
+BEGIN
+        OPEN P_OUTTBL FOR
+        SELECT ROWNUMBER,BRANCH,PRODUCT,GETUSERDATEFORMAT(DATE1,P_COMPANY_ID)AS DATES,AMOUNT FROM TMP_OR_CBR;
+        
+END;
+ELSE
+BEGIN
+        OPEN P_OUTTBL FOR
+        SELECT ROWNUMBER,BRANCH,PRODUCT,GETUSERDATEFORMAT(DATE1,P_COMPANY_ID)AS DATES,AMOUNT FROM TMP_OR_CBR 
+        WHERE ROWNUMBER BETWEEN (P_CURRENTPAGE-1)* P_PAGESIZE + 1 
+        AND (P_CURRENTPAGE)*P_PAGESIZE; 
+END;
+END IF;
+END;
+END IF;
+
+IF (P_REPORT_CODE='CRER') THEN
+BEGIN 
+        DELETE FROM TMP_OR_CR_EXPIRY;
+        INSERT INTO TMP_OR_CR_EXPIRY
+        SELECT ROWNUM AS ROWNUMBER,CUS.CUSTOMER_CODE,CUS.CUSTOMER_NAME,
+               CASE WHEN GC.IDENTITYVALUES = ' ' THEN '' ELSE GC.IDENTITYVALUES 
+               end as "CR_NUMBER",
+               CUS.CR_EXPIRY_DATE,
+--               CUS.CR_EXPIRY_DATE,CUS.COMM_ADDRESS1||CUS.COMM_ADDRESS2||CUS.COMM_CITY||
+--               CUS.COMM_STATE||CUS.COMM_COUNTRY||CUS.COMM_PINCODE AS "CUSTOMER ADDRESS",
+--               CUS.COMM_TELEPHONE AS "CUSTOMER PHONE NUMBER"
+
+            '' as "CUSTOMER ADDRESS",
+            '' AS "CUSTOMER PHONE NUMBER"
+            
+        FROM S3G_ORG_CUSTMASTER CUS JOIN S3G_DV_GETCUSTCONSTLIST GC
+        ON CUS.CUSTOMER_ID=GC.CUSTOMER_ID
+        WHERE GC.DOCUMENTFLAG='CID-CR'
+        AND CUS.CR_EXPIRY_DATE BETWEEN fn_todate(P_FROMDATE) AND fn_todate(P_TODATE);
+IF(P_IS_EXCEL_EXPRT=0) THEN
+BEGIN
+        OPEN P_OUTTBL FOR
+        SELECT ROWNUMBER,CUSTOMER_CODE AS "Customer Code",CUSTOMER_NAME AS "Customer Name",
+        CR_NUMBER AS "CR Number",GETUSERDATEFORMAT(CR_EXPIRY_DATE,P_COMPANY_ID)AS "CR Expiry Date","CUSTOMER ADDRESS",
+        "CUSTOMER PHONE NUMBER"  FROM TMP_OR_CR_EXPIRY;
+        
+END;
+ELSE 
+BEGIN
+        OPEN P_OUTTBL FOR
+                SELECT ROWNUMBER,CUSTOMER_CODE AS "Customer Code",CUSTOMER_NAME AS "Customer Name",
+        CR_NUMBER AS "CR Number",GETUSERDATEFORMAT(CR_EXPIRY_DATE,P_COMPANY_ID)AS "CR Expiry Date","CUSTOMER ADDRESS",
+        "CUSTOMER PHONE NUMBER"  FROM TMP_OR_CR_EXPIRY
+        WHERE ROWNUMBER BETWEEN                                                 
+          (P_CURRENTPAGE-1)* P_PAGESIZE + 1  AND (P_CURRENTPAGE)*P_PAGESIZE; 
+END;
+END IF;
+END;
+END IF;
+
+IF (P_REPORT_CODE='BFM')  THEN
+Delete From TMP_TEST;
+INSERT INTO TMP_TEST
+
+select distinct TO_NUMBER(TO_CHAR(AC.CREATION_DATE,'YYYY')) as Cut_Off_Date,01 as Start_Date,TO_Char(fn_todate(P_REPORT_DATE),'MM') as End_Date   
+from S3G_LAD_ACCCREATION AC
+inner join S3G_LAD_ACCPASADET PASA ON PASA.PANUM=AC.PANUM
+left join s3g_lad_accastdet ACCASST ON ACCASST.PA_SA_REF_ID=PASA.PA_SA_REF_ID
+left join s3g_org_assetmaster Am on am.ASSET_CODE=ACCASST.ASSET_CODE
+Left Outer Join S3G_ORG_ASSETCATEGORY ACR On am.class_id=ACR.asset_category_id
+where PASA.SA_STATUS_CODE=0
+Order By TO_NUMBER(TO_CHAR(AC.CREATION_DATE,'YYYY')) desc;
+
+
+Select  ''''||Replace(Replace(LISTAGG(to_Char(to_Date(Startd,'MM'),'Mon')||to_Char(Years)||'-'||to_Char(to_Date(Ends,'MM'),'Mon')||to_Char(Years)
+                  || ' as "'||to_Char(to_Date(Startd,'MM'),'Mon')||to_Char(Years)||'-'||to_Char(to_Date(Ends,'MM'),'Mon')||to_Char(Years)
+                  ||'_Amount"') Within Group(Order by Startd) ,' as ',''' as '),',',',''') as Col
+into D_PivotStatement_YA from TMP_TEST;
+
+Select  ''''||Replace(Replace(LISTAGG(to_Char(to_Date(Startd,'MM'),'Mon')||to_Char(Years)||'-'||to_Char(to_Date(Ends,'MM'),'Mon')||to_Char(Years)
+                  || ' as "'||to_Char(to_Date(Startd,'MM'),'Mon')||to_Char(Years)||'-'||to_Char(to_Date(Ends,'MM'),'Mon')||to_Char(Years)
+                  ||'_Unit"') Within Group(Order by Startd) ,' as ',''' as '),',',',''') as Col
+into D_PivotStatement_YU from TMP_TEST;
+
+Select ''''||To_Char(fn_todate(P_REPORT_DATE),'Mon')||To_Char(fn_todate(P_REPORT_DATE),'YYYY')||''''||' AS "'
+       ||To_Char(fn_todate(P_REPORT_DATE),'Mon')||To_Char(fn_todate(P_REPORT_DATE),'YYYY')||'_Amount",'||
+       ''''||To_Char(TO_DAte(To_Number(To_Char(fn_todate(P_REPORT_DATE),'MM'))-1,'MM'),'Mon')||To_Char(fn_todate(P_REPORT_DATE),'YYYY')||''''||' AS "'
+       ||To_Char(TO_DAte(To_Number(To_Char(fn_todate(P_REPORT_DATE),'MM'))-1,'MM'),'Mon')||To_Char(fn_todate(P_REPORT_DATE),'YYYY')||'_Amount"' as Col
+into D_PivotStatement_MA from dual;
+
+Select ''''||To_Char(fn_todate(P_REPORT_DATE),'Mon')||To_Char(fn_todate(P_REPORT_DATE),'YYYY')||''''||' AS "'
+       ||To_Char(fn_todate(P_REPORT_DATE),'Mon')||To_Char(fn_todate(P_REPORT_DATE),'YYYY')||'Unit",'||
+       ''''||To_Char(TO_DAte(To_Number(To_Char(fn_todate(P_REPORT_DATE),'MM'))-1,'MM'),'Mon')||To_Char(fn_todate(P_REPORT_DATE),'YYYY')||''''||' AS "'
+       ||To_Char(TO_DAte(To_Number(To_Char(fn_todate(P_REPORT_DATE),'MM'))-1,'MM'),'Mon')||To_Char(fn_todate(P_REPORT_DATE),'YYYY')||'_Unit"' as Col
+into D_PivotStatement_MU from dual;
+
+d_strQuery := ' Select * from 
+(Select *
+from 
+(select SUM(PASA.FINANCE_AMOUNT) as Amount
+       ,am.asset_description,ACR.asset_category_id
+       ,To_Char(To_Date(1,''MM''),''Mon'')||TO_NUMBER(TO_CHAR(AC.CREATION_DATE,''YYYY''))||''-''||TO_Char(fn_todate('''||P_REPORT_DATE||'''),''Mon'')
+       ||TO_NUMBER(TO_CHAR(AC.CREATION_DATE,''YYYY'')) as Year_Slab
+from S3G_LAD_ACCCREATION AC
+inner join S3G_LAD_ACCPASADET PASA ON PASA.PANUM=AC.PANUM
+left join s3g_lad_accastdet ACCASST ON ACCASST.PA_SA_REF_ID=PASA.PA_SA_REF_ID
+left join s3g_org_assetmaster Am on am.ASSET_CODE=ACCASST.ASSET_CODE
+Left Outer Join S3G_ORG_ASSETCATEGORY ACR On am.class_id=ACR.asset_category_id
+where PASA.SA_STATUS_CODE=0
+and TO_NUMBER(TO_CHAR(AC.CREATION_DATE,''MM'')) between 01 and To_NUmBER(TO_Char(fn_todate('''||P_REPORT_DATE||'''),''MM''))
+group by am.asset_description,ACR.asset_category_id
+,To_Char(To_Date(1,''MM''),''Mon'')||TO_NUMBER(TO_CHAR(AC.CREATION_DATE,''YYYY''))||''-''||TO_Char(fn_todate('''||P_REPORT_DATE||'''),''Mon'')
+   ||TO_NUMBER(TO_CHAR(AC.CREATION_DATE,''YYYY''))
+)  MT
+Pivot(Sum(Amount) For Year_Slab IN ('||D_PivotStatement_YA||'))
+) YA
+Left Outer Join
+(
+Select *
+from 
+(select Sum(ACCASST.unit_count) as Unit
+       ,am.asset_description,ACR.asset_category_id
+       ,To_Char(To_Date(1,''MM''),''Mon'')||TO_NUMBER(TO_CHAR(AC.CREATION_DATE,''YYYY''))||''-''||TO_Char(fn_todate('''||P_REPORT_DATE||'''),''Mon'')
+       ||TO_NUMBER(TO_CHAR(AC.CREATION_DATE,''YYYY'')) as Year_Slab
+from S3G_LAD_ACCCREATION AC
+inner join S3G_LAD_ACCPASADET PASA ON PASA.PANUM=AC.PANUM
+left join s3g_lad_accastdet ACCASST ON ACCASST.PA_SA_REF_ID=PASA.PA_SA_REF_ID
+left join s3g_org_assetmaster Am on am.ASSET_CODE=ACCASST.ASSET_CODE
+Left Outer Join S3G_ORG_ASSETCATEGORY ACR On am.class_id=ACR.asset_category_id
+where PASA.SA_STATUS_CODE=0
+and TO_NUMBER(TO_CHAR(AC.CREATION_DATE,''MM'')) between 01 and To_NUmBER(TO_Char(fn_todate('''||P_REPORT_DATE||'''),''MM''))
+group by am.asset_description,ACR.asset_category_id
+,To_Char(To_Date(1,''MM''),''Mon'')||TO_NUMBER(TO_CHAR(AC.CREATION_DATE,''YYYY''))||''-''||TO_Char(fn_todate('''||P_REPORT_DATE||'''),''Mon'')
+   ||TO_NUMBER(TO_CHAR(AC.CREATION_DATE,''YYYY''))
+)  MT
+Pivot(Sum(Unit) For Year_Slab IN ('||D_PivotStatement_YU||'))
+) YU On YA.asset_category_id=YU.asset_category_id
+Left Outer Join
+(
+Select * from                         
+(select TO_CHAR(AC.CREATION_DATE,''Mon'')||TO_NUMBER(TO_CHAR(AC.CREATION_DATE,''YYYY'')) AS CMONTH 
+       ,Sum(accasst.unit_count) as Unit
+       ,am.asset_description,ACR.asset_category_id
+from S3G_LAD_ACCCREATION AC
+inner join S3G_LAD_ACCPASADET PASA ON PASA.PANUM=AC.PANUM
+left join s3g_lad_accastdet ACCASST ON ACCASST.PA_SA_REF_ID=PASA.PA_SA_REF_ID
+left join s3g_org_assetmaster Am on am.ASSET_CODE=ACCASST.ASSET_CODE
+Left Outer Join S3G_ORG_ASSETCATEGORY ACR On am.class_id=ACR.asset_category_id
+where PASA.SA_STATUS_CODE=0 
+and TO_NUMBER(TO_CHAR(AC.CREATION_DATE,''YYYYMM'')) between (TO_NUMBER(TO_CHAR(fn_todate('''||P_REPORT_DATE||'''),''YYYYMM''))-1) and TO_NUMBER(TO_CHAR(fn_todate('''||P_REPORT_DATE||'''),''YYYYMM''))
+group by TO_CHAR(AC.CREATION_DATE,''Mon'')||TO_NUMBER(TO_CHAR(AC.CREATION_DATE,''YYYY'')),am.asset_description,ACR.asset_category_id
+) UNITM
+Pivot (Sum(Unit) for CMONTH In ('||D_PivotStatement_MU||'))
+)MA On YA.asset_category_id=MA.asset_category_id
+Left Outer Join
+(
+Select * from 
+(select SUM(PASA.FINANCE_AMOUNT) as Amount,TO_CHAR(AC.CREATION_DATE,''Mon'')||TO_NUMBER(TO_CHAR(AC.CREATION_DATE,''YYYY'')) AS CMONTH
+       ,am.asset_description
+       ,ACR.asset_category_id
+from S3G_LAD_ACCCREATION AC
+inner join S3G_LAD_ACCPASADET PASA ON PASA.PANUM=AC.PANUM
+left join s3g_lad_accastdet ACCASST ON ACCASST.PA_SA_REF_ID=PASA.PA_SA_REF_ID
+left join s3g_org_assetmaster Am on am.ASSET_CODE=ACCASST.ASSET_CODE
+Left Outer Join S3G_ORG_ASSETCATEGORY ACR On am.class_id=ACR.asset_category_id
+where PASA.SA_STATUS_CODE=0
+and TO_NUMBER(TO_CHAR(AC.CREATION_DATE,''YYYYMM'')) between (TO_NUMBER(TO_CHAR(fn_todate('''||P_REPORT_DATE||'''),''YYYYMM''))-1) and TO_NUMBER(TO_CHAR(fn_todate('''||P_REPORT_DATE||'''),''YYYYMM''))
+group by TO_CHAR(AC.CREATION_DATE,''Mon'')||TO_NUMBER(TO_CHAR(AC.CREATION_DATE,''YYYY'')),am.asset_description,ACR.asset_category_id
+) AMOUNTM 
+Pivot (Sum(Amount) For CMONTH In ('||D_PivotStatement_MA||'))
+) MU On YA.asset_category_id=MU.asset_category_id
+WHere YA.asset_category_id='||P_Asset_Class||'';
+
+d(d_strQuery);
+
+OPEN P_OUTTBL FOR d_strQuery;
+End IF;
+
+IF (P_REPORT_CODE='DWO') THEN 
+
+      DELETE FROM TMP_OR_DEAL_YEARS;
+      INSERT INTO TMP_OR_DEAL_YEARS
+      SELECT DISTINCT TO_CHAR(HDR.JV_DATE,'YYYY')as Years FROM
+      S3G_JV_HDR HDR
+      JOIN S3G_JV_DET DET
+     ON DET.ACCOUNT_LINK_KEY=HDR.ACCOUNT_LINK_KEY
+      ORDER BY TO_CHAR(HDR.JV_DATE,'YYYY');
+        
+ SELECT ''''||REPLACE(LISTAGG(YEARS) Within Group(Order by YEARS), ',',''',''') ||'''' INTO D_CONDITION FROM TMP_OR_DEAL_YEARS;
+
+D_TBLVALUE := 
+                'SELECT T1.ENTITY_CODE as DEALER_CODE,T1.ENTITY_NAME AS DEALER_NAME,T2.Gross,T1.* FROM (SELECT * FROM 
+                (
+                SELECT EXTRACT(YEAR FROM JV_DATE)as a,TXN_AMOUNT,EM.ENTITY_CODE,EM.ENTITY_NAME
+                FROM S3G_JV_HDR HDR
+                JOIN S3G_JV_DET DET
+                ON DET.ACCOUNT_LINK_KEY=HDR.ACCOUNT_LINK_KEY
+                JOIN S3G_ORG_ENTITYMASTER EM
+                ON DET.SUB_GL_ACCOUNT_NUMBER=EM.ENTITY_CODE
+                )
+                PIVOT 
+                (
+                 SUM(TXN_AMOUNT) FOR A IN (' || D_CONDITION || ')
+                ))T1
+                
+                INNER JOIN
+            
+                (SELECT SUM(TXN_AMOUNT) as Gross ,ENTITY_CODE FROM S3G_JV_HDR HDR
+                JOIN S3G_JV_DET DET
+                ON DET.ACCOUNT_LINK_KEY=HDR.ACCOUNT_LINK_KEY
+                JOIN S3G_ORG_ENTITYMASTER EM
+                ON DET.SUB_GL_ACCOUNT_NUMBER=EM.ENTITY_CODE
+                GROUP BY EM.ENTITY_CODE
+                )T2
+            
+            ON T2.ENTITY_CODE=T1.ENTITY_CODE ';
+           
+OPEN P_OUTTBL FOR D_TBLVALUE;
+END IF;
+--Created By : Anbuvel.T,Date : 19-Dec-2017,Description : Debtors Ledger Report
+IF (P_REPORT_CODE='DBL')  THEN
+  BEGIN
+   DELETE FROM TMP_RPT_DBR_LGR;
+   INSERT INTO TMP_RPT_DBR_LGR(SINO,CUSTOMER_NAME,ACCOUNT_NUMBER,DOCUMENT_DATE,VALUE_DATE,CASH_FLOW_DESC,GL_ACCOUNT,SL_ACCOUNT,DEBIT,CREDIT)
+    SELECT ROWNUM AS SINO,a.*
+FROM (
+Select cm.customer_name
+       ,ds.panum as Account_Number,ds.document_date 
+       ,ds.value_date
+       ,cff.cashflowflag_desc as Cash_Flow_Desc
+       ,ds.gl_account,ds.sl_account
+       ,Case when DS.Transaction_Code =0 then S3G_FN_GETGPSDECIMALFORMAT(Sum(ds.transaction_amount),P_COMPANY_ID) Else S3G_FN_GETGPSDECIMALFORMAT(0,P_COMPANY_ID) End As Debit
+       ,Case When DS.Transaction_Code=1 then S3G_FN_GETGPSDECIMALFORMAT(Sum(ds.transaction_amount),P_COMPANY_ID) Else S3G_FN_GETGPSDECIMALFORMAT(0,P_COMPANY_ID) End As Credit
+from s3g_cln_dmdds4 DS
+Join s3g_org_custmaster CM ON ds.customer_id=cm.customer_id
+join s3g_sysad_lobmaster LM on ds.lob_id=lm.lob_id
+Join s3g_org_cashflowflag CFF on ds.due_flag=cff.cashflow_flag_id
+Where (d_LOB_ID IS NULL OR DS.LOB_ID=d_LOB_ID)
+      AND (D_LOCATION_CODE IS NULL OR DS.LOCATION_CODE=D_LOCATION_CODE)
+      AND trunc(document_date) between trunc(fn_todate(P_FROMDATE)) and trunc( fn_todate(P_TODATE))
+GROUP BY CM.CUSTOMER_NAME,DS.PANUM,DS.DOCUMENT_DATE,DS.VALUE_DATE,DS.GL_ACCOUNT,DS.SL_ACCOUNT,DS.DUE_FLAG,DS.TRANSACTION_CODE,CFF.CASHFLOWFLAG_DESC
+Order By DS.PANUM,DS.DOCUMENT_DATE Asc
+)a;
+      select count(1) into P_TotalRecords from TMP_RPT_DBR_LGR;
+  IF(P_IS_EXCEL_EXPRT=1) THEN
+    BEGIN
+      OPEN P_OUTTBL FOR
+        SELECT SINO "SI NO",
+        CUSTOMER_NAME AS "Customer Name",
+        ACCOUNT_NUMBER AS "Account Number",
+        GETUSERDATEFORMAT(Document_Date,P_COMPANY_ID) AS "Document Date",
+        GETUSERDATEFORMAT(Value_Date,P_COMPANY_ID) AS "Value Date",
+        Cash_Flow_Desc as "Account Description",
+        GL_ACCOUNT as "GL Account",
+        SL_ACCOUNT as "SL Account",
+        DEBIT "Debit",
+        CREDIT "Credit"
+        FROM TMP_RPT_DBR_LGR
+        ORDER BY ACCOUNT_NUMBER,Document_Date
+        ;
+    END;
+  ELSE
+    BEGIN
+       OPEN P_OUTTBL FOR
+        SELECT SINO "SI NO",
+        CUSTOMER_NAME AS "Customer Name",
+        ACCOUNT_NUMBER AS "Account Number",
+        GETUSERDATEFORMAT(Document_Date,P_COMPANY_ID) AS "Document Date",
+        GETUSERDATEFORMAT(Value_Date,P_COMPANY_ID) AS "Value Date",
+        Cash_Flow_Desc as "Account Description",
+        GL_ACCOUNT as "GL Account",
+        SL_ACCOUNT as "SL Account",
+        DEBIT "Debit",
+        CREDIT "Credit"
+        FROM TMP_RPT_DBR_LGR
+        WHERE SINO BETWEEN  (P_CURRENTPAGE-1)* P_PAGESIZE + 1  AND (P_CURRENTPAGE)*P_PAGESIZE
+        ORDER BY ACCOUNT_NUMBER,Document_Date; 
+    END;
+  END IF;     
+  END;
+END IF;
+
+IF (P_REPORT_CODE='DBD')  THEN
+BEGIn
+
+Select ''''|| Replace(   LISTAGG((Cashflowflag_desc||''' as "'|| Cashflowflag_desc ))Within Group(Order by Cashflowflag_desc),',','",''')||'"' as Cash_Flow_Desc 
+Into D_Pivot_Query
+from     
+(Select Distinct cff.cashflowflag_desc      
+from s3g_cln_dmdds4 DS
+Join s3g_org_cashflowflag CFF on ds.due_flag=cff.cashflow_flag_id
+Where trunc(document_date) between trunc(fn_todate(P_FROMDATE)) and trunc( fn_todate(P_TODATE))
+Order by cashflowflag_desc
+) A;
+
+Select 
+LISTAGG('MT."'||Cashflowflag_desc||'"' ) Within Group(Order by Cashflowflag_desc) as Cash_Flow_Desc into D_Pivot_Query1
+from     
+(Select Distinct cff.cashflowflag_desc      
+from s3g_cln_dmdds4 DS
+Join s3g_org_cashflowflag CFF on ds.due_flag=cff.cashflow_flag_id
+Where trunc(document_date) between trunc(fn_todate(P_FROMDATE)) and trunc( fn_todate(P_TODATE))
+Order by cashflowflag_desc
+) A;
+
+d_strQuery := ' 
+ Select ROWNUM as SINO,MT.customer_name,MT.Account_Number,MT.DOCUMENT_Date,MT.Value_Date,MT.document_Number,MT.gl_account
+,MT.sl_account,'||D_Pivot_Query1||'
+from
+(
+Select * from 
+(
+Select cm.customer_name
+       ,ds.panum as Account_Number,GETUSERDATEFORMAT(ds.document_date,'||P_COMPANY_ID||') AS DOCUMENT_Date
+       ,GETUSERDATEFORMAT(ds.value_date,'||P_COMPANY_ID||') as Value_Date,DS.document_Number
+       ,cff.cashflowflag_desc as Cash_Flow_Desc
+       ,ds.gl_account,ds.sl_account,DS.Transaction_Code
+       ,Case when DS.Transaction_Code =0 then ''-''||S3G_FN_GETGPSDECIMALFORMAT(SUm(ds.transaction_amount),'||P_COMPANY_ID||') 
+         Else S3G_FN_GETGPSDECIMALFORMAT(SUm(ds.transaction_amount),'||P_COMPANY_ID||') End As Debit
+from s3g_cln_dmdds4 DS
+Join s3g_org_custmaster CM ON ds.customer_id=cm.customer_id
+join s3g_sysad_lobmaster LM on ds.lob_id=lm.lob_id
+Join s3g_org_cashflowflag CFF on ds.due_flag=cff.cashflow_flag_id
+Where --(d_LOB_ID IS NULL OR DS.LOB_ID=d_LOB_ID)
+      --AND (D_LOCATION_CODE IS NULL OR DS.LOCATION_CODE=D_LOCATION_CODE) AND
+      trunc(document_date) between trunc(fn_todate('''||P_FROMDATE||''')) and trunc( fn_todate('''||P_TODATE||'''))
+GROUP BY CM.CUSTOMER_NAME,DS.PANUM,DS.DOCUMENT_DATE,DS.VALUE_DATE,DS.GL_ACCOUNT,DS.SL_ACCOUNT,DS.DUE_FLAG,DS.TRANSACTION_CODE,CFF.CASHFLOWFLAG_DESC,DS.document_Number
+Order By DS.PANUM,DS.DOCUMENT_DATE Asc
+) A
+Pivot (Sum(Debit) for Cash_Flow_Desc In ('||D_Pivot_Query||'))
+Order By Account_Number,DOCUMENT_Date
+) MT';
+--d(d_strQuery);
+d_strQuery1 :='Select * from (
+Select ROWNUM as SINO,MT.customer_name,MT.Account_Number,MT.DOCUMENT_Date,MT.Value_Date,MT.document_Number,MT.gl_account
+,MT.sl_account,'||D_Pivot_Query1||' from
+(
+Select * from 
+(
+Select cm.customer_name
+       ,ds.panum as Account_Number,GETUSERDATEFORMAT(ds.document_date,'||P_COMPANY_ID||') AS DOCUMENT_Date
+       ,GETUSERDATEFORMAT(ds.value_date,'||P_COMPANY_ID||') as Value_Date,DS.document_Number
+       ,cff.cashflowflag_desc as Cash_Flow_Desc
+       ,ds.gl_account,ds.sl_account,DS.Transaction_Code
+       ,Case when DS.Transaction_Code =0 then ''-''||S3G_FN_GETGPSDECIMALFORMAT(SUm(ds.transaction_amount),'||P_COMPANY_ID||') 
+         Else S3G_FN_GETGPSDECIMALFORMAT(SUm(ds.transaction_amount),'||P_COMPANY_ID||') End As Debit
+from s3g_cln_dmdds4 DS
+Join s3g_org_custmaster CM ON ds.customer_id=cm.customer_id
+join s3g_sysad_lobmaster LM on ds.lob_id=lm.lob_id
+Join s3g_org_cashflowflag CFF on ds.due_flag=cff.cashflow_flag_id
+Where --(d_LOB_ID IS NULL OR DS.LOB_ID=d_LOB_ID)
+      --AND (D_LOCATION_CODE IS NULL OR DS.LOCATION_CODE=D_LOCATION_CODE) AND
+      trunc(document_date) between trunc(fn_todate('''||P_FROMDATE||''')) and trunc( fn_todate('''||P_TODATE||'''))
+GROUP BY CM.CUSTOMER_NAME,DS.PANUM,DS.DOCUMENT_DATE,DS.VALUE_DATE,DS.GL_ACCOUNT,DS.SL_ACCOUNT,DS.DUE_FLAG,DS.TRANSACTION_CODE,CFF.CASHFLOWFLAG_DESC,DS.document_Number
+Order By DS.PANUM,DS.DOCUMENT_DATE Asc
+) A
+Pivot (Sum(Debit) for Cash_Flow_Desc In ('||D_Pivot_Query||'))
+Order By Account_Number,DOCUMENT_Date
+) MT
+) MT1
+WHERE SINO BETWEEN  ('||P_CURRENTPAGE||'-1)* '||P_PAGESIZE||' + 1  AND ('||P_CURRENTPAGE||')*'||P_PAGESIZE||'';
+D(d_strQuery1);
+IF(P_IS_EXCEL_EXPRT=1) THEN
+BEGIN
+OPEN P_OUTTBL FOR d_strQuery;
+END;
+Else 
+
+Begin
+Open P_OUTTBL FOR d_strQuery1;
+END;
+END IF;
+
+END;
+END IF;
+
+END S3G_RPT_GET_ENHNCE;

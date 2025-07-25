@@ -1,0 +1,346 @@
+create or replace
+PROCEDURE "S3G_OR_INS_APPAPPRV" 
+(
+    P_APPLICATION_PROCESS_ID IN NUMBER  
+  , P_APPLICATION_APPROVAL_ID IN NUMBER := Null 
+  , P_APPROVAL_SERIAL_NUMBER IN NUMBER  
+  , P_ACTION_ID IN NUMBER  
+  , P_REMARKS IN VARCHAR2 := Null 
+  , P_PASSWORD IN VARCHAR2  
+  , P_CREATED_BY IN NUMBER  
+  , P_COMPANY_ID IN NUMBER  
+  , P_TOTAL_APPROVAL in number 
+  , P_ERRORCODE OUT NUMBER
+  , P_ACCOUNT_NO OUT VARCHAR2
+  , P_AUTH_RULE_CARD_ID NUMBER := NULL
+   ,P_APPROVAL_DATE VARCHAR2
+   ,P_IS_FORCED_APPROVAL NUMBER
+
+) 
+AS
+   
+    d_Document_Type_Code VARCHAR2(20);         
+    d_LOB_ID NUMBER;          
+    d_Location_Code VARCHAR2(30); 
+    d_Product_ID NUMBER;          
+    d_Constitution_ID NUMBER;          
+    d_Customer_ID NUMBER;          
+    d_Amount NUMBER(10,0); 
+    D_MLA_APPLICABLE NUMBER;
+    d_Program_ID NUMBER := 37; 
+    d_Entity_Type_ID INT; 
+    d_Max_Approval_Seq INT;
+    d_Order_by INT;  
+    d_Approved_Count INT;  
+    d_Approver_Count INT;
+    d_Total_Approval NUMBER;          
+    d_Status_ID NUMBER;  
+    d_Status VARCHAR2(15);    
+    d_Status_local VARCHAR2(15);          
+    d_ApplicationApproval_ID NUMBER;     
+    d_MLA_NUMBER VARCHAR2(100);   
+    d_Approval_No NUMBER;   
+    d_CreateAccount Number;
+    d_Location_ID Number;
+    d_IsMLASLA_Applicable Number;
+    d_EnquiryResponse_ID Number;   
+    
+    d_Customer Number;  
+    d_CreidtType Number;  
+    d_Facility_Amount Number(15,4);   
+    d_Utilized_Amount Number(15,4);   
+    d_Released_Amount Number(15,4);  
+    d_Current_Amount  Number(15,4);   
+    
+    d_AUTH_ID number;  
+    d_Password VARCHAR2(200);
+    d_Tot_Appr_Exists Number;
+    d_TotApprovals Number;
+    d_RecCount Number;
+    d_LEVEL_3OR5_APPROVAL Number;        
+    d_LEVEL4_APPROVAL Number;          
+    d_CURRENT_USERLEVEL Number;           
+    d_COUNT_USERLEVEL Number;
+    d_Approval_Serial_Number Number;
+    d_cust_Id Number;    
+    d_Prgrm_Id Number;       
+    d_Cmpny_Id Number; 
+		d_Pricing_ID Number;
+    d_Count Number;
+    d_Count1 Number;
+    D_Count2 Number;
+    
+    D_Application_Number Varchar2(50);
+    D_Sysdate TIMESTAMP;
+    D_Xml Varchar2(1000);
+    D_Varasr Varchar(8000);
+    d_Final_Sanctioned_Limit Number(15,4);
+    
+    
+    P_APPROVALSTATUS  NUMBER ;
+   
+    
+    
+BEGIN
+/*------------------------------------------------------------------------------
+--Created By  : Sathish R
+--Created Date: 28-Sep-2018
+--Description : To Insert Application Approval details
+
+------------------------------------------------------------------------------*/
+
+
+  D_APPROVAL_SERIAL_NUMBER:=P_APPROVAL_SERIAL_NUMBER;
+  D_TOTAL_APPROVAL:=P_TOTAL_APPROVAL;
+  --D_Approval_No:=P_Approval_No;
+
+     D_Approval_Serial_Number := P_APPROVAL_SERIAL_NUMBER;
+     
+     d_Program_ID := 37;     
+     d_Document_Type_Code :='MLA';         
+     P_APPROVALSTATUS := 0;     
+     
+--     SELECT COUNT(Password) into d_Password From S3G_SYSAD_UserMaster where User_ID=P_Created_By 
+--     and USER_LEVEL_ID in(3,4,5);
+--       --d('hiiiiiii');
+--     If(d_Password <= 0)then
+--        BEGIN          
+--          P_ErrorCode :=5;          
+--          RETURN;          
+--        END;    
+--     END IF;
+     
+    Select Count(Approval_Serial_Number) + 1  into D_Approval_Serial_Number
+    From S3G_ORG_AppApproval App     
+    Where App.Application_Process_ID = P_Application_Process_ID;  
+
+    --begin transaction
+    d_RecCount:= 0;
+    
+    SELECT COUNT(1) INTO d_RecCount 
+    FROM S3G_ORG_AppProc
+    WHERE Application_Process_ID=P_Application_Process_ID;    
+  
+    if(D_RECCOUNT > 0)then
+      BEGIN
+        SELECT LOB_ID,LOCATION_CODE,PRODUCT_ID,CONSTITUTION_ID,CUSTOMER_ID,FINANCE_AMOUNT,MLA_APPLICABLE,APPLICATION_NUMBER,Location_ID
+        INTO d_LOB_ID,d_Location_Code,d_Product_ID,d_Constitution_ID,d_Customer_ID,d_Amount,d_MLA_Applicable,D_Application_Number,D_Location_ID
+        FROM S3G_ORG_AppProc
+        where APPLICATION_PROCESS_ID=P_APPLICATION_PROCESS_ID;
+       end; 
+    END IF;
+    
+    
+    --DP_AUTO_TRAN('Line-S3G_OR_INS_APPAPPRV-Check-1-');
+    --Dp_Auto_Tran('Line-S3G_OR_INS_APPAPPRV-P_Action_ID==>--'||P_Action_ID);
+       
+      begin 
+    
+          SELECT Value,
+          UPPER(NAME)
+          INTO  D_STATUS_ID,
+          D_STATUS 
+          FROM S3G_ORG_LOOKUP WHERE TYPE = 'ORG_APPLICATION_PROCESS_ACTION'
+          and value = P_ACTION_ID;
+        
+      END;
+       
+       
+       if(P_APPLICATION_APPROVAL_ID > 0)then --13 ---IF GETTING HOLD IT'S GOING TO BE UPDATE  
+       begin--PICK APPROVAL SERIAL NO START
+          D_APPLICATIONAPPROVAL_ID := P_APPLICATION_APPROVAL_ID;
+            --Dp_Auto_Tran('Line-S3G_OR_INS_APPAPPRV-P_Application_Approval_ID>0==>--'||P_Application_Approval_ID);
+          SELECT Approval_Serial_Number into d_Approval_Serial_Number
+          FROM S3G_ORG_AppApproval     
+          where APPLICATION_APPROVAL_ID = D_APPLICATIONAPPROVAL_ID;    
+        end;--PICK APPROVAL SERIAL NO END
+       
+        begin---UPDATE
+          UPDATE S3G_ORG_AppApproval 
+          SET Action_ID = P_Action_ID,    
+          Remarks = P_Remarks,
+          Modified_By = P_Created_By,
+          Modified_On = sysdate     
+          where APPLICATION_APPROVAL_ID = D_APPLICATIONAPPROVAL_ID; 
+        end;  
+          
+       ELSE -- 13
+            --Dp_Auto_Tran('Line-S3G_OR_INS_APPAPPRV-INSERT S3g_Org_Appapproval==>--'||P_Application_Approval_ID);
+          begin--S3g_Org_Appapproval Start
+          Insert Into S3g_Org_Appapproval(Application_Approval_Id,
+          Lob_Id,Location_Code,Product_Id,    
+          CONSTITUTION_ID,APPLICATION_PROCESS_ID,APPROVAL_SERIAL_NUMBER,ACTION_ID,    
+          Approver_Id,Approval_Date,Remarks,Company_Id,Created_By,Created_On,LOCATION_ID,IS_FORCED_APPROVAL)         
+          
+          Values(Seq_Org_Appproc.Nextval,D_Lob_Id,D_Location_Code,
+           d_Product_ID,d_Constitution_ID,    
+           P_APPLICATION_PROCESS_ID,D_APPROVAL_SERIAL_NUMBER,P_ACTION_ID,    
+           P_CREATED_BY,Fn_Todate(P_Approval_Date),P_REMARKS,P_COMPANY_ID,P_CREATED_BY,sysdate,D_Location_ID,P_IS_FORCED_APPROVAL);
+           end;
+       END IF; --S3g_Org_Appapproval end
+    
+    
+    
+       
+      if(D_APPROVAL_SERIAL_NUMBER = 1)then
+          begin--update S3G_ORG_AppProc status start
+            --Dp_Auto_Tran('Line-S3G_OR_INS_APPAPPRV-D_APPROVAL_SERIAL_NUMBER-1-UPDATE Auth_ID IN S3G_ORG_AppProc==>--'||D_APPROVAL_SERIAL_NUMBER);
+            UPDATE S3G_ORG_AppProc     
+            SET Auth_ID = P_Auth_Rule_Card_Id     
+            where APPLICATION_PROCESS_ID = P_APPLICATION_PROCESS_ID; 
+            end;--update S3G_ORG_AppProc status end
+      END IF;
+    
+        S3G_OR_Upd_SetCustStatus(d_Customer_ID,d_Program_ID,P_Company_ID);    
+    
+    --Get max of approval no  
+        begin--max approval Update Start
+            SELECT MAX(Approval_Serial_Number) into d_Approval_No
+            FROM S3G_ORG_AppApproval    
+            where APPLICATION_PROCESS_ID = P_APPLICATION_PROCESS_ID;  
+        end;--max approval Update end
+    --Update status in Application Process table 'COMPLETE APPROVED' APPROVED PROCESS 
+    
+    --SET DEFAULT VALUE BEGIN    
+    P_APPROVALSTATUS := 0;  
+      
+      --DP_AUTO_TRAN('D_TOTAL_APPROVAL==>'||D_TOTAL_APPROVAL);
+      --DP_AUTO_TRAN('D_APPROVAL_NO==>'||D_APPROVAL_NO);
+      --DP_AUTO_TRAN('Line-S3G_OR_INS_APPAPPRV-d_Total_Approval = d_Approval_NO');
+      
+    if(D_TOTAL_APPROVAL = D_APPROVAL_NO)then
+    begin
+       --Dp_Auto_Tran('d_Status==>'||d_Status);
+         IF (UPPER(d_Status) = 'APPROVED') THEN   
+              P_ApprovalStatus := 1;  -- FINAL APPROVAL    
+         ELSIF(UPPER(d_Status) = 'REJECTED')THEN    
+              P_ApprovalStatus := 2; -- REJECTED    
+         ELSIF(UPPER(d_Status) = 'HOLD')THEN    
+              P_ApprovalStatus := 3;   --- HOLD    
+         ELSIF(UPPER(d_Status) = 'CANCELLED')THEN   
+             P_ApprovalStatus := 4;   --- CANCELLED    
+         end if;
+       end;
+     END IF;
+     
+     IF (UPPER(D_STATUS) = 'APPROVED') THEN--15
+    -- Dp_Auto_Tran('Line-S3G_OR_INS_APPAPPRV-D_STATUS-APPROVED-');
+    
+    
+      IF(P_IS_FORCED_APPROVAL = 1)THEN
+        BEGIN
+        
+            UPDATE S3G_ORG_APPPROC SET STATUS_ID = P_action_id              
+            where APPLICATION_PROCESS_ID = P_APPLICATION_PROCESS_ID;
+        
+        END;
+        ELSE
+        begin
+    
+        IF (d_Total_Approval = d_Approval_No)THEN --16   
+        
+          D_sysdate := SYSTIMESTAMP;
+          D_varASR := 'Application ' || D_Application_Number || ' Approved. ' || NVL(P_Remarks, ' ');
+          S3g_Common_Createfollowupent(TO_CHAR(D_Sysdate,'MM/DD/YYYY HH12:MI:SS AM'),D_Customer_Id,TO_CHAR(D_Sysdate,'MM/DD/YYYY HH12:MI:SS AM'),
+                    P_Created_By,TO_CHAR(D_Sysdate,'MM/DD/YYYY HH12:MI:SS AM'),D_Xml,Null, Null,
+                    'APP',P_Created_By,P_Company_ID,d_Application_Number,d_varASR);
+          D_Count :=0 ;   
+          select COUNT('x') into D_COUNT from S3G_ORG_APPAPPROVAL     
+          where Application_Process_ID = P_Application_Process_ID and Action_ID in(3,4);--Hold,--Rejected
+          
+          if(D_COUNT > 0)then
+          begin
+            UPDATE S3G_ORG_AppProc 
+            SET ApplicationApproval_Status = NULL     
+            where APPLICATION_PROCESS_ID = P_APPLICATION_PROCESS_ID;  
+            end;
+          END IF;
+          
+          d_count1 :=0 ;
+          SELECT COUNT('x') INTO D_COUNT1  FROM S3G_ORG_APPAPPROVAL     
+          WHERE APPLICATION_PROCESS_ID = P_APPLICATION_PROCESS_ID AND ACTION_ID IN(3,4);--Hold,Rejected
+          
+          if(D_COUNT1 <= 0)then -- 20
+          begin
+            --DP_AUTO_TRAN('Line-S3G_OR_INS_APPAPPRV==>LA_INS_AC_CREAT_AP-Check-2-'||P_APPLICATION_PROCESS_ID);
+            
+            BEGIN--ACCOUNT CREATION START
+                la_ins_ac_creat_ap(p_company_id,p_application_process_id,p_errorcode,P_ACCOUNT_NO);
+                IF(P_ERRORCODE<>0)THEN
+                      return ;
+                END IF;
+            END;--ACCOUNT CREATION END
+             update S3G_ORG_APPPROC 
+             SET STATUS_ID= 2  --,Approved--MLA_Number    
+             Where Application_Process_Id = P_Application_Process_Id; 
+              S3G_SYSAD_TRANS_HISTORY(38,P_Application_Process_Id,D_Application_Number,TO_CHAR(SYSTIMESTAMP,'MM/DD/YYYY'),P_CREATED_BY,5);--Approved
+           end;  
+          END IF;--20
+        
+        
+          
+       ELSIF(D_TOTAL_APPROVAL< D_APPROVAL_NO)then -- 16
+       begin
+          P_ErrorCode := 3;    
+          return; 
+        end;  
+       END IF;--16
+       
+      END;
+    end if;
+
+     ----------------------Update status in Application Process Table 'REJECTED' APPROVED PROCESS   
+     ELSIF(UPPER(d_Status) = 'REJECTED')THEN --15
+          
+          UPDATE S3G_ORG_AppProc
+          SET STATUS_ID = d_Status_ID     
+          WHERE Application_Process_ID = P_Application_Process_ID; 
+          
+          if (D_TOTAL_APPROVAL = D_APPROVAL_NO)then--33
+            begin  
+             D_Sysdate := SYSTIMESTAMP;
+              
+             D_Varasr := 'Application ' || D_Application_Number || ' Rejeced. ' || Nvl(P_Remarks, ' ');
+             
+             S3g_Common_Createfollowupent(TO_CHAR(D_Sysdate,'MM/DD/YYYY HH12:MI:SS AM'),D_Customer_Id,TO_CHAR(D_Sysdate,'MM/DD/YYYY HH12:MI:SS AM'),
+             P_Created_By,TO_CHAR(D_Sysdate,'MM/DD/YYYY HH12:MI:SS AM'),D_Xml,Null, Null,
+             'APP',P_Created_By,P_Company_Id,D_Application_Number,D_Varasr);
+              
+             UPDATE S3G_ORG_APPPROC 
+             SET ApplicationApproval_Status = NULL            
+             where APPLICATION_PROCESS_ID = P_APPLICATION_PROCESS_ID;  
+            end; 
+             
+          else --33
+          begin
+                UPDATE S3G_ORG_AppProc 
+                SET ApplicationApproval_Status = 1    
+                where APPLICATION_PROCESS_ID = P_APPLICATION_PROCESS_ID;  
+           end;     
+          END IF;--33
+          
+       
+      ELSIF(UPPER(D_STATUS) = 'CANCELLED')then --15
+       begin   
+          UPDATE S3G_ORG_AppProc
+          SET STATUS_ID = d_Status_ID     
+          WHERE Application_Process_ID = P_Application_Process_ID; 
+          
+             D_Sysdate := SYSTIMESTAMP;
+             D_Varasr := 'Application ' || D_Application_Number || ' Rejeced. ' || Nvl(P_Remarks, ' ');
+             S3g_Common_Createfollowupent(TO_CHAR(D_Sysdate,'MM/DD/YYYY HH12:MI:SS AM'),D_Customer_Id,TO_CHAR(D_Sysdate,'MM/DD/YYYY HH12:MI:SS AM'),
+             P_Created_By,TO_CHAR(D_Sysdate,'MM/DD/YYYY HH12:MI:SS AM'),D_Xml,Null, Null,
+             'APP',P_Created_By,P_Company_Id,D_Application_Number,D_Varasr);
+          S3G_SYSAD_TRANS_HISTORY(38,P_Application_Process_Id,D_Application_Number,TO_CHAR(SYSTIMESTAMP,'MM/DD/YYYY'),P_CREATED_BY,4);--Approved
+      end;     
+          
+     END IF;--15
+     
+     
+     
+     
+     
+    S3G_SYSAD_TRANS_HISTORY(37,P_Application_Process_ID,D_Application_Number,TO_CHAR(SYSTIMESTAMP,'MM/DD/YYYY'),P_CREATED_BY,2);
+    P_ErrorCode := 0; 
+
+END S3G_OR_INS_APPAPPRV;

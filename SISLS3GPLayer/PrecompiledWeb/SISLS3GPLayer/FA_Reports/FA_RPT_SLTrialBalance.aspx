@@ -1,0 +1,563 @@
+﻿<%@ page title="" language="C#" masterpagefile="~/Common/FAMasterPageCollapse.master" autoeventwireup="true" inherits="Reports_FA_RPT_SLTrialBalance, App_Web_upeq32zu" enableeventvalidation="false" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+    <asp:UpdatePanel ID="update1" runat="server">
+        <ContentTemplate>
+            <div>
+                <div class="row">
+                    <div class="col">
+                        <h6 class="title_name">
+                            <asp:Label runat="server" Text="Group Level Trial Balance" ID="lblHeading" CssClass="styleDisplayLabel">
+                            </asp:Label>
+                        </h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <asp:Panel ID="pnlInput" runat="server" CssClass="stylePanel" GroupingText="Input Details">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                    <div class="md-input">
+                                        <cc1:ComboBox ID="ddlActivity" runat="server" ToolTip="Activity" CssClass="WindowsStyle"
+                                            DropDownStyle="DropDownList" AutoPostBack="true" AppendDataBoundItems="true"
+                                            CaseSensitive="false" AutoCompleteMode="SuggestAppend">
+                                        </cc1:ComboBox>
+                                        <span class="highlight"></span>
+                                        <span class="bar"></span>
+                                        <label class="tess">
+                                            <asp:Label runat="server" ID="lblActivity" CssClass="styleReqFieldLabel" Text="Activity"></asp:Label>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                    <div class="md-input">
+                                        <asp:TextBox ID="txtFrmMonthyr" runat="server" OnTextChanged="txtFrmMonthyr_OnTextChanged"
+                                            AutoPostBack="true" ToolTip="From Month/Year"
+                                            class="md-form-control form-control login_form_content_input requires_true"></asp:TextBox>
+                                        <cc1:CalendarExtender ID="CalendarExtender1" runat="server" PopupButtonID="txtFrmMonthyr"
+                                            BehaviorID="calendar1" Format="yyyyMM" TargetControlID="txtFrmMonthyr" OnClientShown="onCalendarShown">
+                                        </cc1:CalendarExtender>
+                                        <div class="validation_msg_box">
+                                            <asp:RequiredFieldValidator ID="rfvFrmMonthyr" runat="server" ErrorMessage="Select From Month/Year."
+                                                ValidationGroup="btnGo" Display="Dynamic" SetFocusOnError="True"
+                                                ControlToValidate="txtFrmMonthyr" CssClass="validation_msg_box_sapn">
+                                            </asp:RequiredFieldValidator>
+                                        </div>
+                                        <span class="highlight"></span>
+                                        <span class="bar"></span>
+                                        <label class="tess">
+                                            <asp:Label runat="server" Text="From Month/Year" ID="lblFrmMonth" CssClass="styleReqFieldLabel"
+                                                ToolTip="From Month/Year">
+                                            </asp:Label>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                    <div class="md-input">
+                                        <cc1:ComboBox ID="ddlLocation" runat="server" Width="145px" ToolTip="Location" OnTextChanged="ddlLocation_OnTextChanged"
+                                            CssClass="WindowsStyle" DropDownStyle="DropDownList" AutoPostBack="true" AppendDataBoundItems="true"
+                                            CaseSensitive="false" AutoCompleteMode="SuggestAppend">
+                                        </cc1:ComboBox>
+
+                                        <div class="validation_msg_box">
+                                            <asp:RequiredFieldValidator ID="rfvLocation" ValidationGroup="btnGo" CssClass="validation_msg_box_sapn"
+                                                runat="server" ControlToValidate="ddlLocation" SetFocusOnError="True" ErrorMessage="Select Location"
+                                                Display="Dynamic" InitialValue="--Select--">
+                                            </asp:RequiredFieldValidator>
+                                        </div>
+                                        <span class="highlight"></span>
+                                        <span class="bar"></span>
+                                        <label class="tess">
+                                            <asp:Label runat="server" ID="lblLocation" CssClass="styleReqFieldLabel" Text="Location"></asp:Label>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                    <div class="md-input">
+                                        <asp:TextBox ID="txtToMonthyr" runat="server" AutoPostBack="true" OnTextChanged="txtToMonthyr_OnTextChanged"
+                                            ToolTip="To Month/Year" class="md-form-control form-control login_form_content_input requires_true"></asp:TextBox>
+                                        <cc1:CalendarExtender ID="CalendarExtender2" runat="server" BehaviorID="calendar2"
+                                            Format="yyyyMM" TargetControlID="txtToMonthyr" PopupButtonID="txtToMonthyr" OnClientShown="onCalendarShown">
+                                        </cc1:CalendarExtender>
+                                        <div class="validation_msg_box">
+                                            <asp:RequiredFieldValidator ID="rfvToMonthyr" runat="server" ErrorMessage="Select To Month/Year."
+                                                ValidationGroup="btnGo" Display="Dynamic" SetFocusOnError="True" ControlToValidate="txtToMonthyr"
+                                                CssClass="validation_msg_box_sapn">
+                                            </asp:RequiredFieldValidator>
+                                        </div>
+                                        <span class="highlight"></span>
+                                        <span class="bar"></span>
+                                        <label class="tess">
+                                            <asp:Label ID="lblEndMonth" runat="server" Text="To Month/Year" CssClass="styleDisplayLabel"
+                                                ToolTip="To Month/Year">
+                                            </asp:Label>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                    <div class="md-input">
+                                        <cc1:ComboBox ID="cmbgroup" runat="server" Width="145px" ToolTip="Location"
+                                            CssClass="WindowsStyle" DropDownStyle="DropDownList" AutoPostBack="true" AppendDataBoundItems="true"
+                                            CaseSensitive="false" AutoCompleteMode="SuggestAppend">
+                                        </cc1:ComboBox>
+                                        <div class="validation_msg_box">
+                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator1" ValidationGroup="btnGo" CssClass="validation_msg_box_sapn"
+                                                runat="server" ControlToValidate="cmbgroup" SetFocusOnError="True" ErrorMessage="Select Account Code"
+                                                Display="Dynamic" InitialValue="--Select--">
+                                            </asp:RequiredFieldValidator>
+                                        </div>
+                                        <span class="highlight"></span>
+                                        <span class="bar"></span>
+                                        <label class="tess">
+                                            <asp:Label runat="server" ID="Label1" CssClass="styleReqFieldLabel" Text="Account Description"></asp:Label>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                    <div class="md-input">
+                                        <asp:CheckBox ID="chkaccount" Checked="false" runat="server" />
+                                        <span class="highlight"></span>
+                                        <span class="bar"></span>
+
+                                        <asp:Label runat="server" ID="lblcheck" CssClass="styleReqFieldLabel" Text="Display Account Code"></asp:Label>
+                                    </div>
+                                </div>
+                            </div>
+                        </asp:Panel>
+                    </div>
+                </div>
+                <div align="right">
+                    <button class="css_btn_enabled" id="btnGo" onserverclick="btnGo_Click" validationgroup="btnGo" runat="server"
+                        type="button" causesvalidation="true" accesskey="G" title="Go,Alt+G">
+                        <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>&emsp;<u>G</u>o
+                    </button>
+                    <button class="css_btn_enabled" id="btnClear" title="Clear[Alt+L]" onclick="if(fnConfirmClear())" causesvalidation="false" onserverclick="btnClear_Click" runat="server"
+                        type="button" accesskey="L">
+                        <i class="fa fa-eraser" aria-hidden="true"></i>&emsp;C<u>l</u>ear
+                    </button>
+                    <button class="css_btn_enabled" id="btnCancel" title="Cancel[Alt+C]" causesvalidation="false" onserverclick="btnCancel_Click" runat="server"
+                        type="button" accesskey="X">
+                        <i class="fa fa-times" aria-hidden="true"></i>&emsp;<u>C</u>ancel
+                    </button>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <asp:Panel ID="pnlTrialbaldet" runat="server" CssClass="stylePanel" Visible="false"
+                            GroupingText="Trial Balance Details" Width="70%">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="gird">
+                                        <div id="divTrialbaldet" runat="server" style="overflow-x: hidden; overflow-y: auto; height: 200px; display: none; width: 100%">
+
+                                            <asp:GridView ID="grvTrialbaldet" runat="server" AutoGenerateColumns="False" BorderWidth="2"
+                                                Width="96%" ShowFooter="true" ShowHeader="true" OnRowDataBound="grvTrialbaldet_RowDataBound">
+                                                <Columns>
+                                                    <%--<asp:TemplateField HeaderText="Sl.No">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblSlNo" Text='<%#Container.DataItemIndex+1%>' runat="server"  ToolTip="Serial Number" ></asp:Label>
+                                    </ItemTemplate>
+                                    <HeaderStyle CssClass="styleGridHeader" HorizontalAlign="Center" />
+                                    <ItemStyle HorizontalAlign="Left"  />
+                                </asp:TemplateField>--%>
+                                                    <asp:TemplateField HeaderText="Account Code" Visible="false">
+                                                        <ItemTemplate>
+                                                            <asp:Label ID="lblCod" runat="server" Text='<%# Bind("GL_CODE") %>'></asp:Label>
+                                                        </ItemTemplate>
+                                                        <ItemStyle HorizontalAlign="left" />
+                                                    </asp:TemplateField>
+                                                    <asp:TemplateField HeaderText="Account Description">
+                                                        <ItemTemplate>
+
+
+
+                                                            <asp:LinkButton ID="lnkButton" Font-Underline="false" runat="server" Text='<%# DataBinder.Eval(Container.DataItem,"Account_Description")  %>' OnClick="lnkAccount_Click" Visible="true"></asp:LinkButton>
+
+                                                        </ItemTemplate>
+                                                        <ItemStyle Width="25%" HorizontalAlign="left" />
+                                                        <FooterTemplate>
+                                                            <asp:Label ID="lblTotal" runat="server" Text="Total :" />
+                                                        </FooterTemplate>
+
+                                                        <FooterStyle HorizontalAlign="Right" />
+                                                    </asp:TemplateField>
+
+                                                    <%--<asp:TemplateField HeaderText="Account Description">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblAccdesc" runat="server" Text='<%# Bind("Account_Description") %>'
+                                            ToolTip="Account Description"></asp:Label>
+                                    </ItemTemplate>--%>
+                                                    <%-- <FooterTemplate>
+                                        <asp:Label ID="lblTotal" runat="server" Text="Total :" />
+                                    </FooterTemplate>
+                                    <FooterStyle HorizontalAlign="Right" />
+                                </asp:TemplateField>--%>
+                                                    <asp:TemplateField HeaderText="Debit">
+                                                        <ItemTemplate>
+                                                            <asp:Label ID="lblDues" runat="server" Text='<%# Bind("Debit1") %>' ToolTip="Dues"></asp:Label>
+                                                        </ItemTemplate>
+                                                        <ItemStyle HorizontalAlign="Right" Width="12%" />
+                                                        <FooterTemplate>
+                                                            <asp:Label ID="lblAmtDebit" runat="server" Text='<%#Eval("TotalDebit") %>' />
+                                                        </FooterTemplate>
+                                                        <FooterStyle HorizontalAlign="Right" />
+                                                    </asp:TemplateField>
+                                                    <asp:TemplateField HeaderText="Credit">
+                                                        <ItemTemplate>
+                                                            <asp:Label ID="lblReceipts" runat="server" Text='<%# Bind("Credit1") %>' ToolTip="Receipts"></asp:Label>
+                                                        </ItemTemplate>
+                                                        <ItemStyle Width="12%" />
+                                                        <ItemStyle HorizontalAlign="Right" />
+                                                        <FooterTemplate>
+                                                            <asp:Label ID="lblAmtCredit" runat="server" Text='<%#Eval("TotalCredit") %>' />
+                                                        </FooterTemplate>
+                                                        <FooterStyle HorizontalAlign="Right" />
+                                                    </asp:TemplateField>
+                                                    <%--<asp:TemplateField ItemStyle-HorizontalAlign="Center" HeaderText="View Details" HeaderStyle-Width="12%">
+                                    <ItemTemplate>
+                                        <asp:ImageButton ID="imgView" CssClass="styleGridQuery" ImageUrl="~/Images/Blue_2/query_blue.gif"
+                                            runat="server" OnClick="btnView_OnClick" />
+                                        <asp:Label ID="ttView" runat="server"></asp:Label>
+                                    </ItemTemplate>
+                                </asp:TemplateField>--%>
+                                                </Columns>
+                                            </asp:GridView>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </asp:Panel>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <asp:ValidationSummary ID="VSTrialBal" runat="server" CssClass="styleMandatoryLabel"
+                            CausesValidation="true" HeaderText="Correct the following validation(s):" ValidationGroup="btnGo" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <asp:CustomValidator ID="cvTrialBal" runat="server" CssClass="styleMandatoryLabel"
+                            Enabled="true" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <a runat="server" id="lnkButton" visible="false" href="#">link</a>
+                        <cc1:AnimationExtender ID="AnimationExtender2" runat="server" TargetControlID="btnModal">
+                        </cc1:AnimationExtender>
+                        <asp:Panel ID="PnlApprover" runat="server"
+                            Visible="false" BackColor="AliceBlue" Width="450px">
+                            <cc1:PopupControlExtender ID="PopupControlExtenderApprover" runat="server" TargetControlID="lnkButton" Position="Top" OffsetX="-100" OffsetY="-200" PopupControlID="PnlApprover"></cc1:PopupControlExtender>
+
+                            <cc1:DragPanelExtender ID="dre" runat="server" TargetControlID="PnlApprover" Enabled="true"></cc1:DragPanelExtender>
+                            <%-- <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+                        <ContentTemplate>--%>
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="gird">
+                                        <div id="divTransaction" visible="true" class="Container" runat="server" style="height: 200px; overflow: scroll">
+                                            <asp:GridView ID="gtView" Width="100%" runat="server" AutoGenerateColumns="false"
+                                                ShowFooter="false">
+
+                                                <Columns>
+
+                                                    <asp:TemplateField HeaderText="Location">
+                                                        <ItemTemplate>
+                                                            <asp:Label ID="lblView" runat="server" Text='<%# Bind("LocationCat_Description") %>'></asp:Label>
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+
+                                                    <asp:TemplateField HeaderText="Account Code">
+                                                        <ItemTemplate>
+                                                            <asp:Label ID="lblDoc" runat="server" Text='<%# Bind("GL_CODE") %>'></asp:Label>
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                    <%--   <asp:TemplateField HeaderText="SL_CODE">
+                                                    <ItemTemplate>
+                                                    <asp:Label ID="lblCode" runat="server" Text='<%# Bind("SL_CODE") %>'>
+                                                    </asp:Label>
+                                                    </ItemTemplate>
+                                                    </asp:TemplateField>--%>
+                                                    <asp:TemplateField HeaderText="Document Date">
+                                                        <ItemTemplate>
+                                                            <asp:Label ID="lblDocDate" runat="server" Text='<%# Bind("Document_Date") %>'></asp:Label>
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                    <asp:TemplateField HeaderText="DOCNO">
+                                                        <ItemTemplate>
+                                                            <asp:Label ID="lbldoc1" runat="server" Text='<%# Bind("Document_No") %>'>
+                                                            </asp:Label>
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+
+                                                    <asp:TemplateField HeaderText="Debit">
+                                                        <ItemTemplate>
+                                                            <asp:Label ID="lblDebit" runat="server" Text='<%# Bind("Debit") %>'></asp:Label>
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                    <asp:TemplateField HeaderText="Credit">
+                                                        <ItemTemplate>
+                                                            <asp:Label ID="lblCredit" runat="server" Text='<%# Bind("Credit") %>'></asp:Label>
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                </Columns>
+
+                                            </asp:GridView>
+                                            <div align="right">
+                                                <asp:Button ID="btnExcel" runat="server" Text="Excel" Visible="false" CssClass="grid_btn"
+                                                    OnClick="FunnExcelExport" CausesValidation="false" />
+                                                <asp:Button ID="btClose" runat="server" Text="Close" CssClass="grid_btn"
+                                                    OnClick="btnCLose_OnClick" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </asp:Panel>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <asp:Button ID="btnModal" Style="display: none" runat="server" />
+                        <asp:Button ID="btnDrop" Style="display: none" runat="server" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <asp:Button ID="BtnPrint" CssClass="styleSubmitButton" runat="server" Text="Print"
+                            OnClick="BtnPrint_Click" Visible="false" ToolTip="Print" />
+                        <asp:Button ID="Button1" CssClass="styleSubmitButton" runat="server" Text="Excel"
+                            OnClick="Button1_Click" Visible="false" ToolTip="Excel" />
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <script type="text/javascript">
+
+                    var cal1;
+                    var cal2;
+
+                    function pageLoad() {
+                        cal1 = $find("calendar1");
+                        cal2 = $find("calendar2");
+
+                        modifyCalDelegates(cal1);
+                        modifyCalDelegates(cal2);
+                    }
+
+                    function modifyCalDelegates(cal) {
+                        //we need to modify the original delegate of the month cell. 
+                        cal._cell$delegates = {
+                            mouseover: Function.createDelegate(cal, cal._cell_onmouseover),
+                            mouseout: Function.createDelegate(cal, cal._cell_onmouseout),
+
+                            click: Function.createDelegate(cal, function (e) {
+                                /// <summary>  
+                                /// Handles the click event of a cell 
+                                /// </summary> 
+                                /// <param name="e" type="Sys.UI.DomEvent">The arguments for the event</param> 
+
+                                e.stopPropagation();
+                                e.preventDefault();
+
+                                if (!cal._enabled) return;
+
+                                var target = e.target;
+                                var visibleDate = cal._getEffectiveVisibleDate();
+                                Sys.UI.DomElement.removeCssClass(target.parentNode, "ajax__calendar_hover");
+                                switch (target.mode) {
+                                    case "prev":
+                                    case "next":
+                                        cal._switchMonth(target.date);
+                                        break;
+                                    case "title":
+                                        switch (cal._mode) {
+                                            case "days": cal._switchMode("months"); break;
+                                            case "months": cal._switchMode("years"); break;
+                                        }
+                                        break;
+                                    case "month":
+                                        //if the mode is month, then stop switching to day mode. 
+                                        if (target.month == visibleDate.getMonth()) {
+                                            //this._switchMode("days"); 
+                                        } else {
+                                            cal._visibleDate = target.date;
+                                            //this._switchMode("days"); 
+                                        }
+                                        cal.set_selectedDate(target.date);
+                                        cal._switchMonth(target.date);
+                                        cal._blur.post(true);
+                                        cal.raiseDateSelectionChanged();
+                                        break;
+                                    case "year":
+                                        if (target.date.getFullYear() == visibleDate.getFullYear()) {
+                                            cal._switchMode("months");
+                                        } else {
+                                            cal._visibleDate = target.date;
+                                            cal._switchMode("months");
+                                        }
+                                        break;
+
+                                        //                case "day":                                                          
+                                        //                    this.set_selectedDate(target.date);                                                          
+                                        //                    this._switchMonth(target.date);                                                          
+                                        //                    this._blur.post(true);                                                          
+                                        //                    this.raiseDateSelectionChanged();                                                          
+                                        //                    break;                                                          
+                                    case "today":
+                                        cal.set_selectedDate(target.date);
+                                        cal._switchMonth(target.date);
+                                        cal._blur.post(true);
+                                        cal.raiseDateSelectionChanged();
+                                        break;
+                                }
+
+                            })
+                        }
+
+                    }
+
+                    function onCalendarShown(sender, args) {
+                        //set the default mode to month 
+                        sender._switchMode("months", true);
+                        changeCellHandlers(cal1);
+                    }
+
+
+                    function changeCellHandlers(cal) {
+
+                        if (cal._monthsBody) {
+
+                            //remove the old handler of each month body. 
+                            for (var i = 0; i < cal._monthsBody.rows.length; i++) {
+                                var row = cal._monthsBody.rows[i];
+                                for (var j = 0; j < row.cells.length; j++) {
+                                    $common.removeHandlers(row.cells[j].firstChild, cal._cell$delegates);
+                                }
+                            }
+                            //add the new handler of each month body. 
+                            for (var i = 0; i < cal._monthsBody.rows.length; i++) {
+                                var row = cal._monthsBody.rows[i];
+                                for (var j = 0; j < row.cells.length; j++) {
+                                    $addHandlers(row.cells[j].firstChild, cal._cell$delegates);
+                                }
+                            }
+
+                        }
+                    }
+
+                    function onCalendarHidden(sender, args) {
+
+                        if (sender.get_selectedDate()) {
+                            if (cal1.get_selectedDate() && cal2.get_selectedDate() && cal1.get_selectedDate() > cal2.get_selectedDate()) {
+                                alert('Start Month/Year cannot be Greater than the End Month/Year, please reselect!');
+                                sender.show();
+                                return;
+                            }
+                            //get the final date 
+                            var finalDate = new Date(sender.get_selectedDate());
+                            var selectedMonth = finalDate.getMonth();
+                            finalDate.setDate(1);
+                            if (sender == cal2) {
+                                // set the calender2's default date as the last day 
+                                finalDate.setMonth(selectedMonth + 1);
+                                finalDate = new Date(finalDate - 1);
+                            }
+                            //set the date to the TextBox 
+                            sender.get_element().value = finalDate.format(sender._format);
+                        }
+                    }
+
+
+                    function Resize() {
+                        if (document.getElementById('ctl00_ContentPlaceHolder1_divDetails') != null) {
+                            if (document.getElementById('divMenu').style.display == 'none') {
+                                (document.getElementById('ctl00_ContentPlaceHolder1_divDetails')).style.width = screen.width - document.getElementById('divMenu').style.width - 60;
+                            }
+                            else {
+                                (document.getElementById('ctl00_ContentPlaceHolder1_divDetails')).style.width = screen.width - 270;
+                            }
+                        }
+                    }
+
+
+                    function showMenu(show) {
+                        if (show == 'T') {
+
+                            if (document.getElementById('divGrid1') != null) {
+                                document.getElementById('divGrid1').style.width = "800px";
+                                document.getElementById('divGrid1').style.overflow = "scroll";
+                            }
+
+                            document.getElementById('divMenu').style.display = 'Block';
+                            document.getElementById('ctl00_imgHideMenu').style.display = 'Block';
+
+                            document.getElementById('ctl00_imgShowMenu').style.display = 'none';
+                            document.getElementById('ctl00_imgHideMenu').style.display = 'Block';
+
+                            if (document.getElementById('ctl00_ContentPlaceHolder1_divDetails') != null)
+                                (document.getElementById('ctl00_ContentPlaceHolder1_divDetails')).style.width = screen.width - 270;
+                        }
+                        if (show == 'F') {
+                            if (document.getElementById('divGrid1') != null) {
+                                document.getElementById('divGrid1').style.width = "960px";
+                                document.getElementById('divGrid1').style.overflow = "auto";
+                            }
+
+                            document.getElementById('divMenu').style.display = 'none';
+                            document.getElementById('ctl00_imgHideMenu').style.display = 'none';
+                            document.getElementById('ctl00_imgShowMenu').style.display = 'Block';
+
+                            if (document.getElementById('ctl00_ContentPlaceHolder1_divDetails') != null)
+                                (document.getElementById('ctl00_ContentPlaceHolder1_divDetails')).style.width = screen.width - document.getElementById('divMenu').style.width - 60;
+                        }
+                    }
+
+                </script>
+                <script type="text/javascript">
+                    function EnabledParent() {
+                        window.opener.document.body.disabled = true;
+                    }
+                </script>
+                </head>
+
+            <%--<html>
+<body>
+
+
+<div>
+         <input id="txtParent" type="text" />
+        <input id="Button1" type="button" value="Open PopUp"  onclick = "popUp('FA_RPT_TrialBalance.aspx')" /><br />
+        <input id="Button2" type="button" value="Call Child Function" onclick = "callChildFunc()" /><br />
+        <input id="Button4" type="button" value="Get Child Control" onclick = "getChildControl()" /><br />
+        <input id="Button3" type="button" value="Refresh Child" onclick = "refreshChild()" /><br />
+    </div>
+</body>
+</html>--%>
+            </div>
+        </ContentTemplate>
+        <Triggers>
+            <asp:PostBackTrigger ControlID="Button1" />
+        </Triggers>
+    </asp:UpdatePanel>
+
+</asp:Content>
+
+

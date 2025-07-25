@@ -1,0 +1,896 @@
+﻿create or replace
+PROCEDURE "S3G_OR_GET_PRICGDET_PRINT" 
+ (    
+   p_pricing_id Number, 
+   p_company_id number := null,
+   p_mode varchar2 := null,
+   p_Lob_Code varchar2 := null,
+   p_entityid number := null,
+   p_noounits number := null,
+   P_ENTITYTYPE number:=null,
+   p_pricgdet1 out sys_refcursor,
+   P_PRICGDET2 OUT SYS_REFCURSOR,
+   p_PricgDet3 OUT SYS_REFCURSOR,
+   P_PRICGDET4 OUT SYS_REFCURSOR,
+   P_PRICGDET5 OUT SYS_REFCURSOR--,
+   --p_PDC_TEMP OUT SYS_REFCURSOR
+   
+ )    
+as 
+
+  p_getentity number;
+  p_getcustomer number;    
+  p_Program_id Number;
+  p_followup_id number;
+  p_followupid number;
+  P_CUSTOMERID NUMBER;
+  P_ID NUMBER;
+  P_TYPE NUMBER;
+  p_count number;
+  D_Exists Number;
+  D_Prd_Id Number;
+  D_Enq_Res_Id Number;
+  D_PRD_CNT number;
+  D_ASSET_DESCRIPTION varchar(100);
+  D_DYNSTR VARCHAR(5000);
+  D_DYNSTR_INSURANCE CLOB;
+  D_INSURANCE_POLICYNO VARCHAR(5000);
+  D_INSUR_BY VARCHAR(100);
+  
+  D_TD_STYLE VARCHAR(4000);
+  
+  D_CLOB_PDC clob;
+  d_clob_pdc2 clob;
+  d_clob_dummy clob;
+  d_clob_downpayment clob;
+  d_clob_DownPaymenthdr clob;
+  d_Entity_Name VARCHAR(100);
+  
+  D_Finance_Amount Number;
+  d_asset_code varchar(100);
+  d_panum varchar(50);
+  d_count number;
+  
+  P_OFFER_NO varchar(500);
+  D_APPROVAR_NAME varchar(400);
+  D_APPROVER_ID number;
+  D_APPROVAL_SERIAL_NUMBER NUMBER;
+  D_PREV_DISP_ORDER NUMBER;
+  D_AUTO_SEQ NUMBER;
+  D_MAX_R_ID NUMBER;
+  D_DISPLAY_ORDER NUMBER;
+  d_max_display_order number;
+  D_ASSET_ID NUMBER;
+  D_INSURANCE_BY NUMBER;
+  D_INSURANCE_BY_NAME VARCHAR(100);
+  
+BEGIN    
+
+delete from tmp_s3g_org_pricingdprcpt;
+DELETE FROM tmp_documents;
+
+S3G_OR_GET_DOCCTRLNO(P_COMPANY_ID ,'CTN',0,0,0,P_OFFER_NO);
+
+select COUNT(1) into D_COUNT  from S3G_ORG_PRICINGAPPROVAL where PRICING_ID=P_PRICING_ID and ACTION_ID=2;
+
+if(D_COUNT>0)then
+select max(APPROVAL_SERIAL_NUMBER) into d_APPROVAL_SERIAL_NUMBER   from S3G_ORG_PRICINGAPPROVAL where PRICING_ID=p_pricing_id and ACTION_ID=2;
+
+select APPROVER_ID into d_APPROVER_ID from S3G_ORG_PRICINGAPPROVAL where APPROVAL_SERIAL_NUMBER=d_APPROVAL_SERIAL_NUMBER and PRICING_ID=p_pricing_id and ACTION_ID=2;
+
+select USER_NAME into d_approvar_Name from S3G_SYSAD_USERMASTER where USER_ID=d_APPROVER_ID;
+
+end if;
+
+
+
+
+SELECT INSURANCE_BY INTO D_INSURANCE_BY FROM S3G_ORG_PRICING PRI WHERE INSURANCE_BY IS NOT NULL AND PRICING_ID=P_PRICING_ID;
+
+IF(D_INSURANCE_BY>0)THEN
+select name INTO D_INSURANCE_BY_NAME from s3g_org_lookup where type='INSURANCE_BY' AND value=D_INSURANCE_BY  ;
+END IF;
+
+D('D_INSURANCE_BY_NAME==>'||D_INSURANCE_BY_NAME);
+
+select count(1) into d_count from s3g_org_pricing pri
+inner join s3g_org_appproc app
+on app.pricing_id=pri.pricing_id
+inner join s3g_lad_acccreation ac
+on AC.APPLICATION_PROCESS_ID=APP.APPLICATION_PROCESS_ID
+where pri.pricing_id=p_pricing_id and ac.PA_STATUS_CODE<>0 ;
+
+
+
+
+if(d_count>0)then
+select ac.panum into d_panum from s3g_org_pricing pri
+inner join s3g_org_appproc app
+on app.pricing_id=pri.pricing_id
+inner join s3g_lad_acccreation ac
+on AC.APPLICATION_PROCESS_ID=APP.APPLICATION_PROCESS_ID
+where pri.pricing_id=p_pricing_id and ac.PA_STATUS_CODE<>0 and rownum<2;
+end if;
+
+
+
+
+        BEGIN
+        IF(P_LOB_CODE='FT' OR P_LOB_CODE='WC' or P_LOB_CODE='TL')THEN
+        BEGIN
+        null;
+        END;
+        else
+        begin
+       
+       if(P_EntityType=0)then
+          select count(1) into d_count from dv_entity_det where entity_id=p_entityid and entity_type_code='DLR' ; 
+           if(d_count>0)then
+               begin
+                select entity_name into d_entity_name from dv_entity_det where entity_id=p_entityid and entity_type_code='DLR' and rownum<2; 
+               end;
+            end if;
+        end if;
+        
+        
+        insert into tmp_s3g_org_pricingdprcpt(down_pay_amount,receipt_no)
+        Select nvl(Sum(MARGIN_AMOUNT),0),Receipt_No From s3g_org_pricingassetdet Where Pricing_Id=P_Pricing_Id
+        group by Receipt_No;
+        
+        end;
+        
+        
+        
+        end if;
+        end;
+--D_CLOB:='sathish'||'fgh'||'sdfhlskdjfbhksdjfkasdfjlsdjf';
+
+
+
+
+
+ delete from s3g_doc_var;
+ insert into S3G_DOC_VAR(DYNVAR) 
+  select '<TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">          
+<TD style="BORDER-TOP: windowtext 1pt solid; BORDER-RIGHT: windowtext 1pt solid; WIDTH: 112.7pt; BORDER-BOTTOM: windowtext 1pt solid; PADDING-BOTTOM: 0cm; PADDING-TOP: 0cm; PADDING-LEFT: 0cm; BORDER-LEFT: windowtext 1pt solid; PADDING-RIGHT: 0cm; BACKGROUND-COLOR: transparent; mso-border-alt: solid windowtext .25pt" vAlign=top width=150>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; LINE-HEIGHT: normal">
+<SPAN style=''FONT-SIZE: 9pt;FONT-FAMILY: "Courier New"''>
+'
+    ||DBANK.BANK_NAME
+    ||'
+ <?xml:namespace prefix = "o" ns = "urn:schemas-microsoft-com:office:office" />
+<o:p></o:p>
+</SPAN>
+</P>    
+    
+    </TD>'
+    || 
+'<TD style="BORDER-TOP: windowtext 1pt solid; BORDER-RIGHT: windowtext 1pt solid; WIDTH: 112.7pt; BORDER-BOTTOM: windowtext 1pt solid; PADDING-BOTTOM: 0cm; PADDING-TOP: 0cm; PADDING-LEFT: 0cm; BORDER-LEFT: windowtext 1pt solid; PADDING-RIGHT: 0cm; BACKGROUND-COLOR: transparent; mso-border-alt: solid windowtext .25pt" vAlign=top width=150 >
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; LINE-HEIGHT: normal">
+<SPAN style=''FONT-SIZE: 9pt;FONT-FAMILY: "Courier New"''>
+'
+||BANKPLACE.BANKBRANCH_NAME
+||'
+
+    <?xml:namespace prefix = "o" ns = "urn:schemas-microsoft-com:office:office" />
+<o:p></o:p>
+</SPAN>
+</P>     
+    </TD>
+   
+    '
+    || 
+'<TD style="BORDER-TOP: windowtext 1pt solid; BORDER-RIGHT: windowtext 1pt solid; WIDTH: 112.7pt; BORDER-BOTTOM: windowtext 1pt solid; PADDING-BOTTOM: 0cm; PADDING-TOP: 0cm; PADDING-LEFT: 0cm; BORDER-LEFT: windowtext 1pt solid; PADDING-RIGHT: 0cm; BACKGROUND-COLOR: transparent; mso-border-alt: solid windowtext .25pt" vAlign=top width=150 >
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; LINE-HEIGHT: normal">
+<SPAN style=''FONT-SIZE: 9pt;FONT-FAMILY: "Courier New"''>
+    '
+    ||PRPDC.PDC_AMOUNT
+    ||' * '
+    ||case when PRPDC.INSTALLMENT_TO=PRPDC.INSTALLMENT_FROM THEN 1 ELSE PRPDC.INSTALLMENT_TO END
+    ||'
+    
+    <?xml:namespace prefix = "o" ns = "urn:schemas-microsoft-com:office:office" />
+<o:p></o:p>
+</SPAN>
+</P>  
+    </TD>
+</TR>
+' AS TR 
+
+
+  FROM S3G_ORG_PRICINGPDC PRPDC
+  INNER JOIN S3G_CLN_DRAWEEBANKMASTER DBANK
+  ON DBANK.DRAWEEBANKMASTER_ID=PRPDC.DRAWEEBANKMASTER_ID
+  INNER JOIN S3G_CLN_DRAWEEBANKBRANCH BANKPLACE
+  ON BANKPLACE.DRAWEEBANKBRANCH_ID=PRPDC.DRAWEEBANKBRANCH_ID
+  INNER JOIN S3G_ORG_LOOKUP LOOK
+  on (LOOK.value        =PRPDC.IS_SECURITY
+  and look.type         ='PDC CHEQUE TYPE')
+  where prpdc.pricing_id=p_pricing_id;
+--return;
+
+for i in(select DYNVAR from s3g_doc_var)
+loop
+d_clob_pdc:=d_clob_pdc||i.DYNVAR;
+end loop;
+--d(D_CLOB_PDC);
+--select dynvar into d_clob_pdc from s3g_doc_var;
+
+--into D_CLOB_PDC
+
+
+delete from S3G_DOC_VAR;
+insert into S3G_DOC_VAR(DYNVAR) 
+select '<TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">          
+<TD style="BORDER-TOP: windowtext 1pt solid; BORDER-RIGHT: windowtext 1pt solid; WIDTH: 112.7pt; BORDER-BOTTOM: windowtext 1pt solid; PADDING-BOTTOM: 0cm; PADDING-TOP: 0cm; PADDING-LEFT: 0cm; BORDER-LEFT: windowtext 1pt solid; PADDING-RIGHT: 0cm; BACKGROUND-COLOR: transparent; mso-border-alt: solid windowtext .25pt" vAlign=top width=150>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; LINE-HEIGHT: normal">
+<SPAN style=''FONT-SIZE: 9pt;FONT-FAMILY: "Courier New"''>
+'
+    ||PRPDC.DOWN_PAY_AMOUNT
+    ||'
+ <?xml:namespace prefix = "o" ns = "urn:schemas-microsoft-com:office:office" />
+<o:p></o:p>
+</SPAN>
+</P>    
+    
+    </TD>'
+    || 
+'<TD style="BORDER-TOP: windowtext 1pt solid; BORDER-RIGHT: windowtext 1pt solid; WIDTH: 112.7pt; BORDER-BOTTOM: windowtext 1pt solid; PADDING-BOTTOM: 0cm; PADDING-TOP: 0cm; PADDING-LEFT: 0cm; BORDER-LEFT: windowtext 1pt solid; PADDING-RIGHT: 0cm; BACKGROUND-COLOR: transparent; mso-border-alt: solid windowtext .25pt" vAlign=top width=150 >
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; LINE-HEIGHT: normal">
+<SPAN style=''FONT-SIZE: 9pt;FONT-FAMILY: "Courier New"''>
+'
+||PRPDC.RECEIPT_NO
+||'
+
+    <?xml:namespace prefix = "o" ns = "urn:schemas-microsoft-com:office:office" />
+<o:p></o:p>
+</SPAN>
+</P>     
+    </TD>
+   
+    ''
+   
+</TR>
+' AS TR 
+
+
+  from tmp_S3G_ORG_PRICINGDPRCPT PRPDC;
+
+
+for i in(select DYNVAR from s3g_doc_var)
+loop
+d_clob_DownPayment:=d_clob_DownPayment||i.dynvar;
+end loop;
+
+--select DYNVAR into d_clob_DownPayment from S3G_DOC_VAR;
+
+
+
+
+
+
+--d(D_CLOB_PDC);
+
+--return;
+
+
+
+
+
+
+
+
+
+--select PROCEDURE_NAME||'ho' into D_CLOB from s3g_error_log_db where rownum<2;
+
+-- =============================================
+-- Author:  Sathish R(8181)
+-- Create Date: 28-May-2018
+-- Description: To Get Check List For Deal Processing Details                
+-- =============================================
+      OPEN p_pricgdet1 FOR
+      SELECT 'Test' AS ORA_DUMMYTABLE FROM DUAL;  
+      OPEN p_pricgdet2 FOR
+      SELECT 'Test' AS Ora_DummyTable FROM dual;      
+
+      OPEN p_pricgdet3 FOR
+      SELECT 'Test' AS Ora_DummyTable FROM dual;      
+
+      OPEN P_PRICGDET4 FOR
+      SELECT 'Test' AS ORA_DUMMYTABLE FROM DUAL; 
+--      OPEN P_PRICGDET5 FOR
+--      SELECT 'Test' AS ORA_DUMMYTABLE FROM DUAL;  
+
+         
+       begin
+         SELECT INSURANCE_POLICYNO,LOOK.NAME INTO D_INSURANCE_POLICYNO ,D_INSUR_BY
+         FROM S3G_ORG_PRICING PRICING 
+         INNER JOIN S3G_ORG_LOOKUP LOOK
+         ON (LOOK.VALUE=PRICING.INSURANCE_BY AND TYPE='INSURANCE_BY')
+         WHERE PRICING.PRICING_ID=P_PRICING_ID;
+         exception when others then null;
+       end;  
+
+  -- if(D_INSURANCE_POLICYNO is not null)then
+  
+        D_DYNSTR_INSURANCE:='<P>       
+  <TABLE class=MsoTableGrid style="BORDER-TOP: medium none; BORDER-RIGHT: medium none; BORDER-COLLAPSE: collapse; BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; mso-padding-alt: 0cm 5.4pt 0cm 5.4pt; mso-yfti-tbllook: 1184; mso-border-alt: solid windowtext .5pt" cellSpacing=0 cellPadding=0 border=1>      
+  <TBODY>      
+  <TR style="HEIGHT: 16.5pt; mso-yfti-irow: 0; mso-yfti-firstrow: yes; mso-yfti-lastrow: yes">      
+  <TD Style="border:none"> 
+  <P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; LINE-HEIGHT: normal">
+<SPAN style=''FONT-SIZE: 9pt;FONT-FAMILY: "Courier New"''>
+  
+  Cover Note No:='||D_INSURANCE_POLICYNO||
+  '
+   <?xml:namespace prefix = "o" ns = "urn:schemas-microsoft-com:office:office" />
+<o:p></o:p>
+</SPAN>
+</P>  
+  </TD>      
+  </TR>      
+  </TBODY>      
+  </TABLE>      
+  <TABLE class=MsoTableGrid style="BORDER-TOP: medium none; BORDER-RIGHT: medium none; BORDER-COLLAPSE: collapse; BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; mso-padding-alt: 0cm 5.4pt 0cm 5.4pt; mso-yfti-tbllook: 1184; mso-border-alt: solid windowtext .5pt" cellSpacing=0 cellPadding=0 border=1>      
+  <TBODY>      
+  <TR style="HEIGHT: 16.5pt; mso-yfti-irow: 0; mso-yfti-firstrow: yes; mso-yfti-lastrow: yes">      
+  <TD Style="border:none">  
+  <P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; LINE-HEIGHT: normal">
+<SPAN style=''FONT-SIZE: 9pt;FONT-FAMILY: "Courier New"''>
+  STF 
+    <?xml:namespace prefix = "o" ns = "urn:schemas-microsoft-com:office:office" />
+<o:p></o:p>
+</SPAN>
+</P>  
+  </TD>            
+  
+  <TD style="BORDER-TOP: windowtext 1pt solid; HEIGHT: 16.5pt; BORDER-RIGHT: windowtext 1pt solid; WIDTH: 18.25pt; BORDER-BOTTOM: windowtext 1pt solid; PADDING-BOTTOM: 0cm; PADDING-TOP: 0cm; PADDING-LEFT: 5.4pt; BORDER-LEFT: windowtext 1pt solid; PADDING-RIGHT: 5.4pt; BACKGROUND-COLOR: transparent; mso-border-alt: solid windowtext .5pt" vAlign=top width=24>      
+  <P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; LINE-HEIGHT: normal"><?xml:namespace prefix = "o" ns = "urn:schemas-microsoft-com:office:office" /><o:p><FONT face=Calibri>&nbsp;</FONT></o:p>      
+  </P>      
+  </TD>      
+  <TD Style="border:none">    
+   <P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; LINE-HEIGHT: normal">
+<SPAN style=''FONT-SIZE: 9pt;FONT-FAMILY: "Courier New"''>
+  Cash Receipt  
+   <?xml:namespace prefix = "o" ns = "urn:schemas-microsoft-com:office:office" />
+<o:p></o:p>
+</SPAN>
+</P>  
+  </TD>      
+  <TD style="BORDER-TOP: windowtext 1pt solid; HEIGHT: 5.5pt; BORDER-RIGHT: windowtext 1pt solid; WIDTH: 18.25pt; BORDER-BOTTOM: windowtext 1pt solid; PADDING-BOTTOM: 0cm; PADDING-TOP: 0cm; PADDING-LEFT: 5.4pt; BORDER-LEFT: windowtext 1pt solid; PADDING-RIGHT: 5.4pt; BACKGROUND-COLOR: transparent; mso-border-alt: solid windowtext .5pt" vAlign=top width=5>      
+  <P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; LINE-HEIGHT: normal"><?xml:namespace prefix = "o" ns = "urn:schemas-microsoft-com:office:office" /><o:p><FONT face=Calibri>&nbsp;</FONT></o:p>      
+  </P>      
+  </TD>            
+  
+  </TR>      
+  </TBODY>      
+  </TABLE>      
+  </P>'
+  ; 
+
+--end if;
+
+
+select 
+
+
+'<TABLE class=MsoTableGrid style="BORDER-TOP: medium none; BORDER-RIGHT: medium none; BORDER-COLLAPSE: collapse; BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; mso-yfti-tbllook: 1184; mso-padding-alt: 0cm 0cm 0cm 0cm; mso-border-insideh: .25pt solid windowtext; mso-border-insidev: .25pt solid windowtext; mso-border-alt: solid windowtext .25pt" cellSpacing=0 cellPadding=0 border=1>          
+<TBODY>          
+<TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">          
+<TD style="BORDER-TOP: windowtext 1pt solid; BORDER-RIGHT: windowtext 1pt solid; WIDTH: 112.7pt; BORDER-BOTTOM: windowtext 1pt solid; PADDING-BOTTOM: 0cm; PADDING-TOP: 0cm; PADDING-LEFT: 0cm; BORDER-LEFT: windowtext 1pt solid; PADDING-RIGHT: 0cm; BACKGROUND-COLOR: transparent; mso-border-alt: solid windowtext .25pt" vAlign=top width=150  colSpan=3>          
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; LINE-HEIGHT: normal">
+<SPAN style=''FONT-SIZE: 9pt;FONT-FAMILY: "Courier New"''>
+
+
+Start Date             : '
+  ||
+  (SELECT PDC_STARTDATE FROM s3g_org_pricing WHERE PRICING_ID=p_pricing_id
+  )
+  ||'
+  
+<?xml:namespace prefix = "o" ns = "urn:schemas-microsoft-com:office:office" />
+<o:p></o:p>
+</SPAN></P>  
+</TD>                            
+</TR>
+
+         
+<TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">          
+<TD style="BORDER-TOP: windowtext 1pt solid; BORDER-RIGHT: windowtext 1pt solid; WIDTH: 112.7pt; BORDER-BOTTOM: windowtext 1pt solid; PADDING-BOTTOM: 0cm; PADDING-TOP: 0cm; PADDING-LEFT: 0cm; BORDER-LEFT: windowtext 1pt solid; PADDING-RIGHT: 0cm; BACKGROUND-COLOR: transparent; mso-border-alt: solid windowtext .25pt" vAlign=top width=150 >
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; LINE-HEIGHT: normal">
+<SPAN style=''FONT-SIZE: 9pt;FONT-FAMILY: "Courier New"''>
+Bank
+<?xml:namespace prefix = "o" ns = "urn:schemas-microsoft-com:office:office" />
+<o:p></o:p>
+</SPAN>
+</P> 
+</TD> 
+
+
+
+<TD style="BORDER-TOP: windowtext 1pt solid; BORDER-RIGHT: windowtext 1pt solid; WIDTH: 112.7pt; BORDER-BOTTOM: windowtext 1pt solid; PADDING-BOTTOM: 0cm; PADDING-TOP: 0cm; PADDING-LEFT: 0cm; BORDER-LEFT: windowtext 1pt solid; PADDING-RIGHT: 0cm; BACKGROUND-COLOR: transparent; mso-border-alt: solid windowtext .25pt" vAlign=top width=150>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; LINE-HEIGHT: normal">
+<SPAN style=''FONT-SIZE: 9pt;FONT-FAMILY: "Courier New"''>
+Branch
+<?xml:namespace prefix = "o" ns = "urn:schemas-microsoft-com:office:office" />
+<o:p></o:p>
+</SPAN>
+</P> 
+</TD>  
+
+<TD style="BORDER-TOP: windowtext 1pt solid; BORDER-RIGHT: windowtext 1pt solid; WIDTH: 112.7pt; BORDER-BOTTOM: windowtext 1pt solid; PADDING-BOTTOM: 0cm; PADDING-TOP: 0cm; PADDING-LEFT: 0cm; BORDER-LEFT: windowtext 1pt solid; PADDING-RIGHT: 0cm; BACKGROUND-COLOR: transparent; mso-border-alt: solid windowtext .25pt" vAlign=top width=150>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; LINE-HEIGHT: normal">
+<SPAN style=''FONT-SIZE: 9pt;FONT-FAMILY: "Courier New"''>
+Structure
+<?xml:namespace prefix = "o" ns = "urn:schemas-microsoft-com:office:office" />
+<o:p></o:p>
+</SPAN>
+</P> 
+
+
+</TD>   
+</TR>
+'
+  ||D_CLOB_PDC||
+  
+  '          
+</TBODY>          
+</TABLE>'
+
+
+into D_CLOB_PDC2 from dual;
+
+
+
+
+
+select 
+
+
+'<TABLE class=MsoTableGrid style="BORDER-TOP: medium none; BORDER-RIGHT: medium none; BORDER-COLLAPSE: collapse; BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; mso-yfti-tbllook: 1184; mso-padding-alt: 0cm 0cm 0cm 0cm; mso-border-insideh: .25pt solid windowtext; mso-border-insidev: .25pt solid windowtext; mso-border-alt: solid windowtext .25pt" cellSpacing=0 cellPadding=0 border=1>          
+<TBODY>          
+
+         
+<TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">          
+
+
+
+
+<TD style="BORDER-TOP: windowtext 1pt solid; BORDER-RIGHT: windowtext 1pt solid; WIDTH: 112.7pt; BORDER-BOTTOM: windowtext 1pt solid; PADDING-BOTTOM: 0cm; PADDING-TOP: 0cm; PADDING-LEFT: 0cm; BORDER-LEFT: windowtext 1pt solid; PADDING-RIGHT: 0cm; BACKGROUND-COLOR: transparent; mso-border-alt: solid windowtext .25pt" vAlign=top width=150>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; LINE-HEIGHT: normal">
+<SPAN style=''FONT-SIZE: 9pt;FONT-FAMILY: "Courier New"''>
+DwonPayment Amount
+<?xml:namespace prefix = "o" ns = "urn:schemas-microsoft-com:office:office" />
+<o:p></o:p>
+</SPAN>
+</P> 
+</TD>  
+
+<TD style="BORDER-TOP: windowtext 1pt solid; BORDER-RIGHT: windowtext 1pt solid; WIDTH: 112.7pt; BORDER-BOTTOM: windowtext 1pt solid; PADDING-BOTTOM: 0cm; PADDING-TOP: 0cm; PADDING-LEFT: 0cm; BORDER-LEFT: windowtext 1pt solid; PADDING-RIGHT: 0cm; BACKGROUND-COLOR: transparent; mso-border-alt: solid windowtext .25pt" vAlign=top width=150>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; LINE-HEIGHT: normal">
+<SPAN style=''FONT-SIZE: 9pt;FONT-FAMILY: "Courier New"''>
+Receipt
+<?xml:namespace prefix = "o" ns = "urn:schemas-microsoft-com:office:office" />
+<o:p></o:p>
+</SPAN>
+</P> 
+
+
+</TD>   
+</TR>
+'
+  ||d_clob_DownPayment||
+  
+  '          
+</TBODY>          
+</TABLE>'
+
+
+into d_clob_DownPaymenthdr from dual;
+
+
+
+--D('D_DYNSTR=====>'||D_DYNSTR);
+--return;
+
+
+          SELECT COUNT(1)
+          INTO p_count
+          FROM S3G_ORG_PRICINGASSETDET PRCAST
+          inner join s3g_org_assetmaster astmstr
+          ON PRCAST.ASSET_id=ASTMSTR.ASSET_id
+          WHERE PRICING_ID    =P_PRICING_ID
+          and PRCAST.ENTITY_ID=p_entityid
+          ; 
+
+                  
+          IF(P_COUNT>0)THEN
+            begin
+             SELECT max(nvl(PRCAST.FINANCE_AMOUNT,0)),Astmstr.Asset_Code,Astmstr.asset_id into d_FINANCE_AMOUNT,d_Asset_Code,d_Asset_id
+            
+              FROM S3G_ORG_PRICINGASSETDET PRCAST
+              inner join s3g_org_assetmaster astmstr
+              ON PRCAST.ASSET_id=ASTMSTR.ASSET_id
+              Where Pricing_Id    =P_Pricing_Id
+              And Prcast.Entity_Id=P_Entityid
+              and rownum<2
+              group by Astmstr.Asset_Code,Astmstr.asset_id
+              ;
+         
+            
+            
+            
+            
+              SELECT ASSET_DESCRIPTION
+              INTO D_ASSET_DESCRIPTION
+              FROM S3G_ORG_PRICINGASSETDET PRCAST
+              inner join s3g_org_assetmaster astmstr
+              ON PRCAST.ASSET_id=ASTMSTR.ASSET_id
+              where pricing_id    =p_pricing_id
+              and prcast.entity_id=p_entityid
+              and  ASTMSTR.Asset_id=d_Asset_id
+              AND ROWNUM          <2 ;
+            END;
+          END IF;
+
+               
+
+
+
+
+
+
+    
+        --Main tab pages 
+        open p_pricgdet1 for
+        select 
+        distinct
+          case 
+          when pricing.lob_id=1 then 'Vehicle Type' 
+          when pricing.lob_id=2 then 'Type of Asset' 
+          when pricing.lob_id=3 then 'Item Type'
+          else
+          ''
+          end as "VTPY"
+          , 
+          PRICING.CUSTOMER_ID,    
+          customer.customer_name  "NameOfHir",    
+          CUSTOMER.CUSTOMER_NAME || ' -- '||CUSTOMER.CUSTOMER_CODE AS CUSTOMER_CODE,
+          title.name || customer.customer_name as customer_name,GETUSERDATEFORMAT(Offer_Date,P_COMPANY_ID) as "Date",                                                                                                                     
+          Pricing.LOB_ID,    
+          Pricing.Tenure,    
+          Pricing.Tenure_Type,    
+          LOB_Code ||' - '|| LOB_Name AS LOB,    
+          Pricing.Product_ID,    
+          Product_Code||' - '|| Product_Name AS PRODUCT,    
+          LocM.Location_ID,
+          LOCC.LOCATIONCAT_DESCRIPTION AS LOCATION, 
+          s3g_fn_getgpsdecimalformat(pricing.facility_amount,p_company_id) as facility_amount,  --5366  
+          pricing.constitution_id,    
+          pricing.business_offer_number as "ProposalNo",    
+          TO_CHAR(CONSMAS.CONSTITUTION_CODE) || ' - ' || CONSMAS.CONSTITUTION_NAME as CONSITUTION,    
+          rownum as "R",    
+          Status_Id,
+         
+         GETUSERDATEFORMAT(DATEOFBIRTH,P_COMPANY_ID) DATEOFBIRTH,
+         PRICING.SUB_LOCATION_ID,
+         PRICING.CUSTOMER_TYPE,
+         PRICING.CONTRACT_TYPE,
+         PRICING.DEAL_TYPE,
+         PRICING.DEALER_ID,
+         DVENT.ENTITY_NAME as "DealerName",
+         PRICING.SALES_PERSON_ID,
+         UM.USER_NAME as Sales_Person_Name,
+         PRICING.DEALER_SALESPERSON_ID,
+         DVDESLPERSION.ENTITY_NAME as Dealer_Sales_Persion,
+         PRICING.SELLER_NAME,
+         PRICING.SELLER_ID,
+         PRICING.INSURANCE_BY,
+         PRICING.INSURANCE_COVERAGE,
+         PRICING.INSURANCE_POLICYNO,
+         PRICING.INSURANCE_REMARKS,
+         PRICING.INSURER,
+         DVDENTINSURAR.ENTITY_NAME AS INSURER_NAME,
+         PRICING.NO_OF_PDC,
+         GETUSERDATEFORMAT(PRICING.PDC_STARTDATE,P_COMPANY_ID) AS PDC_STARTDATE,
+         '' ACCOUNTNUMBER,
+         PRICING.STATUS_ID,
+         upper(CM.COMPANY_NAME) AS "CompanyName",
+         DVCOMADDR.OFFICE_PHONE_NO AS "TelNo",
+         DVCOMADDR.OFFICE_FAX_NO as "FaxNo",
+         locc.locationcat_description as "MLocation",
+         FN_GET_LOCATIONNAME(pricing.SUB_LOCATION_ID)   as "SubLocation",
+         D_ASSET_DESCRIPTION as "TpAst",
+         D_ENTITY_NAME AS "Dlrnam",
+         LOOKDEAL.NAME as "RefBy" ,
+         p_noounits as "NOOfUnits",
+         chklststs.name as "Status",
+         D_PANUM as  "AccNo",
+         GETUSERDATEFORMAT(sysdate,P_COMPANY_ID) as "datetime",
+         UMCREATED_BY.USER_NAME  as "PreparedBy",
+         d_approvar_Name as "AuthorizedBy",
+         P_OFFER_NO as "Sno",
+         PRICING.GEN_REMARKS "Remarks"
+       
+         
+         from s3g_org_pricing pricing 
+         INNER JOIN S3G_ORG_CustMaster Customer ON Customer.Customer_ID=Pricing.Customer_ID    
+         INNER JOIN S3G_SYSAD_LOBMASTER LOB ON LOB.LOB_ID=Pricing.LOB_ID    
+         Inner Join S3g_Sysad_Productmaster Product On Product.Product_Id=Pricing.Product_Id    
+         inner join S3G_SYSAD_LocationMaster LocM on LocM.LOCATION_ID = Pricing.LOCATION_ID
+         inner join S3G_SYSAD_LocationCategory Locc on locc.location_category_id=locm.location_category_id      
+         inner join  s3g_org_constmast consmas on consmas.constitution_id=customer.constitution_id   
+         inner join s3g_status_lookup title on title.id=customer.title_id 
+         left JOIN DV_ENTITY_DET DVENT 
+         ON (DVENT.ENTITY_ID=PRICING.DEALER_ID AND DVENT.ENTITY_TYPE=PRICING.DEAL_TYPE)
+         inner JOIN S3G_SYSAD_USERMASTER UM
+         on um.user_id=pricing.sales_person_id
+         left JOIN DV_ENTITY_DET DVDESLPERSION 
+         ON (DVDESLPERSION.ENTITY_ID=PRICING.DEALER_SALESPERSON_ID 
+         AND DVDESLPERSION.ENTITY_TYPE=38)
+         left JOIN DV_ENTITY_DET DVDENTINSURAR
+         ON (DVDENTINSURAR.ENTITY_ID=PRICING.INSURER 
+         AND DVDENTINSURAR.ENTITY_TYPE=11)
+         INNER JOIN S3G_ORG_LOOKUP CHKLSTSTS
+         ON (CHKLSTSTS.VALUE=PRICING.STATUS_ID AND CHKLSTSTS.TYPE='ORG_APPLICATION_PROCESS_ACTION')
+         INNER JOIN S3G_SYSAD_COMPANYMASTER CM
+         ON CM.COMPANY_ID=PRICING.COMPANY_ID
+         inner JOIN S3G_DV_COMPANY_ADDRESSS DVCOMADDR
+         ON DVCOMADDR.COMPANY_ID=CM.COMPANY_ID
+         INNER JOIN S3G_SA_VW_LOCATIONCATEGORY MAINLOCATION
+         on MAINLOCATION.LOCATION_CATEGORY_ID=PRICING.LOCATION_ID
+         
+     
+         
+         inner join s3g_sysad_usermaster umcreated_by
+         on UMCREATED_BY.USER_ID=PRICING.CREATED_BY
+         inner join S3G_ORG_LOOKUP LOOKDEAL
+         on (LOOKDEAL.value=PRICING.DEAL_TYPE and  LOOKDEAL.type='DEAL TYPE')
+         left join S3G_SYSAD_USERMASTER UMAUTH
+         on UMAUTH.CREATED_BY=pricing.auth_id
+        
+         where pricing_id= p_pricing_id  and title.type='TITLE'
+       --  AND DVENT.PROGRAM_ID=42 AND DVDESLPERSION.PROGRAM_ID=42
+         
+         ;  
+   
+      --Alerts Details  
+      Open p_pricgdet2 For
+       SELECT     
+        Alerts_Type AS TypeId,Status.Name AS Type,Alerts_UserContact AS UserContactId,    
+        user_code||' - '||user_name as usercontact,
+        case when alerts_sms = 1 then 'True' else 'False' end as email,    
+        case when alerts_email = 1 then 'True' else 'False' end  as sms        
+        FROM S3G_ORG_PricingAlertDet ALERT
+       INNER JOIN S3G_Status_LookUP STATUS ON     
+       STATUS.ID=ALERT.Alerts_Type    
+       INNER JOIN S3G_SYSAD_UserMaster USR ON    
+       USR.User_ID=ALERT.Alerts_UserContact    
+       where status.type='ALERT_TYPE'    
+       And  Pricing_ID = p_Pricing_ID;    
+        
+     
+   
+    
+           OPEN p_pricgdet3 FOR SELECT rownum
+        AS
+          Sl_No, ' '
+        AS
+          Application_Process_Asset_ID, prcast.asset_id, AstMstr.Asset_Code 
+        AS
+          Asset_Code, Required_From
+        AS
+          Required_FromDate, No_Of_Units
+        AS
+          Noof_units, Unit_Value, (NVL(Unit_Value,0)*NVL(No_Of_Units,0))
+        AS
+          AssetValue, Finance_Amount, Capital_Portion, Non_Capital_Portion
+        AS
+          NonCapital_Portion, pay_to, ' '
+        AS
+          Pay_ID, Payment_Percentage, NVL(Margin_Percentage,0)
+        AS
+          "Margin_Percentage" , NVL(Margin_Amount,0)
+        AS
+          Margin_Amount, NVL(Book_Depreciation_Percentage,0)
+        AS
+          Book_Depreciation_Percentage , NVL(Block_Depreciation_Percentage,0)
+        AS
+          Block_Depreciation_Percentage, ' '
+        AS
+          entity_code, ' '
+        AS
+          Entity_ID, ' '
+        AS
+          isproforma, ' '
+        AS
+          IS_PROFORMA ,
+         PRCAST.MARGIN_TO_DEALER AS "Margin_Dealer",
+         PRCAST.MARGIN_TO_COMPANY AS "Margin_MFC",
+         PRCAST.TRADE_IN as "Trade_In",
+         '' ISOWNASSET,
+         '' STATUS_DESC,
+         '' STATUS_CODE,
+         '' STATUS,
+          PRCAST.PAY_TO AS "pay_to",
+          PRCAST.PAY_TYPE AS "paytype",
+          PRCAST.ENTITY_ID AS "pay_id",
+          PrcAst.PAY_Name  as "payname"  
+         
+          FROM S3G_ORG_PRICINGASSETDET PRCAST 
+          INNER JOIN S3G_ORG_ASSETMASTER ASTMSTR 
+          ON PRCAST.ASSET_CODE=ASTMSTR.ASSET_CODE 
+          WHERE Pricing_ID=p_Pricing_ID;    
+  
+    -- OPEN P_PRICGDET4 FOR
+     
+     insert into tmp_documents
+     (
+      R_ID,
+      prddc_doc_cat_id,
+      docrcq,
+      docrec,
+      particulars,
+      pdc,
+      priority_type,
+      DISPLAY_ORDER,
+      COLLECTED_DATE,
+      R2,
+      RECEIVER_SIGN
+     )
+     
+  SELECT rownum        AS "R",
+  PRPD.PRDDC_DOC_CAT_ID                                    AS "PRDDC_Doc_Cat_ID",
+  DECODE(PRPD.IS_REQUIRED,1,'Required','Not Required')     AS "Docrcq",
+  DECODE(PRPD.RECEIVED_STATUS,1,'Received',2,'Not Received',3,'Waived') AS "DocRec",
+  CASE WHEN prdddoc.ADD_FLAG='INC' THEN  prdddoc.PRDDC_DOC_DESCRIPTION||D_INSURANCE_BY_NAME ELSE  
+  prdddoc.PRDDC_DOC_DESCRIPTION END AS "Particulars",
+  
+  case
+    WHEN prdddoc.ADD_FLAG='PDC'
+    THEN d_clob_pdc2
+    WHEN prdddoc.ADD_FLAG='STF'
+    THEN d_dynstr_insurance
+    WHEN prdddoc.ADD_FLAG='DPR'
+    THEN d_clob_DownPaymenthdr
+    ELSE D_CLOB_DUMMY
+  end as "PDC" ,
+  --'' PDC,
+  '' AS PRIORITY_TYPE,
+   PRDDDCOS.DISPLAY_ORDER,
+  PRPD.COLLECTED_ON,
+  0,
+  RECEIVER_SIGN.USER_NAME
+ 
+from s3g_org_pricingdocdet prpd
+inner join s3g_org_prddcdoccateg prdddoc
+ON PRDDDOC.PRDDC_DOC_CAT_ID=PRPD.PRDDC_DOC_CAT_ID
+INNER JOIN S3G_ORG_PRICING PRI
+ON PRI.PRICING_ID=PRPD.PRICING_ID
+INNER JOIN S3G_ORG_PRDDCDOCS PRDDDCOS
+ON (PRDDDCOS.PRDDC_ID=PRI.PRDDC_ID )
+left JOIN S3G_SYSAD_USERMASTER RECEIVER_SIGN
+on receiver_sign.user_id=prpd.cad_verified_by
+WHERE PRPD.PRICING_ID=P_PRICING_ID AND PRDDDCOS.PRDDC_DOC_CAT_ID=PRDDDOC.PRDDC_DOC_CAT_ID
+AND PRDDDCOS.CHECKLIST_FLAG=1 
+ORDER BY PRDDDCOS.DISPLAY_ORDER,prdddoc.PRDDC_DOC_DESCRIPTION 
+ ;
+
+---Additional Documents start
+BEGIN
+SELECT MAX(R_ID),MAX(DISPLAY_ORDER) INTO D_MAX_R_ID,D_MAX_DISPLAY_ORDER FROM TMP_DOCUMENTS;
+d(d_max_DISPLAY_ORDER);
+
+  insert into tmp_documents
+     (
+      R_ID,
+      prddc_doc_cat_id,
+      docrcq,
+      docrec,
+      particulars,
+      pdc,
+      priority_type,
+      DISPLAY_ORDER,
+      COLLECTED_DATE,
+      R2,
+      RECEIVER_SIGN
+     )
+     
+  SELECT rownum+d_max_R_ID        AS "R",
+  PRPD.PRDDC_DOC_CAT_ID                                    AS "PRDDC_Doc_Cat_ID",
+  DECODE(PRPD.IS_REQUIRED,1,'Required','Not Required')     AS "Docrcq",
+  decode(prpd.received_status,1,'Received',2,'Not Received',3,'Waived') as "DocRec",
+  ADD_DOC_DESC  AS "Particulars",
+   '' "PDC" ,
+  --'' PDC,
+  '' AS PRIORITY_TYPE,
+   rownum+d_max_DISPLAY_ORDER,
+  PRPD.COLLECTED_ON,
+  0,
+  RECEIVER_SIGN.USER_NAME
+ 
+FROM S3G_ORG_PRICINGDOCDET PRPD
+INNER JOIN S3G_SYSAD_USERMASTER RECEIVER_SIGN
+ON RECEIVER_SIGN.USER_ID=PRPD.CAD_VERIFIED_BY
+WHERE PRPD.PRICING_ID=P_PRICING_ID and IS_ADDITIONAL=1
+order by prpd.PRICING_DOC_ID
+ ;
+end;
+
+
+
+
+
+D_PREV_DISP_ORDER:=0;
+D_AUTO_SEQ:=1;
+FOR I IN(SELECT R_ID,DISPLAY_ORDER FROM TMP_DOCUMENTS ORDER BY R_ID)
+LOOP
+
+IF(D_PREV_DISP_ORDER<>I.DISPLAY_ORDER)THEN
+UPDATE TMP_DOCUMENTS SET R2=D_AUTO_SEQ WHERE R_ID=I.R_ID;
+D_AUTO_SEQ:=D_AUTO_SEQ+1;
+
+ELSE
+UPDATE TMP_DOCUMENTS SET R2=NULL WHERE R_ID=I.R_ID;
+END IF;
+
+D_PREV_DISP_ORDER:=I.DISPLAY_ORDER;
+
+
+
+end loop;
+
+
+
+
+
+ OPEN P_PRICGDET4 FOR
+    select 
+    R2 as "R",
+    prddc_doc_cat_id as "PRDDC_Doc_Cat_ID",
+    docrcq as "Docrcq",
+    docrec as "DocRec",
+    particulars as "Particulars",
+    pdc as "PDC",
+    '' as pdc,
+    PRIORITY_TYPE AS "PRIORITY_TYPE",
+    display_order,
+    GETUSERDATEFORMAT(COLLECTED_DATE,P_COMPANY_ID) AS "sysdate",
+    R_ID,
+    RECEIVER_SIGN as "rsign"
+    FROM TMP_DOCUMENTS
+    ORDER BY R_ID
+    ;
+
+
+    
+OPEN P_PRICGDET5 FOR
+SELECT ROWNUM AS Sno,PRPDC.PRICINGPDC_ID,
+PRPDC.PRICING_ID,
+PRPDC.DRAWEEBANKMASTER_ID AS "BankId",
+PRPDC.DRAWEEBANKBRANCH_ID AS "BankPlace_Id" ,
+PRPDC.IS_SECURITY AS "PDC_Type_Id",
+PRPDC.INSTALLMENT_FROM AS "Ins_Start",
+PRPDC.INSTALLMENT_TO AS "Ins_End",
+PRPDC.PDC_AMOUNT AS "Total_Amount",
+DBANK.BANK_NAME AS "BANK",
+BANKPLACE.BANKBRANCH_NAME AS BANKPLACE,
+LOOK.NAME AS PDC_TYPE,
+PRPDC.INSTALLMENT_FROM||' * '||PRPDC.INSTALLMENT_TO as "Structure"
+FROM S3G_ORG_PRICINGPDC PRPDC
+INNER JOIN S3G_CLN_DRAWEEBANKMASTER DBANK
+ON DBANK.DRAWEEBANKMASTER_ID=PRPDC.DRAWEEBANKMASTER_ID
+INNER JOIN S3G_CLN_DRAWEEBANKBRANCH BANKPLACE
+ON BANKPLACE.DRAWEEBANKBRANCH_ID=PRPDC.DRAWEEBANKBRANCH_ID
+INNER JOIN S3G_ORG_LOOKUP LOOK 
+on (LOOK.VALUE=PRPDC.IS_SECURITY and LOOK.TYPE='PDC CHEQUE TYPE')
+WHERE PRPDC.PRICING_ID=P_PRICING_ID;
+
+  
+  
+  
+--  open p_PDC_TEMP for
+--  
+--SELECT D_DYNSTR as PDC_TMP from dual;
+    
+end S3G_OR_GET_PRICGDET_PRINT;

@@ -1,0 +1,165 @@
+﻿create or replace
+PROCEDURE S3G_FACT_LOC_INTEREST
+(     
+     P_COMPANY_ID number:=null
+    ,P_PA_SA_REF_ID NUMBER:=NULL
+    ,P_USERID int:=null
+    ,P_INSERT_BREAKUP int:=0
+    ,P_OUT_PENAL_INT OUT SYS_REFCURSOR
+)      
+as      
+ 
+  D_COUNT number:=0;
+  D_MONTH_END_DATE date;
+  D_PA_SA_REF_ID number;
+  D_CUSTOMER_ID number; 
+  D_RUN_TYPE number:=0;--0 S-1-J
+  D_AVERAGE_UTILIZATION number:=0;
+  D_NO_DAYS number:=0;
+  D_LOOP_START number:=1;
+  D_ACCOUNT_COUNT number:=0;
+
+  D_PA_SA_REF_ID_L number;
+  D_POS_FUNDS_IN_USE number:=0;
+  D_AVERAGE_UTILIZED_AMOUNT number:=0;
+  D_REGULAR_INTEREST number:=0;
+  D_PENAL_RATE number;
+  D_REGULAR_DENOMINATOR number:=0;
+  D_PENAL_INTEREST number:=0;
+  D_PENAL_INTEREST_CHARGE  number:=0;
+  D_IRREGULAR_FUNDS number;
+  D_DISCOUNT_LOC_CHARGE number;
+  D_FUND_AMOUNT number;
+ 
+  
+  D_LOC_DENOMINATOR number:=0;
+  D_FIRST_DAY_OF_MONTH date;
+  D_DAY_OS_BAL number;
+  D_L1_ROW_ID number;
+
+  
+  D_REGULAR_INVOICE_Amt number:=0;
+  D_OVER_DUE_INVOICE_AMT number:=0;
+  D_DEFAULT_INVOICE_AMT number:=0;
+  D_MARGIN_AMOUNT number:=0;
+  D_DP_REGULAR_INVOICE_AMT number:=0;
+  D_PREV_DOCUMENT_DATE date;
+  D_LOOP_NO_DAYS number:=0;
+  D_DISCOUNT_RATE_LOC number:=0;
+
+  
+    
+ 
+begin    
+  --CREATED BY:SATHISH R
+  --CREATED ON:12-MAR-2019
+  --USE:FACTORING MONTH END JOB ACTIVITY
+  
+delete from TMP_FAC_D4_STG1;
+delete from TMP_FAC_D4_STG2;
+delete from TMP_INVOICE_DTLS_PNLSTG1;
+  
+  
+  D_RUN_TYPE:=0;
+  D_CUSTOMER_ID:=null;
+  D_PA_SA_REF_ID:=null;
+  D_REGULAR_DENOMINATOR:=365;
+  D_LOC_DENOMINATOR:=1200;
+  
+                     
+              begin
+                  BEGIN
+                      SELECT LAST_DAY(sysdate) INTO D_MONTH_END_DATE FROM DUAL;
+                      SELECT ADD_MONTHS((LAST_DAY(SYSDATE)+1),-1)
+                      INTO D_FIRST_DAY_OF_MONTH
+                      FROM DUAL;
+                      select extract(day from LAST_DAY(sysdate)) into D_NO_DAYS from DUAL;
+                  END;    
+                END;
+           
+                 
+          Select Count(1) Into D_Count 
+            From S3G_GLOBAL_PARAMETERS                                   
+            INNER JOIN S3G_GLOBAL_PARAMETERVALUES 
+            ON S3G_GLOBAL_PARAMETERS.PARAM_SET_ID = S3G_GLOBAL_PARAMETERVALUES.PARAM_SET_ID                                                                                      
+            WHERE S3G_GLOBAL_PARAMETERS.LOB_ID = 4                                  
+             And S3g_Global_Parametervalues.Parameter_Code = '23'                                              
+             And S3g_Global_Parameters.Company_Id = P_Company_Id;
+           
+           
+           If ( D_Count > 0 ) Then
+            Begin
+              Select NVL(Parameter_Value,0) INTO D_REGULAR_DENOMINATOR                                   
+                From S3G_GLOBAL_PARAMETERS                                   
+                INNER JOIN S3G_GLOBAL_PARAMETERVALUES 
+                ON S3G_GLOBAL_PARAMETERS.PARAM_SET_ID = S3G_GLOBAL_PARAMETERVALUES.PARAM_SET_ID                                                                                      
+                WHERE S3G_GLOBAL_PARAMETERS.LOB_ID = 4                                  
+                And S3g_Global_Parametervalues.Parameter_Code = '23'                                              
+                AND S3G_GLOBAL_PARAMETERS.COMPANY_ID = p_Company_ID and rownum < 2;    
+            End;
+          Else
+            Begin
+              D_REGULAR_DENOMINATOR := 365;
+            end;
+          End IF;  
+                 
+                 
+                 
+    
+               begin--GET PENAL RATE START      
+                 select APP.MARGIN_AMOUNT,PASA.DISCOUNT_RATE_LOC into D_MARGIN_AMOUNT,D_DISCOUNT_RATE_LOC from S3G_LAD_ACCCREATION AC
+                 inner join S3G_LAD_ACCPASADET PASA
+                 on PASA.ACCOUNT_CREATION_ID=AC.ACCOUNT_CREATION_ID
+                 inner join S3G_ORG_APPPROC APP
+                 on APP.APPLICATION_PROCESS_ID=AC.APPLICATION_PROCESS_ID
+                 where    PASA.PA_SA_REF_ID=P_PA_SA_REF_ID;
+               end ;--GET PENAL RATE END
+                 
+          
+                 
+          begin  --Base Invoice Opening Start
+          
+          begin--OS FLAG 1 START
+             insert into TB_LOC_CHARGE1
+             (
+             ROW_ID,
+             DOCUMENT_NUMBER,
+             TRANSACTION_AMOUNT,
+             DOCUMENT_DATE
+             )
+            select rownum,TRANSACTION_AMOUNT,DOCUMENT_NUMBER,DOCUMENT_DATE from S3G_CLN_DMDDS4  where DUE_FLAG=41 and DOCUMENT_DATE<=D_MONTH_END_DATE 
+            and DOCUMENT_DATE>=D_FIRST_DAY_OF_MONTH
+            and TRANSACTION_CODE=0
+            ;
+           end;--OS FLAG 1 END 
+              
+             FOR L1 in(select ROW_ID,DOCUMENT_DATE,DOCUMENT_NUMBER
+                     from TB_LOC_CHARGE1) 
+                   LOOP
+                     begin
+                     
+                     select COUNT(1) into D_COUNT from TB_LOC_CHARGE1 where ROW_ID=L1.ROW_ID-1;
+                     if(D_COUNT>0)then
+                         begin
+                         select DOCUMENT_DATE-D_PREV_DOCUMENT_DATE INTO D_LOOP_NO_DAYS from TB_LOC_CHARGE1 where ROW_ID=L1.ROW_ID-1;
+                         end;
+                       else
+                         begin
+                         D_LOOP_NO_DAYS:=0;
+                         END;
+                     end if;
+                      UPDATE TB_LOC_CHARGE1 SET NO_OF_DAYS=D_LOOP_NO_DAYS where ROW_ID=L1.ROW_ID-1;
+                     
+                     END;
+              END LOOP;
+              
+              
+        end;-----Base Invoice Opening SEnd    
+             
+         UPDATE TB_LOC_CHARGE1 SET LOC_INTEREST_AMOUNR=LOC_INTEREST_AMOUNR+ TRANSACTION_AMOUNT * D_DISCOUNT_RATE_LOC * (1/D_LOC_DENOMINATOR);
+                 
+               
+                 
+          open P_OUT_PENAL_INT for        
+          select * from TB_LOC_CHARGE1;
+End S3G_FACT_LOC_INTEREST;

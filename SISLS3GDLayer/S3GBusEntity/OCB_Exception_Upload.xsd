@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="OCB_Exception_Upload" targetNamespace="http://tempuri.org/OCB_Exception_Upload.xsd" xmlns:mstns="http://tempuri.org/OCB_Exception_Upload.xsd" xmlns="http://tempuri.org/OCB_Exception_Upload.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="OCB_Exception_Upload" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="OCB_Exception_Upload" msprop:Generator_UserDSName="OCB_Exception_Upload">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Ocb_Exception" msprop:Generator_TableClassName="Ocb_ExceptionDataTable" msprop:Generator_TableVarName="tableOcb_Exception" msprop:Generator_RowChangedName="Ocb_ExceptionRowChanged" msprop:Generator_TablePropName="Ocb_Exception" msprop:Generator_RowDeletingName="Ocb_ExceptionRowDeleting" msprop:Generator_RowChangingName="Ocb_ExceptionRowChanging" msprop:Generator_RowEvHandlerName="Ocb_ExceptionRowChangeEventHandler" msprop:Generator_RowDeletedName="Ocb_ExceptionRowDeleted" msprop:Generator_RowClassName="Ocb_ExceptionRow" msprop:Generator_UserTableName="Ocb_Exception" msprop:Generator_RowEvArgName="Ocb_ExceptionRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Company_Id" msprop:Generator_ColumnVarNameInTable="columnCompany_Id" msprop:Generator_ColumnPropNameInRow="Company_Id" msprop:Generator_ColumnPropNameInTable="Company_IdColumn" msprop:Generator_UserColumnName="Company_Id" type="xs:string" minOccurs="0" />
+              <xs:element name="XML_OCB_Exception_Data" msprop:Generator_ColumnVarNameInTable="columnXML_OCB_Exception_Data" msprop:Generator_ColumnPropNameInRow="XML_OCB_Exception_Data" msprop:Generator_ColumnPropNameInTable="XML_OCB_Exception_DataColumn" msprop:Generator_UserColumnName="XML_OCB_Exception_Data" type="xs:string" minOccurs="0" />
+              <xs:element name="File_Name" msprop:Generator_ColumnVarNameInTable="columnFile_Name" msprop:Generator_ColumnPropNameInRow="File_Name" msprop:Generator_ColumnPropNameInTable="File_NameColumn" msprop:Generator_UserColumnName="File_Name" type="xs:string" minOccurs="0" />
+              <xs:element name="FROM_DATE" msprop:Generator_ColumnVarNameInTable="columnFROM_DATE" msprop:Generator_ColumnPropNameInRow="FROM_DATE" msprop:Generator_ColumnPropNameInTable="FROM_DATEColumn" msprop:Generator_UserColumnName="FROM_DATE" type="xs:string" minOccurs="0" />
+              <xs:element name="END_DATE" msprop:Generator_ColumnVarNameInTable="columnEND_DATE" msprop:Generator_ColumnPropNameInRow="END_DATE" msprop:Generator_ColumnPropNameInTable="END_DATEColumn" msprop:Generator_UserColumnName="END_DATE" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

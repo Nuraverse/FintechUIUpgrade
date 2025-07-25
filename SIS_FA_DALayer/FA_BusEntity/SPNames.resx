@@ -1,0 +1,788 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="DeleteDNC" xml:space="preserve">
+    <value>FA_Delete_DNC_Det</value>
+  </data>
+  <data name="ExistLocationMapping" xml:space="preserve">
+    <value>FA_SYS_EXIST_LOCA_MAP</value>
+  </data>
+  <data name="GetAllLocationCategory" xml:space="preserve">
+    <value>FA_SYS_GETALL_LOCA_CAT</value>
+    <comment>To get all Location Category Details</comment>
+  </data>
+  <data name="GetBatch" xml:space="preserve">
+    <value>FA_Get_Batch_List</value>
+  </data>
+  <data name="GetDimensionDetails" xml:space="preserve">
+    <value>FA_GET_DIMENSIONDETAILS</value>
+    <comment>Get dimension details by Dim ID</comment>
+  </data>
+  <data name="GetDNC" xml:space="preserve">
+    <value>FA_Get_DNC_Det</value>
+  </data>
+  <data name="GetDNCView" xml:space="preserve">
+    <value>FA_Get_DNC_Det_view</value>
+  </data>
+  <data name="GetDocType" xml:space="preserve">
+    <value>FA_Get_DocType_List</value>
+  </data>
+  <data name="GetHierachyDTL" xml:space="preserve">
+    <value>FA_SYS_GET_HIAR_DTL</value>
+    <comment>To Get Hierarchy Master Details</comment>
+  </data>
+  <data name="GetLocationCategory" xml:space="preserve">
+    <value>FA_SYS_GET_LOCA_CAT</value>
+  </data>
+  <data name="GetLocationCategoryDetails" xml:space="preserve">
+    <value>FA_SYS_GET_LOCA_CAT_DTL</value>
+  </data>
+  <data name="GetLocationMappingDetails" xml:space="preserve">
+    <value>FA_SYS_GET_LOCA_MAP_DTL</value>
+    <comment>To get Location Mapping Details for Query or Modify</comment>
+  </data>
+  <data name="GetLookupDetails" xml:space="preserve">
+    <value>FA_CMN_LOOKUP</value>
+    <comment>Get lookup details by Lookup type Code</comment>
+  </data>
+  <data name="GetUserMenuItems" xml:space="preserve">
+    <value>FA_GET_USERMENUITEMS</value>
+  </data>
+  <data name="InsertCompanyDtls" xml:space="preserve">
+    <value>FA_SYS_INSERTCOMPANYDTLS</value>
+    <comment>To insert Company Details</comment>
+  </data>
+  <data name="InsertDNCDetails" xml:space="preserve">
+    <value>FA_Ins_DNC_Det</value>
+  </data>
+  <data name="InsertLocationCategory" xml:space="preserve">
+    <value>FA_SYS_INS_LOCA_CAT</value>
+  </data>
+  <data name="InsertLocationMaster" xml:space="preserve">
+    <value>FA_SYS_INS_LOCA_MAP</value>
+  </data>
+  <data name="InsertUpdateDimension" xml:space="preserve">
+    <value>FA_INSERTUPDATE_DIMENSION</value>
+    <comment>Insert and Update details for Dimension</comment>
+  </data>
+  <data name="LocationCategory_Paging" xml:space="preserve">
+    <value>FA_SYS_LOCA_CAT_PAG</value>
+    <comment>To show Location Category Details in View page</comment>
+  </data>
+  <data name="LocationMapping_Paging" xml:space="preserve">
+    <value>FA_SYS_LOCA_MAP_PAG</value>
+    <comment>To show Location Mapping Details in View page</comment>
+  </data>
+  <data name="SaveHierarchyMaster" xml:space="preserve">
+    <value>FA_SYS_INS_HIAR_MST</value>
+    <comment>To insert/Modify Hierarchy details in table</comment>
+  </data>
+  <data name="UpdateCompanyDtls" xml:space="preserve">
+    <value>FA_SYS_UPDATECOMPANYDTLS</value>
+    <comment>To Update Company Details</comment>
+  </data>
+  <data name="UpdateDNC" xml:space="preserve">
+    <value>FA_Update_DNC_Det</value>
+  </data>
+  <data name="UpdateLocationCategory" xml:space="preserve">
+    <value>FA_SYS_UPD_LOCA_CAT</value>
+  </data>
+  <data name="UpdateLocationMapping" xml:space="preserve">
+    <value>FA_SYS_UPD_LOCA_MAP</value>
+  </data>
+  <data name="VALIDATE_LOGIN" xml:space="preserve">
+    <value>FA_VALIDATE_LOGIN</value>
+    <comment>Validate the login details</comment>
+  </data>
+  <data name="View_Dimension_Paging" xml:space="preserve">
+    <value>FA_SYS_VIEW_DIMENSION</value>
+    <comment>Dimension master</comment>
+  </data>
+  <data name="GetLocation" xml:space="preserve">
+    <value>FA_Loca_List</value>
+  </data>
+  <data name="ExchangeRate_Paging" xml:space="preserve">
+    <value>FA_SYS_EXCH_RATE_PAG</value>
+    <comment>To show Exchange Rate Paging Details in View page</comment>
+  </data>
+  <data name="GetExchangeRateDetails" xml:space="preserve">
+    <value>FA_SYS_GET_EXCHANGE_RATE_DTL</value>
+    <comment>To get Exchange Rate Master Details for Query or Modify</comment>
+  </data>
+  <data name="InsertExchangeRate" xml:space="preserve">
+    <value>FA_SYS_INS_EXCHANGE_RATE</value>
+    <comment>To Insert/Update Exchange Rate Details</comment>
+  </data>
+  <data name="Insert_RCM" xml:space="preserve">
+    <value>FA_SYS_INS_RCM</value>
+    <comment>Inserting Role Center Master</comment>
+  </data>
+  <data name="Update_RCM" xml:space="preserve">
+    <value>FA_SYS_UPD_RCM</value>
+    <comment>Updating Role Center Master</comment>
+  </data>
+  <data name="Get_Programs" xml:space="preserve">
+    <value>FA_GetPrgmMasterDtls</value>
+    <comment>To get Program for Role Center</comment>
+  </data>
+  <data name="Get_RCM" xml:space="preserve">
+    <value>FA_SYS_GetRCMDtls</value>
+    <comment>Getting Role Code Master Details for Modification and query</comment>
+  </data>
+  <data name="InsertUpdate_GPS" xml:space="preserve">
+    <value>FA_INSERTUPDATE_GPS</value>
+    <comment>Global parameter setup </comment>
+  </data>
+  <data name="Get_GPS_Details" xml:space="preserve">
+    <value>FA_GET_GPSDETAILS</value>
+    <comment>Global parameter setup</comment>
+  </data>
+  <data name="FA_Get_GobalCompanyDetails" xml:space="preserve">
+    <value>FA_GETGLOBALCOMPANYDETAIL</value>
+  </data>
+  <data name="Get_Investment_Lookup" xml:space="preserve">
+    <value>FA_GET_INVESTMST_LOOKUP</value>
+    <comment>Investment</comment>
+  </data>
+  <data name="InsertUpdate_InvestmentMaster" xml:space="preserve">
+    <value>FA_INSERTUPDATE_INVST_MST</value>
+    <comment>Investment</comment>
+  </data>
+  <data name="GetCurrencyCodesPrecision" xml:space="preserve">
+    <value>FA_SYS_GET_EXCH_CURR_CODE</value>
+  </data>
+  <data name="GetFunderMaster" xml:space="preserve">
+    <value>FA_GET_FUNDER_MST</value>
+    <comment>To Get FunderMaster Details</comment>
+  </data>
+  <data name="InsertFunderMaster" xml:space="preserve">
+    <value>FA_INS_FUNDER_MST</value>
+    <comment>To Insert FunderMaster Details</comment>
+  </data>
+  <data name="UpdateFunderMaster" xml:space="preserve">
+    <value>FA_UPD_FUNDER_MST</value>
+    <comment>To Update FunderMaster Details</comment>
+  </data>
+  <data name="GetGLCode" xml:space="preserve">
+    <value>FA_GET_GLCODE</value>
+    <comment>To get GLCodes</comment>
+  </data>
+  <data name="GetSLCode" xml:space="preserve">
+    <value>FA_GET_SLCODE</value>
+    <comment>To get SLCodes based on GLCodes</comment>
+  </data>
+  <data name="View_InvestmentMaster_Paging" xml:space="preserve">
+    <value>FA_VIEW_INVESTMENTMASTER</value>
+    <comment>Investment </comment>
+  </data>
+  <data name="Get_InvestmentMaster" xml:space="preserve">
+    <value>FA_GET_INVESTMENTMASTER</value>
+    <comment>Investment</comment>
+  </data>
+  <data name="FA_getGL_Paging" xml:space="preserve">
+    <value>FA_getGL_Paging</value>
+    <comment>View Page SP for GL</comment>
+  </data>
+  <data name="FA_getSL_Paging" xml:space="preserve">
+    <value>FA_getSL_Paging</value>
+    <comment>View Page SP for SL</comment>
+  </data>
+  <data name="Currency_Paging" xml:space="preserve">
+    <value>FA_SYS_Curr_Paging</value>
+    <comment>View Page for Currency</comment>
+  </data>
+  <data name="Get_Currency_Dtls" xml:space="preserve">
+    <value>FA_GetCurrencyDtls</value>
+    <comment>To get Currency Details</comment>
+  </data>
+  <data name="Get_Currency_List" xml:space="preserve">
+    <value>FA_SYS_GetCurrList</value>
+    <comment>To Get Currency List</comment>
+  </data>
+  <data name="Get_RCM_Paging" xml:space="preserve">
+    <value>FA_SYS_RCM_Page</value>
+    <comment>For Role Center Master View Paging</comment>
+  </data>
+  <data name="Get_Program_RefNo" xml:space="preserve">
+    <value>FA_GETPROGRAM_REF_NO</value>
+  </data>
+  <data name="GetFunderAccountsAllocated" xml:space="preserve">
+    <value>FA_GET_FUND_ACC_ALLOCATED</value>
+    <comment>To get the Details of Accounts allocated to the funder in Funder Master</comment>
+  </data>
+  <data name="GetFunderBorrowerRepayDetails" xml:space="preserve">
+    <value>FA_GET_FUND_BORROWER_REPAY</value>
+    <comment>To get the Borrower Repay Details for Funder Master </comment>
+  </data>
+  <data name="Insert_Currency" xml:space="preserve">
+    <value>FA_SYS_INS_Currency</value>
+    <comment>To Insert Currecy</comment>
+  </data>
+  <data name="Update_Currency" xml:space="preserve">
+    <value>FA_SYS_UPD_CurrDtls</value>
+    <comment>To Update Currency Details</comment>
+  </data>
+  <data name="Get_InvestmentTransactions_Lookup" xml:space="preserve">
+    <value>FA_GET_INVSTTRANS_LOOKUP</value>
+    <comment>Investment</comment>
+  </data>
+  <data name="Get_Investment_Code" xml:space="preserve">
+    <value>FA_GET_INVST_CODE</value>
+    <comment>Get Investment code based on company and Investment type</comment>
+  </data>
+  <data name="Get_Entity_Code" xml:space="preserve">
+    <value>FA_GET_ENTITY_CODE</value>
+    <comment>Get Entity code and Address details</comment>
+  </data>
+  <data name="GetFunderCode_Details" xml:space="preserve">
+    <value>FA_GET_FUNDER_CODES_DTL</value>
+    <comment>To Get Funder Codes and Details Based on FunderCode</comment>
+  </data>
+  <data name="GetFunderTransaction" xml:space="preserve">
+    <value>FA_GET_FUNDER_TRANSACTION</value>
+    <comment>To Get Funder Transaction Details</comment>
+  </data>
+  <data name="InsertFunderTransaction" xml:space="preserve">
+    <value>FA_INS_FUNDER_TRANSACTION</value>
+    <comment>To Insert Funder Transaction Details</comment>
+  </data>
+  <data name="UpdateFunderTransaction" xml:space="preserve">
+    <value>FA_UPD_FUNDER_TRANSACTION</value>
+    <comment>To Update Funder Transaction Details</comment>
+  </data>
+  <data name="Get_Investment_Transaction_Number" xml:space="preserve">
+    <value>FA_GET_INVST_TRANS_NO</value>
+    <comment>Get Investment transaction number for translander</comment>
+  </data>
+  <data name="InsertUpdate_InvestmentTransaction" xml:space="preserve">
+    <value>FA_INSERTUPDATE_INVST_TRAN</value>
+    <comment>insert or update investment transaction details</comment>
+  </data>
+  <data name="Get_Funder_Transaction_Number" xml:space="preserve">
+    <value>FA_GET_FUNDER_TRAN_NO</value>
+    <comment>To get Funder Transaction Number in Translander Page</comment>
+  </data>
+  <data name="GetFunderLoading" xml:space="preserve">
+    <value>FA_GET_FUNDER_LOADING</value>
+    <comment>To Get Funder Loading Details</comment>
+  </data>
+  <data name="InsertFunderLoading" xml:space="preserve">
+    <value>FA_INS_FUNDER_LOADING</value>
+    <comment>To Insert Funder Loading Details</comment>
+  </data>
+  <data name="IsExistsFund_Ref_No" xml:space="preserve">
+    <value>FA_IS_EXIST_FUNDER_REF_NO</value>
+    <comment>To verify the existance of Fund_Ref_No in Funder Transaction</comment>
+  </data>
+  <data name="UpdateFunderLoading" xml:space="preserve">
+    <value>FA_UPD_FUNDER_LOADING</value>
+    <comment>To Update Funder Loading Details</comment>
+  </data>
+  <data name="Get_Investment_Transaction_Details" xml:space="preserve">
+    <value>FA_GET_INVST_TRAN_DETAILS</value>
+    <comment>To get investment transaction details for modification and View</comment>
+  </data>
+  <data name="Get_Sale_Investment_SerialNumber" xml:space="preserve">
+    <value>FA_GET_SALE_INVST_SERIALNO</value>
+    <comment>To get investment serial number for Sale transaction</comment>
+  </data>
+  <data name="GetAccountsFromS3G" xml:space="preserve">
+    <value>FA_S3G_ACC_FUNDER_LOADING</value>
+    <comment>To get Accounts For Funder Loading based on dates</comment>
+  </data>
+  <data name="Get_Funder_Loading_Number" xml:space="preserve">
+    <value>FA_GET_FUNDER_LOADING_NO</value>
+    <comment>To get Funder Loading Number in Translander Page</comment>
+  </data>
+  <data name="Get_Input_Transaction_InterestSchedule" xml:space="preserve">
+    <value>FA_GETINPUT_INTEREST_SCHE</value>
+    <comment>To get the input for transaction Interest schedule</comment>
+  </data>
+  <data name="FA_SYS_GET_COMPANYDETAILS" xml:space="preserve">
+    <value>FA_SYS_GET_COMPANYDETAILS</value>
+    <comment>to load company details</comment>
+  </data>
+  <data name="FA_SYS_GET_COMPANY_DDLIST" xml:space="preserve">
+    <value>FA_SYS_GET_COMPANY_DDLIST</value>
+    <comment>to load company details for controls</comment>
+  </data>
+  <data name="Get_PurchaseTransaction_ForSale" xml:space="preserve">
+    <value>FA_GET_PURCHASE_INVST_TRAN</value>
+    <comment>Investment</comment>
+  </data>
+  <data name="GetBudget" xml:space="preserve">
+    <value>FA_GET_Budget_MST</value>
+    <comment>To get Budget Master Details</comment>
+  </data>
+  <data name="GetBudgetPattern" xml:space="preserve">
+    <value>FA_GET_BUD_PATTERN</value>
+  </data>
+  <data name="GetBudgetType" xml:space="preserve">
+    <value>FA_GET_BUDGETTYPE</value>
+  </data>
+  <data name="FAGetGLDetails" xml:space="preserve">
+    <value>FA_Get_GLDetails</value>
+    <comment>Account Card</comment>
+  </data>
+  <data name="FASubAccountCardPaging" xml:space="preserve">
+    <value>FA_SubAccountCard_Paging</value>
+    <comment>Account Card</comment>
+  </data>
+  <data name="GetAccountCardDetail" xml:space="preserve">
+    <value>FA_Get_AccountCard_Detail</value>
+    <comment>Account Card</comment>
+  </data>
+  <data name="GetAccountID" xml:space="preserve">
+    <value>FA_Get_AccountID</value>
+    <comment>Account Card</comment>
+  </data>
+  <data name="GETLOCATIONTREEVIEW" xml:space="preserve">
+    <value>FA_SYS_GETLOCATIONTREEVIEW</value>
+    <comment>Account Card</comment>
+  </data>
+  <data name="GETLOOKUPVALUES" xml:space="preserve">
+    <value>FA_GET_LOOKUP_VALUES</value>
+    <comment>Account Card</comment>
+  </data>
+  <data name="INSERTACCOUNTDETAILS" xml:space="preserve">
+    <value>FA_INSERT_ACCOUNT_DETAILS</value>
+    <comment>Account Card</comment>
+  </data>
+  <data name="GetReceipt_Lookup" xml:space="preserve">
+    <value>FA_GET_RECEIPT_LOOKUP</value>
+    <comment>For Receipt Processing</comment>
+  </data>
+  <data name="Get_Dimension2_Reference" xml:space="preserve">
+    <value>FA_GET_DIM2_REFERENCE</value>
+    <comment>Dimension Ref No</comment>
+  </data>
+  <data name="Get_EntityName_Receipt" xml:space="preserve">
+    <value>FA_GET_ENTITY_RECEIPT</value>
+    <comment>Receipt processing</comment>
+  </data>
+  <data name="GetMJV" xml:space="preserve">
+    <value>FA_GET_MJV</value>
+    <comment>Manual Journal</comment>
+  </data>
+  <data name="InsertMJV" xml:space="preserve">
+    <value>FA_INS_MJV</value>
+    <comment>Manual Journal</comment>
+  </data>
+  <data name="Get_ManualJournal_No" xml:space="preserve">
+    <value>FA_GET_MJV_NO</value>
+    <comment>To get Manual Journal Number</comment>
+  </data>
+  <data name="Get_ChequeReturn_LookupDetails" xml:space="preserve">
+    <value>FA_GET_CHEQUERETURN_LOOKUP</value>
+    <comment>Cheque Return</comment>
+  </data>
+  <data name="UpdateMJV" xml:space="preserve">
+    <value>FA_UPD_MJV</value>
+    <comment>To Update Manual Journal Details</comment>
+  </data>
+  <data name="InsertUpdate_ReceiptProcessing" xml:space="preserve">
+    <value>FA_INSERTUPDATE_RECEIPT</value>
+    <comment>Insert and update Receipt processing.</comment>
+  </data>
+  <data name="InsertDebitNote" xml:space="preserve">
+    <value>FA_INS_Debit_Note</value>
+    <comment>DebitCreditNote</comment>
+  </data>
+  <data name="Get_Receipt_Number_Translander" xml:space="preserve">
+    <value>FA_GET_RECEIPT_NO_TRAN</value>
+    <comment>To get Receipt number for Translander screen</comment>
+  </data>
+  <data name="Get_Receipt_Details_QueryModify" xml:space="preserve">
+    <value>FA_GET_RECEIPT_DETAILS</value>
+    <comment>To get the Receipt details for query and modify mode</comment>
+  </data>
+  <data name="GetInterest" xml:space="preserve">
+    <value>FA_GET_Funder_Interest</value>
+  </data>
+  <data name="Check_Default_Currency_And_Exchange_Rate" xml:space="preserve">
+    <value>FA_CHK_DEF_CURRENCY_EX_RT</value>
+    <comment>To check Default currency and exchange rate for selected currency</comment>
+  </data>
+  <data name="Get_BankDetail_Receipt" xml:space="preserve">
+    <value>FA_GET_BANKDET_RECEIPT</value>
+    <comment>To get bank Details</comment>
+  </data>
+  <data name="GetDCNoteTran" xml:space="preserve">
+    <value>FA_GET_DCNote_TRAN_NO</value>
+  </data>
+  <data name="Get_ChequeReturn_Number_Translander" xml:space="preserve">
+    <value>FA_GET_CHEQUERETN_NO_TRAN</value>
+    <comment>cheque return</comment>
+  </data>
+  <data name="GetPPJV" xml:space="preserve">
+    <value>FA_GET_PPJV</value>
+    <comment>Get Prior Period JV</comment>
+  </data>
+  <data name="Get_PriorPeriodJV_No" xml:space="preserve">
+    <value>FA_GET_PPJV_NO</value>
+    <comment>To get Prior Period JV Number</comment>
+  </data>
+  <data name="InsertPPJV" xml:space="preserve">
+    <value>FA_INS_PPJV</value>
+    <comment>Insert Prior Period JV</comment>
+  </data>
+  <data name="UpdatePPJV" xml:space="preserve">
+    <value>FA_UPD_PPJV</value>
+    <comment>To Update Prior Period JV Details</comment>
+  </data>
+  <data name="GetDCNote" xml:space="preserve">
+    <value>FA_GET_DCNOTE</value>
+  </data>
+  <data name="Get_Receipt_Number_Cheque" xml:space="preserve">
+    <value>FA_GETRECEIPT_NO_CHEQUE</value>
+    <comment>To get the Receipt number for the process of Cheque return</comment>
+  </data>
+  <data name="Get_Receipt_Details_ChequeReturn" xml:space="preserve">
+    <value>FA_GET_RECEIPT_DET_CHR</value>
+    <comment>Cheque Return</comment>
+  </data>
+  <data name="UpdateDCNote" xml:space="preserve">
+    <value>FA_UPD_DCNote</value>
+    <comment>Debit Credit Note</comment>
+  </data>
+  <data name="Receipt_Cancel" xml:space="preserve">
+    <value>FA_UPD_RECEIPTCANCEL</value>
+    <comment>to cancel the receipt details </comment>
+  </data>
+  <data name="GetIntTranNo" xml:space="preserve">
+    <value>FA_GET_INTAccrual_NO</value>
+  </data>
+  <data name="GETPaymentReqnoCombo" xml:space="preserve">
+    <value>FA_Get_Pay_ReqNo_Combo</value>
+    <comment>Payment request no</comment>
+  </data>
+  <data name="InsertUpdate_Cheque_Return" xml:space="preserve">
+    <value>FA_INSERTUPDATE_CHEQUE_RET</value>
+    <comment>To insert update cheque return Details</comment>
+  </data>
+  <data name="GetFundInterest" xml:space="preserve">
+    <value>FA_GET_Fund_Int</value>
+  </data>
+  <data name="Get_Funder_Amount_Receipt" xml:space="preserve">
+    <value>FA_GET_FUNDER_AMT_RECEIPT</value>
+    <comment>For Receipt Processing</comment>
+  </data>
+  <data name="FA_GetApprovalCombo" xml:space="preserve">
+    <value>FA_Get_Approval_Combo</value>
+    <comment>Approval</comment>
+  </data>
+  <data name="Approval_Grid_Dtls" xml:space="preserve">
+    <value>FA_Approval_Grid_Dtls</value>
+    <comment>Approval</comment>
+  </data>
+  <data name="DOC_NO_DTLS_APVL" xml:space="preserve">
+    <value>FA_DOC_NO_DTLS_APVL</value>
+    <comment>Approval</comment>
+  </data>
+  <data name="Get_Approval_Dtls" xml:space="preserve">
+    <value>FA_Get_Approval_Dtls</value>
+    <comment>Approval</comment>
+  </data>
+  <data name="GET_APPROVAL_LIST" xml:space="preserve">
+    <value>FA_GET_APPROVAL_LIST</value>
+    <comment>Approval</comment>
+  </data>
+  <data name="GET_DOCNO_APVL" xml:space="preserve">
+    <value>FA_GET_DOCNO_APVL</value>
+    <comment>Approval</comment>
+  </data>
+  <data name="Get_Cheque_Return_Details" xml:space="preserve">
+    <value>FA_GET_CHEQUE_RET_DETAILS</value>
+    <comment>Cheque Return details for Modify and Query</comment>
+  </data>
+  <data name="Cancel_Cheque_Return_Processing" xml:space="preserve">
+    <value>FA_UPD_CHEQUE_RET_CANCEL</value>
+    <comment>Cheque Return Processing</comment>
+  </data>
+  <data name="Get_Investment_Interest_Accrued_Lookup" xml:space="preserve">
+    <value>FA_INV_INTRST_ACCRUED_LOOKUP</value>
+    <comment>Investment Interest Accrued</comment>
+  </data>
+  <data name="GETCURRENCY_DTLS" xml:space="preserve">
+    <value>FA_GET_CURRENCY_DTLS</value>
+    <comment>Payment request</comment>
+  </data>
+  <data name="GET_ENTITY_DETAILS" xml:space="preserve">
+    <value>FA_GET_ENTITY_DETAILS</value>
+    <comment>Payment request</comment>
+  </data>
+  <data name="GET_FUNINVEST_REF_NO" xml:space="preserve">
+    <value>FA_GET_FUNINVEST_REF_NO</value>
+    <comment>Payment request</comment>
+  </data>
+  <data name="Get_PayType" xml:space="preserve">
+    <value>FA_Get_PayType</value>
+    <comment>Payment request</comment>
+  </data>
+  <data name="GET_PAY_BANK_DTLS" xml:space="preserve">
+    <value>FA_GET_PAY_BANK_DTLS</value>
+    <comment>Payment request</comment>
+  </data>
+  <data name="GET_PAY_GRID_DETAILS" xml:space="preserve">
+    <value>FA_GET_PAY_GRID_DETAILS</value>
+    <comment>Payment request</comment>
+  </data>
+  <data name="GET_PAY_REQ_DETAILS" xml:space="preserve">
+    <value>FA_GET_PAY_REQ_DETAILS</value>
+    <comment>Payment request</comment>
+  </data>
+  <data name="Update_VoucherStatus" xml:space="preserve">
+    <value>FA_Update_VoucherStatus</value>
+    <comment>Payment request</comment>
+  </data>
+  <data name="GET_DIMENSION_TRAN" xml:space="preserve">
+    <value>FA_GET_DIMENSION_TRAN</value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="GetPPJVApproval" xml:space="preserve">
+    <value>FA_GET_PPJVApproval</value>
+    <comment>To Get PPJV Approval Details</comment>
+  </data>
+  <data name="Get_PPJVApproval_No" xml:space="preserve">
+    <value>FA_GET_PPJV_Approval_NO</value>
+    <comment>To get PPJV Approval No Translanding Page</comment>
+  </data>
+  <data name="InsertPPJVApproval" xml:space="preserve">
+    <value>FA_INS_PPJVApproval</value>
+    <comment>To Insert PPJV Approval</comment>
+  </data>
+  <data name="GET_DOCNO_PPJVApproval" xml:space="preserve">
+    <value>FA_GET_DOCNO_PPJVApproval</value>
+    <comment>To get Doc No for PPJV Approval</comment>
+  </data>
+  <data name="CancelMJV" xml:space="preserve">
+    <value>FA_Cancel_MJV</value>
+    <comment>To cancel MJV</comment>
+  </data>
+  <data name="CancelPPJV" xml:space="preserve">
+    <value>FA_Cancel_PPJV</value>
+    <comment>To cancel PPJV</comment>
+  </data>
+  <data name="Get_Investment_Interest_Last_Calculation_Date" xml:space="preserve">
+    <value>FA_GET_INV_LAST_CALC_DATE</value>
+    <comment>Investment Interest accrued</comment>
+  </data>
+  <data name="Generate_Investment_Interest_Accrued_Process" xml:space="preserve">
+    <value>FA_GENERATE_INTRST_ACCRUED</value>
+    <comment>Investment Interest accrued</comment>
+  </data>
+  <data name="Get_Investment_Amount_Receipt" xml:space="preserve">
+    <value>FA_GET_INVST_AMT_RECEIPT</value>
+    <comment>Get investment Amount for receipt processing</comment>
+  </data>
+  <data name="Get_Investment_Interest_Accrued_No_TransLander" xml:space="preserve">
+    <value>FA_GET_INVST_ACCRUED_NO</value>
+    <comment>Investment Interest accrued</comment>
+  </data>
+  <data name="Post_Investment_Interest_Accrued" xml:space="preserve">
+    <value>FA_POST_INVST_INTRST_ACCRUED</value>
+    <comment>Investment Insertest accrued Post (Insert/Update)</comment>
+  </data>
+  <data name="updateFunderInterest" xml:space="preserve">
+    <value>FA_UPD_FundInterest</value>
+  </data>
+  <data name="DeleteDCNote" xml:space="preserve">
+    <value>FA_Delete_DC_Note</value>
+  </data>
+  <data name="Get_Investment_Interest_Accrued_Details" xml:space="preserve">
+    <value>FA_GET_INV_INTRST_ACCRUED</value>
+    <comment>Investment Interest Accrued</comment>
+  </data>
+  <data name="Get_Cash_Account_Details_Receipt" xml:space="preserve">
+    <value>FA_GET_CSH_ACC_DET_RECEIPT</value>
+    <comment>Receipt Processing </comment>
+  </data>
+  <data name="GetLocationValue" xml:space="preserve">
+    <value>FA_RPT_GET_LOCATION</value>
+    <comment>To Get Locations based on options for Report</comment>
+  </data>
+  <data name="GetDenomination" xml:space="preserve">
+    <value>FA_RPT_GET_DENOMINATION</value>
+    <comment>To Get the Denomination Values</comment>
+  </data>
+  <data name="GetTrialBalanceDet" xml:space="preserve">
+    <value>FA_RPT_TRIAL_BAL_DET</value>
+    <comment>To Get the Trial Balance Grid Details</comment>
+  </data>
+  <data name="GetFunderStatus" xml:space="preserve">
+    <value>FA_RPT_FUND_STATUS</value>
+    <comment>To Get the Funder Transaction Status</comment>
+  </data>
+  <data name="Cancelling_Investment_Transaction" xml:space="preserve">
+    <value>FA_CANCELLING_INVST_TRAN</value>
+    <comment>Investment Transaction</comment>
+  </data>
+  <data name="Validate_Investment_CashFlow_ES" xml:space="preserve">
+    <value>FA_VAL_CASHFLOW_ES_INVSTMT</value>
+    <comment>Investment Transaction</comment>
+  </data>
+  <data name="GetBudgetDetails" xml:space="preserve">
+    <value>FA_GET_Budget_DTL</value>
+    <comment>Budget</comment>
+  </data>
+  <data name="GetDefaultcurrency" xml:space="preserve">
+    <value>FA_GET_DEFAULTCURR</value>
+    <comment>Budget</comment>
+  </data>
+  <data name="ValidateMonthLock" xml:space="preserve">
+    <value>FA_Validate_Month_Lock</value>
+    <comment>Budget</comment>
+  </data>
+  <data name="BranchMaster_LIST" xml:space="preserve">
+    <value>FA_Get_Branch_List</value>
+    <comment>To Get Branch List</comment>
+  </data>
+  <data name="SYS_ModuleMaster" xml:space="preserve">
+    <value>FA_Get_ModuleMaster_List</value>
+    <comment>To get module master</comment>
+  </data>
+  <data name="SYS_ProgramMaster" xml:space="preserve">
+    <value>FA_Get_ProgramMaster_List</value>
+    <comment>To get program name</comment>
+  </data>
+  <data name="GET_CallPut" xml:space="preserve">
+    <value>FA_GET_CallPut</value>
+    <comment>Call Put</comment>
+  </data>
+  <data name="Get_Hdge_No" xml:space="preserve">
+    <value>FA_GET_Hedge_No</value>
+    <comment>Hedging</comment>
+  </data>
+  <data name="FA_GET_AGENT_NAME" xml:space="preserve">
+    <value>FA_GET_AGENT_NAME</value>
+    <comment>Agent Name</comment>
+  </data>
+  <data name="Get_Agent_Name" xml:space="preserve">
+    <value>Get_Agent_Name</value>
+    <comment>To load Agent_Name</comment>
+  </data>
+  <data name="FA_Get_Hedging_Rpt_Details" xml:space="preserve">
+    <value>FA_Get_Hedging_Rpt_Details</value>
+    <comment>To Load Hedging report details</comment>
+  </data>
+  <data name="Fa_Ins_Di" xml:space="preserve">
+    <value>Fa_Ins_Di</value>
+    <comment>To Insert Local Purchase Order</comment>
+  </data>
+</root>

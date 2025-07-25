@@ -1,0 +1,68 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/Common/MasterPage.master" AutoEventWireup="true"
+    CodeFile="FA_DBConverter.aspx.cs" Inherits="System_Admin_FA_DBConverter" Title="Database Replication" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+    <table width="100%" align="center" cellpadding="3" cellspacing="0">
+        <tr>
+            <td class="stylePageHeading" width="100%">
+                <asp:Label runat="server" Text="Database Replication" ID="lblHeading" CssClass="styleDisplayLabel"> </asp:Label>
+            </td>
+        </tr>
+    </table>
+    <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+        <ContentTemplate>
+            <table width="348px%">
+                <tr>
+                    <td width="348px" align="center">
+                        <asp:Panel ID="pnlConvert" runat="server" GroupingText="Data Base Process" CssClass="stylePanel"
+                            Width="100%" Style="overflow-y: hidden">
+                            <asp:GridView ID="grvConvert" runat="server" AutoGenerateColumns="false" Width="100%">
+                                <Columns>
+                                    <asp:TemplateField HeaderText="Status" ItemStyle-Width="50px">
+                                        <ItemTemplate>
+                                            <asp:Image ID="imgStatus" runat="server" ImageUrl="~/Images/delete_desabled.png"
+                                                Height="15px" Width="15px" />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Process" ItemStyle-HorizontalAlign="Left">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblProcess" Style="padding-left: 15px" runat="server" Text='<%# Bind("Process") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                </Columns>
+                            </asp:GridView>
+                            <asp:Panel ID="pnlProgress" runat="server" Width="100%" Style="text-align: left;"
+                                Visible="false">
+                            </asp:Panel>
+                        </asp:Panel>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        <asp:Button ID="btnMove" runat="server" CssClass="styleGridShortButton" OnClick="btnConvert_Click"
+                            Text="Move" />
+                        <asp:Button ID="btnClose" runat="server" CssClass="styleGridShortButton" Text="Close"
+                            OnClick="btnClose_Click" Visible="false" />
+                    </td>
+                </tr>
+            </table>
+        </ContentTemplate>
+        <Triggers>
+            <asp:AsyncPostBackTrigger ControlID="Timer1" EventName="Tick"></asp:AsyncPostBackTrigger>
+        </Triggers>
+    </asp:UpdatePanel>
+    <asp:Timer ID="Timer1" runat="server" Interval="2000" Enabled="false" OnTick="Timer1_Tick">
+    </asp:Timer>
+    <table align="left">
+        <tr>
+            <td align="left">
+                <asp:ValidationSummary CssClass="styleSummaryStyle" runat="server" ID="vsYrOpen"
+                    HeaderText="Correct the following validation(s):  " ShowSummary="true" ShowMessageBox="false" />
+                <asp:CustomValidator ID="cvYrOpen" runat="server" CssClass="styleMandatoryLabel"
+                    Enabled="true"></asp:CustomValidator>
+            </td>
+        </tr>
+    </table>
+   
+</asp:Content>

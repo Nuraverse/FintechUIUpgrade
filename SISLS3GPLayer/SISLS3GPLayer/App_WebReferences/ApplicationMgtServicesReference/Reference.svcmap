@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="87ab1fef-9949-4357-a6ec-ad0c428ca1d5" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:3220/Origination/ApplicationMgtServices.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="ApplicationMgtServices.disco" MetadataType="Disco" ID="3bc0ea69-1f4a-4c18-9a3d-bcdae2067b23" SourceId="1" SourceUrl="http://localhost:3220/Origination/ApplicationMgtServices.svc?disco" />
+    <MetadataFile FileName="ApplicationMgtServices.xsd" MetadataType="Schema" ID="5ca3dec4-5e6c-43fe-ae6f-e0aa2c48b604" SourceId="1" SourceUrl="http://localhost:3220/Origination/ApplicationMgtServices.svc?xsd=xsd1" />
+    <MetadataFile FileName="ApplicationMgtServices2.xsd" MetadataType="Schema" ID="7b7c8f8e-ff4a-4ffb-a996-b3e404585f9b" SourceId="1" SourceUrl="http://localhost:3220/Origination/ApplicationMgtServices.svc?xsd=xsd0" />
+    <MetadataFile FileName="ApplicationMgtServices3.xsd" MetadataType="Schema" ID="34c3f1fe-c304-4877-8b04-50386543cc53" SourceId="1" SourceUrl="http://localhost:3220/Origination/ApplicationMgtServices.svc?xsd=xsd3" />
+    <MetadataFile FileName="ApplicationMgtServices4.xsd" MetadataType="Schema" ID="8229b19a-9405-4b5e-ae9f-0d57b9083f2b" SourceId="1" SourceUrl="http://localhost:3220/Origination/ApplicationMgtServices.svc?xsd=xsd2" />
+    <MetadataFile FileName="ApplicationMgtServices5.xsd" MetadataType="Schema" ID="0863a5c7-c3e8-4986-9c83-a328ae6489cf" SourceId="1" SourceUrl="http://localhost:3220/Origination/ApplicationMgtServices.svc?xsd=xsd4" />
+    <MetadataFile FileName="ApplicationMgtServices.wsdl" MetadataType="Wsdl" ID="9912fff8-e2a9-423d-bda5-2eef076369eb" SourceId="1" SourceUrl="http://localhost:3220/Origination/ApplicationMgtServices.svc?wsdl" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+    <ExtensionFile FileName="configuration912.svcinfo" Name="configuration91.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

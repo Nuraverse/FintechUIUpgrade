@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="41841339-d19c-4b69-803a-ce199d9db964" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:3220/Reports/ReportCAMPMgtServices.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="ReportCAMPMgtServices.xsd" MetadataType="Schema" ID="cce1c879-ac9a-480b-9fc5-8a1b7f69012d" SourceId="1" SourceUrl="http://localhost:3220/Reports/ReportCAMPMgtServices.svc?xsd=xsd0" />
+    <MetadataFile FileName="ReportCAMPMgtServices1.xsd" MetadataType="Schema" ID="1fb3e8c4-6528-4b94-a74c-5f09cacb2455" SourceId="1" SourceUrl="http://localhost:3220/Reports/ReportCAMPMgtServices.svc?xsd=xsd3" />
+    <MetadataFile FileName="ReportCAMPMgtServices2.xsd" MetadataType="Schema" ID="4471b769-e2b1-4ac3-a07b-21ea4a33d1f2" SourceId="1" SourceUrl="http://localhost:3220/Reports/ReportCAMPMgtServices.svc?xsd=xsd4" />
+    <MetadataFile FileName="ReportCAMPMgtServices.wsdl" MetadataType="Wsdl" ID="4bb4df09-8078-485e-81bb-730c0114c9cd" SourceId="1" SourceUrl="http://localhost:3220/Reports/ReportCAMPMgtServices.svc?wsdl" />
+    <MetadataFile FileName="ReportCAMPMgtServices.disco" MetadataType="Disco" ID="79377d5f-4301-4249-a103-02b74b47b4be" SourceId="1" SourceUrl="http://localhost:3220/Reports/ReportCAMPMgtServices.svc?disco" />
+    <MetadataFile FileName="ReportCAMPMgtServices3.xsd" MetadataType="Schema" ID="7495247b-c5db-48ff-b07f-bed84990a171" SourceId="1" SourceUrl="http://localhost:3220/Reports/ReportCAMPMgtServices.svc?xsd=xsd2" />
+    <MetadataFile FileName="ReportCAMPMgtServices4.xsd" MetadataType="Schema" ID="7cb69bbe-9d91-4083-8a0a-915f1cee38fc" SourceId="1" SourceUrl="http://localhost:3220/Reports/ReportCAMPMgtServices.svc?xsd=xsd1" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

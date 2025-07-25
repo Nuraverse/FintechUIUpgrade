@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="86346d09-b356-4899-9ea1-1f28e1fe7628" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:3220/LegalAndRepossession/LegalAndRepossessionMgtServices.svc?wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="LegalAndRepossessionMgtServices.xsd" MetadataType="Schema" ID="07870b90-2df2-473f-bf62-19d73f2b0f76" SourceId="1" SourceUrl="http://localhost:3220/LegalAndRepossession/LegalAndRepossessionMgtServices.svc?xsd=xsd1" />
+    <MetadataFile FileName="LegalAndRepossessionMgtServices1.xsd" MetadataType="Schema" ID="e87fdc12-942c-49ea-9a07-8a6cd3d64d0a" SourceId="1" SourceUrl="http://localhost:3220/LegalAndRepossession/LegalAndRepossessionMgtServices.svc?xsd=xsd3" />
+    <MetadataFile FileName="LegalAndRepossessionMgtServices2.xsd" MetadataType="Schema" ID="84a0850d-6726-43a5-b3af-6a960e812701" SourceId="1" SourceUrl="http://localhost:3220/LegalAndRepossession/LegalAndRepossessionMgtServices.svc?xsd=xsd2" />
+    <MetadataFile FileName="LegalAndRepossessionMgtServices3.xsd" MetadataType="Schema" ID="2ca801f8-2ee7-41cb-bdb9-76c7184f6ffb" SourceId="1" SourceUrl="http://localhost:3220/LegalAndRepossession/LegalAndRepossessionMgtServices.svc?xsd=xsd0" />
+    <MetadataFile FileName="LegalAndRepossessionMgtServices.wsdl" MetadataType="Wsdl" ID="4507cb77-2df4-4b46-897d-ae03013a6a3e" SourceId="1" SourceUrl="http://localhost:3220/LegalAndRepossession/LegalAndRepossessionMgtServices.svc?wsdl" />
+    <MetadataFile FileName="LegalAndRepossessionMgtServices4.xsd" MetadataType="Schema" ID="a0da17b4-f114-44c8-8890-ebd41f4281bc" SourceId="1" SourceUrl="http://localhost:3220/LegalAndRepossession/LegalAndRepossessionMgtServices.svc?xsd=xsd4" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

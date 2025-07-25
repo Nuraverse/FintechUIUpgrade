@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/FA_BusEntity" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/FA_BusEntity" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="FASerializationMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Binary" />
+      <xs:enumeration value="Xml" />
+      <xs:enumeration value="Soap" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="FASerializationMode" nillable="true" type="tns:FASerializationMode" />
+</xs:schema>

@@ -1,0 +1,631 @@
+create or replace
+PROCEDURE S3G_FACT_REGULAR_INT
+(     
+     P_COMPANY_ID NUMBER:=NULL
+    ,P_LOCATION_ID NUMBER:=NULL
+    ,P_PA_SA_REF_ID NUMBER:=NULL
+    ,P_CUT_OFF_DATE date:=null
+    ,P_TRAN_TYPE NUMBER:=NULL--0 -Query Mode--1--Transaction Mode
+    ,P_SCHEDULEJOB_STATUS_ID INT:=NULL
+    ,P_OUT_REGULAR_INT OUT SYS_REFCURSOR
+)      
+as      
+ 
+  D_COUNT number:=0;
+  D_NO_DAYS number:=0;
+  D_REGULAR_DENOMINATOR number:=0;
+  D_LOC_DENOMINATOR number:=0;
+  D_FIRST_DAY_OF_MONTH date;
+  D_L1_ROW_ID number;
+  D_PREV_DOCUMENT_DATE date;
+  D_LOOP_NO_DAYS NUMBER:=0;
+  D_CUT_OFF_DATE date;
+  D_DUE_FLAG number;
+  D_CREATED_BY number;
+  D_INCOME_RECOGNITION_ID number;
+  D_INCOME_RECOGNITION_NUMBER varchar2(50);
+  D_TASK_ID               number;
+  D_JOURNAL_ENTRY       number;
+  D_ERRORCODE number;
+  P_ERRORMSG varchar(600);
+  D_FINANCIAL_MONTH     varchar2(6);
+  D_OS_BAL number;
+  D_CUR_BAL number;
+  D_OUT_DIFF_INT SYS_REFCURSOR;
+  P_OUT_DIFF_INT_AMOUNT number  ;
+  D_PREV_PROCESS_MONTH number;
+  D_USER_CODE VARCHAR(50);
+  D_DOCUMENT_DATE DATE;
+  D_TRANSACTION_AMOUNT NUMBER;
+  D_XML_JOURNAL VARCHAR2(7500);
+  D_LAST_INCOME_DATE DATE;
+  D_NO_OF_DAYS NUMBER;
+  D_CURR_DOCUMENT_DATE date;
+  D_CUR_TRANSACTION_AMOUNT number;
+  D_NO_OF_DAYS_2 number;
+  D_INTEREST_PREV number;
+  D_DISC_RATE number;
+  D_INTEREST number;
+  D_INTEREST_TOTAL number;
+  D_DISC_RATE_PREV number;
+  D_CUR_TRANSACTION_AMOUNT_1 number;
+  D_TRANSACTION_AMOUNT_1 NUMBER;
+  
+  D_LAST_PA_SA_REF_ID number;
+  D_LAST_RECORD_ID number;
+  D_LAST_DOCUMENT_DATE date;
+  D_LAST_TRANSACTION_AMOUNT_1 number;
+  D_LAST_DISC_RATE_PREV NUMBER;
+  D_IRHEADER_ID number;
+  D_ACCOUNT_COUNT number;
+  D_TOTAL_BRANCH_INETERST_AMOUNT NUMBER;
+  D_LAST_OD_BAL NUMBER;
+begin    
+  --CREATED BY:SATHISH R
+  --CREATED ON:12-MAR-2019
+  --USE:FACTORING MONTH END JOB ACTIVITY
+  
+delete from TMP_FAC_D4_STG1;
+delete from TMP_FAC_D4_STG3;
+DELETE FROM TMP_FAC_D4_STG4;
+
+  D_REGULAR_DENOMINATOR:=365;
+  D_LOC_DENOMINATOR:=1200;
+  
+  D_CUT_OFF_DATE:=P_CUT_OFF_DATE;
+  D_DUE_FLAG:=91;--PRINCIPAL
+  d_TASK_ID               := 114;--INCOME RECOGNIZATION PROGRAM
+           
+           
+           
+           
+        if(P_TRAN_TYPE=0)then--P_TRAN_TYPE=0
+        BEGIN
+        
+           begin
+             if(D_CUT_OFF_DATE is null)then
+                 BEGIN
+                    select  LAST_DAY(sysdate) into D_CUT_OFF_DATE from DUAL;
+                    
+                  END;  
+              end if;   
+              select ADD_MONTHS((LAST_DAY(sysdate)+1),-1) into D_FIRST_DAY_OF_MONTH from DUAL;
+              select extract(day from LAST_DAY(sysdate)) into D_NO_DAYS from DUAL;
+           end;
+            D_PREV_PROCESS_MONTH:=TO_NUMBER(TO_CHAR(D_CUT_OFF_DATE,'YYYYMM'))-1;     
+                
+                --d('D_PREV_PROCESS_MONTH==>'||D_PREV_PROCESS_MONTH);
+                
+             BEGIN--CONTRACT WISE OPENING <0          
+               insert into  TMP_FAC_D4_STG1
+               (
+                RECORD_ID,
+                DOCUMENT_DATE,
+                TRANSACTION_AMOUNT,
+                OS_FLAG,
+                NO_OF_DAYS,
+                PA_SA_REF_ID,
+                LOCATION_ID,
+                LOCATION_CODE,
+                LAST_ODI_AMOUNT,
+                LOB_ID
+               )
+               SELECT ROWNUM,LAST_FAC_INCOME_DATE,T.OS_BAL,1,D_CUT_OFF_DATE-LAST_FAC_INCOME_DATE
+               ,PA_SA_REF_ID,LOCATION_ID,LOCATION_CODE,INTEREST_AMOUNT,LOB_ID
+               from 
+               (
+                 SELECT 
+                 NVL(INCDET.PRINCIPAL_OUTSTANDING,0) as OS_BAL,
+                 PASA.PA_SA_REF_ID as PA_SA_REF_ID,
+                 NVL(PASA.LAST_FAC_INCOME_DATE,PASA.CREATION_DATE) as LAST_FAC_INCOME_DATE
+                 ,AC.LOCATION_CODE
+                 ,AC.LOCATION_ID,
+                 NVL(INCDET.INTEREST_AMOUNT,0) AS INTEREST_AMOUNT,
+                 AC.LOB_ID
+                 
+                 FROM  S3G_LAD_ACCPASADET PASA
+                 inner join S3G_LAD_ACCCREATION AC
+                 ON AC.ACCOUNT_CREATION_ID=PASA.ACCOUNT_CREATION_ID
+                 LEFT JOIN S3G_LAD_INCOMERECOGDET INCDET
+                 ON (INCDET.PA_SA_REF_ID=PASA.PA_SA_REF_ID )
+                 LEFT JOIN S3G_LAD_INCOMERECOG INC
+                 on (INC.INCOME_RECOGNITION_ID=INCDET.INCOME_RECOGNITION_ID AND INC.PROCESS_MONTH=D_PREV_PROCESS_MONTH and INCDET.PRINCIPAL_OUTSTANDING>0 )
+                 WHERE PASA.PA_SA_REF_ID=NVL(P_PA_SA_REF_ID,PASA.PA_SA_REF_ID)
+                 AND PASA.SA_STATUS_CODE=3
+                 AND AC.LOB_ID IN(4,5)
+                 group by INCDET.PRINCIPAL_OUTSTANDING,PASA.PA_SA_REF_ID,PASA.LAST_FAC_INCOME_DATE,PASA.CREATION_DATE,AC.LOCATION_CODE,AC.LOCATION_ID,INCDET.INTEREST_AMOUNT,AC.LOB_ID
+               )T 
+               ;
+             END;--CONTRACT WISE OPENING >0 END           
+              
+               BEGIN--CONTRACT WISE CURRENT MONTH BALANCE START        
+                   insert into  TMP_FAC_D4_STG3
+                   (
+                    RECORD_ID,
+                    DOCUMENT_DATE,
+                    TRANSACTION_AMOUNT,
+                    OS_FLAG,
+                    NO_OF_DAYS_FLAG2,
+                    PA_SA_REF_ID,
+                    LOCATION_ID,
+                    location_code,
+                    LAST_FAC_INCOME_DATE,
+                    DOCMENT_NO,
+                    DOCUMENT_TYPE,
+                    CHQ_GAP_DAYS
+                   )
+                   SELECT ROWNUM,T.DOCUMENT_DATE,T.OS_BAL,2,T.DOCUMENT_DATE-LAST_FAC_INCOME_DATE,PA_SA_REF_ID,LOCATION_ID,LOCATION_CODE 
+                   ,LAST_FAC_INCOME_DATE,DOCUMENT_NUMBER,DOCUMENT_TYPE,CHQ_GAP_DAYS
+                   from 
+                   (
+                   
+                   
+                  SELECT  distinct
+                  DOCUMENT_DATE+1 AS DOCUMENT_DATE,
+                  TRANSACTION_AMOUNT as OS_BAL,
+                  LOCATION_CODE,
+                  LOCATION_ID,
+                  PA_SA_REF_ID,
+                  LAST_FAC_INCOME_DATE,
+                  'opening' as DOCUMENT_NUMBER,
+                  'op' as DOCUMENT_TYPE,
+                  0 AS CHQ_GAP_DAYS
+                  from TMP_FAC_D4_STG1 where TRANSACTION_AMOUNT<>0 AND ROWNUM<2
+                   
+                     UNIoN
+                     SELECT D4.DOCUMENT_DATE,
+                     NVL(SUM(CASE WHEN TRANSACTION_CODE=1 THEN D4.TRANSACTION_AMOUNT ELSE  -1*D4.TRANSACTION_AMOUNT END),0) AS OS_BAL,
+                     AC.LOCATION_CODE,
+                     AC.LOCATION_ID,
+                     D4.PA_SA_REF_ID,
+                     NVL(PASA.LAST_FAC_INCOME_DATE+1,PASA.CREATION_DATE) AS LAST_FAC_INCOME_DATE,
+                     D4.DOCUMENT_NUMBER AS DOCUMENT_NUMBER,
+                     D4.DOCUMENT_TYPE,
+                     0 AS CHQ_GAP_DAYS
+                     
+                     from S3G_CLN_DMDDS4 D4 
+                     inner join S3G_LAD_ACCPASADET PASA
+                     on PASA.PA_SA_REF_ID=D4.PA_SA_REF_ID
+                     inner join S3G_LAD_ACCCREATION AC
+                     on AC.ACCOUNT_CREATION_ID=PASA.ACCOUNT_CREATION_ID
+                     WHERE D4.PA_SA_REF_ID=NVL(P_PA_SA_REF_ID,D4.PA_SA_REF_ID)
+                     and D4.DUE_FLAG=D_DUE_FLAG and D4.DOCUMENT_DATE>=NVL(PASA.LAST_FAC_INCOME_DATE+1,PASA.CREATION_DATE)
+                     AND D4.DOCUMENT_DATE<=D_CUT_OFF_DATE
+                      and AC.LOB_ID in(4,5)
+                     and upper(D4.DOCUMENT_TYPE) not in('CHR','CIR')
+                     --and AC.LOCATION_ID=P_LOCATION_ID
+                     group by D4.DOCUMENT_DATE,D4.TRANSACTION_AMOUNT,AC.LOCATION_CODE,AC.LOCATION_ID,D4.PA_SA_REF_ID,PASA.LAST_FAC_INCOME_DATE,TRANSACTION_CODE,PASA.CREATION_DATE,D4.DOCUMENT_NUMBER,D4.DOCUMENT_TYPE
+                     
+                     UNION
+                     SELECT TRUNC(D4.DOCUMENT_DATE),
+                     abs(NVL(SUM(CASE WHEN TRANSACTION_CODE=1 THEN D4.TRANSACTION_AMOUNT ELSE  -1*D4.TRANSACTION_AMOUNT END),0))*-1 AS OS_BAL,
+                     AC.LOCATION_CODE,AC.LOCATION_ID,D4.PA_SA_REF_ID,NVL(PASA.LAST_FAC_INCOME_DATE+1,PASA.CREATION_DATE) AS LAST_FAC_INCOME_DATE,D4.DOCUMENT_NUMBER AS DOCUMENT_NUMBER,D4.DOCUMENT_TYPE,
+                     trunc(D4.DOCUMENT_DATE)- trunc(D4.VALUE_DATE) as CHQ_GAP_DAYS
+                     from S3G_CLN_DMDDS4 D4 
+                     inner join S3G_LAD_ACCPASADET PASA
+                     on PASA.PA_SA_REF_ID=D4.PA_SA_REF_ID
+                     inner join S3G_LAD_ACCCREATION AC
+                     on AC.ACCOUNT_CREATION_ID=PASA.ACCOUNT_CREATION_ID
+                     WHERE D4.PA_SA_REF_ID=NVL(P_PA_SA_REF_ID,D4.PA_SA_REF_ID)
+                     and D4.DUE_FLAG=D_DUE_FLAG and D4.DOCUMENT_DATE>=NVL(PASA.LAST_FAC_INCOME_DATE+1,PASA.CREATION_DATE)
+                     AND D4.DOCUMENT_DATE<=D_CUT_OFF_DATE
+                     and AC.LOB_ID in(4,5)
+                     AND UPPER(D4.DOCUMENT_TYPE)='CHR'
+                       
+                     --and AC.LOCATION_ID=P_LOCATION_ID
+                     group by trunc(D4.DOCUMENT_DATE),D4.VALUE_DATE,D4.TRANSACTION_AMOUNT,AC.LOCATION_CODE,AC.LOCATION_ID,D4.PA_SA_REF_ID,PASA.LAST_FAC_INCOME_DATE,TRANSACTION_CODE,PASA.CREATION_DATE,D4.DOCUMENT_NUMBER,D4.DOCUMENT_TYPE
+                     
+                     --ORDER BY D4.PA_SA_REF_ID,D4.DOCUMENT_DATE
+                   )T
+                 ;
+               END;--CONTRACT WISE CURRENT MONTH BALANCE END  
+             
+           
+             begin--UPDATE INTEREST FOR WITHOUT FUTURE TRANSACTION CASE  START
+                 merge into TMP_FAC_D4_STG1 TARGET
+                 using(
+                   select a.PA_SA_REF_ID,a.TRANSACTION_AMOUNT AS TRANSACTION_AMOUNT,C.DISC_RATE AS DISC_RATE from TMP_FAC_D4_STG1 a 
+                   inner join S3G_LAD_ACC_DIS_UTIL C
+                   ON C.PA_SA_REF_ID=A.PA_SA_REF_ID
+                   left join TMP_FAC_D4_STG3 B
+                   on B.PA_SA_REF_ID=a.PA_SA_REF_ID
+                   where B.PA_SA_REF_ID is null
+                   and a.TRANSACTION_AMOUNT between C.START_SLAB and C.END_SLAB
+                 )TBL on (TBL.PA_SA_REF_ID=TARGET.PA_SA_REF_ID and TARGET.OS_FLAG=1)
+                 when matched then
+                 update set INETERST_AMOUNT=NVL(INETERST_AMOUNT,0)+NVL(INETERST_AMOUNT,0)+(ROUND(( TBL.TRANSACTION_AMOUNT * (1 / (100 * D_REGULAR_DENOMINATOR ) ) * TBL.DISC_RATE * NO_OF_DAYS),3))
+                 ,INETERST_RATE=NVL(TBL.DISC_RATE,0) ;
+                
+             END;--UPDATE INTEREST FOR WITHOUT FUTURE TRANSACTION CASE END     
+            
+            
+            
+                UPDATE  TMP_FAC_D4_STG3 SET OS_BAL=0,INETERST_RATE=0;
+                
+                
+                
+                insert into TMP_FAC_D4_STG4
+                (
+                  RECORD_ID,
+                  DOCUMENT_DATE, 
+                  LOCATION_CODE, 
+                  LOCATION_ID, 
+                  PA_SA_REF_ID, 
+                  TRANSACTION_AMOUNT 
+                )
+                select  
+                ROW_NUMBER() OVER(ORDER BY PA_SA_REF_ID,TRUNC(DOCUMENT_DATE)) ,
+                TRUNC(DOCUMENT_DATE) AS DOCUMENT_DATE, 
+                LOCATION_CODE ,
+                LOCATION_ID ,
+                PA_SA_REF_ID ,
+                sum(TRANSACTION_AMOUNT) as TRANSACTION_AMOUNT
+                from TMP_FAC_D4_STG3
+                GROUP BY  TRUNC(DOCUMENT_DATE), LOCATION_CODE ,LOCATION_ID ,PA_SA_REF_ID ;
+                
+            
+               for K in(select PA_SA_REF_ID from TMP_FAC_D4_STG4 group by PA_SA_REF_ID)
+               LOOP--LOOP MASTER 1
+               begin
+                  FOR I IN(SELECT DOCUMENT_DATE,RECORD_ID,PA_SA_REF_ID FROM TMP_FAC_D4_STG4 WHERE PA_SA_REF_ID=K.PA_SA_REF_ID  ORDER BY RECORD_ID,PA_SA_REF_ID )
+                    LOOP
+                      BEGIN--L1
+                      
+                      
+                    
+                            D_PREV_DOCUMENT_DATE:=NULL;
+                            D_CURR_DOCUMENT_DATE:=NULL;
+                            D_TRANSACTION_AMOUNT:=NULL;
+                            D_CUR_TRANSACTION_AMOUNT:=NULL;
+                            D_NO_OF_DAYS:=NULL;
+                            D_NO_OF_DAYS_2:=NULL;
+                            D_DISC_RATE_PREV:=NULL;
+                            D_DISC_RATE:=NULL;
+                            D_INTEREST_PREV:=NULL;
+                            D_INTEREST:=NULL;
+                      
+                      
+                      SELECT COUNT(1) INTO D_COUNT FROM TMP_FAC_D4_STG4 WHERE RECORD_ID=I.RECORD_ID-1 AND PA_SA_REF_ID=I.PA_SA_REF_ID;
+                      
+                      IF(D_COUNT>0)THEN
+                         begin
+                             select NVL(SUM(TRANSACTION_AMOUNT),0) into D_TRANSACTION_AMOUNT from TMP_FAC_D4_STG4 where RECORD_ID<I.RECORD_ID and PA_SA_REF_ID=I.PA_SA_REF_ID;
+                             SELECT SUM(TRANSACTION_AMOUNT)+D_TRANSACTION_AMOUNT INTO D_CUR_TRANSACTION_AMOUNT FROM TMP_FAC_D4_STG4 WHERE RECORD_ID=I.RECORD_ID AND PA_SA_REF_ID=I.PA_SA_REF_ID;
+                             
+                             D_TRANSACTION_AMOUNT_1:=ABS(D_TRANSACTION_AMOUNT);
+                             D_CUR_TRANSACTION_AMOUNT_1:=ABS(D_CUR_TRANSACTION_AMOUNT);
+                             D_LAST_OD_BAL:=D_CUR_TRANSACTION_AMOUNT;
+                             SELECT DOCUMENT_DATE INTO D_PREV_DOCUMENT_DATE FROM TMP_FAC_D4_STG4 WHERE RECORD_ID=I.RECORD_ID-1 AND PA_SA_REF_ID=I.PA_SA_REF_ID;
+                             SELECT DOCUMENT_DATE INTO D_CURR_DOCUMENT_DATE FROM TMP_FAC_D4_STG4 WHERE RECORD_ID=I.RECORD_ID AND PA_SA_REF_ID=I.PA_SA_REF_ID;
+                            
+                            D_NO_OF_DAYS:=TRUNC(D_CURR_DOCUMENT_DATE)-TRUNC(D_PREV_DOCUMENT_DATE);
+                            D_NO_OF_DAYS_2:=D_NO_OF_DAYS;
+                            
+                            D_NO_OF_DAYS_2:= CASE WHEN D_NO_OF_DAYS_2=0 OR D_NO_OF_DAYS_2=-1 THEN 1 ELSE D_NO_OF_DAYS_2 END;
+                            
+                            begin--INCOME PREVBAL
+                            
+                             select COUNT(1) into D_COUNT from S3G_LAD_ACC_DIS_UTIL a 
+                               where D_TRANSACTION_AMOUNT_1 between a.START_SLAB and a.END_SLAB
+                               AND a.PA_SA_REF_ID=I.PA_SA_REF_ID;
+                            
+                             if(D_COUNT>0)then
+                             begin
+                           
+                               select a.DISC_RATE into D_DISC_RATE_PREV from S3G_LAD_ACC_DIS_UTIL a 
+                               WHERE D_TRANSACTION_AMOUNT_1 between A.START_SLAB and A.END_SLAB
+                               AND a.PA_SA_REF_ID=I.PA_SA_REF_ID
+                               ;
+                              end; 
+                             END IF;
+                             
+                            D_INTEREST_PREV:=0; 
+                            D_INTEREST_PREV:=(ROUND(( D_TRANSACTION_AMOUNT_1 * (1 / (100 * D_REGULAR_DENOMINATOR ) ) * D_DISC_RATE_PREV * D_NO_OF_DAYS_2),3));
+                            
+                            D_LAST_TRANSACTION_AMOUNT_1:=D_CUR_TRANSACTION_AMOUNT_1;
+                            D_LAST_DISC_RATE_PREV:=D_DISC_RATE_PREV;
+                             
+                            END; 
+                            
+                             begin--INCOME CURRBAL
+                             
+--                             select COUNT(1) into D_COUNT from S3G_LAD_ACC_DIS_UTIL a 
+--                             where D_CUR_TRANSACTION_AMOUNT_1 between a.START_SLAB and a.END_SLAB
+--                             AND a.PA_SA_REF_ID=I.PA_SA_REF_ID;
+--                             
+--                             
+--                             if(D_COUNT>0)then
+--                             begin
+--                             select a.DISC_RATE into D_DISC_RATE from S3G_LAD_ACC_DIS_UTIL a 
+--                             where D_CUR_TRANSACTION_AMOUNT_1 between a.START_SLAB and a.END_SLAB
+--                             AND a.PA_SA_REF_ID=I.PA_SA_REF_ID;
+--                             END;
+--                             END IF;
+                             
+--                            D_INTEREST:=0; 
+--                            D_INTEREST:=(ROUND(( D_CUR_TRANSACTION_AMOUNT_1 * (1 / (100 * D_REGULAR_DENOMINATOR ) ) * D_DISC_RATE * 1),3));
+                            D_INTEREST:=0;
+                             
+                            D_INTEREST_TOTAL:=D_INTEREST+ D_INTEREST_PREV;
+                            END; 
+                            
+                                
+                            
+                            update TMP_FAC_D4_STG4 set LAST_FAC_INCOME_DATE=D_DOCUMENT_DATE,OS_BAL=D_CUR_TRANSACTION_AMOUNT  ,INETERST_AMOUNT=NVL(INETERST_AMOUNT,0)+D_INTEREST_TOTAL,NO_OF_DAYS=D_NO_OF_DAYS_2,
+                            INETERST_RATE=D_DISC_RATE_PREV
+                            WHERE RECORD_ID=I.RECORD_ID AND PA_SA_REF_ID=I.PA_SA_REF_ID;
+                            
+                            D_LAST_PA_SA_REF_ID:=I.PA_SA_REF_ID;
+                            D_LAST_RECORD_ID:=I.RECORD_ID;
+                            D_LAST_DOCUMENT_DATE:=D_CURR_DOCUMENT_DATE;
+                            
+                            
+--                            D('--------------');
+--                            D('I.RECORD_ID ==>'||I.RECORD_ID );
+--                            D('D_PREV_DOCUMENT_DATE==>'||D_PREV_DOCUMENT_DATE);
+--                            D('D_CURR_DOCUMENT_DATE==>'||D_CURR_DOCUMENT_DATE);
+--                            D('D_TRANSACTION_AMOUNT==>'||D_TRANSACTION_AMOUNT);
+--                            D('D_CUR_TRANSACTION_AMOUNT==>'||D_CUR_TRANSACTION_AMOUNT);
+--                            D('D_NO_OF_DAYS==>'||D_NO_OF_DAYS);
+--                            D('D_NO_OF_DAYS_2==>'||D_NO_OF_DAYS_2);
+--                            D('D_DISC_RATE_PREV==>'||D_DISC_RATE_PREV);
+--                            D('D_DISC_RATE==>'||D_DISC_RATE);
+--                            D('D_INTEREST_PREV==>'||D_INTEREST_PREV);
+--                            D('D_INTEREST==>'||D_INTEREST);
+                            
+                         end; 
+                       ELSE
+                         BEGIN
+                               
+                               D('I.RECORD_ID==>'||I.RECORD_ID);
+                               d('I.PA_SA_REF_ID==>'||I.PA_SA_REF_ID);
+                                                 
+                          SELECT TRANSACTION_AMOUNT,DOCUMENT_DATE INTO D_TRANSACTION_AMOUNT,D_LAST_INCOME_DATE FROM TMP_FAC_D4_STG4 WHERE PA_SA_REF_ID=I.PA_SA_REF_ID AND RECORD_ID=I.RECORD_ID;
+                          
+                          SELECT DOCUMENT_DATE INTO D_CURR_DOCUMENT_DATE FROM TMP_FAC_D4_STG4   WHERE RECORD_ID=I.RECORD_ID AND PA_SA_REF_ID=I.PA_SA_REF_ID;
+                          
+                          D_NO_OF_DAYS:=TRUNC(D_CURR_DOCUMENT_DATE)-(D_LAST_INCOME_DATE);
+                          
+                          
+                          
+                            D_LAST_PA_SA_REF_ID:=I.PA_SA_REF_ID;
+                            D_LAST_RECORD_ID:=I.RECORD_ID;
+                            D_LAST_DOCUMENT_DATE:=D_CURR_DOCUMENT_DATE;
+                            D_LAST_TRANSACTION_AMOUNT_1:=D_TRANSACTION_AMOUNT;
+                            D_LAST_OD_BAL:=D_TRANSACTION_AMOUNT;
+                          
+                           --D('D_TRANSACTION_AMOUNT==>'||D_TRANSACTION_AMOUNT);
+                          
+                          
+--                          D('D_NO_OF_DAYS==>'||D_NO_OF_DAYS);
+--                          D('D_CURR_DOCUMENT_DATE==>'||D_CURR_DOCUMENT_DATE);
+--                          D('D_LAST_INCOME_DATE==>'||D_LAST_INCOME_DATE);
+                          
+                          UPDATE TMP_FAC_D4_STG4 SET OS_BAL=D_TRANSACTION_AMOUNT,NO_OF_DAYS=D_NO_OF_DAYS  WHERE RECORD_ID=I.RECORD_ID AND PA_SA_REF_ID=I.PA_SA_REF_ID;
+                         END;
+                      END IF;
+                      
+                      
+                      END;--L1
+                  END LOOP;
+            
+            
+                  D_NO_OF_DAYS_2:=TRUNC(D_CUT_OFF_DATE)-TRUNC(D_LAST_DOCUMENT_DATE)+1;
+                  
+--                  D('D_LAST_TRANSACTION_AMOUNT_1==>'||D_LAST_TRANSACTION_AMOUNT_1);
+--                  D('D_REGULAR_DENOMINATOR==>'||D_REGULAR_DENOMINATOR); 
+--                  D('D_LAST_DISC_RATE_PREV==>'||D_LAST_DISC_RATE_PREV); 
+--                  D('D_NO_OF_DAYS_2==>'||D_NO_OF_DAYS_2); 
+--                  D('D_LAST_PA_SA_REF_ID==>'||D_LAST_PA_SA_REF_ID);
+--                  D('D_LAST_RECORD_ID==>'||D_LAST_RECORD_ID);
+--                  D('D_LAST_TRANSACTION_AMOUNT_1==>'||D_LAST_TRANSACTION_AMOUNT_1);
+                   
+                   
+                    select COUNT(1) into D_COUNT from S3G_LAD_ACC_DIS_UTIL a 
+                               where abs(D_LAST_TRANSACTION_AMOUNT_1) between a.START_SLAB and a.END_SLAB
+                               AND a.PA_SA_REF_ID=D_LAST_PA_SA_REF_ID;
+                            
+                             if(D_COUNT>0)then
+                             begin
+                           
+                               select a.DISC_RATE into D_LAST_DISC_RATE_PREV from S3G_LAD_ACC_DIS_UTIL a 
+                               WHERE abs(D_LAST_TRANSACTION_AMOUNT_1) between A.START_SLAB and A.END_SLAB
+                               AND a.PA_SA_REF_ID=D_LAST_PA_SA_REF_ID
+                               ;
+                              end; 
+                              else
+                              begin
+                              D('Discount Rate not Reached');
+                              END;
+                             END IF;
+                   
+                 
+                  IF(D_LAST_OD_BAL<0) THEN--for excess Collection Interest shoould not arrive
+                  BEGIN
+                  --d('Excess Collection not Comming==>'||D_LAST_PA_SA_REF_ID );
+                  D_INTEREST_PREV:=(ROUND(( abs(D_LAST_TRANSACTION_AMOUNT_1) * (1 / (100 * D_REGULAR_DENOMINATOR ) ) * D_LAST_DISC_RATE_PREV * D_NO_OF_DAYS_2),3));
+                  --D('D_LAST_DISC_RATE_PREV==>'||D_LAST_DISC_RATE_PREV);
+                 
+            
+                  insert into TMP_FAC_D4_STG4
+                  (
+                    RECORD_ID,
+                    DOCUMENT_DATE,
+                    TRANSACTION_AMOUNT,
+                    NO_OF_DAYS,
+                    PA_SA_REF_ID,
+                    LOCATION_ID,
+                    location_code,
+                    LAST_FAC_INCOME_DATE,
+                    DOCMENT_NO,
+                    OS_BAL,
+                    INETERST_AMOUNT,
+                    INETERST_RATE,
+                    LAST_POS_BAL
+                   )
+                    select  
+                    D_LAST_RECORD_ID+1,
+                    D_CUT_OFF_DATE,
+                    D_LAST_TRANSACTION_AMOUNT_1,
+                    D_NO_OF_DAYS_2,
+                    PA_SA_REF_ID,
+                    LOCATION_ID,
+                    location_code,
+                    LAST_FAC_INCOME_DATE,
+                    'Closing',
+                     D_LAST_OD_BAL,
+                     D_INTEREST_PREV,
+                     D_LAST_DISC_RATE_PREV,
+                     D_LAST_OD_BAL
+                    from TMP_FAC_D4_STG4 where  PA_SA_REF_ID=D_LAST_PA_SA_REF_ID and RECORD_ID=D_LAST_RECORD_ID;
+                   
+                   
+                    
+                    END;
+                    else
+                    BEGIN
+                      D('Excess Collection Comming==>'||D_LAST_PA_SA_REF_ID);
+                       d('D_LAST_TRANSACTION_AMOUNT_1==>'||D_LAST_TRANSACTION_AMOUNT_1);
+                    end;
+                    
+                    end if;--for excess Collection Interest shoould not arrive
+                    
+                    begin--Cheque Return Gap Days Start
+                    insert into TMP_FAC_D4_STG4
+                  (
+                    RECORD_ID,
+                    DOCUMENT_DATE,
+                    TRANSACTION_AMOUNT,
+                    NO_OF_DAYS,
+                    PA_SA_REF_ID,
+                    LOCATION_ID,
+                    location_code,
+                    LAST_FAC_INCOME_DATE,
+                    DOCMENT_NO,
+                    OS_BAL,
+                    INETERST_AMOUNT,
+                    INETERST_RATE,
+                    LAST_POS_BAL
+                   )
+                    select  
+                    D_LAST_RECORD_ID+1,
+                    D_CUT_OFF_DATE,
+                    abs(CHR.TRANSACTION_AMOUNT),
+                    0,
+                    CHR.PA_SA_REF_ID,
+                    LOCATION_ID,
+                    location_code,
+                    LAST_FAC_INCOME_DATE,
+                    'Closing-CheqReturn',
+                     D_LAST_OD_BAL,
+                     ROUND(( abs(CHR.TRANSACTION_AMOUNT) * (1 / (100 * D_REGULAR_DENOMINATOR ) ) *  DISUTIL.DISC_RATE * CHQ_GAP_DAYS),3),
+                     DISUTIL.DISC_RATE,
+                     null
+                    FROM TMP_FAC_D4_STG3 CHR 
+                    INNER JOIN S3G_LAD_ACC_DIS_UTIL DISUTIL
+                    on DISUTIL.PA_SA_REF_ID=CHR.PA_SA_REF_ID 
+                    WHERE  CHQ_GAP_DAYS>0
+                    AND ABS(CHR.TRANSACTION_AMOUNT) BETWEEN DISUTIL.START_SLAB AND DISUTIL.END_SLAB
+                    and  CHR.PA_SA_REF_ID=D_LAST_PA_SA_REF_ID and CHR.RECORD_ID=D_LAST_RECORD_ID
+                    ;
+                    
+                    end;----Cheque Return Gap Days End
+                    
+                    
+                    
+          END;
+          end LOOP;--LOOP MASTER 1
+          
+       
+       update TMP_FAC_D4_STG1 set INETERST_AMOUNT=0,LAST_POS_BAL=0 where INETERST_AMOUNT is null;
+       BEGIN
+         MERGE INTO   TMP_FAC_D4_STG1 TARGET
+         USING 
+         (
+           SELECT sum(INETERST_AMOUNT) AS INETERST_AMOUNT,MAX(INETERST_RATE)  AS INETERST_RATE,PA_SA_REF_ID,sum(NO_OF_DAYS) as NO_OF_DAYS,SUM(NVL(LAST_POS_BAL,0)) AS LAST_POS_BAL FROM TMP_FAC_D4_STG4  
+           GROUP BY PA_SA_REF_ID
+         )TBL ON(TBL.PA_SA_REF_ID=TARGET.PA_SA_REF_ID)
+         WHEN MATCHED THEN
+         UPDATE SET INETERST_AMOUNT=nvl(TBL.INETERST_AMOUNT,0),INETERST_RATE=nvl(INETERST_RATE,0)+TBL.INETERST_RATE,NO_OF_DAYS=TBL.NO_OF_DAYS,LAST_POS_BAL=TBL.LAST_POS_BAL;
+       END;
+       
+--       UPDATE  TMP_FAC_D4_STG1 SET IS_PREVOUS_CHQ_RTN=1;
+--        BEGIN
+--         MERGE INTO   TMP_FAC_D4_STG1 TARGET
+--         USING 
+--         (
+--           SELECT 1 AS CHR,PA_SA_REF_ID FROM TMP_FAC_D4_STG3  
+--           WHERE DOCUMENT_TYPE='CHR'
+--           GROUP BY PA_SA_REF_ID
+--         )TBL ON(TBL.PA_SA_REF_ID=TARGET.PA_SA_REF_ID)
+--         WHEN MATCHED THEN
+--         UPDATE SET IS_PREVOUS_CHQ_RTN=1;
+--       END;
+       
+       
+       --update  TMP_FAC_D4_STG1   set    INETERST_AMOUNT=nvl(INETERST_AMOUNT,0)-LAST_ODI_AMOUNT WHERE IS_PREVOUS_CHQ_RTN=1;
+            
+        DELETE FROM  S3G_TEMP_FAC_INCOME_DET  WHERE SCHEDULEJOB_STATUS_ID=P_SCHEDULEJOB_STATUS_ID ;
+        INSERT INTO S3G_TEMP_FAC_INCOME_DET
+        (
+            RECORD_ID,
+            DOCUMENT_NUMBER,
+            DOCUMENT_TYPE,
+            DOCUMENT_DATE,
+            VALUE_DATE,
+            TRANSACTION_AMOUNT,
+            TRANSACTION_CODE,
+            OS_FLAG,
+            NO_OF_DAYS,
+            NO_OF_DAYS_FLAG2,
+            PA_SA_REF_ID,
+            INETERST_AMOUNT,
+            INETERST_RATE,
+            LOCATION_ID,
+            LOCATION_CODE,
+            LOB_ID,
+            LAST_FAC_INCOME_DATE,
+            OS_BAL,
+            SCHEDULEJOB_STATUS_ID,
+            JOB_CUT_OFF_DATE
+        )
+
+         SELECT RECORD_ID,
+            DOCUMENT_NUMBER,
+            DOCUMENT_TYPE,
+            DOCUMENT_DATE,
+            VALUE_DATE,
+            TRANSACTION_AMOUNT,
+            TRANSACTION_CODE,
+            OS_FLAG,
+            NO_OF_DAYS,
+            NO_OF_DAYS_FLAG2,
+            PA_SA_REF_ID,
+            INETERST_AMOUNT,
+            INETERST_RATE,
+            LOCATION_ID,
+            LOCATION_CODE,
+            LOB_ID,
+            LAST_FAC_INCOME_DATE,
+            nvl(OS_BAL,LAST_POS_BAL),
+            P_SCHEDULEJOB_STATUS_ID,
+            D_CUT_OFF_DATE
+            
+            FROM TMP_FAC_D4_STG1;
+     
+  
+         end;
+     end if;--P_TRAN_TYPE
+        
+     if(P_SCHEDULEJOB_STATUS_ID is not null)then  
+     OPEN P_OUT_REGULAR_INT FOR
+     SELECT PA_SA_REF_ID,NO_OF_DAYS,INETERST_AMOUNT,INETERST_RATE,ERROR_MSG FROM S3G_TEMP_FAC_INCOME_DET WHERE SCHEDULEJOB_STATUS_ID=P_SCHEDULEJOB_STATUS_ID;
+     
+     ELSE
+      OPEN P_OUT_REGULAR_INT FOR
+      select * from TMP_FAC_D4_STG1;
+     end if;
+     
+     
+     
+End S3G_FACT_REGULAR_INT;

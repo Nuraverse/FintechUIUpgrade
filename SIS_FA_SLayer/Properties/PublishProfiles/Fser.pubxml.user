@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit http://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <LastUsedBuildConfiguration>Release</LastUsedBuildConfiguration>
+    <LastUsedPlatform>Any CPU</LastUsedPlatform>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="bin/FA_BusEntity.dll">
+      <publishTime>02/24/2023 03:06:02</publishTime>
+    </File>
+    <File Include="bin/FA_DALayer.dll">
+      <publishTime>02/24/2023 03:06:04</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Practices.EnterpriseLibrary.Common.dll">
+      <publishTime>02/22/2023 21:55:39</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Practices.EnterpriseLibrary.Data.dll">
+      <publishTime>02/22/2023 21:55:39</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Practices.EnterpriseLibrary.Logging.dll">
+      <publishTime>02/22/2023 21:55:39</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Practices.ObjectBuilder2.dll">
+      <publishTime>02/22/2023 21:55:39</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Practices.Unity.dll">
+      <publishTime>02/22/2023 21:55:39</publishTime>
+    </File>
+    <File Include="bin/SIS_FA_SLayer.dll">
+      <publishTime>02/24/2023 11:05:09</publishTime>
+    </File>
+    <File Include="Budget/BudgetMaster.svc">
+      <publishTime>02/22/2023 23:08:28</publishTime>
+    </File>
+    <File Include="FinancialAccounting/AccountMgtService.svc">
+      <publishTime>02/22/2023 23:08:28</publishTime>
+    </File>
+    <File Include="FinancialAccounting/CommonMail.svc">
+      <publishTime>02/22/2023 23:08:28</publishTime>
+    </File>
+    <File Include="FinancialAccounting/FATranMasterMgtServices.svc">
+      <publishTime>02/22/2023 23:08:28</publishTime>
+    </File>
+    <File Include="FinancialAccounting/FATransactionService.svc">
+      <publishTime>02/22/2023 23:08:28</publishTime>
+    </File>
+    <File Include="FinancialAccounting/FunderInvestmentMgtService.svc">
+      <publishTime>02/22/2023 23:08:28</publishTime>
+    </File>
+    <File Include="SIS_FA_SLayer.sln">
+      <publishTime>02/22/2023 23:08:28</publishTime>
+    </File>
+    <File Include="SysAdmin/FAAdminServices.svc">
+      <publishTime>02/22/2023 23:08:28</publishTime>
+    </File>
+    <File Include="SysAdmin/ScheduledJobMgtServices.svc">
+      <publishTime>02/22/2023 23:08:28</publishTime>
+    </File>
+    <File Include="SysAdmin/SystemAdminMgtService.svc">
+      <publishTime>02/22/2023 23:08:28</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>02/24/2023 07:37:48</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

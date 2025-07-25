@@ -1,0 +1,209 @@
+﻿create or replace
+procedure S3G_FAC_UPD_PENAL_MEMO(
+    P_COMPANYID      in number,--1
+    P_JV_STATUS_CODE in number,--2
+    P_LOBID          in number,--3
+    P_LOCATION_CODE  IN varchar2,--4
+    P_PANUM          in varchar2,--5
+    P_CLOSURENO      in varchar2,--6
+    P_USERID         in number,--7
+    P_CUSTOMERID     in number,--8
+    P_MEMOTYPE       in number,--9
+    P_AMOUNT         in number,--10
+    P_VALUE_DATE     in date,--11
+    P_TYPE           in varchar2:=null,--12
+    D_TYPEDESC       in varchar2:=null,--13
+    P_PA_SA_REF_ID   IN NUMBER:=NULL--14
+    
+    )
+AS
+  D_ROWCOUNT      NUMBER;
+  D_MEMO_LINK_KEY NUMBER;
+  D_VARCOUNT      NUMBER;
+  D_VARINDEX      NUMBER;
+  D_Memoamount    Number;
+  D_CURRENTDUE    NUMBER;
+  D_Location_Id   Number;
+  D_MEMODISTINCTNO number;
+  
+  D_Resultset Sys_Refcursor;
+  D_Resultset_1 Sys_Refcursor;
+  D_Resultset_2 Sys_Refcursor;
+  
+  d_Memo_Type NUMBER;
+  d_Description VARCHAR2(50);
+  D_Gl_Account Varchar2(30);
+  D_Sl_Account Varchar2(30);
+  D_Distinct_Number Number;
+  D_Gl_Desc Varchar(50);
+  d_sl_desc varchar(50);
+  
+  
+BEGIN
+  
+  D_LOCATION_ID:=FN_GET_LOCATIONID(P_LOCATION_CODE);
+  
+  
+      CN_Get_Mem_Desc_Dtl(P_LOBID, D_LOCATION_ID, P_COMPANYID, 1, NULL,0, d_RESULTSET,d_RESULTSET_1,d_RESULTSET_2);
+      
+        LOOP
+        
+            FETCH D_RESULTSET INTO D_MEMO_TYPE, D_DESCRIPTION, D_GL_ACCOUNT, 
+                     D_SL_Account, D_Distinct_Number,D_GL_DESC,D_sL_DESC;
+            
+            EXIT WHEN d_RESULTSET%NOTFOUND;
+            
+            INSERT INTO TMP_CLN_MEMODISTINCT(MEMO_TYPE, DESCRIPTION, GL_ACCOUNT, 
+               SL_ACCOUNT, DISTINCT_NUMBER)
+            VALUES(d_MEMO_TYPE, d_DESCRIPTION, d_GL_ACCOUNT, 
+               d_SL_ACCOUNT, d_DISTINCT_NUMBER);
+                
+        END LOOP;
+       
+        CLOSE d_RESULTSET;
+        
+        SELECT MAX(DISTINCT_NUMBER) INTO D_MEMODISTINCTNO FROM TMP_CLN_MEMODISTINCT;
+  
+  
+  
+  SELECT COUNT(MB.MEMO_LINK_KEY)
+  INTO D_ROWCOUNT
+  FROM S3G_CLN_MEMOBKNG MB
+    /*~~~~~~~~ Check For Entry In Header ~~~~~~~~*/
+  WHERE MB.COMPANY_ID = P_COMPANYID
+  AND MB.LOB_ID       = P_LOBID
+  AND MB.LOCATION_ID  = D_LOCATION_ID
+  AND MB.Customer_ID  = P_CUSTOMERID
+  AND MB.PA_SA_REF_ID = P_PA_SA_REF_ID
+  AND MB.Memo_Type    = P_Memotype;
+  --      d('D_ROWCOUNT2 - '||D_ROWCOUNT);
+  IF(D_ROWCOUNT > 0)THEN
+    SELECT MB.MEMO_LINK_KEY
+    INTO D_MEMO_LINK_KEY
+    FROM S3G_CLN_MEMOBKNG MB
+      /*~~~~~~~~ Check For Entry In Header ~~~~~~~~*/
+    WHERE MB.COMPANY_ID = P_COMPANYID
+    AND MB.LOB_ID       = P_LOBID
+    AND MB.LOCATION_ID  = D_LOCATION_ID
+    AND MB.CUSTOMER_ID  = P_CUSTOMERID
+    AND MB.PA_SA_REF_ID = P_PA_SA_REF_ID
+    AND MB.Memo_Type    = P_Memotype;
+  END IF;
+  --      D('D_MEMO_LINK_KEY - '||D_MEMO_LINK_KEY);
+  IF( P_JV_STATUS_CODE = 1 ) THEN
+    BEGIN
+      --  Insert Memo  Master details infomartion   Receipt_ID,Receipt_No,
+      IF(d_MEMO_LINK_KEY IS NOT NULL AND d_MEMO_LINK_KEY!=0) THEN
+        Update S3g_Cln_Memobkng Mb
+        SET MB.due_AMOUNT=(MB.due_AMOUNT + P_Amount)
+        WHERE MB.COMPANY_ID   = P_COMPANYID
+        AND MB.LOB_ID         = P_LOBID
+        AND MB.LOCATION_ID    = D_LOCATION_ID
+        AND MB.CUSTOMER_ID    = P_CUSTOMERID
+        AND MB.PA_SA_REF_ID   = P_PA_SA_REF_ID
+        AND MB.MEMO_TYPE      = P_Memotype;
+      ELSE
+        --Insert new Header  --  Insert Memo  Master header infomartion
+        SELECT SEQ_CLN_MemoBkng.NEXTVAL
+        INTO D_MEMO_LINK_KEY
+        FROM DUAL;
+        INSERT
+        INTO S3G_CLN_MemoBkng
+          (
+            MEMO_LINK_KEY,
+            COMPANY_ID,
+            LOB_ID,
+            LOCATION_CODE,
+            CUSTOMER_ID,
+            PANUM,
+            SANUM,
+            MEMO_TYPE_CODE,
+            MEMO_TYPE,
+            DUE_AMOUNT,
+            RECEIVED_AMOUNT,
+            TXN_ID,
+            LOCATION_ID,
+            PA_SA_REF_ID,
+            LAST_CALCULATED_DATE
+          )
+          VALUES
+          (
+            D_MEMO_LINK_KEY,
+            P_COMPANYID,
+            P_LOBID,
+            P_LOCATION_CODE,
+            P_CUSTOMERID,
+            P_PANUM,
+            P_Panum
+            ||'DUMMY',
+            36,
+            P_Memotype,
+            P_AMOUNT,
+            0,
+            1,
+            D_LOCATION_ID,
+            P_PA_SA_REF_ID,
+            sysdate
+          );
+      END IF;
+      INSERT
+      INTO S3G_CLN_MemoDtl --MEMO_BOOKING_NO - SEQ_CLN_MEMODTL
+        (
+          MEMO_BOOKING_NO,
+          COMPANY_ID,
+          MEMO_LINK_KEY,
+          MEMO_DOCUMENT_TYPE,
+          MEMO_VALUE_DATE,
+          MEMO_BOOKING_DATE,
+          MEMO_TYPE_CODE,
+          MEMO_TYPE,
+          DUE_AMOUNT,
+          RECEIVED_AMOUNT,
+          DOC_REF_NO,
+          STATUS,
+          CREATED_BY,
+          CREATED_ON,
+          REMARKS,
+          MEMO_DISTINCT_NUMBER,
+          MEMO_FLAG
+        )
+        VALUES
+        (
+          SEQ_CLN_MEMODTL.NEXTVAL,
+          P_COMPANYID,
+          D_MEMO_LINK_KEY,
+          P_TYPE,
+          P_VALUE_DATE,
+          P_Value_date,
+          36,
+          P_Memotype,
+          P_AMOUNT,
+          0,
+          P_CLOSURENO,
+          1,
+          P_USERID,
+          SYSDATE,
+          D_TYPEDESC,
+          D_MEMODISTINCTNO,
+          1--MEMO Booking
+        );
+    END;
+  ELSIF( P_JV_STATUS_CODE = 2 ) THEN --If cancelling the cheque return process
+    BEGIN
+      IF(NVL(D_MEMO_LINK_KEY,0) != 0) THEN
+        UPDATE S3G_CLN_MEMOBKNG
+        Set --DUE_AMOUNT = DUE_AMOUNT - P_AMOUNT,
+          due_AMOUNT   = due_AMOUNT - P_AMOUNT
+        WHERE MEMO_LINK_KEY = D_MEMO_LINK_KEY;
+      END IF;
+      UPDATE S3g_Cln_Memodtl
+      SET STATUS             = 0,
+        RECEIVED_AMOUNT      = 0 ,
+        Due_Amount           =0,
+        MEMO_FLAG=2--Waived
+      WHERE DOC_REF_NO       = P_CLOSURENO
+      AND MEMO_DOCUMENT_TYPE = P_TYPE
+      AND COMPANY_ID         = P_COMPANYID;
+    END;
+  end if;
+END S3G_FAC_UPD_PENAL_MEMO;

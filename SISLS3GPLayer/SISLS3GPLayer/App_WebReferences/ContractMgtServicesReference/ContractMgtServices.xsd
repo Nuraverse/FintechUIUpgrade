@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/S3GBusEntity" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/S3GBusEntity" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:3220/LoanAdmin/ContractMgtServices.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:simpleType name="SerializationMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Binary" />
+      <xs:enumeration value="Xml" />
+      <xs:enumeration value="Soap" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="SerializationMode" nillable="true" type="tns:SerializationMode" />
+  <xs:complexType name="ClsSystemJournal">
+    <xs:sequence>
+      <xs:element name="_x003C_Account_Link_Key_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_Accounting_Flag_x003E_k__BackingField" type="ser:char" />
+      <xs:element name="_x003C_Branch_ID_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Company_ID_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Created_By_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Customer_ID_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_GL_Account_Number_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_Global_Dimension1_Code_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Global_Dimension1_No_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_Global_Dimension2_Code_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_Global_Dimension2_No_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_JV_Status_Code_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_LOB_ID_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Narration_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_Occurrence_No_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Payment_Type_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Program_ID_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Reference_Number_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_Report_ID_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Sub_GL_Account_Number_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_Sub_Reference_Number_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_Txn_Amount_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_Txn_Currency_Code_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_Value_Date_x003E_k__BackingField" type="xs:dateTime" />
+      <xs:element name="_x003C_XMLSysJournal_x003E_k__BackingField" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ClsSystemJournal" nillable="true" type="tns:ClsSystemJournal" />
+  <xs:complexType name="AccountCreationEntity">
+    <xs:sequence>
+      <xs:element name="_x003C_Status_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XMLRepayDetailsOthers_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XmlAlertDetails_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XmlAssetDetails_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XmlCashInflowDetails_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XmlCollateralDetails_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XmlConstitutionDocDetails_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XmlFollowDetails_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XmlGuarantorDetails_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XmlInvoiceDetails_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XmlMoratoriumDetails_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XmlOutFlowDetails_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XmlROIDetails_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XmlRepaymentDetails_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XmlRepaymentStructure_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_blnIsDORequired_x003E_k__BackingField" type="xs:boolean" />
+      <xs:element name="_x003C_dcmAccountingIRR_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_dcmBusinessIRR_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_dcmCompanyIRR_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_dcmFinanceAmount_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_dcmLoanAmount_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_dcmOfferMarginAmount_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_dcmOfferMargin_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_dcmOfferResidualValueAmount_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_dcmOfferResidualValue_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_dcmRefinanceConstract_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_dtAssigneeEffDate_x003E_k__BackingField" type="xs:dateTime" />
+      <xs:element name="_x003C_dtCreationDate_x003E_k__BackingField" type="xs:dateTime" />
+      <xs:element name="_x003C_dtLastODICalcDate_x003E_k__BackingField" type="xs:dateTime" />
+      <xs:element name="_x003C_intAccountCreationId_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_intAdvanceInstallments_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_intApplicationProcessId_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_intAssigneeStatus_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_intBranchId_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_intCompanyId_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_intConstitutionId_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_intCustomerId_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_intFBDate_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_intLeaseType_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_intLobId_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_intPAStatusCode_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_intPAStatusTypeCode_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_intPaymentRuleId_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_intProductId_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_intROIRuleID_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_intRepaymentCode_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_intRepaymentTimeCode_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_intRepaymentTimeTypeCode_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_intRepaymentTypecode_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_intSalesPersonId_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_intTenureCode_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_intTenureTypeCode_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_intTenure_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_intTxnId_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_intUserId_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_strAccountNumber_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_strAssigneeName_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_strAssigneeRemarks_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_strConsSplitNo_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_strPANumber_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_strSAInternal_code_Ref_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_strSANum_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_strSA_User_Address1_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_strSA_User_Address2_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_strSA_User_City_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_strSA_User_Country_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_strSA_User_Email_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_strSA_User_Mobile_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_strSA_User_Name_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_strSA_User_Phone_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_strSA_User_Pincode_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_strSA_User_State_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_strSA_User_Website_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_strSplit_RefNo_x003E_k__BackingField" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="AccountCreationEntity" nillable="true" type="tns:AccountCreationEntity" />
+</xs:schema>

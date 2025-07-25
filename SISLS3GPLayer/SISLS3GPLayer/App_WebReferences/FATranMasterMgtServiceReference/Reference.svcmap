@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="00e54ed4-ad3d-44f6-90e4-cbb295f81228" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:1788/FinancialAccounting/FATranMasterMgtServices.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="FATranMasterMgtServices.disco" MetadataType="Disco" ID="4b6f15ce-5240-4280-9b8f-1fef73579a08" SourceId="1" SourceUrl="http://localhost:1788/FinancialAccounting/FATranMasterMgtServices.svc?disco" />
+    <MetadataFile FileName="FATranMasterMgtServices.wsdl" MetadataType="Wsdl" ID="6ce18c1b-abde-4444-9809-a0231959d747" SourceId="1" SourceUrl="http://localhost:1788/FinancialAccounting/FATranMasterMgtServices.svc?wsdl" />
+    <MetadataFile FileName="FATranMasterMgtServices3.xsd" MetadataType="Schema" ID="acd38697-b3ed-4422-a9de-43d879c00708" SourceId="1" SourceUrl="http://localhost:1788/FinancialAccounting/FATranMasterMgtServices.svc?xsd=xsd2" />
+    <MetadataFile FileName="FATranMasterMgtServices2.xsd" MetadataType="Schema" ID="f56a76dc-6299-46f3-b268-ca9f88f0dd12" SourceId="1" SourceUrl="http://localhost:1788/FinancialAccounting/FATranMasterMgtServices.svc?xsd=xsd3" />
+    <MetadataFile FileName="FATranMasterMgtServices1.xsd" MetadataType="Schema" ID="45addf46-92e3-40fe-adca-209c4604cefc" SourceId="1" SourceUrl="http://localhost:1788/FinancialAccounting/FATranMasterMgtServices.svc?xsd=xsd0" />
+    <MetadataFile FileName="FATranMasterMgtServices.xsd" MetadataType="Schema" ID="9d6f960d-608d-4547-8cf3-f6f73be29c06" SourceId="1" SourceUrl="http://localhost:1788/FinancialAccounting/FATranMasterMgtServices.svc?xsd=xsd1" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

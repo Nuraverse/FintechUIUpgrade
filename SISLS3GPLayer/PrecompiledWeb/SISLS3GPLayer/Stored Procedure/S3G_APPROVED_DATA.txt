@@ -1,0 +1,2803 @@
+create or replace
+PROCEDURE "S3G_APPROVED_DATA"
+(                       
+ P_Company_ID int,                                    
+ P_User_ID INT:=NULL,     
+ P_Tran_Type VARCHAR2:= NULL,                                   
+ P_Entity_Type_code INT:=NULL,    
+ P_ENTITY_ID INT:=NULL,             
+ P_lob_id INT:=NULL,                                    
+ P_LOCATION_ID INT:=NULL,                                    
+ P_DOCUMENT_NO VARCHAR2:= NULL,  
+ P_Document_ID INT:=NULL,
+ P_TRAN_ID INT:= NULL,
+ P_STATUS INT := NULL,
+ P_FROM_DATE VARCHAR2:= NULL,
+ P_To_Date VARCHAR2:= null
+,P_OUTTBL OUT SYS_REFCURSOR
+,P_OUTTBL1 OUT SYS_REFCURSOR
+                                  
+)                                    
+AS                                    
+  P_ERRORCODE INT;       
+  P_USER_NAME VARCHAR(200);    
+  P_LOCATION_CODE VARCHAR(50);       
+  D_DOCUMENT_NO VARCHAR2(50):= NULL;
+  D_STATUS INT:=NULL;
+  D_CONDITION VARCHAR(2000);
+  D_TBLVALUE  VARCHAR2(9000);   
+BEGIN      
+ -- SET NOCOUNT ON added to prevent extra result sets from      
+ -- interfering with SELECT statements.   
+ 
+ D_CONDITION := ' ';
+
+EXECUTE IMMEDIATE ('Alter session set NLS_COMP = LINGUISTIC');
+EXECUTE IMMEDIATE ('Alter session set NLS_SORT = BINARY_CI');
+
+--execute immediate('TRUNCATE TABLE TMP_TBL_LAD_COMMON');
+DELETE FROM TMP_TBL_LAD_COMMON;
+  
+ SELECT USER_NAME INTO P_USER_NAME FROM S3G_SYSAD_USERMASTER WHERE USER_ID=P_USER_ID AND COMPANY_ID=P_COMPANY_ID;    
+ 
+ P_location_code:=FN_Get_LocationCode(P_location_id);
+      
+IF(P_DOCUMENT_NO IS NOT NULL)THEN
+BEGIN
+    D_DOCUMENT_NO:=P_DOCUMENT_NO;
+END;
+ELSE
+BEGIN
+
+    IF(P_TRAN_ID IS NOT NULL) THEN
+    BEGIN
+    
+        IF(P_TRAN_TYPE='PRAP')THEN -- Pricing Approval
+        BEGIN
+            
+            SELECT PRI.BUSINESS_OFFER_NUMBER
+            --,APR.ACTION_ID 
+            ,0
+            INTO D_DOCUMENT_NO,D_STATUS 
+            FROM S3G_ORG_PRICING PRI
+            INNER JOIN S3G_ORG_PRICINGAPPROVAL APR ON APR.PRICING_ID=PRI.PRICING_ID 
+            WHERE PRI.PRICING_ID=P_TRAN_ID AND ROWNUM<2;--AND APR.APPROVER_ID=P_User_ID
+            
+        END;
+        end if;
+         IF(P_TRAN_TYPE='APAP')THEN -- Application Approval
+        BEGIN
+            
+            SELECT APP.APPLICATION_NUMBER
+            --,APR.ACTION_ID 
+            ,0
+            into D_DOCUMENT_NO,D_STATUS 
+            FROM S3G_ORG_APPPROC APP
+            INNER JOIN S3G_ORG_APPAPPROVAL APR ON APR.APPLICATION_PROCESS_ID=APP.APPLICATION_PROCESS_ID 
+            WHERE APP.APPLICATION_PROCESS_ID =P_TRAN_ID AND ROWNUM<2;--AND APR.APPROVER_ID=P_User_ID
+            
+        end;
+        END IF;
+        IF(P_TRAN_TYPE='PAAP')THEN -- Payment Approval
+        BEGIN
+            
+            SELECT APP.PAYMENT_REQUEST_NO
+            --,APR.ACTION_ID 
+            ,0 --APP.PMT_VOUCHER_STATUS
+            into D_DOCUMENT_NO,D_STATUS 
+            FROM S3G_LAD_PYMNTREQST APP
+            INNER JOIN S3G_LAD_APPROVAL APR ON APR.TASK_NUMBER=APP.REQUEST_NO and APR.TASK_TYPE=10-- Payment Approval 
+            WHERE APP.REQUEST_NO =P_TRAN_ID AND ROWNUM<2;--AND APR.APPROVER_ID=P_User_ID
+            
+        end;
+        END IF;
+    END;
+    END IF;
+    
+END;
+END IF;
+
+  IF(P_STATUS IS NOT NULL) THEN
+    BEGIN
+    D_STATUS:=P_STATUS;
+    END; 
+  END IF;
+ 
+ 
+-----table[2]---------------                                    
+                                    
+    
+                                  
+------table[3]-----------------             
+    
+if(P_Tran_Type='PAAP')THEN    
+BEGIN--if(P_Tran_Type='FAFT')    
+--  D('Payment Approval View - D_STATUS -' || D_STATUS);
+  IF(D_STATUS=2)THEN--Approved    
+    BEGIN 
+     OPEN P_OUTTBL FOR
+        SELECT                                     
+            LOOKUP_CODE,                                    
+            LOOKUP_DESCRIPTION 
+        FROM S3G_LAD_LOOKUPTYPEDET
+        WHERE LOOKUPTYPE_CODE=9 
+        AND LOOKUP_CODE = 6;   
+      
+      D_CONDITION := ' Where (PRI.COMPANY_ID = ' || TO_CHAR(P_COMPANY_ID) || ' and APP.TASK_STATUS_CODE = 3 and APP.TASK_APPROVALUSERID = ' || TO_CHAR(P_USER_ID) || ')';    
+   
+        --LOB
+        if(NVL(P_LOB_ID , 0) != 0) then
+        BEGIN    
+            D_CONDITION := D_CONDITION || 'AND PRI.LOB_ID = ' ||  cast(P_LOB_ID as varchar);
+        END;
+        END if;
+        
+        --Location
+        if(NVL(P_LOCATION_ID , 0) != 0) then
+        BEGIN    
+            D_CONDITION := D_CONDITION || 'AND PRI.LOCATION_ID = ' ||  cast(P_LOCATION_ID as varchar);
+        END;
+        END if;
+        
+        --Customer
+        if(NVL(P_ENTITY_ID , 0) != 0) then
+        BEGIN    
+            D_CONDITION := D_CONDITION || 'AND PRI.CUSTOMER_ID = ' ||  cast(P_ENTITY_ID as varchar);
+        END;
+        END if;
+        
+        --Document Number
+        if(NVL(P_Document_ID , 0) != 0) then
+        BEGIN    
+            D_CONDITION := D_CONDITION || 'AND PRI.REQUEST_NO = ' ||  cast(P_Document_ID as varchar);
+        END;
+        END if;
+        
+        --From and To Date
+        IF(P_from_Date Is Not Null and P_To_DATE Is Not Null) THEN
+        BEGIN 
+        
+             D_CONDITION :=  D_CONDITION || ' and TO_DATE(To_CHAR(PRI.PAYMENT_REQUEST_DATE , ''DD/Mon/YYYY''))           
+             BETWEEN ' || '''' || TO_DATE(To_CHAR(FN_TODATE(P_FROM_DATE),'DD/Mon/YYYY')) || '''' || '           
+             AND ' || '''' || TO_DATE(To_CHAR(FN_TODATE(P_To_DATE),'DD/Mon/YYYY')) || '''' || ' '; 
+        
+        END;
+        END IF;   
+       
+        --From Date
+        IF(P_from_Date Is Not Null and P_To_DATE Is Null) THEN
+        BEGIN    
+            D_CONDITION := D_CONDITION || ' and (To_CHAR(PRI.PAYMENT_REQUEST_DATE , ''DD/Mon/YYYY'')) >= '       
+         || '''' ||  TO_DATE(To_CHAR(FN_TODATE(P_FROM_DATE),'DD/Mon/YYYY'))  || '''' || ' ';
+        END;
+        END IF;
+        
+        --To Date
+       IF(P_from_Date Is Null and P_To_DATE Is Not Null) THEN
+        BEGIN    
+            D_CONDITION := D_CONDITION || ' and (To_CHAR(PRI.PAYMENT_REQUEST_DATE , ''DD/Mon/YYYY'')) <= '       
+         || '''' ||  TO_DATE(To_CHAR(FN_TODATE(P_To_DATE),'DD/Mon/YYYY'))  || '''' || ' ';
+        END;
+        END IF;
+        
+        D_TBLVALUE := '
+        INSERT INTO TMP_TBL_LAD_COMMON
+        (COL1_NUM
+        , COL2_NUM
+        , COL9_VARCHAR
+        , COL3_NUM
+        , COL10_VARCHAR
+        , COL4_NUM
+        , COL11_VARCHAR
+        , COL5_NUM
+        , COL6_NUM
+        , COL7_NUM
+        , COL8_NUM
+        , COL16_DATE
+        , COL19_NUM
+        , COL12_VARCHAR
+        , COL13_VARCHAR
+        , COL22_VARCHAR
+        ,COL20_NUM
+        )
+         SELECT 
+         ROW_NUMBER() OVER (ORDER BY REQUEST_NO)
+         , NVL(CUST.CUSTOMER_ID,ENT.ENTITY_ID) AS CUSTOMER_ID
+         , CASE WHEN CUST.CUSTOMER_ID IS NOT NULL 
+            THEN (CUST.CUSTOMER_CODE || ''-'' || CUST.CUSTOMER_NAME) 
+            ELSE (ENT.ENTITY_CODE || ''-'' || ENT.ENTITY_NAME) END AS CUSTOMER_NAME
+         , PRI.REQUEST_NO
+         , PRI.PAYMENT_REQUEST_NO
+         , PRI.LOB_ID
+         , PRI.LOCATION_ID
+         , PRI.REQUEST_NO
+         , PRI.CREATED_BY
+         , PRI.PMT_VOUCHER_STATUS
+         , app.TASK_APPROVALUSERID
+         , APP.TASK_STATUSDATE
+         , APP.TASK_STATUS_CODE
+         , det.LOOKUP_DESCRIPTION
+         , APP.Remarks
+         , APP.UPLOAD_PATH
+         , PRI.PAY_TO_TYPE_CODE
+         from S3G_LAD_APPROVAL app    
+         inner join S3G_LAD_PYMNTREQST PRI on APP.TASK_NUMBER = PRI.REQUEST_NO AND  APP.TASK_TYPE=10
+         LEFT Join S3G_ORG_CUSTMASTER CUST ON CUST.CUSTOMER_ID = PRI.CUSTOMER_ID and PRI.PAY_TO_TYPE_CODE=1
+         LEFT JOIN S3G_ORG_ENTITYMASTER ENT ON ENT.ENTITY_ID=PRI.VENDOR_CODE AND PRI.PAY_TO_TYPE_CODE!=1
+         inner join s3g_sysad_usermaster us on us.user_id=app.TASK_APPROVALUSERID    
+         inner join S3G_LAD_LOOKUPTYPEDET det on det.LOOKUP_CODE = APP.TASK_STATUS_CODE AND det.LOOKUPTYPE_CODE = 9
+         '  ||  d_Condition;--Pending
+         
+         DBMS_OUTPUT.PUT_LINE(d_tblValue);
+         
+         EXECUTE IMMEDIATE D_TBLVALUE;
+    
+        OPEN P_OUTTBL1 FOR
+            Select
+            COL1_NUM AS SL_NO,--partition by PRI.CUSTOMER_ID 
+            COL2_NUM as CUSTOMER_ID,
+            COL9_VARCHAR as Entity,
+            COL3_NUM as ID,
+            COL10_VARCHAR as Document_No,
+            COL10_VARCHAR AS ORDER_NO,
+            P_USER_NAME AS APPROVER,
+            GETUSERDATEFORMAT(COL16_DATE , P_Company_ID) AS APPROVAL_DATE,
+            COL19_NUM as Approval_status_id ,  
+            COL8_NUM as APPROVAL_ID,
+            COL12_VARCHAR AS APPROVAL_STATUS,
+            P_User_ID as User_id,
+            COL4_NUM AS LOB_ID,
+            COL11_VARCHAR as LOCATION_ID,
+            COL5_NUM as Task_number            
+            ,1 as Task_status_type_code   -- Pricing Type        
+            ,COL6_NUM as created_by            
+            ,'' as Status            
+            ,COL13_VARCHAR as REMARKS                             
+            ,54 AS PROGRAM_ID   -- Payment Request
+            ,COL7_NUM AS ACCOUNTSTATUS
+            ,COL22_VARCHAR AS DOCUMENT_PATH
+            ,0 AS APPROVAL_SERIAL_NUMBER
+            From TMP_TBL_LAD_COMMON;
+        
+-- OPEN P_OUTTBL1 FOR                                   
+--  select     
+--    case when nvl(Entity,'0')='0' then 'General' else Entity end as Entity, 
+--      Document_No    
+--     ,Approver    
+--     , Approval_Date    
+--     ,Approval_status_id as Approval_status_id    
+--     ,Approval_status as Approval_status    
+--     , User_id     
+--     ,Row_number() over (partition by Document_No order by Document_No) as Sl_no    
+--     , lob_id    
+--     , location_id    
+--     , Task_number    
+--     , Task_status_type_code    
+--     , created_by    
+--     ,status    
+--     ,remarks    
+--     ,ID AS ID    
+--     ,DOCUMENT_PATH as DOCUMENT_PATH 
+--     ,ACCOUNTSTATUS
+--     from(    
+--         
+--     select     
+--     case when P_Entity_Type_code=1 then cust.customer_name else ent.entity_name end as Entity,    
+--      CASE WHEN  nvl(Is_Mobile,1)=1 Then    
+--        '<img src="..\Images\Online_Receipt.png" alt="Online Receipt" style="width:20px;height:18px;"/>        '    
+--        Else     
+--        '<img src="..\Images\Mobile_Receipt.png" alt="Mobile Receipt" style="width:20px;height:18px;"/>        ' End    
+--        || 
+--        Payment_Request_No as document_no    
+--     ,USER_NAME as Approver    
+--     ,GetUserDateFormat(Task_StatusDate,P_company_id) AS Approval_Date    
+--     ,lookup_code as Approval_status_id    
+--     ,lookup_description as Approval_status    
+--     ,Task_ApprovalUserID as User_id    
+--     ,pr.lob_id as lob_id    
+--     ,FN_GET_LOCATIONID(PR.LOCATION_CODE) as LOCATION_ID    
+--     ,PR.request_no as Task_number    
+--     ,9 as Task_status_type_code    
+--     ,pr.created_by as created_by    
+--     ,'' as status    
+--     ,APP.REMARKS as REMARKS    
+--     ,PR.REQUEST_NO AS ID    
+--     ,IMAGE_PATH as DOCUMENT_PATH
+--     ,AD.SA_STATUS_CODE AS ACCOUNTSTATUS
+--    from        
+--    S3G_LAD_Approval app    
+--    inner join S3G_LAD_PYMNTREQST PR on APP.TASK_NUMBER=PR.REQUEST_NO    
+--    inner join S3G_LAD_PAYMENTREQSTDET PD on PD.REQUEST_NO=PR.REQUEST_NO
+--    LEFT join S3G_LAD_AccPASADet AD on PD.PANum=AD.PANum AND AD.SA_STATUSTYPE_CODE=25
+--    inner join S3G_SYSAD_USERMASTER US on US.USER_ID=APP.TASK_APPROVALUSERID 
+--    inner join S3G_LAD_LookupTypeDet det on det.lookup_code=task_status_code and lookuptype_code=9    
+--    left join S3G_ORG_CustMaster cust on cust.customer_id=pr.customer_id and pay_to_type_code=1    
+--    left join S3G_ORG_EntityMaster ent on ent.entity_id=pr.vendor_code    
+--        
+--    where pmt_voucher_status in(2,3)     
+--    and app.task_type=10    
+--    and pr.lob_id=nvl(P_lob_id,pr.lob_id)    
+--    and pr.location_code=nvl(P_location_code,pr.location_code)   
+--    and pr.Company_ID=P_Company_ID  
+--    and cust.Company_ID=P_Company_ID   
+--    and Pay_To_Type_Code=nvl(P_Entity_Type_code,Pay_To_Type_Code)    
+--    and nvl(pr.customer_id,0)=case when P_Entity_Type_code=1 then nvl(P_Entity_id ,nvl(pr.customer_id,0)) else nvl(pr.customer_id,0) end    
+--    and nvl(vendor_code,0)=case when P_Entity_Type_code!=-1 then nvl(P_Entity_id ,nvl(vendor_code,0)) else nvl(vendor_code,0) end    
+--    and Payment_Request_No=nvl(D_DOCUMENT_NO,Payment_Request_No)    
+--    AND TASK_APPROVALUSERID=P_USER_ID    
+--    )TMP;    
+    
+  END;    
+  elsif(D_STATUS=4)THEN--Rejected    
+    BEGIN    
+  OPEN P_OUTTBL FOR    
+  SELECT                                     
+  LOOKUP_CODE,            
+  LOOKUP_DESCRIPTION FROM S3G_LAD_LOOKUPTYPEDET WHERE LOOKUPTYPE_CODE=9 AND LOOKUP_CODE IN (6);                                    
+   OPEN P_OUTTBL1 FOR                                   
+  select     
+      case when nvl(Entity,'0')='0' then 'General' else Entity end as Entity,    
+      
+    Document_No    
+   ,Approver    
+   , Approval_Date    
+   ,Approval_status_id as Approval_status_id    
+   ,Approval_status as Approval_status    
+   , USER_ID     
+   ,ROWNUM as Sl_no    
+   , lob_id    
+   , location_id    
+   , Task_number    
+   , Task_status_type_code    
+   , created_by    
+   ,status    
+   ,remarks    
+   ,id as id    
+    ,DOCUMENT_PATH as DOCUMENT_PATH    
+    ,ACCOUNTSTATUS 
+   from(    
+       
+   select     
+   case when P_Entity_Type_code=1 then cust.customer_name else ent.entity_name end as Entity,    
+    CASE WHEN  nvl(Is_Mobile,1)=1 Then    
+      '<img src="..\Images\Online_Receipt.png" alt="Online Receipt" style="width:20px;height:18px;"/>        '    
+      Else     
+      '<img src="..\Images\Mobile_Receipt.png" alt="Mobile Receipt" style="width:20px;height:18px;"/>        ' End    
+      || 
+      Payment_Request_No as document_no      
+   ,USER_NAME as Approver    
+   ,GetUserDateFormat(Task_StatusDate,P_company_id) AS Approval_Date    
+   ,lookup_code as Approval_status_id    
+   ,lookup_description as Approval_status    
+   ,Task_ApprovalUserID as User_id    
+   ,pr.lob_id as lob_id    
+   ,FN_GET_LOCATIONID(PR.LOCATION_CODE) as LOCATION_ID    
+   ,PR.request_no as Task_number    
+   ,9 as Task_status_type_code    
+   ,pr.created_by as created_by    
+   ,'' as status    
+   ,APP.REMARKS as REMARKS    
+   ,PR.REQUEST_NO AS ID    
+    ,IMAGE_PATH 
+    ,IMAGE_PATH as DOCUMENT_PATH   
+    ,AD.SA_STATUS_CODE AS ACCOUNTSTATUS  
+  from     
+      
+  S3G_LAD_Approval app    
+  inner join S3G_LAD_PymntReqst PR on app.task_number=pr.request_no    
+  inner join s3g_sysad_usermaster us on us.user_id=app.Task_approvalUserID  
+  inner join S3G_LAD_PAYMENTREQSTDET PD on PD.REQUEST_NO=PR.REQUEST_NO
+  inner join S3G_LAD_AccPASADet AD on PD.PANum=AD.PANum AND AD.SA_STATUSTYPE_CODE=25 
+  inner join S3G_LAD_LookupTypeDet det on det.lookup_code=task_status_code and lookuptype_code=9    
+  left join S3G_ORG_CustMaster cust on cust.customer_id=pr.customer_id and pay_to_type_code=1    
+  left join S3G_ORG_EntityMaster ent on ent.entity_id=pr.vendor_code    
+      
+  where pmt_voucher_status in(4) and app.task_type=10    
+  and pr.lob_id=nvl(P_lob_id,pr.lob_id)    
+  and pr.location_code=nvl(P_location_code,pr.location_code)    
+  and Pay_To_Type_Code=nvl(P_Entity_Type_code,Pay_To_Type_Code)    
+  and nvl(pr.customer_id,0)=case when P_Entity_Type_code=1 then nvl(P_Entity_id ,nvl(pr.customer_id,0)) else nvl(pr.customer_id,0) end    
+  and nvl(vendor_code,0)=case when P_Entity_Type_code!=-1 then nvl(P_Entity_id ,nvl(vendor_code,0)) else nvl(vendor_code,0) end    
+  and Payment_Request_No=nvl(D_DOCUMENT_NO,Payment_Request_No)    
+  and Task_ApprovalUserID=P_user_id    
+  and pr.Company_ID=P_Company_ID  
+  AND CUST.COMPANY_ID=P_COMPANY_ID   
+  )TMP;    
+  END;      
+  elsif(D_STATUS = 0)THEN    -- Querry Mode
+    BEGIN    
+    OPEN P_OUTTBL FOR     
+    SELECT                                     
+    LOOKUP_CODE,                      
+    LOOKUP_DESCRIPTION FROM S3G_LAD_LOOKUPTYPEDET
+    WHERE LOOKUPTYPE_CODE=9 AND LOOKUP_CODE IN (3);   --Querry Mode   
+    
+    INSERT INTO TMP_TBL_LAD_COMMON
+          (COL1_NUM
+          , COL2_NUM
+          , COL9_VARCHAR
+          , COL3_NUM
+          , COL10_VARCHAR
+          , COL4_NUM
+          , COL11_VARCHAR
+          , COL5_NUM
+          , COL6_NUM
+          , COL7_NUM
+          , COL8_NUM
+          , COL16_DATE
+          , COL19_NUM
+          , COL12_VARCHAR
+          , COL13_VARCHAR
+          , COL21_VARCHAR
+          --, COL22_VARCHAR
+          )
+          SELECT 
+          ROW_NUMBER() OVER (ORDER BY PAYMENT_REQUEST_NO)
+          , NVL(CUST.CUSTOMER_ID,ENT.ENTITY_ID) AS CUSTOMER_ID
+          , CASE WHEN CUST.CUSTOMER_NAME IS NOT NULL THEN CUST.CUSTOMER_CODE || '-' || CUST.CUSTOMER_NAME ELSE
+          ENT.ENTITY_CODE || '-' || ENT.ENTITY_NAME END as CUSTOMER_NAME
+          , PRI.REQUEST_NO
+          , PRI.PAYMENT_REQUEST_NO
+          , PRI.LOB_ID
+          , PRI.LOCATION_CODE
+          , PRI.PAY_TO_TYPE_CODE
+          , PRI.CREATED_BY
+          , PRI.PMT_VOUCHER_STATUS
+          , APP.TASK_APPROVALUSERID
+          , APP.TASK_STATUSDATE
+          , APP.TASK_STATUS_CODE
+          , det.LOOKUP_DESCRIPTION
+          , APP.REMARKS
+          , lob.LOB_CODE || ' - ' || lob.LOB_NAME
+          --, APP.UPLOAD_PATH
+          from S3G_LAD_APPROVAL app    
+          INNER JOIN S3G_LAD_PYMNTREQST PRI ON APP.TASK_NUMBER = PRI.REQUEST_NO AND  APP.TASK_TYPE=10-- Payment
+          INNER JOIN S3G_SYSAD_LOBMASTER LOB On LOB.LOB_ID = PRI.LOB_ID
+          LEFT Join S3G_ORG_CUSTMASTER CUST ON CUST.CUSTOMER_ID = PRI.CUSTOMER_ID AND PRI.PAY_TO_TYPE_CODE=1
+          LEFT JOIN S3G_ORG_ENTITYMASTER ENT ON ENT.ENTITY_ID = PRI.VENDOR_CODE AND PRI.PAY_TO_TYPE_CODE!=1
+          inner join s3g_sysad_usermaster us on us.user_id=APP.TASK_APPROVALUSERID    
+          INNER JOIN S3G_LAD_LOOKUPTYPEDET DET ON DET.LOOKUP_CODE = PRI.PMT_VOUCHER_STATUS AND  DET.LOOKUPTYPE_CODE=9
+          WHERE PRI.COMPANY_ID = P_COMPANY_ID
+          and PRI.REQUEST_NO = P_TRAN_ID;
+           
+          OPEN P_OUTTBL1 FOR
+          Select
+          COL1_NUM AS SL_NO,--partition by PRI.CUSTOMER_ID 
+          COL2_NUM as CUSTOMER_ID,
+          COL9_VARCHAR as Entity,
+          COL3_NUM as ID,
+          COL10_VARCHAR as Document_No,
+          COL10_VARCHAR AS ORDER_NO,
+          P_USER_NAME AS APPROVER,
+          GETUSERDATEFORMAT(COL16_DATE , P_Company_ID) AS APPROVAL_DATE,
+          CASE WHEN COL19_NUM= 3 THEN 2 ELSE COL19_NUM END as Approval_status_id ,  
+          COL8_NUM as APPROVAL_ID,
+          COL12_VARCHAR AS APPROVAL_STATUS,
+          P_User_ID as User_id,
+          COL4_NUM AS LOB_ID,
+          COL21_VARCHAR as LOB_Name,
+          FN_GET_LOCATIONID(COL11_VARCHAR) as LOCATION_ID,
+          COL3_NUM as Task_number            
+          ,1 as Task_status_type_code   -- Pricing Type        
+          ,COL6_NUM as created_by            
+          ,'' as Status            
+          ,COL13_VARCHAR as REMARKS                             
+          ,42 AS PROGRAM_ID   -- Check List for Deal Processing
+          ,COL7_NUM AS ACCOUNTSTATUS
+          ,COL22_VARCHAR AS DOCUMENT_PATH
+          ,0 AS APPROVAL_SERIAL_NUMBER
+          ,COL5_NUM as PAY_TO
+          From TMP_TBL_LAD_COMMON;
+          
+--  OPEN P_OUTTBL1 FOR                                     
+--  select     
+--       case when nvl(Entity,'0')='0' then 'General' else Entity end as Entity,    
+--      
+--    Document_No    
+--   ,Approver    
+--   , Approval_Date    
+--   ,Approval_status_id as Approval_status_id    
+--   ,Approval_status as Approval_status    
+--   , USER_ID     
+--   ,ROWNUM as Sl_no    
+--   , lob_id    
+--   , location_id    
+--   , Task_number    
+--   , Task_status_type_code    
+--   , created_by    
+--   ,status    
+--   ,remarks    
+--   ,id as id    
+--    ,DOCUMENT_PATH as DOCUMENT_PATH    
+--    ,ACCOUNTSTATUS 
+--   from(    
+--       
+--   select     
+--   case when P_Entity_Type_code=1 then cust.customer_name else ent.entity_name end as Entity,    
+--   Payment_Request_No as document_no    
+--   ,'' as Approver    
+--   ,GetUserDateFormat(value_date,P_company_id) AS Approval_Date    
+--   ,'' as Approval_status_id    
+--   ,'' as Approval_status    
+--   ,'' as User_id    
+--   ,pr.lob_id as lob_id    
+--   ,FN_GET_LOCATIONID(PR.LOCATION_CODE) as LOCATION_ID    
+--   ,pr.request_no as Task_number    
+--   ,9 as Task_status_type_code    
+--   ,pr.created_by as created_by    
+--   ,'' as status    
+--   ,'' as REMARKS    
+--   ,pr.REQUEST_NO AS ID    
+--    ,'' as DOCUMENT_PATH    
+--    ,AD.SA_STATUS_CODE AS ACCOUNTSTATUS
+--  from     
+--   S3G_LAD_PymntReqst PR     
+--  left join S3G_ORG_CustMaster cust on cust.customer_id=pr.customer_id and pay_to_type_code=1    
+--  left join S3G_ORG_EntityMaster ent on ent.entity_id=pr.vendor_code    
+--  inner join S3G_LAD_PAYMENTREQSTDET PD on PD.REQUEST_NO=PR.REQUEST_NO
+--  inner join S3G_LAD_AccPASADet AD on PD.PA_SA_REF_ID=AD.PA_SA_REF_ID AND AD.SA_STATUSTYPE_CODE=25  
+--  where pmt_voucher_status = 3 
+--  and pr.lob_id=nvl(P_lob_id,pr.lob_id)    
+--  and PR.LOCATION_ID=nvl(P_LOCATION_ID,pr.LOCATION_ID)    
+--  and pr.Company_ID=P_Company_ID  
+--  and cust.Company_ID=P_Company_ID   
+--  and Pay_To_Type_Code=nvl(P_Entity_Type_code,Pay_To_Type_Code)    
+--  and nvl(pr.customer_id,0)=case when P_Entity_Type_code=1 then nvl(P_Entity_id ,nvl(pr.customer_id,0)) else nvl(pr.customer_id,0) end    
+--  and nvl(vendor_code,0)=case when P_Entity_Type_code!=-1 then nvl(P_Entity_id ,nvl(vendor_code,0)) else nvl(vendor_code,0) end    
+--  and Payment_Request_No=nvl(D_DOCUMENT_NO,Payment_Request_No)    
+--  AND PR.CREATED_BY!=P_USER_ID    
+--  )TMP;    
+  END;
+  END IF;
+END;
+                                   
+--elsif(P_Tran_Type='LCLRR')THEN    
+-- begin     
+--if(D_STATUS=2)--Approved    
+-- BEGIN 
+-- OPEN P_OUTTBL FOR 
+-- SELECT                                     
+--LOOKUP_CODE,                                    
+--LOOKUP_DESCRIPTION FROM S3G_LAD_LOOKUPTYPEDET WHERE LOOKUPTYPE_CODE=9 AND LOOKUP_CODE IN (6);                               
+--OPEN P_OUTTBL1 FOR                                     
+-- select     
+--    case when nvl(Entity,'0')='0' then 'General' else Entity end as Entity,    
+--    
+--  Document_No    
+-- ,Approver    
+-- , Approval_Date    
+-- ,Approval_status_id as Approval_status_id    
+-- ,Approval_status as Approval_status    
+-- , USER_ID     
+-- ,ROWNUM as Sl_no    
+-- , lob_id    
+-- , location_id    
+-- , Task_number    
+-- , Task_status_type_code    
+-- , created_by    
+-- ,status    
+-- ,remarks    
+-- ,id as id    
+-- ,document_path as document_path    
+-- from(    
+--     
+-- select     
+-- '' Entity,    
+--  CASE WHEN  nvl(Is_Mobile,1)=1 Then    
+--    '<img src="..\Images\Online_Receipt.png" alt="Online Receipt" style="width:20px;height:18px;"/>        '    
+--    Else     
+--    '<img src="..\Images\Mobile_Receipt.png" alt="Mobile Receipt" style="width:20px;height:18px;"/>        ' End    
+--    || Legal_No as document_no    
+-- ,USER_NAME as Approver    
+-- ,GetUserDateFormat(Task_StatusDate,P_company_id) AS Approval_Date    
+-- ,lookup_code as Approval_status_id    
+-- ,lookup_description as Approval_status    
+-- ,Task_ApprovalUserID as User_id    
+-- ,pr.lob_id as lob_id    
+-- ,FN_Get_LocationID(pr.location_code,P_Company_ID) as location_id    
+-- ,Legal_No as Task_number    
+-- ,9 as Task_status_type_code    
+-- ,pr.created_by as created_by    
+-- ,'' as status    
+-- ,app.Remarks as remarks    
+-- ,Legal_Clearance_ID as id    
+-- ,Image_path as document_path    
+--from     
+--    
+--S3G_LAD_Approval app    
+--inner join S3G_ORG_LegalClearanceReport PR on app.task_number=pr.legal_No    
+--inner join s3g_sysad_usermaster us on us.user_id=app.Task_approvalUserID    
+--inner join S3G_LAD_LookupTypeDet det on det.lookup_code=task_status_code and lookuptype_code=130    
+--left join S3G_ORG_CustomerMaster cust on cust.customer_id=pr.customer_id     
+--    
+--where pr.status in(3)     
+--and app.task_type=273    
+--and pr.Company_ID=P_Company_ID  
+--and cust.Company_ID=P_Company_ID   
+--and pr.lob_id=nvl(P_lob_id,pr.lob_id)    
+--and pr.location_code=nvl(P_location_code,pr.location_code)    
+--and legal_no=nvl(D_DOCUMENT_NO,legal_no)    
+--AND TASK_APPROVALUSERID=P_USER_ID    
+--)TMP;    
+--end;    
+    
+--elsif(D_STATUS=3)THEN--cancelled    
+--BEGIN    
+--OPEN P_OUTTBL FOR     
+--SELECT                                     
+--LOOKUP_CODE,            
+--LOOKUP_DESCRIPTION FROM S3G_LAD_LOOKUPTYPEDET WHERE LOOKUPTYPE_CODE=9 AND LOOKUP_CODE IN (5);                                     
+--OPEN P_OUTTBL1 FOR                                     
+--select     
+--    case when nvl(Entity,'0')='0' then 'General' else Entity end as Entity,    
+--    
+--  Document_No    
+-- ,Approver    
+-- , Approval_Date    
+-- ,Approval_status_id as Approval_status_id    
+-- ,Approval_status as Approval_status    
+-- , USER_ID     
+-- ,ROWNUM as Sl_no    
+-- , lob_id    
+-- , location_id    
+-- , Task_number    
+-- , Task_status_type_code    
+-- , created_by    
+-- ,status    
+-- ,remarks    
+-- ,id as id    
+-- ,document_path as document_path    
+-- from(    
+--     
+-- select     
+-- '' Entity,    
+-- Legal_No as document_no    
+-- ,'' as Approver    
+-- ,'' AS Approval_Date    
+-- ,'' as Approval_status_id    
+-- ,'' as Approval_status    
+-- ,'' as User_id    
+-- ,pr.lob_id as lob_id    
+-- ,FN_Get_LocationID(pr.location_code,P_Company_ID) as location_id    
+-- ,Legal_No as Task_number    
+-- ,9 as Task_status_type_code    
+-- ,pr.created_by as created_by    
+-- ,'' as status    
+-- ,'' as remarks    
+-- ,Legal_Clearance_ID as id    
+-- ,'' as document_path    
+--from     
+--    
+--    
+--    
+-- S3G_ORG_LegalClearanceReport PR     
+--left join S3G_ORG_CustomerMaster cust on cust.customer_id=pr.customer_id     
+--left join S3G_ORG_EntityMaster ent on ent.entity_id=pr.entity_id    
+--    
+--where pr.status in(4)     
+--and pr.lob_id=nvl(P_lob_id,pr.lob_id)    
+--and pr.Company_ID=P_Company_ID  
+--and cust.Company_ID=P_Company_ID   
+--and pr.location_code=nvl(P_location_code,pr.location_code)    
+--and legal_no=nvl(D_DOCUMENT_NO,legal_no)    
+--AND PR.CREATED_BY!=P_USER_ID    
+--)tmp;    
+--    
+--    
+--end;    
+    
+--else if(D_STATUS = 4)    
+--begin     
+--    
+--SELECT                                     
+--Lookup_Code,            
+--Lookup_Description from S3G_LAD_LookupTypeDet where LookupType_Code=9 and lookup_code in (5)                                     
+--                                    
+--select     
+--    case when nvl(Entity,'0')='0' then 'General' else Entity end as Entity,    
+--    
+--  Document_No    
+-- ,Approver    
+-- , Approval_Date    
+-- ,Approval_status_id as Approval_status_id    
+-- ,Approval_status as Approval_status    
+-- , User_id     
+-- ,Row_number() over (partition by Document_No order by Document_No) as Sl_no    
+-- , lob_id    
+-- , location_id    
+-- , Task_number    
+-- , Task_status_type_code    
+-- , created_by    
+-- ,status    
+-- ,remarks    
+-- ,id as id    
+-- ,document_path as document_path    
+-- from(    
+--     
+-- select     
+-- '' Entity,    
+-- Legal_No as document_no    
+-- ,'' as Approver    
+-- ,'' AS Approval_Date    
+-- ,'' as Approval_status_id    
+-- ,'' as Approval_status    
+-- ,'' as User_id    
+-- ,pr.lob_id as lob_id    
+-- ,FN_Get_LocationID(pr.location_code,P_Company_ID) as location_id    
+-- ,Legal_No as Task_number    
+-- ,9 as Task_status_type_code    
+-- ,pr.created_by as created_by    
+-- ,'' as status    
+-- ,'' as remarks    
+-- ,Legal_Clearance_ID as id    
+-- ,'' as document_path    
+--from     
+--    
+--    
+--    
+-- S3G_ORG_LegalClearanceReport PR     
+--left join S3G_ORG_CustomerMaster cust on cust.customer_id=pr.customer_id     
+--left join S3G_ORG_EntityMaster ent on ent.entity_id=pr.entity_id    
+--    
+--where pr.status in(1,2)     
+--and pr.lob_id=nvl(P_lob_id,pr.lob_id)   
+--and pr.Company_ID=P_Company_ID  
+--and cust.Company_ID=P_Company_ID    
+--and pr.location_code=nvl(P_location_code,pr.location_code)    
+--and legal_no=nvl(D_DOCUMENT_NO,legal_no)    
+--and pr.created_by!=P_user_id    
+--)tmp    
+--    
+--end    
+    
+    
+--end     
+    
+elsif(P_Tran_Type='MJA')THEN    
+begin    
+    
+if(D_STATUS = 2)THEN    
+BEGIN 
+OPEN P_OUTTBL FOR 
+SELECT                                     
+LOOKUP_CODE,                                    
+LOOKUP_DESCRIPTION FROM S3G_LAD_LOOKUPTYPEDET WHERE LOOKUPTYPE_CODE=9 AND LOOKUP_CODE IN (6);                                    
+ OPEN P_OUTTBL1 FOR                                    
+ select     
+    case when nvl(Entity,'0')='0' then 'General' else Entity end as Entity,    
+    
+  Document_No    
+ ,Approver    
+ , Approval_Date    
+ ,Approval_status_id as Approval_status_id    
+ ,Approval_status as Approval_status    
+ , USER_ID     
+ ,ROWNUM as Sl_no    
+ , lob_id    
+ , location_id    
+ , Task_number    
+ , Task_status_type_code    
+ , created_by    
+ ,status    
+ ,remarks    
+ ,id as id    
+ ,document_path as document_path    
+ from(    
+     
+ select     
+ '' Entity,    
+  CASE WHEN  nvl(Is_Mobile,1)=1 Then    
+    '<img src="..\Images\Online_Receipt.png" alt="Online Receipt" style="width:20px;height:18px;"/>        '    
+    Else     
+    '<img src="..\Images\Mobile_Receipt.png" alt="Mobile Receipt" style="width:20px;height:18px;"/>        ' End    
+    || MANUAL_JV_NO as document_no    
+ ,USER_NAME as Approver    
+ ,GetUserDateFormat(Task_StatusDate,P_company_id) AS Approval_Date    
+ ,lookup_code as Approval_status_id    
+ ,lookup_description as Approval_status    
+ ,Task_ApprovalUserID as User_id    
+ ,pr.lob_id as lob_id    
+ ,FN_Get_LocationID(pr.location_code) as location_id    
+ ,MANUAL_JV_NO as Task_number    
+ ,9 as Task_status_type_code    
+ ,pr.created_by as created_by    
+ ,'' as status    
+ ,app.Remarks as remarks    
+ ,MANUAL_JV_ID as id    
+ ,Image_path as document_path    
+from     
+    
+S3G_LAD_Approval app    
+inner join S3G_LAD_ManualJN PR on app.task_number=pr.MANUAL_JV_NO    
+inner join s3g_sysad_usermaster us on us.user_id=app.Task_approvalUserID    
+inner join S3G_LAD_LookupTypeDet det on det.lookup_code=task_status_code     
+and lookuptype_code=9    
+    
+where MANUAL_JV_STATUS in(2,3)     
+and app.task_type=29    
+and pr.Company_ID=P_Company_ID  
+and pr.lob_id=nvl(P_lob_id,pr.lob_id)    
+and pr.location_code=nvl(P_location_code,pr.location_code)    
+and MANUAL_JV_NO=nvl(D_DOCUMENT_NO,MANUAL_JV_NO)    
+AND TASK_APPROVALUSERID=P_USER_ID    
+)tmp;    
+    
+end;    
+    
+elsif(D_STATUS = 3)THEN    
+BEGIN    
+OPEN P_OUTTBL FOR    
+SELECT                                     
+LOOKUP_CODE,            
+LOOKUP_DESCRIPTION FROM S3G_LAD_LOOKUPTYPEDET WHERE LOOKUPTYPE_CODE=9 AND LOOKUP_CODE IN (6);                                    
+OPEN P_OUTTBL1 FOR                                     
+select     
+    case when nvl(Entity,'0')='0' then 'General' else Entity end as Entity,    
+    
+  Document_No    
+ ,Approver    
+ , Approval_Date    
+ ,Approval_status_id as Approval_status_id    
+ ,Approval_status as Approval_status    
+ , USER_ID     
+ ,ROWNUM as Sl_no    
+ , lob_id    
+ , location_id    
+ , Task_number    
+ , Task_status_type_code    
+ , created_by    
+ ,status    
+ ,remarks    
+ ,id as id    
+  ,document_path as document_path    
+    
+ from(    
+     
+ select     
+ ''as Entity,    
+  CASE WHEN  nvl(Is_Mobile,1)=1 Then    
+    '<img src="..\Images\Online_Receipt.png" alt="Online Receipt" style="width:20px;height:18px;"/>        '    
+    Else     
+    '<img src="..\Images\Mobile_Receipt.png" alt="Mobile Receipt" style="width:20px;height:18px;"/>        ' End    
+    || MANUAL_JV_NO as document_no    
+ --Payment_Request_No as document_no    
+ ,USER_NAME as Approver    
+ ,GetUserDateFormat(Task_StatusDate,P_company_id) AS Approval_Date    
+ ,lookup_code as Approval_status_id    
+ ,lookup_description as Approval_status    
+ ,Task_ApprovalUserID as User_id    
+ ,pr.lob_id as lob_id    
+ ,FN_Get_LocationID(pr.location_code) as location_id    
+ ,MANUAL_JV_NO as Task_number    
+ ,9 as Task_status_type_code    
+ ,pr.created_by as created_by    
+ ,'' as status    
+ ,app.Remarks as remarks    
+ ,MANUAL_JV_ID as id    
+  ,image_path as document_path    
+    
+from     
+    
+S3G_LAD_Approval app    
+inner join S3G_LAD_ManualJN PR on app.task_number=pr.MANUAL_JV_NO    
+inner join s3g_sysad_usermaster us on us.user_id=app.Task_approvalUserID    
+inner join S3G_LAD_LookupTypeDet det on det.lookup_code=task_status_code     
+    
+    
+where app.task_status_code in (4)    
+and app.task_type=29    
+and pr.lob_id=nvl(P_lob_id,pr.lob_id)    
+and pr.location_code=nvl(P_location_code,pr.location_code)    
+and MANUAL_JV_NO=nvl(D_DOCUMENT_NO,MANUAL_JV_NO)    
+and Task_ApprovalUserID=P_user_id    
+and lookuptype_code=9    
+and pr.Company_ID=P_Company_ID  
+AND APP.COMPANY_ID=P_COMPANY_ID   
+)tmp;    
+    
+end;    
+    
+    
+    
+elsif(D_STATUS = 4)THEN    
+BEGIN    
+OPEN P_OUTTBL FOR        
+SELECT                                     
+LOOKUP_CODE,                                    
+LOOKUP_DESCRIPTION FROM S3G_LAD_LOOKUPTYPEDET WHERE LOOKUPTYPE_CODE=9 AND LOOKUP_CODE IN (6);                                    
+OPEN P_OUTTBL1 FOR                                        
+ select     
+    case when nvl(Entity,'0')='0' then 'General' else Entity end as Entity,    
+    
+  Document_No    
+ ,Approver    
+ , Approval_Date    
+ ,Approval_status_id as Approval_status_id    
+ ,Approval_status as Approval_status    
+ , USER_ID     
+ ,ROWNUM as Sl_no    
+ , lob_id    
+ , location_id    
+ , Task_number    
+ , Task_status_type_code    
+ , created_by    
+ ,status    
+ ,remarks    
+ ,id as id    
+ ,document_path as document_path    
+ from(    
+     
+ select     
+ '' Entity,    
+  CASE WHEN  nvl(Is_Mobile,1)=1 Then    
+    '<img src="..\Images\Online_Receipt.png" alt="Online Receipt" style="width:20px;height:18px;"/>        '    
+    Else     
+    '<img src="..\Images\Mobile_Receipt.png" alt="Mobile Receipt" style="width:20px;height:18px;"/>   ' End    
+    || MANUAL_JV_NO as document_no    
+ ,USER_NAME as Approver    
+ ,GetUserDateFormat(Task_StatusDate,P_company_id) AS Approval_Date    
+ ,lookup_code as Approval_status_id    
+ ,lookup_description as Approval_status    
+ ,Task_ApprovalUserID as User_id    
+ ,pr.lob_id as lob_id    
+ ,FN_Get_LocationID(pr.location_code) as location_id    
+ ,MANUAL_JV_NO as Task_number    
+ ,9 as Task_status_type_code    
+ ,pr.created_by as created_by    
+ ,'' as status    
+ ,app.Remarks as remarks    
+ ,MANUAL_JV_ID as id    
+ ,Image_path as document_path    
+from     
+    
+S3G_LAD_Approval  app    
+inner join S3G_LAD_ManualJN PR on app.task_number=pr.MANUAL_JV_NO    
+inner join s3g_sysad_usermaster us on us.user_id=app.Task_approvalUserID    
+inner join S3G_LAD_LookupTypeDet det on det.lookup_code=task_status_code and lookuptype_code=9    
+    
+where MANUAL_JV_STATUS_CODE in(1)     
+and app.task_type=29    
+and pr.lob_id=nvl(P_lob_id,pr.lob_id)    
+and pr.location_code=nvl(P_location_code,pr.location_code)    
+and MANUAL_JV_NO=nvl(D_DOCUMENT_NO,MANUAL_JV_NO)    
+and Task_ApprovalUserID=P_user_id   
+and pr.Company_ID=P_Company_ID  
+AND APP.COMPANY_ID=P_COMPANY_ID    
+)tmp;    
+    
+END;    
+END IF;
+END;
+--end    
+
+
+elsif(P_Tran_Type='PRAP')THEN    
+begin    
+   
+    if(D_STATUS = 2)THEN    
+    BEGIN   
+
+        OPEN P_OUTTBL FOR
+        SELECT VALUE AS Lookup_Code , NAME as Lookup_Description
+        FROM S3G_ORG_LOOKUP 
+        WHERE TYPE = 'ORG_APPLICATION_PROCESS_ACTION'
+        AND VALUE = 8;
+                
+        D_CONDITION := ' Where (PRI.COMPANY_ID = ' || CAST(P_COMPANY_ID AS VARCHAR) || ' and APP.ACTION_ID = 2 and APPROVER_ID = ' || CAST(P_USER_ID AS VARCHAR) || ')';    
+   
+        --LOB
+        if(NVL(P_LOB_ID , 0) != 0) then
+        BEGIN    
+            D_CONDITION := D_CONDITION || 'AND PRI.LOB_ID = ' ||  cast(P_LOB_ID as varchar);
+        END;
+        END if;
+        
+        --Location
+        if(NVL(P_LOCATION_ID , 0) != 0) then
+        BEGIN    
+            D_CONDITION := D_CONDITION || 'AND PRI.LOCATION_ID = ' ||  cast(P_LOCATION_ID as varchar);
+        END;
+        END if;
+        
+        --Customer
+        if(NVL(P_ENTITY_ID , 0) != 0) then
+        BEGIN    
+            D_CONDITION := D_CONDITION || 'AND PRI.CUSTOMER_ID = ' ||  cast(P_ENTITY_ID as varchar);
+        END;
+        END if;
+        
+        --Document Number
+        if(NVL(P_Document_ID , 0) != 0) then
+        BEGIN    
+            D_CONDITION := D_CONDITION || 'AND PRI.pricing_id = ' ||  cast(P_Document_ID as varchar);
+        END;
+        END if;
+        
+        --From and To Date
+        IF(P_from_Date Is Not Null and P_To_DATE Is Not Null) THEN
+        BEGIN 
+        
+             D_CONDITION :=  D_CONDITION || ' and TO_DATE(To_CHAR(PRI.OFFER_DATE , ''DD/Mon/YYYY''))           
+             BETWEEN ' || '''' || TO_DATE(To_CHAR(FN_TODATE(P_FROM_DATE),'DD/Mon/YYYY')) || '''' || '           
+             AND ' || '''' || TO_DATE(To_CHAR(FN_TODATE(P_To_DATE),'DD/Mon/YYYY')) || '''' || ' '; 
+        
+        END;
+        END IF;   
+       
+        --From Date
+        IF(P_from_Date Is Not Null and P_To_DATE Is Null) THEN
+        BEGIN    
+            D_CONDITION := D_CONDITION || ' and (To_CHAR(PRI.OFFER_DATE , ''DD/Mon/YYYY'')) >= '       
+         || '''' ||  TO_DATE(To_CHAR(FN_TODATE(P_FROM_DATE),'DD/Mon/YYYY'))  || '''' || ' ';
+        END;
+        END IF;
+        
+        --To Date
+       IF(P_from_Date Is Null and P_To_DATE Is Not Null) THEN
+        BEGIN    
+            D_CONDITION := D_CONDITION || ' and (To_CHAR(PRI.OFFER_DATE , ''DD/Mon/YYYY'')) <= '       
+         || '''' ||  TO_DATE(To_CHAR(FN_TODATE(P_To_DATE),'DD/Mon/YYYY'))  || '''' || ' ';
+        END;
+        END IF;
+        
+        D_TBLVALUE := '
+        INSERT INTO TMP_TBL_LAD_COMMON
+        (COL1_NUM
+        , COL2_NUM
+        , COL9_VARCHAR
+        , COL3_NUM
+        , COL10_VARCHAR
+        , COL4_NUM
+        , COL11_VARCHAR
+        , COL5_NUM
+        , COL6_NUM
+        , COL7_NUM
+        , COL8_NUM
+        , COL16_DATE
+        , COL19_NUM
+        , COL12_VARCHAR
+        , COL13_VARCHAR
+        , COL22_VARCHAR)
+         SELECT 
+         ROW_NUMBER() OVER (ORDER BY BUSINESS_OFFER_NUMBER)
+         , CUST.CUSTOMER_ID
+         , CUST.CUSTOMER_NAME
+         , PRI.PRICING_ID
+         , PRI.BUSINESS_OFFER_NUMBER
+         , PRI.LOB_ID
+         , PRI.LOCATION_CODE
+         , PRI.PRICING_ID
+         , PRI.CREATED_BY
+         , PRI.STATUS_ID
+         , APP.APPROVER_ID
+         , APP.APPROVAL_DATE
+         , APP.ACTION_ID
+         , det.Name
+         , APP.Remarks
+         , APP.UPLOAD_PATH
+         from S3G_ORG_PricingApproval app    
+         inner join S3G_ORG_Pricing PRI on app.pricing_id = PRI.pricing_id 
+         iNNER Join S3G_ORG_CUSTMASTER CUST ON CUST.CUSTOMER_ID = PRI.CUSTOMER_ID
+         inner join s3g_sysad_usermaster us on us.user_id=app.Approver_ID    
+         inner join S3G_ORG_Lookup det on det.Value = app.action_id
+         and type = ''ORG_APPLICATION_PROCESS_ACTION''
+         '  ||  d_Condition;--Pending
+         
+         --DBMS_OUTPUT.PUT_LINE(d_tblValue);
+         
+         EXECUTE IMMEDIATE D_TBLVALUE;
+    
+        OPEN P_OUTTBL1 FOR
+        Select
+        COL1_NUM AS SL_NO,--partition by PRI.CUSTOMER_ID 
+        COL2_NUM as CUSTOMER_ID,
+        COL9_VARCHAR as Entity,
+        COL3_NUM as ID,
+        COL10_VARCHAR as Document_No,
+        COL10_VARCHAR AS ORDER_NO,
+        P_USER_NAME AS APPROVER,
+        GETUSERDATEFORMAT(COL16_DATE , P_Company_ID) AS APPROVAL_DATE,
+        COL19_NUM as Approval_status_id ,  
+        COL8_NUM as APPROVAL_ID,
+        COL12_VARCHAR AS APPROVAL_STATUS,
+        P_User_ID as User_id,
+        COL4_NUM AS LOB_ID,
+        FN_GET_LOCATIONID(COL11_VARCHAR) as LOCATION_ID,
+        COL5_NUM as Task_number            
+        ,1 as Task_status_type_code   -- Pricing Type        
+        ,COL6_NUM as created_by            
+        ,'' as Status            
+        ,COL13_VARCHAR as REMARKS                             
+        ,42 AS PROGRAM_ID   -- Check List for Deal Processing
+        ,COL7_NUM AS ACCOUNTSTATUS
+        ,COL22_VARCHAR AS DOCUMENT_PATH
+        ,0 AS APPROVAL_SERIAL_NUMBER
+        From TMP_TBL_LAD_COMMON;
+      
+        /*
+        
+        OPEN P_OUTTBL1 FOR                                    
+        select     
+        case when nvl(Entity,'0')='0' then 'General' else Entity end as Entity,    
+        
+        Document_No    
+        ,Approver    
+        , Approval_Date    
+        ,Approval_status_id as Approval_status_id    
+        ,Approval_status as Approval_status    
+        , USER_ID     
+        ,ROWNUM as Sl_no    
+        , lob_id    
+        , location_id    
+        , Task_number    
+        , Task_status_type_code    
+        , created_by    
+        ,status    
+        ,remarks    
+        ,id as id    
+        ,document_path as document_path    
+        from(    
+        
+        select     
+        '' Entity,
+        business_offer_number as document_no    
+        ,USER_NAME as Approver    
+        ,GetUserDateFormat(Approval_Date,P_company_id) AS Approval_Date    
+        ,LookUp_ID as Approval_status_id    
+        ,Name as Approval_status    
+        ,approver_id as User_id    
+        ,pr.lob_id as lob_id    
+        ,FN_GET_LOCATIONID(PR.LOCATION_CODE) AS LOCATION_ID    
+        ,business_offer_number as Task_number    
+        ,9 as Task_status_type_code    
+        ,pr.created_by as created_by    
+        ,'' as status    
+        ,app.Remarks as remarks    
+        ,PR.Pricing_ID as id    
+        ,'' as document_path    
+        
+        COL1_NUM AS SL_NO,--partition by PRI.CUSTOMER_ID 
+        COL2_NUM as CUSTOMER_ID,
+        COL9_VARCHAR as Entity,
+        COL3_NUM as ID,
+        COL10_VARCHAR as Document_No,
+        COL10_VARCHAR AS ORDER_NO,
+        D_User_Name as Approver,
+        GETUSERDATEFORMAT(SYSDATE,1) AS APPROVAL_DATE,
+        0 as Approval_status_id ,  
+        0 as APPROVAL_ID,
+        '' AS APPROVAL_STATUS,
+        P_User_ID as User_id,
+        COL4_NUM AS LOB_ID,
+        FN_GET_LOCATIONID(COL11_VARCHAR) as LOCATION_ID,
+        COL5_NUM as Task_number            
+        ,1 as Task_status_type_code   -- Pricing Type        
+        ,COL6_NUM as created_by            
+        ,'' as Status            
+        ,'' as REMARKS                             
+        ,42 AS PROGRAM_ID   -- Check List for Deal Processing
+        ,COL7_NUM AS ACCOUNTSTATUS
+        ,'' AS DOCUMENT_PATH
+        ,0 AS APPROVAL_SERIAL_NUMBER
+        
+        from
+        S3G_ORG_PricingApproval app    
+        inner join S3G_ORG_Pricing PR on app.pricing_id=pr.pricing_id    
+        inner join s3g_sysad_usermaster us on us.user_id=app.Approver_ID    
+        inner join S3G_ORG_Lookup det on det.lookup_id=app.action_id     
+        
+        where PR.status_id = 2     
+        AND PR.LOB_ID = NVL(P_LOB_ID,PR.LOB_ID)    
+        AND PR.LOCATION_CODE = NVL(P_LOCATION_CODE,PR.LOCATION_CODE)    
+        AND BUSINESS_OFFER_NUMBER = NVL(D_DOCUMENT_NO,BUSINESS_OFFER_NUMBER)    
+        AND APPROVER_ID = P_USER_ID    
+        AND PR.COMPANY_ID = P_COMPANY_ID  
+        AND APP.COMPANY_ID = P_COMPANY_ID   
+        )tmp;    
+        
+        */
+    
+    end;    
+    
+    elsif(D_STATUS = 3)THEN    
+    BEGIN    
+      
+        --D('D_DOCUMENT_NO-' || D_DOCUMENT_NO || '-D_STATUS-' || D_STATUS);  
+    
+        OPEN P_OUTTBL FOR
+        SELECT VALUE AS Lookup_Code , NAME as Lookup_Description
+        FROM S3G_ORG_LOOKUP 
+        WHERE TYPE = 'ORG_APPLICATION_PROCESS_ACTION'
+        AND VALUE = 8;
+        
+        --Commented and Added on 26-Sep-2018 Starts here
+        /*
+        
+        OPEN P_OUTTBL1 FOR                                    
+        select     
+        case when nvl(Entity,'0')='0' then 'General' else Entity end as Entity,    
+        
+        Document_No    
+        ,Approver    
+        , Approval_Date    
+        ,Approval_status_id as Approval_status_id
+        ,Approval_status_id as ACCOUNTSTATUS
+        ,Approval_status as Approval_status    
+        , USER_ID     
+        ,ROWNUM as Sl_no    
+        , lob_id    
+        , location_id    
+        , Task_number    
+        , Task_status_type_code    
+        , created_by    
+        ,status    
+        ,remarks    
+        ,id as id    
+        ,document_path as document_path 
+        ,APPROVAL_SERIAL_NUMBER
+        ,APPROVAL_ID
+        from(    
+        
+        select     
+        '' Entity,    
+        --CASE WHEN  nvl(Is_Mobile,1)=1 Then    
+        --  '<img src="..\Images\Online_Receipt.png" alt="Online Receipt" style="width:20px;height:18px;"/>        '    
+        --  Else     
+        --  '<img src="..\Images\Mobile_Receipt.png" alt="Mobile Receipt" style="width:20px;height:18px;"/>        ' End    
+        --  ||     
+        business_offer_number as document_no    
+        ,USER_NAME as Approver    
+        ,GetUserDateFormat(Approval_Date,P_company_id) AS Approval_Date    
+        ,det.LOOKUP_CODE as Approval_status_id     --LookUp_ID 
+        ,det.LOOKUP_DESCRIPTION  as Approval_status --Name   
+        ,approver_id as User_id    
+        ,pr.lob_id as lob_id    
+        ,FN_Get_LocationID(pr.location_code) as location_id    
+        ,business_offer_number as Task_number    
+        ,9 as Task_status_type_code    
+        ,pr.created_by as created_by    
+        ,'' as status    
+        ,app.Remarks as remarks    
+        ,PR.pricing_id as id    
+        ,'' as document_path
+        ,APPROVAL_SERIAL_NUMBER
+        ,app.PRICINGAPPROVAL_ID as APPROVAL_ID
+        from     
+        
+        S3G_ORG_PricingApproval app    
+        inner join S3G_ORG_pricing PR on app.pricing_id=pr.pricing_id    
+        inner join s3g_sysad_usermaster us on us.user_id=app.Approver_ID    
+        inner join S3G_LAD_LOOKUPTYPEDET det on det.LOOKUP_CODE=app.action_id AND det.LOOKUPTYPE_CODE=9    
+        
+        where 
+        --PR.status_id in(51)     
+        --and 
+        pr.lob_id=nvl(P_lob_id,pr.lob_id)    
+        and pr.location_code=nvl(P_location_code,pr.location_code)    
+        and business_offer_number=nvl(D_DOCUMENT_NO,business_offer_number)    
+        --and Approver_ID=P_user_id  
+        and pr.Company_ID=P_Company_ID  
+        AND APP.COMPANY_ID=P_COMPANY_ID     
+        )TMP; 
+        
+        */
+        
+        D_CONDITION := ' Where (PRI.COMPANY_ID = ' || CAST(P_COMPANY_ID AS VARCHAR) || ' and APP.ACTION_ID = 4 and APPROVER_ID = ' || CAST(P_USER_ID AS VARCHAR) || ')';    
+        
+        --LOB
+        if(NVL(P_LOB_ID , 0) != 0) then
+        BEGIN    
+            D_CONDITION := D_CONDITION || 'AND PRI.LOB_ID = ' ||  cast(P_LOB_ID as varchar);
+        END;
+        END if;
+        
+        --Location
+        if(NVL(P_LOCATION_ID , 0) != 0) then
+        BEGIN    
+            D_CONDITION := D_CONDITION || 'AND PRI.LOCATION_ID = ' ||  cast(P_LOCATION_ID as varchar);
+        END;
+        END if;
+        
+        --Customer
+        if(NVL(P_ENTITY_ID , 0) != 0) then
+        BEGIN    
+            D_CONDITION := D_CONDITION || 'AND PRI.CUSTOMER_ID = ' ||  cast(P_ENTITY_ID as varchar);
+        END;
+        END if;
+        
+        --Document Number
+        if(NVL(P_Document_ID , 0) != 0) then
+        BEGIN    
+            D_CONDITION := D_CONDITION || 'AND PRI.pricing_id = ' ||  cast(P_Document_ID as varchar);
+        END;
+        END if;
+        
+        --From and To Date
+        IF(P_from_Date Is Not Null and P_To_DATE Is Not Null) THEN
+        BEGIN 
+        
+             D_CONDITION :=  D_CONDITION || ' and TO_DATE(To_CHAR(PRI.OFFER_DATE , ''DD/Mon/YYYY''))           
+             BETWEEN ' || '''' || TO_DATE(To_CHAR(FN_TODATE(P_FROM_DATE),'DD/Mon/YYYY')) || '''' || '           
+             AND ' || '''' || TO_DATE(To_CHAR(FN_TODATE(P_To_DATE),'DD/Mon/YYYY')) || '''' || ' '; 
+        
+        END;
+        END IF;   
+       
+        --From Date
+        IF(P_from_Date Is Not Null and P_To_DATE Is Null) THEN
+        BEGIN    
+            D_CONDITION := D_CONDITION || ' and (To_CHAR(PRI.OFFER_DATE , ''DD/Mon/YYYY'')) >= '       
+         || '''' ||  TO_DATE(To_CHAR(FN_TODATE(P_FROM_DATE),'DD/Mon/YYYY'))  || '''' || ' ';
+        END;
+        END IF;
+        
+        --To Date
+       IF(P_from_Date Is Null and P_To_DATE Is Not Null) THEN
+        BEGIN    
+            D_CONDITION := D_CONDITION || ' and (To_CHAR(PRI.OFFER_DATE , ''DD/Mon/YYYY'')) <= '       
+         || '''' ||  TO_DATE(To_CHAR(FN_TODATE(P_To_DATE),'DD/Mon/YYYY'))  || '''' || ' ';
+        END;
+        END IF;
+        
+          D_TBLVALUE := '
+          INSERT INTO TMP_TBL_LAD_COMMON
+          (COL1_NUM
+          , COL2_NUM
+          , COL9_VARCHAR
+          , COL3_NUM
+          , COL10_VARCHAR
+          , COL4_NUM
+          , COL11_VARCHAR
+          , COL5_NUM
+          , COL6_NUM
+          , COL7_NUM
+          , COL8_NUM
+          , COL16_DATE
+          , COL19_NUM
+          , COL12_VARCHAR
+          , COL13_VARCHAR
+          , COL22_VARCHAR)
+           SELECT 
+           ROW_NUMBER() OVER (ORDER BY BUSINESS_OFFER_NUMBER)
+           , CUST.CUSTOMER_ID
+           , CUST.CUSTOMER_NAME
+           , PRI.PRICING_ID
+           , PRI.BUSINESS_OFFER_NUMBER
+           , PRI.LOB_ID
+           , PRI.LOCATION_CODE
+           , PRI.PRICING_ID
+           , PRI.CREATED_BY
+           , PRI.STATUS_ID
+           , APP.APPROVER_ID
+           , APP.APPROVAL_DATE
+           , APP.ACTION_ID
+           , det.Name
+           , APP.Remarks
+           , APP.UPLOAD_PATH
+           from S3G_ORG_PricingApproval app    
+           inner join S3G_ORG_Pricing PRI on app.pricing_id = PRI.pricing_id 
+           iNNER Join S3G_ORG_CUSTMASTER CUST ON CUST.CUSTOMER_ID = PRI.CUSTOMER_ID
+           inner join s3g_sysad_usermaster us on us.user_id=app.Approver_ID    
+           inner join S3G_ORG_Lookup det on det.Value = app.action_id
+           and type = ''ORG_APPLICATION_PROCESS_ACTION''
+           '  ||  d_Condition;--Pending
+           
+           --DBMS_OUTPUT.PUT_LINE(d_tblValue);
+         
+          EXECUTE IMMEDIATE D_TBLVALUE;
+    
+          OPEN P_OUTTBL1 FOR
+          Select
+          COL1_NUM AS SL_NO,--partition by PRI.CUSTOMER_ID 
+          COL2_NUM as CUSTOMER_ID,
+          COL9_VARCHAR as Entity,
+          COL3_NUM as ID,
+          COL10_VARCHAR as Document_No,
+          COL10_VARCHAR AS ORDER_NO,
+          P_USER_NAME AS APPROVER,
+          GETUSERDATEFORMAT(COL16_DATE , P_Company_ID) AS APPROVAL_DATE,
+          COL19_NUM as Approval_status_id ,  
+          COL8_NUM as APPROVAL_ID,
+          COL12_VARCHAR AS APPROVAL_STATUS,
+          P_User_ID as User_id,
+          COL4_NUM AS LOB_ID,
+          FN_GET_LOCATIONID(COL11_VARCHAR) as LOCATION_ID,
+          COL5_NUM as Task_number            
+          ,1 as Task_status_type_code   -- Pricing Type        
+          ,COL6_NUM as created_by            
+          ,'' as Status            
+          ,COL13_VARCHAR as REMARKS                             
+          ,42 AS PROGRAM_ID   -- Check List for Deal Processing
+          ,COL7_NUM AS ACCOUNTSTATUS
+          ,COL22_VARCHAR AS DOCUMENT_PATH
+          ,0 AS APPROVAL_SERIAL_NUMBER
+          From TMP_TBL_LAD_COMMON;
+          
+          --Commented and Added on 26-Sep-2018 Ends here
+    end;  
+    
+    elsif(D_STATUS = 0)THEN       --Query Mode 
+    BEGIN  
+          OPEN P_OUTTBL FOR
+          SELECT VALUE AS Lookup_Code , NAME as Lookup_Description
+          FROM S3G_ORG_LOOKUP 
+          WHERE TYPE = 'ORG_APPLICATION_PROCESS_ACTION'
+          AND VALUE in (2 , 4 , 5 , 8);
+    
+    
+          INSERT INTO TMP_TBL_LAD_COMMON
+          (COL1_NUM
+          , COL2_NUM
+          , COL9_VARCHAR
+          , COL3_NUM
+          , COL10_VARCHAR
+          , COL4_NUM
+          , COL11_VARCHAR
+          , COL5_NUM
+          , COL6_NUM
+          , COL7_NUM
+          , COL8_NUM
+          , COL16_DATE
+          , COL19_NUM
+          , COL12_VARCHAR
+          , COL13_VARCHAR
+          , COL21_VARCHAR
+          , COL22_VARCHAR
+          )
+          SELECT 
+          ROW_NUMBER() OVER (ORDER BY BUSINESS_OFFER_NUMBER)
+          , CUST.CUSTOMER_ID
+          , CUST.CUSTOMER_NAME
+          , PRI.PRICING_ID
+          , PRI.BUSINESS_OFFER_NUMBER
+          , PRI.LOB_ID
+          , PRI.LOCATION_CODE
+          , PRI.PRICING_ID
+          , PRI.CREATED_BY
+          , PRI.STATUS_ID
+          , APP.APPROVER_ID
+          , APP.APPROVAL_DATE
+          , APP.ACTION_ID
+          , det.Name
+          , APP.REMARKS
+          , LOB.LOB_CODE || ' - ' || LOB.LOB_NAME
+          , APP.UPLOAD_PATH
+          from S3G_ORG_PricingApproval app    
+          INNER JOIN S3G_ORG_PRICING PRI ON APP.PRICING_ID = PRI.PRICING_ID 
+          INNER JOIN S3G_SYSAD_LOBMASTER LOB
+          On LOB.LOB_ID = PRI.LOB_ID
+          iNNER Join S3G_ORG_CUSTMASTER CUST ON CUST.CUSTOMER_ID = PRI.CUSTOMER_ID
+          INNER JOIN S3G_ORG_LOOKUP DET ON DET.VALUE = APP.ACTION_ID
+          AND TYPE = 'ORG_APPLICATION_PROCESS_ACTION'
+          WHERE PRI.COMPANY_ID = P_COMPANY_ID
+          and PRI.Pricing_ID = P_TRAN_ID;
+           
+          OPEN P_OUTTBL1 FOR
+          Select
+          COL1_NUM AS SL_NO,--partition by PRI.CUSTOMER_ID 
+          COL2_NUM as CUSTOMER_ID,
+          COL9_VARCHAR as Entity,
+          COL3_NUM as ID,
+          COL10_VARCHAR as Document_No,
+          COL10_VARCHAR as ORDER_NO,
+          US.User_Name AS APPROVER,
+          GETUSERDATEFORMAT(COL16_DATE , P_Company_ID) AS APPROVAL_DATE,
+          COL19_NUM as Approval_status_id ,  
+          COL8_NUM as APPROVAL_ID,
+          COL12_VARCHAR AS APPROVAL_STATUS,
+          P_User_ID as User_id,
+          COL4_NUM AS LOB_ID,
+          COL21_VARCHAR as LOB_Name,
+          FN_GET_LOCATIONID(COL11_VARCHAR) as LOCATION_ID,
+          COL5_NUM as Task_number            
+          ,1 as Task_status_type_code   -- Pricing Type        
+          ,COL6_NUM as created_by            
+          ,'' as Status            
+          ,COL13_VARCHAR as REMARKS                             
+          ,42 AS PROGRAM_ID   -- Check List for Deal Processing
+          ,COL7_NUM AS ACCOUNTSTATUS
+          ,COL22_VARCHAR AS DOCUMENT_PATH
+          ,0 as APPROVAL_SERIAL_NUMBER
+          from TMP_TBL_LAD_COMMON TMP
+          inner join s3g_sysad_usermaster us on us.user_id = TMP.COL8_NUM ;
+    
+    END; 
+
+END IF;
+END;
+
+elsif(P_Tran_Type='APAP')THEN    
+Begin    
+   --D('D_STATUS==>'||D_STATUS);
+    if(D_STATUS = 2)THEN  --Approved  
+    BEGIN   
+
+        OPEN P_OUTTBL FOR
+        SELECT VALUE AS Lookup_Code , NAME as Lookup_Description
+        FROM S3G_ORG_LOOKUP 
+        WHERE TYPE = 'ORG_APPLICATION_PROCESS_ACTION'
+        AND VALUE = 8;
+                
+        D_CONDITION := ' Where (appro.COMPANY_ID = ' || CAST(P_COMPANY_ID AS VARCHAR) || ' and appro.STATUS_ID = 2 and APPROVER_ID = ' || CAST(P_USER_ID AS VARCHAR) || ')';    
+   
+        --LOB
+        if(NVL(P_LOB_ID , 0) != 0) then
+        BEGIN    
+            D_CONDITION := D_CONDITION || 'AND appro.LOB_ID = ' ||  cast(P_LOB_ID as varchar);
+        END;
+        END if;
+        
+        --Location
+        if(NVL(P_LOCATION_ID , 0) != 0) then
+        BEGIN    
+            D_CONDITION := D_CONDITION || 'AND appro.LOCATION_ID = ' ||  cast(P_LOCATION_ID as varchar);
+        END;
+        END if;
+        
+        --Customer
+        if(NVL(P_ENTITY_ID , 0) != 0) then
+        BEGIN    
+            D_CONDITION := D_CONDITION || 'AND appro.CUSTOMER_ID = ' ||  cast(P_ENTITY_ID as varchar);
+        END;
+        END if;
+        
+        --Document Number
+        if(NVL(P_Document_ID , 0) != 0) then
+        BEGIN    
+            D_CONDITION := D_CONDITION || 'AND appro.APPLICATION_PROCESS_ID = ' ||  cast(P_Document_ID as varchar);
+        END;
+        END if;
+        
+        --From and To Date
+        IF(P_from_Date Is Not Null and P_To_DATE Is Not Null) THEN
+        BEGIN 
+        
+             D_CONDITION :=  D_CONDITION || ' and TO_DATE(To_CHAR(appro.APPLICAION_PROCESS_DATE , ''DD/Mon/YYYY''))           
+             BETWEEN ' || '''' || TO_DATE(To_CHAR(FN_TODATE(P_FROM_DATE),'DD/Mon/YYYY')) || '''' || '           
+             AND ' || '''' || TO_DATE(To_CHAR(FN_TODATE(P_To_DATE),'DD/Mon/YYYY')) || '''' || ' '; 
+        
+        END;
+        END IF;   
+       
+        --From Date
+        IF(P_from_Date Is Not Null and P_To_DATE Is Null) THEN
+        BEGIN    
+            D_CONDITION := D_CONDITION || ' and (To_CHAR(appro.APPLICAION_PROCESS_DATE , ''DD/Mon/YYYY'')) >= '       
+         || '''' ||  TO_DATE(To_CHAR(FN_TODATE(P_FROM_DATE),'DD/Mon/YYYY'))  || '''' || ' ';
+        END;
+        END IF;
+        
+        --To Date
+       IF(P_from_Date Is Null and P_To_DATE Is Not Null) THEN
+        BEGIN    
+            D_CONDITION := D_CONDITION || ' and (To_CHAR(appro.APPLICAION_PROCESS_DATE , ''DD/Mon/YYYY'')) <= '       
+         || '''' ||  TO_DATE(To_CHAR(FN_TODATE(P_To_DATE),'DD/Mon/YYYY'))  || '''' || ' ';
+        END;
+        END IF;
+        
+        D_TBLVALUE := '
+        INSERT INTO TMP_TBL_LAD_COMMON
+        (COL1_NUM
+        , COL2_NUM
+        , COL9_VARCHAR
+        , COL3_NUM
+        , COL10_VARCHAR
+        , COL4_NUM
+        , COL11_VARCHAR
+        , COL5_NUM
+        , COL6_NUM
+        , COL7_NUM
+        , COL8_NUM
+        , COL16_DATE
+        , COL19_NUM
+        , COL12_VARCHAR
+        , COL13_VARCHAR
+        , COL22_VARCHAR)
+         SELECT 
+         ROW_NUMBER() OVER (ORDER BY Application_Number)
+         , CUST.CUSTOMER_ID
+         , CUST.CUSTOMER_NAME
+         , appro.APPLICATION_PROCESS_ID
+         , appro.Application_Number
+         , appro.LOB_ID
+         , appro.LOCATION_CODE
+         , appro.PRICING_ID
+         , appro.CREATED_BY
+         , appro.STATUS_ID
+         , apprvl.APPROVER_ID
+         , apprvl.APPROVAL_DATE
+         , apprvl.ACTION_ID
+         , det.Name
+         , apprvl.Remarks
+         , UPLOAD_PATH UPLOAD_PATH
+         from S3G_ORG_APPAPPROVAL apprvl    
+         inner join S3G_ORG_APPPROC appro on apprvl.APPLICATION_PROCESS_ID = appro.APPLICATION_PROCESS_ID 
+         iNNER Join S3G_ORG_CUSTMASTER CUST ON CUST.CUSTOMER_ID = appro.CUSTOMER_ID
+         inner join s3g_sysad_usermaster us on us.user_id=apprvl.Approver_ID    
+         inner join S3G_ORG_Lookup det on det.Value = apprvl.action_id
+         and type = ''ORG_APPLICATION_PROCESS_ACTION''
+         '  ||  d_Condition;--Pending
+         
+         --DBMS_OUTPUT.PUT_LINE(d_tblValue);
+         
+         EXECUTE IMMEDIATE D_TBLVALUE;
+    
+        OPEN P_OUTTBL1 FOR
+        Select
+        COL1_NUM AS SL_NO,--partition by PRI.CUSTOMER_ID 
+        COL2_NUM as CUSTOMER_ID,
+        COL9_VARCHAR as Entity,
+        COL3_NUM as ID,
+        COL10_VARCHAR as Document_No,
+        COL10_VARCHAR AS ORDER_NO,
+        P_USER_NAME AS APPROVER,
+        GETUSERDATEFORMAT(COL16_DATE , P_Company_ID) AS APPROVAL_DATE,
+        COL19_NUM as Approval_status_id ,  
+        COL8_NUM as APPROVAL_ID,
+        COL12_VARCHAR AS APPROVAL_STATUS,
+        P_User_ID as User_id,
+        COL4_NUM AS LOB_ID,
+        FN_GET_LOCATIONID(COL11_VARCHAR) as LOCATION_ID,
+        COL5_NUM as Task_number            
+        ,1 as Task_status_type_code   -- Pricing Type        
+        ,COL6_NUM as created_by            
+        ,'' as Status            
+        ,COL13_VARCHAR as REMARKS                             
+        ,42 AS PROGRAM_ID   -- Check List for Deal Processing
+        ,COL7_NUM AS ACCOUNTSTATUS
+        ,COL22_VARCHAR AS DOCUMENT_PATH
+        ,0 AS APPROVAL_SERIAL_NUMBER
+        From TMP_TBL_LAD_COMMON;
+      
+        
+    
+    end;    
+    
+    elsif(D_STATUS = 3)THEN --Rejected   
+    BEGIN    
+      
+          OPEN P_OUTTBL FOR
+        SELECT VALUE AS Lookup_Code , NAME as Lookup_Description
+        FROM S3G_ORG_LOOKUP 
+        WHERE TYPE = 'ORG_APPLICATION_PROCESS_ACTION'
+        AND VALUE = 8;
+                
+        D_CONDITION := ' Where (appro.COMPANY_ID = ' || CAST(P_COMPANY_ID AS VARCHAR) || ' and appro.STATUS_ID = 4 and APPROVER_ID = ' || CAST(P_USER_ID AS VARCHAR) || ')';    
+   
+        --LOB
+        if(NVL(P_LOB_ID , 0) != 0) then
+        BEGIN    
+            D_CONDITION := D_CONDITION || 'AND appro.LOB_ID = ' ||  cast(P_LOB_ID as varchar);
+        END;
+        END if;
+        
+        --Location
+        if(NVL(P_LOCATION_ID , 0) != 0) then
+        BEGIN    
+            D_CONDITION := D_CONDITION || 'AND appro.LOCATION_ID = ' ||  cast(P_LOCATION_ID as varchar);
+        END;
+        END if;
+        
+        --Customer
+        if(NVL(P_ENTITY_ID , 0) != 0) then
+        BEGIN    
+            D_CONDITION := D_CONDITION || 'AND appro.CUSTOMER_ID = ' ||  cast(P_ENTITY_ID as varchar);
+        END;
+        END if;
+        
+        --Document Number
+        if(NVL(P_Document_ID , 0) != 0) then
+        BEGIN    
+            D_CONDITION := D_CONDITION || 'AND appro.APPLICATION_PROCESS_ID = ' ||  cast(P_Document_ID as varchar);
+        END;
+        END if;
+        
+        --From and To Date
+        IF(P_from_Date Is Not Null and P_To_DATE Is Not Null) THEN
+        BEGIN 
+        
+             D_CONDITION :=  D_CONDITION || ' and TO_DATE(To_CHAR(appro.APPLICAION_PROCESS_DATE , ''DD/Mon/YYYY''))           
+             BETWEEN ' || '''' || TO_DATE(To_CHAR(FN_TODATE(P_FROM_DATE),'DD/Mon/YYYY')) || '''' || '           
+             AND ' || '''' || TO_DATE(To_CHAR(FN_TODATE(P_To_DATE),'DD/Mon/YYYY')) || '''' || ' '; 
+        
+        END;
+        END IF;   
+       
+        --From Date
+        IF(P_from_Date Is Not Null and P_To_DATE Is Null) THEN
+        BEGIN    
+            D_CONDITION := D_CONDITION || ' and (To_CHAR(appro.APPLICAION_PROCESS_DATE , ''DD/Mon/YYYY'')) >= '       
+         || '''' ||  TO_DATE(To_CHAR(FN_TODATE(P_FROM_DATE),'DD/Mon/YYYY'))  || '''' || ' ';
+        END;
+        END IF;
+        
+        --To Date
+       IF(P_from_Date Is Null and P_To_DATE Is Not Null) THEN
+        BEGIN    
+            D_CONDITION := D_CONDITION || ' and (To_CHAR(appro.APPLICAION_PROCESS_DATE , ''DD/Mon/YYYY'')) <= '       
+         || '''' ||  TO_DATE(To_CHAR(FN_TODATE(P_To_DATE),'DD/Mon/YYYY'))  || '''' || ' ';
+        END;
+        END IF;
+        
+        D_TBLVALUE := '
+        INSERT INTO TMP_TBL_LAD_COMMON
+        (COL1_NUM
+        , COL2_NUM
+        , COL9_VARCHAR
+        , COL3_NUM
+        , COL10_VARCHAR
+        , COL4_NUM
+        , COL11_VARCHAR
+        , COL5_NUM
+        , COL6_NUM
+        , COL7_NUM
+        , COL8_NUM
+        , COL16_DATE
+        , COL19_NUM
+        , COL12_VARCHAR
+        , COL13_VARCHAR
+        , COL22_VARCHAR)
+         SELECT 
+         ROW_NUMBER() OVER (ORDER BY APPLICATION_NUMBER)
+         , CUST.CUSTOMER_ID
+         , CUST.CUSTOMER_NAME
+         , appro.APPLICATION_PROCESS_ID
+         , appro.APPLICATION_NUMBER
+         , appro.LOB_ID
+         , appro.LOCATION_CODE
+         , appro.PRICING_ID
+         , appro.CREATED_BY
+         , appro.STATUS_ID
+         , apprvl.APPROVER_ID
+         , apprvl.APPROVAL_DATE
+         , apprvl.ACTION_ID
+         , det.Name
+         , apprvl.Remarks
+         , UPLOAD_PATH UPLOAD_PATH
+         from S3G_ORG_APPAPPROVAL apprvl    
+         inner join S3G_ORG_APPPROC appro on apprvl.APPLICATION_PROCESS_ID = appro.APPLICATION_PROCESS_ID 
+         iNNER Join S3G_ORG_CUSTMASTER CUST ON CUST.CUSTOMER_ID = appro.CUSTOMER_ID
+         inner join s3g_sysad_usermaster us on us.user_id=apprvl.Approver_ID    
+         inner join S3G_ORG_Lookup det on det.Value = apprvl.action_id
+         and type = ''ORG_APPLICATION_PROCESS_ACTION''
+         '  ||  d_Condition;--Pending
+         
+         --DBMS_OUTPUT.PUT_LINE(d_tblValue);
+         
+         EXECUTE IMMEDIATE D_TBLVALUE;
+    
+        OPEN P_OUTTBL1 FOR
+        Select
+        COL1_NUM AS SL_NO,--partition by PRI.CUSTOMER_ID 
+        COL2_NUM as CUSTOMER_ID,
+        COL9_VARCHAR as Entity,
+        COL3_NUM as ID,
+        COL10_VARCHAR as Document_No,
+        COL10_VARCHAR AS ORDER_NO,
+        P_USER_NAME AS APPROVER,
+        GETUSERDATEFORMAT(COL16_DATE , P_Company_ID) AS APPROVAL_DATE,
+        COL19_NUM as Approval_status_id ,  
+        COL8_NUM as APPROVAL_ID,
+        COL12_VARCHAR AS APPROVAL_STATUS,
+        P_User_ID as User_id,
+        COL4_NUM AS LOB_ID,
+        FN_GET_LOCATIONID(COL11_VARCHAR) as LOCATION_ID,
+        COL5_NUM as Task_number            
+        ,1 as Task_status_type_code   -- Pricing Type        
+        ,COL6_NUM as created_by            
+        ,'' as Status            
+        ,COL13_VARCHAR as REMARKS                             
+        ,42 AS PROGRAM_ID   -- Check List for Deal Processing
+        ,COL7_NUM AS ACCOUNTSTATUS
+        ,COL22_VARCHAR AS DOCUMENT_PATH
+        ,0 AS APPROVAL_SERIAL_NUMBER
+        From TMP_TBL_LAD_COMMON;
+      
+    end;  
+    
+    elsif(D_STATUS = 0)THEN       --Query Mode 
+    BEGIN    
+    
+          OPEN P_OUTTBL FOR
+          SELECT VALUE AS Lookup_Code , NAME as Lookup_Description
+          FROM S3G_ORG_LOOKUP 
+          WHERE TYPE = 'ORG_APPLICATION_PROCESS_ACTION'
+          AND VALUE in (2 , 4 , 5 , 8);
+    
+    
+          INSERT INTO TMP_TBL_LAD_COMMON
+          (COL1_NUM
+          , COL2_NUM
+          , COL9_VARCHAR
+          , COL3_NUM
+          , COL10_VARCHAR
+          , COL4_NUM
+          , COL11_VARCHAR
+          , COL5_NUM
+          , COL6_NUM
+          , COL7_NUM
+          , COL8_NUM
+          , COL16_DATE
+          , COL19_NUM
+          , COL12_VARCHAR
+          , COL13_VARCHAR
+          , COL21_VARCHAR
+          , COL22_VARCHAR
+          )
+          SELECT 
+          ROW_NUMBER() OVER (ORDER BY APPLICATION_NUMBER)
+          , CUST.CUSTOMER_ID
+          , CUST.CUSTOMER_NAME
+          , PRI.APPLICATION_PROCESS_ID
+          , PRI.APPLICATION_NUMBER
+          , PRI.LOB_ID
+          , PRI.LOCATION_CODE
+          , PRI.PRICING_ID
+          , PRI.CREATED_BY
+          , PRI.STATUS_ID
+          , APP.APPROVER_ID
+          , APP.APPROVAL_DATE
+          , APP.ACTION_ID
+          , det.Name
+          , APP.REMARKS
+          , lob.LOB_CODE || ' - ' || lob.LOB_NAME
+          , APP.UPLOAD_PATH
+          from S3G_ORG_APPAPPROVAL app    
+          INNER JOIN S3G_ORG_APPPROC PRI ON APP.APPLICATION_PROCESS_ID = PRI.APPLICATION_PROCESS_ID 
+          INNER JOIN S3G_SYSAD_LOBMASTER LOB
+          On LOB.LOB_ID = PRI.LOB_ID
+          iNNER Join S3G_ORG_CUSTMASTER CUST ON CUST.CUSTOMER_ID = PRI.CUSTOMER_ID
+          inner join s3g_sysad_usermaster us on us.user_id=app.Approver_ID    
+          INNER JOIN S3G_ORG_LOOKUP DET ON DET.VALUE = APP.ACTION_ID
+          AND TYPE = 'ORG_APPLICATION_PROCESS_ACTION'
+          WHERE PRI.COMPANY_ID = P_COMPANY_ID
+          and PRI.APPLICATION_PROCESS_ID = P_TRAN_ID;
+           
+          OPEN P_OUTTBL1 FOR
+          Select
+          COL1_NUM AS SL_NO,--partition by PRI.CUSTOMER_ID 
+          COL2_NUM as CUSTOMER_ID,
+          COL9_VARCHAR as Entity,
+          COL3_NUM as ID,
+          COL10_VARCHAR as Document_No,
+          COL10_VARCHAR AS ORDER_NO,
+          P_USER_NAME AS APPROVER,
+          GETUSERDATEFORMAT(COL16_DATE , P_Company_ID) AS APPROVAL_DATE,
+          COL19_NUM as Approval_status_id ,  
+          COL8_NUM as APPROVAL_ID,
+          COL12_VARCHAR AS APPROVAL_STATUS,
+          P_User_ID as User_id,
+          COL4_NUM AS LOB_ID,
+          COL21_VARCHAR as LOB_Name,
+          FN_GET_LOCATIONID(COL11_VARCHAR) as LOCATION_ID,
+          COL5_NUM as Task_number            
+          ,1 as Task_status_type_code   -- Pricing Type        
+          ,COL6_NUM as created_by            
+          ,'' as Status            
+          ,COL13_VARCHAR as REMARKS                             
+          ,42 AS PROGRAM_ID   -- Check List for Deal Processing
+          ,COL7_NUM AS ACCOUNTSTATUS
+          ,COL22_VARCHAR AS DOCUMENT_PATH
+          ,0 AS APPROVAL_SERIAL_NUMBER
+          From TMP_TBL_LAD_COMMON;
+    
+    END; 
+
+END IF;
+END;
+elsif(P_Tran_Type='FINAPPR')THEN    
+BEGIN    
+   D('HI==>'||D_STATUS);  
+if(D_STATUS = 2)THEN    
+  BEGIN   
+
+        OPEN P_OUTTBL FOR
+        SELECT VALUE AS Lookup_Code , NAME as Lookup_Description
+        FROM S3G_ORG_LOOKUP 
+        WHERE TYPE = 'ORG_APPLICATION_PROCESS_ACTION'
+        AND VALUE = 8;--REVOKE
+                
+       D_CONDITION := ' Where (INVLOD.COMPANY_ID = ' || CAST(P_COMPANY_ID AS VARCHAR) || ' and LOADDET.STATUS_ID in (2))';--Pending    
+   
+    --LOB
+    if(NVL(P_lob_id , 0) != 0) then
+    BEGIN    
+        D_CONDITION := D_CONDITION || ' AND INVLOD.LOB_ID = ' ||  cast(P_lob_id as varchar);
+    END;
+    END if;    
+    
+    --Location
+    if(NVL(P_LOCATION_ID , 0) != 0) then
+    BEGIN    
+        D_CONDITION := D_CONDITION || ' AND INVLOD.LOCATION_ID = ' ||  cast(P_LOCATION_ID as varchar);
+    END;
+    END if;
+    
+    --Customer
+    if(NVL(P_ENTITY_ID , 0) != 0) then
+    BEGIN    
+        D_CONDITION := D_CONDITION || ' AND INVLOD.CUSTOMER_ID = ' ||  cast(P_ENTITY_ID as varchar);
+    END;
+    END if;
+    
+    --Document Number
+    if(NVL(P_DOCUMENT_ID , 0) != 0) then
+    BEGIN    
+        D_CONDITION := D_CONDITION || ' AND INVLOD.FACTORING_INV_LOAD_ID = ' ||  cast(P_DOCUMENT_ID as varchar);
+    END;
+    END if;
+   
+     --From and To Date
+    IF(P_from_Date Is Not Null and P_To_DATE Is Not Null) THEN
+    BEGIN 
+    
+         D_CONDITION :=  D_CONDITION || ' and TO_DATE(To_CHAR(LOADDET.INVOICE_DATE , ''DD/Mon/YYYY''))           
+         BETWEEN ' || '''' || TO_DATE(To_CHAR(FN_TODATE(P_FROM_DATE),'DD/Mon/YYYY')) || '''' || '           
+         AND ' || '''' || TO_DATE(To_CHAR(FN_TODATE(P_To_DATE),'DD/Mon/YYYY')) || '''' || ' '; 
+    
+    END;
+    END IF;   
+   
+    --From Date
+    IF(P_from_Date Is Not Null and P_To_DATE Is Null) THEN
+    BEGIN    
+        D_CONDITION := D_CONDITION || ' and (To_CHAR(LOADDET.INVOICE_DATE , ''DD/Mon/YYYY'')) >= '       
+     || '''' ||  TO_DATE(To_CHAR(FN_TODATE(P_FROM_DATE),'DD/Mon/YYYY'))  || '''' || ' ';
+    END;
+    END IF;
+    
+    --To Date
+   IF(P_from_Date Is Null and P_To_DATE Is Not Null) THEN
+    BEGIN    
+        D_CONDITION := D_CONDITION || ' and (To_CHAR(LOADDET.INVOICE_DATE , ''DD/Mon/YYYY'')) <= '       
+     || '''' ||  TO_DATE(To_CHAR(FN_TODATE(P_To_DATE),'DD/Mon/YYYY'))  || '''' || ' ';
+    END;
+    END IF;
+    
+    D_TBLVALUE := '
+    INSERT INTO TMP_TBL_LAD_COMMON
+    (COL1_NUM
+    , COL2_NUM
+    , COL9_VARCHAR
+    , COL3_NUM
+    , COL10_VARCHAR
+    , COL4_NUM
+    , COL11_VARCHAR
+    , COL5_NUM
+    , COL6_NUM
+    , COL7_NUM
+    , COL8_NUM
+    , COL19_NUM)
+     SELECT 
+     ROW_NUMBER() OVER (ORDER BY LOADDET.INVOICE_NO)
+     , CM.CUSTOMER_ID
+     , CM.CUSTOMER_NAME
+     , LOADDET.FACTORING_INV_LOAD_DETAILS_ID
+     , LOADDET.INVOICE_NO
+     , INVLOD.LOB_ID
+     , INVLOD.LOCATION_CODE
+     , INVLOD.FACTORING_INV_LOAD_ID
+     , INVLOD.CREATED_BY
+     , LOADDET.STATUS_ID
+     , INVAPP.INVOICE_APPROVAL_ID
+     , INVAPP.APPROVAL_SERIAL_NUMBER
+    
+    
+    
+      FROM S3G_LAD_FACTRNGINVLOADING INVLOD
+      INNER JOIN S3G_ORG_CUSTMASTER CM
+      ON CM.CUSTOMER_ID=INVLOD.CUSTOMER_ID
+      INNER JOIN S3G_LAD_FACTRNGINVLOADINGDET LOADDET
+      ON LOADDET.FACTORING_INV_LOAD_ID=INVLOD.FACTORING_INV_LOAD_ID
+      LEFT JOIN S3G_LAD_FACINVOICE_APPROVAL INVAPP
+      ON (INVAPP.FACTORING_INV_LOAD_DETAILS_ID=LOADDET.FACTORING_INV_LOAD_DETAILS_ID AND INVAPP.FACTORING_INV_LOAD_ID=INVLOD.FACTORING_INV_LOAD_ID)
+      
+        '||d_Condition
+         ||' AND INVAPP.FACTORING_INV_LOAD_DETAILS_ID Is Null and LOADDET.STATUS_ID=2 ';--Pending
+
+    DBMS_OUTPUT.PUT_LINE(d_tblValue);
+    
+    EXECUTE IMMEDIATE D_TBLVALUE;
+    
+    OPEN P_OUTTBL1 FOR
+    Select
+    COL1_NUM AS SL_NO,--partition by PRI.CUSTOMER_ID 
+    COL2_NUM as CUSTOMER_ID,
+    COL9_VARCHAR as Entity,
+    COL3_NUM as ID,
+    COL10_VARCHAR as Document_No,
+    COL10_VARCHAR AS ORDER_NO,
+    P_USER_NAME as Approver,
+    GETUSERDATEFORMAT(SYSDATE,P_Company_ID) AS APPROVAL_DATE,
+    0 as Approval_status_id ,  
+    0 as APPROVAL_ID,
+    '' AS APPROVAL_STATUS,
+    P_User_ID as User_id,
+    COL4_NUM AS LOB_ID,
+    FN_GET_LOCATIONID(COL11_VARCHAR) as LOCATION_ID,
+    COL5_NUM as Task_number            
+    ,1 as Task_status_type_code   -- Pricing Type        
+    ,COL6_NUM as created_by            
+    ,'' as Status            
+    ,'' AS REMARKS                             
+    ,568 AS PROGRAM_ID   -- Check List for Deal Processing
+    ,COL7_NUM AS ACCOUNTSTATUS
+    ,'' AS DOCUMENT_PATH
+    ,0 AS APPROVAL_SERIAL_NUMBER
+    From TMP_TBL_LAD_COMMON;   
+    
+      
+        
+    
+    end;    
+    
+elsif(D_STATUS = 3)THEN    
+Begin    
+   --D('D_DOCUMENT_NO-' || D_DOCUMENT_NO || '-D_STATUS-' || D_STATUS);  
+OPEN P_OUTTBL FOR     
+SELECT                                     
+LOOKUP_CODE,                                    
+Lookup_Description from S3G_LAD_LookupTypeDet where LookupType_Code=9;    -- and lookup_code in (6)
+    
+                                    
+ OPEN P_OUTTBL1 FOR                                    
+ select     
+    case when nvl(Entity,'0')='0' then 'General' else Entity end as Entity,    
+    
+  Document_No    
+ ,Approver    
+ , Approval_Date    
+ ,Approval_status_id as Approval_status_id
+ ,Approval_status_id as ACCOUNTSTATUS
+ ,Approval_status as Approval_status    
+ , USER_ID     
+ ,ROWNUM as Sl_no    
+ , lob_id    
+ , location_id    
+ , Task_number    
+ , Task_status_type_code    
+ , created_by    
+ ,status    
+ ,remarks    
+ ,id as id    
+ ,document_path as document_path 
+ ,APPROVAL_SERIAL_NUMBER
+ ,APPROVAL_ID
+ from(    
+     
+ select     
+ '' Entity,    
+  --CASE WHEN  nvl(Is_Mobile,1)=1 Then    
+  --  '<img src="..\Images\Online_Receipt.png" alt="Online Receipt" style="width:20px;height:18px;"/>        '    
+  --  Else     
+  --  '<img src="..\Images\Mobile_Receipt.png" alt="Mobile Receipt" style="width:20px;height:18px;"/>        ' End    
+  --  ||     
+ business_offer_number as document_no    
+ ,USER_NAME as Approver    
+ ,GetUserDateFormat(Approval_Date,P_company_id) AS Approval_Date    
+ ,det.LOOKUP_CODE as Approval_status_id     --LookUp_ID 
+ ,det.LOOKUP_DESCRIPTION  as Approval_status --Name   
+ ,approver_id as User_id    
+ ,pr.lob_id as lob_id    
+ ,FN_Get_LocationID(pr.location_code) as location_id    
+ ,business_offer_number as Task_number    
+ ,9 as Task_status_type_code    
+ ,pr.created_by as created_by    
+ ,'' as status    
+ ,app.Remarks as remarks    
+ ,PR.pricing_id as id    
+ ,'' as document_path
+ ,APPROVAL_SERIAL_NUMBER
+ ,app.PRICINGAPPROVAL_ID as APPROVAL_ID
+from     
+    
+S3G_ORG_PricingApproval app    
+inner join S3G_ORG_pricing PR on app.pricing_id=pr.pricing_id    
+inner join s3g_sysad_usermaster us on us.user_id=app.Approver_ID    
+inner join S3G_LAD_LOOKUPTYPEDET det on det.LOOKUP_CODE=app.action_id AND det.LOOKUPTYPE_CODE=9    
+    
+where 
+--PR.status_id in(51)     
+--and 
+pr.lob_id=nvl(P_lob_id,pr.lob_id)    
+and pr.location_code=nvl(P_location_code,pr.location_code)    
+and business_offer_number=nvl(D_DOCUMENT_NO,business_offer_number)    
+--and Approver_ID=P_user_id  
+and pr.Company_ID=P_Company_ID  
+AND APP.COMPANY_ID=P_COMPANY_ID     
+)TMP;    
+end;    
+    
+    
+ 
+elsif(D_STATUS = 4)THEN    
+BEGIN    
+OPEN P_OUTTBL FOR     
+SELECT                                     
+LOOKUP_CODE,                                    
+Lookup_Description from S3G_LAD_LookupTypeDet where LookupType_Code=9 and lookup_code in (6);    
+    
+                                    
+OPEN P_OUTTBL1 FOR                                     
+ select     
+    case when nvl(Entity,'0')='0' then 'General' else Entity end as Entity,    
+    
+  Document_No    
+ ,Approver    
+ , Approval_Date    
+ ,Approval_status_id as Approval_status_id    
+ ,Approval_status as Approval_status    
+ , USER_ID     
+ ,ROWNUM as Sl_no    
+ , lob_id    
+ , location_id    
+ , Task_number    
+ , Task_status_type_code    
+ , created_by    
+ ,status    
+ ,remarks    
+ ,id as id    
+ ,document_path as document_path    
+ from(    
+     
+ select     
+ '' Entity,    
+  --CASE WHEN  nvl(Is_Mobile,1)=1 Then    
+  --  '<img src="..\Images\Online_Receipt.png" alt="Online Receipt" style="width:20px;height:18px;"/>        '    
+  --  Else     
+  --  '<img src="..\Images\Mobile_Receipt.png" alt="Mobile Receipt" style="width:20px;height:18px;"/>        ' End    
+  --  ||     
+ business_offer_number as document_no    
+ ,USER_NAME as Approver    
+ ,GetUserDateFormat(Approval_Date,P_company_id) AS Approval_Date    
+ ,LookUp_ID as Approval_status_id    
+ ,Name as Approval_status    
+ ,approver_id as User_id    
+ ,pr.lob_id as lob_id    
+ ,FN_GET_LOCATIONID(PR.LOCATION_CODE) AS LOCATION_ID    
+ ,business_offer_number as Task_number    
+ ,9 as Task_status_type_code    
+ ,pr.created_by as created_by    
+ ,'' as status    
+ ,app.Remarks as remarks    
+ ,PR.Pricing_ID as id    
+ ,'' as document_path    
+from     
+    
+S3G_ORG_PricingApproval app    
+inner join S3G_ORG_Pricing PR on app.pricing_id=pr.pricing_id    
+inner join s3g_sysad_usermaster us on us.user_id=app.Approver_ID    
+inner join S3G_ORG_Lookup det on det.lookup_id=app.action_id     
+    
+where PR.status_id in(44)     
+and pr.lob_id=nvl(P_lob_id,pr.lob_id)    
+and pr.location_code=nvl(P_location_code,pr.location_code)    
+and business_offer_number=nvl(D_DOCUMENT_NO,business_offer_number)    
+and Approver_ID=P_user_id   
+and pr.Company_ID=P_Company_ID  
+AND APP.COMPANY_ID=P_COMPANY_ID    
+)tmp;    
+    
+END;    
+
+  
+ elsE       --Query Mode 
+    BEGIN    
+    D('HI');
+          OPEN P_OUTTBL FOR
+          SELECT VALUE AS Lookup_Code , NAME as Lookup_Description
+          FROM S3G_ORG_LOOKUP 
+          WHERE TYPE = 'ORG_APPLICATION_PROCESS_ACTION'
+          AND VALUE in (2 , 4 , 5 , 8);
+    
+    
+          INSERT INTO TMP_TBL_LAD_COMMON
+          (COL1_NUM
+          , COL2_NUM
+          , COL9_VARCHAR
+          , COL3_NUM
+          , COL10_VARCHAR
+          , COL4_NUM
+          , COL11_VARCHAR
+          , COL5_NUM
+          , COL6_NUM
+          , COL7_NUM
+          , COL8_NUM
+          , COL16_DATE
+          , COL19_NUM
+          , COL12_VARCHAR
+          , COL13_VARCHAR
+          , COL21_VARCHAR
+          , COL22_VARCHAR
+          )
+          SELECT 
+          ROW_NUMBER() OVER (ORDER BY FIL_NO)
+          , CUST.CUSTOMER_ID
+          , CUST.CUSTOMER_NAME
+          , LOAD.FACTORING_INV_LOAD_ID
+          , LOAD.FIL_NO
+          , LOAD.LOB_ID
+          , LOAD.LOCATION_CODE
+          , LOAD.FACTORING_INV_LOAD_ID
+          , LOAD.CREATED_BY
+          , LOADDET.STATUS_ID
+          , FAPPR.APPROVER_ID
+          , FAPPR.APPROVAL_DATE
+          , FAPPR.ACTION_ID
+          , det.Name
+          , FAPPR.REMARKS
+          , lob.LOB_CODE || ' - ' || lob.LOB_NAME
+          , FAPPR.UPLOAD_PATH
+           FROM S3G_LAD_FACINVOICE_APPROVAL FAPPR    
+          INNER JOIN S3G_LAD_FACTRNGINVLOADINGDET LOADDET ON LOADDET.FACTORING_INV_LOAD_DETAILS_ID = FAPPR.FACTORING_INV_LOAD_DETAILS_ID 
+          INNER JOIN S3G_LAD_FACTRNGINVLOADING LOAD
+          ON LOAD.FACTORING_INV_LOAD_ID=LOADDET.FACTORING_INV_LOAD_ID
+          INNER JOIN S3G_SYSAD_LOBMASTER LOB
+          ON LOB.LOB_ID = LOAD.LOB_ID
+          iNNER Join S3G_ORG_CUSTMASTER CUST ON CUST.CUSTOMER_ID = LOAD.CUSTOMER_ID
+          inner join s3g_sysad_usermaster us on us.user_id=FAPPR.Approver_ID    
+          INNER JOIN S3G_ORG_LOOKUP DET ON DET.VALUE = FAPPR.ACTION_ID
+          AND TYPE = 'ORG_APPLICATION_PROCESS_ACTION'
+          WHERE LOAD.COMPANY_ID = P_COMPANY_ID
+          and LOADDET.FACTORING_INV_LOAD_DETAILS_ID = P_TRAN_ID;
+           
+          OPEN P_OUTTBL1 FOR
+          Select
+          COL1_NUM AS SL_NO,--partition by PRI.CUSTOMER_ID 
+          COL2_NUM as CUSTOMER_ID,
+          COL9_VARCHAR as Entity,
+          COL3_NUM as ID,
+          COL10_VARCHAR as Document_No,
+          COL10_VARCHAR AS ORDER_NO,
+          P_USER_NAME AS APPROVER,
+          GETUSERDATEFORMAT(COL16_DATE , P_Company_ID) AS APPROVAL_DATE,
+          COL19_NUM as Approval_status_id ,  
+          COL8_NUM as APPROVAL_ID,
+          COL12_VARCHAR AS APPROVAL_STATUS,
+          P_User_ID as User_id,
+          COL4_NUM AS LOB_ID,
+          COL21_VARCHAR as LOB_Name,
+          FN_GET_LOCATIONID(COL11_VARCHAR) as LOCATION_ID,
+          COL5_NUM as Task_number            
+          ,1 as Task_status_type_code   -- Pricing Type        
+          ,COL6_NUM as created_by            
+          ,'' as Status            
+          ,COL13_VARCHAR as REMARKS                             
+          ,42 AS PROGRAM_ID   -- Check List for Deal Processing
+          ,COL7_NUM AS ACCOUNTSTATUS
+          ,COL22_VARCHAR AS DOCUMENT_PATH
+          ,0 AS APPROVAL_SERIAL_NUMBER
+          From TMP_TBL_LAD_COMMON;
+    
+    END; 
+
+
+
+end if;
+END;
+
+
+elsif(P_Tran_Type='NOCT')THEN    
+Begin    
+--   SELECT noc_status_code INTO D_STATUS FROM S3G_LAD_NOCTerminatn WHERE nocterminatn_id = P_TRAN_ID;
+--   D('D_STATUS==>'||D_STATUS);
+--    if(D_STATUS = 2)THEN  --Approved  
+--    BEGIN   
+
+        OPEN P_OUTTBL FOR
+              SELECT LOOKUP_CODE, LOOKUP_DESCRIPTION 
+          FROM S3G_LAD_LOOKUPTYPEDET
+          WHERE LOOKUPTYPE_CODE = 9 AND LOOKUP_CODE IN(2,3,4,5);
+--        SELECT VALUE AS Lookup_Code , NAME as Lookup_Description
+--        FROM S3G_ORG_LOOKUP 
+--        WHERE TYPE = 'ORG_APPLICATION_PROCESS_ACTION'
+--        AND VALUE in (2 , 4 , 5 , 8);
+          -- and NOC.NOC_STATUS_CODE = 2      
+        D_CONDITION := ' Where (NOC.COMPANY_ID = ' || CAST(P_COMPANY_ID AS VARCHAR) ||')';    
+   
+        --LOB
+        if(NVL(P_LOB_ID , 0) != 0) then
+        BEGIN    
+            D_CONDITION := D_CONDITION || 'AND NOC.LOB_ID = ' ||  cast(P_LOB_ID as varchar);
+        END;
+        END if;
+        
+        --Location
+        if(NVL(P_LOCATION_ID , 0) != 0) then
+        BEGIN    
+            D_CONDITION := D_CONDITION || 'AND NOC.LOCATION_ID = ' ||  cast(P_LOCATION_ID as varchar);
+        END;
+        END if;
+        
+        --Customer
+        if(NVL(P_ENTITY_ID , 0) != 0) then
+        BEGIN    
+            D_CONDITION := D_CONDITION || 'AND NOC.CUSTOMER_ID = ' ||  cast(P_ENTITY_ID as varchar);
+        END;
+        END if;
+        
+        --Document Number
+        if(NVL(P_Document_ID , 0) != 0) then
+        BEGIN    
+            D_CONDITION := D_CONDITION || 'AND NOC.NOCTERMINATN_ID = ' ||  cast(P_Document_ID as varchar);
+        END;
+        END if;
+        
+        --From and To Date
+        IF(P_from_Date Is Not Null and P_To_DATE Is Not Null) THEN
+        BEGIN 
+        
+             D_CONDITION :=  D_CONDITION || ' and TO_DATE(To_CHAR(NOC.APPLICAION_PROCESS_DATE , ''DD/Mon/YYYY''))           
+             BETWEEN ' || '''' || TO_DATE(To_CHAR(FN_TODATE(P_FROM_DATE),'DD/Mon/YYYY')) || '''' || '           
+             AND ' || '''' || TO_DATE(To_CHAR(FN_TODATE(P_To_DATE),'DD/Mon/YYYY')) || '''' || ' '; 
+        
+        END;
+        END IF;   
+       
+        --From Date
+        IF(P_from_Date Is Not Null and P_To_DATE Is Null) THEN
+        BEGIN    
+            D_CONDITION := D_CONDITION || ' and (To_CHAR(NOC.APPLICAION_PROCESS_DATE , ''DD/Mon/YYYY'')) >= '       
+         || '''' ||  TO_DATE(To_CHAR(FN_TODATE(P_FROM_DATE),'DD/Mon/YYYY'))  || '''' || ' ';
+        END;
+        END IF;
+        
+        --To Date
+       IF(P_from_Date Is Null and P_To_DATE Is Not Null) THEN
+        BEGIN    
+            D_CONDITION := D_CONDITION || ' and (To_CHAR(NOC.APPLICAION_PROCESS_DATE , ''DD/Mon/YYYY'')) <= '       
+         || '''' ||  TO_DATE(To_CHAR(FN_TODATE(P_To_DATE),'DD/Mon/YYYY'))  || '''' || ' ';
+        END;
+        END IF;
+        
+        D_TBLVALUE := '
+        INSERT INTO TMP_TBL_LAD_COMMON
+        (COL1_NUM
+        , COL2_NUM
+        , COL9_VARCHAR
+        , COL3_NUM
+        , COL10_VARCHAR
+        , COL4_NUM
+        , COL11_VARCHAR
+        , COL5_NUM
+        , COL6_NUM
+        , COL7_NUM
+        , COL8_NUM
+        , COL16_DATE
+        , COL19_NUM
+        , COL12_VARCHAR
+        , COL13_VARCHAR
+        , COL22_VARCHAR)
+         SELECT 
+         ROW_NUMBER() OVER (ORDER BY NOC_NUMBER)
+         , CUST.CUSTOMER_ID
+         , CUST.CUSTOMER_NAME
+         , NOC.NOCTERMINATN_ID
+         , NOC.NOC_NUMBER
+         , NOC.LOB_ID
+         , NOC.LOCATION_CODE
+         , NOC.NOCTERMINATN_ID
+         , NOC.CREATED_BY
+         , NOC.NOC_STATUS_CODE
+         , apprvl.CREATED_BY
+         , apprvl.TASK_STATUSDATE
+         , apprvl.TASK_STATUS_CODE
+         , SLUP.LOOKUP_DESCRIPTION
+         , apprvl.Remarks
+         , '''' UPLOAD_PATH
+         from S3G_LAD_Approval apprvl    
+         inner join S3G_LAD_NOCTerminatn NOC on NOC.NOCTERMINATN_ID = apprvl.TASK_NUMBER 
+         iNNER Join S3G_ORG_CUSTMASTER CUST ON CUST.CUSTOMER_ID = apprvl.CUSTOMER_ID
+         inner join s3g_sysad_usermaster us on us.user_id=apprvl.CREATED_BY    
+--         inner join S3G_ORG_Lookup det on det.Value = apprvl.TASK_STATUS_CODE
+--         and type = ''ORG_APPLICATION_PROCESS_ACTION''
+          inner join S3G_LAD_LOOKUPTYPEDET SLUP
+          on SLUP.LOOKUP_CODE = NOC.NOC_STATUS_CODE
+          AND SLUP.LOOKUPTYPE_CODE = ''33''
+         '  ||  d_Condition || ' AND NOC.NOCTERMINATN_ID = '''|| P_TRAN_ID ||'''';
+         
+         DBMS_OUTPUT.PUT_LINE(d_tblValue);
+         
+         EXECUTE IMMEDIATE D_TBLVALUE;
+    
+        OPEN P_OUTTBL1 FOR
+        Select
+        COL1_NUM AS SL_NO,--partition by PRI.CUSTOMER_ID 
+        COL2_NUM as CUSTOMER_ID,
+        COL9_VARCHAR as Entity,
+        COL3_NUM as ID,
+        COL10_VARCHAR as Document_No,
+        COL10_VARCHAR AS ORDER_NO,
+        P_USER_NAME AS APPROVER,
+        GETUSERDATEFORMAT(COL16_DATE , P_Company_ID) AS APPROVAL_DATE,
+        COL19_NUM as Approval_status_id ,  
+        COL8_NUM as APPROVAL_ID,
+        COL12_VARCHAR AS APPROVAL_STATUS,
+        P_User_ID as User_id,
+        COL4_NUM AS LOB_ID,
+        '' LOB_NAME,
+        FN_GET_LOCATIONID(COL11_VARCHAR) as LOCATION_ID,
+        COL5_NUM as Task_number            
+        ,9 as Task_status_type_code       
+        ,COL6_NUM as created_by            
+        ,'' as Status            
+        ,COL13_VARCHAR as REMARKS                             
+        ,76 AS PROGRAM_ID   -- noc
+        ,COL7_NUM AS ACCOUNTSTATUS
+        ,COL22_VARCHAR AS DOCUMENT_PATH
+        ,0 AS APPROVAL_SERIAL_NUMBER
+        From TMP_TBL_LAD_COMMON;
+      
+        
+    
+--    end;    
+--END IF;
+END;
+
+ElsIf(P_Tran_Type='CHA')Then
+Begin
+
+      OPEN P_OUTTBL FOR
+      Select Lookup_Code As Lookup_Code , Lookup_Description As Lookup_Description
+      From S3g_Lad_Lookuptypedet 
+      WHERE LOOKUPTYPE_CODE = 9;
+      
+       
+      OPEN P_OUTTBL1 FOR
+      Select
+      1 As Sl_No,--partition by PRI.CUSTOMER_ID 
+      Rcpt.Entity_Id As Customer_Id,
+      Case When RCPT.Entity_Type = 1 Then CUST.CUSTOMER_NAME Else ENTMST.ENtity_NAme END as Entity,
+      CHQRTN.CHEQUE_RETURN_ID as ID,
+      (CHQRTN.CHEQUE_RETURN_ADVICE_NO || ' - ' || CHQRTN.RECEIPT_NO  || ' - ' || CHQRTN.CHEQUE_NUMBER) as Document_No,
+      (CHQRTN.CHEQUE_RETURN_ADVICE_NO || ' - ' || CHQRTN.RECEIPT_NO  || ' - ' || CHQRTN.CHEQUE_NUMBER) as ORDER_NO,
+      Um.User_Name As Approver,
+      Getuserdateformat(Apvl.Task_Statusdate , P_Company_Id) As Approval_Date,
+      Apvl.Task_Status_Code As Approval_Status_Id ,  
+      APVL.TASK_APPROVALUSERID as APPROVAL_ID,
+      '' AS APPROVAL_STATUS,
+      P_User_ID as User_id,
+      Chqrtn.Lob_Id As Lob_Id,
+      Lob.LOB_Name As Lob_Name,
+      Chqrtn.Location_Id As Location_Id,
+      FN_GET_LOCATIONNAME(Chqrtn.Location_Id) as Task_number            
+      ,9 As Task_Status_Type_Code   -- Pricing Type        
+      ,APVL.CREATED_BY as created_by            
+      ,'' As Status            
+      ,APVL.REMARKS As Remarks                             
+      ,104 AS PROGRAM_ID   -- Cheque Return Approval
+      ,'' As Accountstatus
+      ,APVL.IMAGE_PATH AS DOCUMENT_PATH
+      ,0 As Approval_Serial_Number
+      From S3g_Lad_Approval Apvl
+      Inner Join S3g_Cln_Cheqretproc Chqrtn                         
+      On APVL.TASK_NUMBER = Chqrtn.CHEQUE_RETURN_ID
+      Inner Join S3g_Sysad_Lobmaster Lob
+      On Lob.Lob_Id = Chqrtn.Lob_Id
+      Inner Join S3g_Sysad_Usermaster Um
+      ON UM.user_id = APVL.TASK_APPROVALUSERID
+      INNER JOIN S3G_CLN_RcptProc RCPT ON CHQRTN.RECEIPT_ID = RCPT.RECEIPT_ID               
+      Left JOIN S3G_ORG_CustMaster CUST ON CUST.Customer_ID = RCPT.Entity_ID 
+      and RCPT.Entity_Type = 1
+      Left JOIN S3G_ORG_ENTITYMASTER ENTMST ON ENTMST.ENTITY_ID = RCPT.Entity_ID 
+      And (Rcpt.Entity_Type != 1 And Rcpt.Entity_Type != 12 And Rcpt.Entity_Type != 50)
+      Where Chqrtn.Cheque_Return_Id = P_Tran_Id
+      AND Apvl.TASK_TYPE = 104;
+    
+End;
+ElsIf(P_Tran_Type='CHL')Then
+Begin
+  IF(P_Tran_Id IS NOT NULL) THEN
+    BEGIN
+      OPEN P_OUTTBL FOR
+      Select Lookup_Code As Lookup_Code , Lookup_Description As Lookup_Description
+      From S3g_Lad_Lookuptypedet 
+      WHERE LOOKUPTYPE_CODE = 9;
+      
+       
+      OPEN P_OUTTBL1 FOR
+      Select
+      1 As Sl_No,--partition by PRI.CUSTOMER_ID 
+      Chqrtn.DEPOSIT_BANK_CODE As Customer_Id,
+      LD.LOOKUP_DESCRIPTION  as Entity,
+      CHQRTN.CHALLAN_ID as ID,
+      CASE WHEN Chqrtn.Challan_Type=5 THEN  Chqrtn.CHALLAN_NO || ' - ' || RCPT.PDC_PICKLIST_NO ELSE Chqrtn.CHALLAN_NO END as Document_No,
+       CASE WHEN Chqrtn.Challan_Type=5 THEN  Chqrtn.CHALLAN_NO || ' - ' || RCPT.PDC_PICKLIST_NO ELSE Chqrtn.CHALLAN_NO END as ORDER_NO,
+      Um.User_Name As Approver,
+      Getuserdateformat(Apvl.Task_Statusdate , 1) As Approval_Date,
+      Apvl.Task_Status_Code As Approval_Status_Id ,  
+      APVL.TASK_APPROVALUSERID as APPROVAL_ID,
+      '' AS APPROVAL_STATUS,
+      P_User_ID as User_id,
+      NVL(Chqrtn.Lob_Id,0) As Lob_Id,
+      NVL(Lob.LOB_Name,'ALL') As Lob_Name,
+      Chqrtn.Location_Id As Location_Id,
+      FN_GET_LOCATIONNAME(Chqrtn.Location_Id) as Task_number            
+      ,9 As Task_Status_Type_Code   -- Pricing Type        
+      ,APVL.CREATED_BY as created_by            
+      ,'' As Status            
+      ,APVL.REMARKS As Remarks                             
+      ,328 AS PROGRAM_ID   -- Cheque Return Approval
+      ,'' As Accountstatus
+      ,APVL.IMAGE_PATH AS DOCUMENT_PATH
+      ,0 As Approval_Serial_Number
+      From S3g_Lad_Approval Apvl
+      Inner Join S3G_CLN_CHALNGEN Chqrtn  On APVL.TASK_NUMBER = Chqrtn.CHALLAN_ID
+      INNER JOIN S3G_LAD_LOOKUPTYPEDET LD ON LD.LookupType_Code = 41 AND LD.Lookup_Code = Chqrtn.Challan_Type
+      LEFT Join S3g_Sysad_Lobmaster Lob On Lob.Lob_Id = Chqrtn.Lob_Id
+      Inner Join S3g_Sysad_Usermaster Um ON UM.user_id = APVL.TASK_APPROVALUSERID
+      LEFT JOIN S3G_CLN_PDC_PICKLIST RCPT ON Chqrtn.CHALLAN_ID = RCPT.CHALLAN_ID     
+      Where Chqrtn.CHALLAN_ID = P_Tran_Id
+      AND Apvl.TASK_TYPE = 328;     
+    END;
+  ELSE
+    BEGIN
+      S3G_CLN_GET_CHALLAN_APVL(
+      P_Company_ID ,                                    
+      P_User_ID ,                                  
+      P_Entity_Type_code,    
+      P_ENTITY_ID,             
+      P_lob_id,                                    
+      P_LOCATION_ID,                                    
+      P_DOCUMENT_NO,    
+      P_DOCUMENT_ID,   
+      P_STATUS,
+      P_From_Date,
+      P_To_Date,
+      NULL,
+      3
+      ,P_Outtbl
+      ,P_OUTTBL1 );
+    END;
+  END IF;
+      
+    
+End;
+ElsIf(P_Tran_Type='ROPCCN')Then --ROP CASE CANCELLATION APPROVED DATA
+Begin
+
+      OPEN P_OUTTBL FOR
+      SELECT LOOKUP_CODE AS LOOKUP_CODE , LOOKUP_DESCRIPTION AS LOOKUP_DESCRIPTION
+      FROM S3G_LAD_LOOKUPTYPEDET 
+      WHERE LOOKUPTYPE_CODE = 9;
+      
+       
+      OPEN P_OUTTBL1 FOR
+      Select
+      1 As Sl_No,--partition by PRI.CUSTOMER_ID 
+      CM.CUSTOMER_ID,
+      CUST.CUSTOMER_NAME AS Entity,
+      CMC.CASE_CANCEL_ID AS ID,
+      CMC.CASE_CANCEL_NUMBER AS DOCUMENT_NO,
+      CMC.CASE_CANCEL_NUMBER as ORDER_NO,
+      Um.User_Name As Approver,
+      Getuserdateformat(Apvl.Task_Statusdate , P_Company_Id) As Approval_Date,
+      Apvl.Task_Status_Code As Approval_Status_Id ,  
+      APVL.TASK_APPROVALUSERID as APPROVAL_ID,
+      '' AS APPROVAL_STATUS,
+      P_USER_ID AS USER_ID,
+      CM.LOB_ID AS LOB_ID,
+      LOB.LOB_NAME AS LOB_NAME,
+      CM.LOCATION_ID AS LOCATION_ID,
+      FN_GET_LOCATIONNAME(CM.Location_Id) as Task_number            
+      ,9 As Task_Status_Type_Code   -- Pricing Type        
+      ,APVL.CREATED_BY as created_by            
+      ,'' As Status            
+      ,APVL.REMARKS AS REMARKS                             
+      ,574  AS PROGRAM_ID   -- ROP CASE CANCELLATION
+      ,'' As Accountstatus
+      ,APVL.IMAGE_PATH AS DOCUMENT_PATH
+      ,0 As Approval_Serial_Number
+      From S3g_Lad_Approval Apvl
+      Inner Join S3G_LR_CASEMASTER_CANCEL CMC                         
+      ON APVL.TASK_NUMBER = CMC.CASE_CANCEL_ID
+      INNER JOIN S3G_LR_CASEMASTER CM ON CM.CASE_ID = CMC.CASE_ID 
+      Inner Join S3g_Sysad_Lobmaster Lob
+      On Lob.Lob_Id = CM.LOB_ID
+      Inner Join S3g_Sysad_Usermaster Um
+      ON UM.USER_ID = APVL.TASK_APPROVALUSERID
+      Left JOIN S3G_ORG_CustMaster CUST ON CUST.Customer_ID = CM.CUSTOMER_ID 
+      Where CMC.CASE_CANCEL_ID = P_Tran_Id
+      AND Apvl.TASK_TYPE = 45;
+    
+End;
+--end    
+--else if(P_Tran_Type='TCLRR')    
+-- begin     
+--if(D_STATUS=2)--Approved    
+-- begin    
+-- SELECT                                     
+--Lookup_Code,                                    
+--Lookup_Description from S3G_LAD_LookupTypeDet where LookupType_Code=9 and lookup_code in (6)                              
+--                                    
+-- select     
+--    case when nvl(Entity,'0')='0' then 'General' else Entity end as Entity,    
+--    
+--  Document_No    
+-- ,Approver    
+-- , Approval_Date    
+-- ,Approval_status_id as Approval_status_id    
+-- ,Approval_status as Approval_status    
+-- , User_id     
+-- ,Row_number() over (partition by Document_No order by Document_No) as Sl_no    
+-- , lob_id    
+-- , location_id    
+-- , Task_number    
+-- , Task_status_type_code    
+-- , created_by    
+-- ,status    
+-- ,remarks    
+-- ,id as id    
+-- ,document_path as document_path    
+-- from(    
+--     
+-- select     
+-- '' Entity,    
+--  CASE WHEN  nvl(Is_Mobile,1)=1 Then    
+--    '<img src="..\Images\Online_Receipt.png" alt="Online Receipt" style="width:20px;height:18px;"/>        '    
+--    Else     
+--    '<img src="..\Images\Mobile_Receipt.png" alt="Mobile Receipt" style="width:20px;height:18px;"/>        ' End    
+--    || Tech_Req_No as document_no    
+-- ,USER_NAME as Approver    
+-- ,GetUserDateFormat(Task_StatusDate,P_company_id) AS Approval_Date    
+-- ,lookup_code as Approval_status_id    
+-- ,lookup_description as Approval_status    
+-- ,Task_ApprovalUserID as User_id    
+-- ,pr.lob_id as lob_id    
+-- ,location_id    
+-- ,Tech_Req_No as Task_number    
+-- ,9 as Task_status_type_code    
+-- ,pr.USRID as created_by    
+-- ,'' as status    
+-- ,app.Remarks as remarks    
+-- ,Tech_Hdr_Id as id    
+-- ,Image_path as document_path    
+--from     
+--    
+--S3G_LAD_Approval app    
+--inner join S3G_ORG_Tech_req_Hdr PR on app.task_number=pr.tech_req_no    
+--inner join s3g_sysad_usermaster us on us.user_id=app.Task_approvalUserID    
+--inner join S3G_LAD_LookupTypeDet det on det.lookup_code=task_status_code and lookuptype_code=130    
+--left join S3G_ORG_CustomerMaster cust on cust.customer_id=pr.customer_id     
+--    
+--where pr.tech_eval_status_type in(3)     
+--and app.task_type=274    
+--and pr.lob_id=nvl(P_lob_id,pr.lob_id)    
+--and pr.location_id=nvl(P_location_code,pr.location_id)    
+--and tech_req_no=nvl(D_DOCUMENT_NO,tech_req_no)    
+--and Task_ApprovalUserID=P_user_id    
+--and pr.Company_ID=P_Company_ID  
+--and app.Company_ID=P_Company_ID   
+--)tmp    
+--end    
+    
+--elsif(D_STATUS=3)THEN--cancelled    
+--BEGIN    
+--OPEN P_OUTTBL FOR     
+--SELECT                                     
+--LOOKUP_CODE,            
+--LOOKUP_DESCRIPTION FROM S3G_LAD_LOOKUPTYPEDET WHERE LOOKUPTYPE_CODE=9 AND LOOKUP_CODE IN (5);                                     
+--OPEN P_OUTTBL1 FOR                                     
+--select     
+--    case when nvl(Entity,'0')='0' then 'General' else Entity end as Entity,    
+--    
+--  Document_No    
+-- ,Approver    
+-- , Approval_Date    
+-- ,Approval_status_id as Approval_status_id    
+-- ,Approval_status as Approval_status    
+-- , USER_ID     
+-- ,ROWNUM as Sl_no    
+-- , lob_id    
+-- , location_id    
+-- , Task_number    
+-- , Task_status_type_code    
+-- , created_by    
+-- ,status    
+-- ,remarks    
+-- ,id as id    
+-- ,document_path as document_path    
+-- from(    
+--     
+-- select     
+-- '' Entity,    
+-- Tech_Req_No as document_no    
+-- ,'' as Approver    
+-- ,'' AS Approval_Date    
+-- ,'' as Approval_status_id    
+-- ,'' as Approval_status    
+-- ,'' as User_id    
+-- ,pr.lob_id as lob_id    
+-- ,location_id    
+-- ,Tech_Req_No as Task_number    
+-- ,9 as Task_status_type_code    
+-- ,pr.USRID as created_by    
+-- ,'' as status    
+-- ,'' as remarks    
+-- ,Tech_Hdr_Id as id    
+-- ,'' as document_path    
+--from     
+--    
+--    
+--    
+-- S3G_ORG_Tech_req_Hdr PR     
+--left join S3G_ORG_CustrMaster cust on cust.customer_id=pr.customer_id     
+--left join S3G_ORG_EntityMaster ent on ent.entity_id=pr.tech_valuer_code    
+--    
+--where pr.tech_eval_status_type in(4)     
+--and pr.lob_id=nvl(P_lob_id,pr.lob_id)    
+--and pr.location_id=nvl(P_location_code,pr.location_id)    
+--and tech_req_no=nvl(D_DOCUMENT_NO,tech_req_no)    
+--and pr.USRid!=P_user_id   
+--and pr.Company_ID=P_Company_ID  
+--AND ENT.COMPANY_ID=P_COMPANY_ID    
+--)tmp;       
+--    
+--    
+--end;    
+    
+--elsif(D_STATUS = 4)THEN    
+--BEGIN     
+--OPEN P_OUTTBL FOR     
+--SELECT                                     
+--LOOKUP_CODE,            
+--LOOKUP_DESCRIPTION FROM S3G_LAD_LOOKUPTYPEDET WHERE LOOKUPTYPE_CODE=9 AND LOOKUP_CODE IN (5);                                    
+--OPEN P_OUTTBL1 FOR                                     
+--select     
+--    case when nvl(Entity,'0')='0' then 'General' else Entity end as Entity,    
+--    
+--  Document_No    
+-- ,Approver    
+-- , Approval_Date    
+-- ,Approval_status_id as Approval_status_id    
+-- ,Approval_status as Approval_status  
+-- , USER_ID     
+-- ,ROWNUM as Sl_no    
+-- , lob_id    
+-- , location_id    
+-- , Task_number    
+-- , Task_status_type_code    
+-- , created_by    
+-- ,status    
+-- ,remarks    
+-- ,id as id    
+-- ,document_path as document_path    
+-- from(    
+--     
+-- select     
+-- '' Entity,    
+-- Tech_Req_No as document_no    
+-- ,'' as Approver    
+-- ,'' AS Approval_Date    
+-- ,'' as Approval_status_id    
+-- ,'' as Approval_status    
+-- ,'' as User_id    
+-- ,pr.lob_id as lob_id    
+-- ,location_id    
+-- ,Tech_Req_No as Task_number    
+-- ,9 as Task_status_type_code    
+-- ,pr.USRID as created_by    
+-- ,'' as status    
+-- ,'' as remarks    
+-- ,Tech_Hdr_Id as id    
+-- ,'' as document_path    
+--from     
+--    
+--    
+--    
+-- S3G_ORG_Tech_req_Hdr PR     
+--left join S3G_ORG_CustMaster cust on cust.customer_id=pr.customer_id     
+--left join S3G_ORG_EntityMaster ent on ent.entity_id=pr.tech_valuer_code    
+--    
+--where pr.tech_eval_status_type in(1,2)     
+--and pr.lob_id=nvl(P_lob_id,pr.lob_id)    
+--and pr.location_id=nvl(P_location_code,pr.location_id)    
+--and tech_req_no=nvl(D_DOCUMENT_NO,tech_req_no)    
+--and pr.USRid!=P_user_id  
+--and pr.Company_ID=P_Company_ID  
+--AND ENT.COMPANY_ID=P_COMPANY_ID     
+--)tmp;    
+--    
+--END;
+END IF;       
+END;

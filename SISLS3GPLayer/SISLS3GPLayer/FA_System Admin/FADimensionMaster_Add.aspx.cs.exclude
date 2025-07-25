@@ -1,0 +1,941 @@
+﻿
+#region [Revision History]
+/// Screen Name     :   FA_DimensionMaster_Add.aspx
+/// Created By      :   Tamilselvan S
+/// Created Date    :   24-Jan-2012
+/// Purpose         :   To stored Dimension master details
+/// Modified By     :   Muni Kavitha
+/// Created Date    :   24-July-2012
+/// Purpose         :   changed for DIM Patterns
+
+#endregion [Revision History]
+
+#region [NameSapce]
+
+using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
+using System.Collections.Generic;
+using FA_BusEntity;
+using System.ServiceModel;
+using System.Text;
+
+
+#endregion [NameSapce]
+
+public partial class System_Admin_FADimensionMaster_Add : ApplyThemeForProject_FA
+{
+    #region [Intialization]
+    
+    //User Authorization
+    string strMode = string.Empty;
+    bool bCreate = false;
+    bool bModify = false;
+    bool bQuery = false;
+    bool bDelete = false;
+    bool bMakerChecker = false;
+    bool bClearList = false;
+    //Code end
+    UserInfo_FA ObjUserInfo_FA = null;
+    int intUserID, intCompanyID, intDimensionId = 0;
+    int intMode = 0;
+    Dictionary<string, string> Procparam = null;
+    bool dim;
+    static string strPageName = "Dimension Master";
+    static string strAlertPage = " Dimension Master Details";
+    string strErrorMsg = @"Correct the following validation(s):</br><ul><li>";
+    string strErrMsgLast = "</li></ul>";
+    FASession ObjSession = new FASession();
+    int count = 0;
+    int Dcount = 0;
+    string countstring = "";
+    string Dcountstring = "";
+    DataTable dtlocation;
+    DataTable dthistory;
+    SystemAdminMgtServiceReference.SystemAdminMgtServiceClient objAdminServiceClient;
+    FA_BusEntity.SysAdmin.SystemAdmin.FA_SYS_DimensionMasterDataTable ObjFA_SYS_DimensionMaster_DataTable = new FA_BusEntity.SysAdmin.SystemAdmin.FA_SYS_DimensionMasterDataTable();
+    FA_BusEntity.SysAdmin.SystemAdmin.FA_SYS_DimensionMasterRow objDimension_Row;
+   // DataTable dtlocation;
+    string strKey = "Insert";
+    string strAlert = "alert('__ALERT__');";
+    string strRedirectAddPage = "~/System Admin/FADimensionMaster_view.aspx";
+    string strRedirectViewPage = "~/System Admin/FADimensionMaster_Add.aspx";
+    string strRedirectPageView = "window.location.href='../System Admin/FADimensionMaster_view.aspx';";
+    string strRedirectPageAdd = "window.location.href='../System Admin/FADimensionMaster_Add.aspx';";
+    string strConnectionName = "";
+
+    #endregion [Intialization]
+
+    #region [Event's]
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        try
+        {
+            FunPubPageLoad();
+        }
+        catch (Exception ex)
+        {
+               FAClsPubCommErrorLog.CustomErrorRoutine(ex, strPageName);
+            cvDim.ErrorMessage = Resources.ErrorHandlingAndValidation._12 + strAlertPage;
+            cvDim.IsValid = false;
+        }
+    }
+
+    protected void btnSave_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            bool bolreturn = false;
+            FunPubDimensionSave(ref bolreturn);
+            if (bolreturn)
+                return;
+        }
+        catch (Exception ex)
+        {
+               FAClsPubCommErrorLog.CustomErrorRoutine(ex, strPageName);
+            cvDim.ErrorMessage = Resources.ErrorHandlingAndValidation._14 + strAlertPage;
+            cvDim.IsValid = false;
+        }
+    }
+
+    protected void btnCancel_Click(object sender, EventArgs e)
+    {
+        Response.Redirect(strRedirectAddPage);
+    }
+
+    protected void btnClear_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            FunPubReset();
+            FunPubSetToolTip();
+        }
+        catch (Exception ex)
+        {
+               FAClsPubCommErrorLog.CustomErrorRoutine(ex, strPageName);
+            cvDim.ErrorMessage = Resources.ErrorHandlingAndValidation._13 + strAlertPage;
+            cvDim.IsValid = false;
+        }
+    }
+    protected void ddlActivity_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        try
+        {
+            FunPubBindDimensionType(0, ddlActivity.SelectedValue.ToString());
+            FunPubSetToolTip();
+        }
+        catch (Exception ex)
+        {
+               FAClsPubCommErrorLog.CustomErrorRoutine(ex, strPageName);
+            cvDim.ErrorMessage = Resources.ErrorHandlingAndValidation._15;
+            cvDim.IsValid = false;
+        }
+    }
+
+    protected void ddlDimensionType_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        try
+        {
+            if (ddlDimensionType.SelectedIndex > 0)
+            {
+                Procparam = new Dictionary<string, string>();
+                Procparam.Add("@Company_ID", intCompanyID.ToString());
+                Procparam.Add("@Dim_Type", ddlDimensionType.SelectedValue);
+                Procparam.Add("@Option", "1");
+                //Procparam.Add("@location_id", ddlLocation.SelectedValue);
+                DataTable DT = new DataTable();
+                DT = Utility_FA.GetDefaultData(SPNames.Get_Dimension2_Reference, Procparam);
+
+                if (!string.IsNullOrEmpty(DT.Rows[0]["Dim_Pattern"].ToString()))
+                {
+                    rblDimensionPattern.SelectedValue = DT.Rows[0]["Dim_Pattern"].ToString();
+                    foreach (ListItem li in rblDimensionPattern.Items)
+                    {
+                        if (li.Selected == false)
+                            li.Enabled = false;
+                        else
+                            li.Enabled = true;
+                    }
+                }
+                else
+                { 
+                    if(DT.Rows[0]["Dim1_Pattern"].ToString()!="0")
+                        rblDimensionPattern.SelectedValue = DT.Rows[0]["Dim1_Pattern"].ToString();
+                   if (DT.Rows[0]["Dim1_Pattern"].ToString() == "2")
+                   {
+                       foreach (ListItem li in rblDimensionPattern.Items)
+                       {
+                           if (li.Selected == false)
+                               li.Enabled = false;
+                           else
+                               li.Enabled = true;
+                       }
+                   }
+                   else
+                   {
+                       foreach (ListItem li in rblDimensionPattern.Items)
+                          li.Enabled = true;
+                   }
+                
+                }
+
+                if (ObjSession.ProDim2_Linkwith_Dim1RW == true)
+                {
+                    if (ddlDimensionType.SelectedValue == "2")
+                        lblDimRef.Visible = ddlDimRefNo.Visible = rfvDimRefNo.Enabled = true;
+                    else
+                        lblDimRef.Visible = ddlDimRefNo.Visible = rfvDimRefNo.Enabled = false;
+                    if (Convert.ToInt32(DT.Rows[0]["EDim"]) == 0)
+                    {
+                        //Utility_FA.FunShowAlertMsg_FA(this.Page, "No Dimension1 is defined for Reference");
+                        Utility_FA.FunShowAlertMsg_FA(this.Page, Resources.ErrorHandlingAndValidation._727);
+                        return;
+                    }
+                    else
+                        FunPubBindDimensionRefNo();
+                }
+                else
+                    lblDimRef.Visible = ddlDimRefNo.Visible = rfvDimRefNo.Enabled = false;
+            }
+            else
+            {
+                rblDimensionPattern.ClearSelection();
+                foreach (ListItem li in rblDimensionPattern.Items)
+                    li.Enabled = true;
+              ddlDimRefNo.Items.Clear();
+              lblDimRef .Visible =  ddlDimRefNo.Visible = rfvDimRefNo.Enabled = false;
+            }
+         
+            FunPubSetToolTip();
+        }
+        catch (Exception ex)
+        {
+               FAClsPubCommErrorLog.CustomErrorRoutine(ex, strPageName);
+            cvDim.ErrorMessage = Resources.ErrorHandlingAndValidation._726;
+            cvDim.IsValid = false;
+        }
+    }
+    protected void lnkView_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            FunPubLoadDimensionHistory();
+            
+        }
+        catch (Exception ex)
+        {
+               FAClsPubCommErrorLog.CustomErrorRoutine(ex, strPageName);
+            cvDim.ErrorMessage = Resources.ErrorHandlingAndValidation._726;
+            cvDim.IsValid = false;
+        }
+    }
+
+
+    protected void rblDimensionPattern_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        try
+        {
+            if (ObjSession.ProDim2_Linkwith_Dim1RW == true)
+            {
+                FunPubBindDimensionRefNo();
+                FunPubSetToolTip();
+            }
+        }
+        catch (Exception ex)
+        {
+               FAClsPubCommErrorLog.CustomErrorRoutine(ex, strPageName);
+            cvDim.ErrorMessage = Resources.ErrorHandlingAndValidation._726;
+            cvDim.IsValid = false;
+        }
+    }
+    
+    #endregion [Event's]
+
+    #region [Function's]
+
+    public void FunPubPageLoad()
+    {
+        try
+        {
+            this.Page.Title = FunPubGetPageTitles(enumPageTitle.PageTitle);
+            ObjUserInfo_FA = new UserInfo_FA();
+            intCompanyID = ObjUserInfo_FA.ProCompanyIdRW;
+            intUserID = ObjUserInfo_FA.ProUserIdRW;
+            bCreate = ObjUserInfo_FA.ProCreateRW;
+            bModify = ObjUserInfo_FA.ProModifyRW;
+            bQuery = ObjUserInfo_FA.ProViewRW;
+            bDelete = ObjUserInfo_FA.ProDeleteRW;
+            bMakerChecker = ObjUserInfo_FA.ProMakerCheckerRW;
+          
+            strConnectionName = ObjSession.ProConnectionName;
+
+            if (Request.QueryString["qsMode"] != null)
+                strMode = Convert.ToString(Request.QueryString["qsMode"]);
+            FormsAuthenticationTicket fromTicket;
+            if (Request.QueryString.Get("qsDimensionId") != null)
+            {
+                fromTicket = FormsAuthentication.Decrypt(Request.QueryString.Get("qsDimensionId"));
+                intDimensionId = Convert.ToInt32(fromTicket.Name);
+            }
+            
+            if (!IsPostBack)
+            {
+                FunPubBindControls(0);
+               // FunPriGetLocation();
+                FunPriloadLocationTreeview();
+                intMode = strMode == "M" ? 1 : strMode == "Q" ? -1 : 0;
+                FunPriDisableControls(intMode);
+            }
+            treeview.Attributes.Add("onclick", "postBackByObject()");
+            txtDimensionDescription.Attributes.Add("onBlur", "return FunTrimwhitespace(this,'" + lblDimensiondescription.Text + "');");
+        }
+        catch (Exception ex)
+        {
+               FAClsPubCommErrorLog.CustomErrorRoutine(ex, strPageName);
+            throw ex;
+        }
+    }
+
+    public void FunPubBindControls(int intMode)
+    {
+        try
+        {
+            if (Procparam != null)
+                Procparam.Clear();
+            else
+                Procparam = new Dictionary<string, string>();
+            Procparam.Add("@Company_ID", "-1");
+            Procparam.Add("@LookupType", "1");
+
+            ddlActivity.BindDataTable_FA(SPNames.GetLookupDetails, Procparam, "Lookup_Code", "Lookup_Desc");
+            if (ddlActivity != null && ddlActivity.Items.Count > 0 && ddlActivity.Items.Count == 2 && Convert.ToString(ddlActivity.Items[1].Value) == "-1")
+            {
+                ddlActivity.SelectedIndex = 1;
+                ddlActivity.ClearDropDownList_FA();
+            }
+            ddlActivity.AddItemToolTipText_FA();
+            Procparam["@Company_ID"] = intCompanyID.ToString();
+            Procparam["@LookupType"] = "2";
+            Procparam.Add("@Option", "3");
+            DataTable dtPattern = Utility_FA.GetDefaultData(SPNames.GetLookupDetails, Procparam);
+            rblDimensionPattern.BindDataTable_FA(dtPattern, "Lookup_Code", "Lookup_Desc");
+            rblDimensionPattern.AddItemToolTipText_FA();
+            FunPubBindDimensionType(0, ddlActivity.SelectedValue.ToString());
+            ViewState["vs_DimensionDet"] = dtPattern;
+            FunPubBindDimensionRefNo();
+
+        }
+        catch (Exception ex)
+        {
+               FAClsPubCommErrorLog.CustomErrorRoutine(ex, strPageName);
+            throw ex;
+        }
+    }
+    
+    public void FunPubBindDimensionType(int intMode, string strActivity)
+    {
+        try
+        {
+            if (Procparam != null)
+                Procparam.Clear();
+            else
+                Procparam = new Dictionary<string, string>();
+            Procparam.Add("@Company_ID", intCompanyID.ToString());
+            Procparam.Add("@LookupType", "1");
+            Procparam.Add("@Option", "1");
+            Procparam.Add("@Input1", strActivity);
+            ddlDimensionType.BindDataTable_FA(SPNames.GetLookupDetails, Procparam, "Dimension_Type", "Dimension_Value");
+            ddlDimensionType.AddItemToolTipText_FA();
+        }
+        catch (Exception ex)
+        {
+               FAClsPubCommErrorLog.CustomErrorRoutine(ex, strPageName);
+            throw ex;
+        }
+    }
+
+    public void FunPubBindDimensionRefNo()
+    {
+        try
+        {
+                if (Procparam != null)
+                    Procparam.Clear();
+                else
+                    Procparam = new Dictionary<string, string>();
+                Procparam.Add("@Company_ID", intCompanyID.ToString());
+
+                if (intDimensionId != 0)
+                    Procparam.Add("@Dim_ID", intDimensionId.ToString());
+
+                if(rblDimensionPattern.SelectedValue=="1")
+                    Procparam.Add("@Dim_Pattern", rblDimensionPattern.SelectedValue);
+                //if (ddlLocation.SelectedIndex > 0)
+                //    Procparam.Add("@location_id", ddlLocation.SelectedValue);
+
+                   ddlDimRefNo.BindDataTable_FA(SPNames.Get_Dimension2_Reference, Procparam, "Dim_ID", "Dim_Desc");
+
+               ddlDimRefNo.AddItemToolTipText_FA();
+        }
+        catch (Exception ex)
+        {
+               FAClsPubCommErrorLog.CustomErrorRoutine(ex, strPageName);
+            throw ex;
+        }
+    }
+
+    public void FunPubDimensionSave(ref bool blnValReturn)
+    {
+        int intReturnValue = 903;
+        int intReturnCode = 0;
+       
+        objAdminServiceClient = new SystemAdminMgtServiceReference.SystemAdminMgtServiceClient();
+        objAdminServiceClient.Open();
+        ObjFA_SYS_DimensionMaster_DataTable = new FA_BusEntity.SysAdmin.SystemAdmin.FA_SYS_DimensionMasterDataTable();
+        try
+        {
+            if (strMode.ToString() == "C" || strMode == "")
+            {
+                objDimension_Row = ObjFA_SYS_DimensionMaster_DataTable.NewFA_SYS_DimensionMasterRow();
+                objDimension_Row.Company_ID = intCompanyID;
+                objDimension_Row.Dim_ID = 0;
+                objDimension_Row.Activity = Convert.ToInt32(ddlActivity.SelectedValue);
+                objDimension_Row.Dim_Type = Convert.ToInt32(ddlDimensionType.SelectedValue);
+                objDimension_Row.Dim_Code = txtDimensionCode.Text.Trim();
+                objDimension_Row.Dim_Desc = txtDimensionDescription.Text.Trim();
+                objDimension_Row.Dim_Pattern = Convert.ToInt32(rblDimensionPattern.SelectedValue);
+                objDimension_Row.User_ID = intUserID;
+                objDimension_Row.Is_Active = chkActive.Checked;
+                //if (ddlLocation.SelectedIndex > 0)
+                //    objDimension_Row.Location_Id = ddlLocation.SelectedValue;
+                if (ddlDimRefNo.Items.Count > 0 && Convert.ToInt32(ddlDimRefNo.SelectedValue) > 0)
+                    objDimension_Row.Dim1_Ref_ID = Convert.ToInt32(ddlDimRefNo.SelectedValue);
+                objDimension_Row.Trans_Date = DateTime.Now;
+                objDimension_Row.XMLLocationDetails = FunPriFormXMLLocationDetails().ToString();
+                objDimension_Row.Dim_Type_Desc = txtdescriptiontypeddescription.Text.Trim();
+                ObjFA_SYS_DimensionMaster_DataTable.AddFA_SYS_DimensionMasterRow(objDimension_Row);
+                intReturnValue = objAdminServiceClient.FunPubInsertUpdateDimensionMaster(FASerializationMode.Binary, FAClsPubSerialize.Serialize(ObjFA_SYS_DimensionMaster_DataTable, FASerializationMode.Binary), "C", strConnectionName);
+                string strvalue = Convert.ToString(Resources.ErrorHandlingAndValidation.ResourceManager.GetString("711"));
+                if (strvalue.Contains(Convert.ToString(Resources.ErrorHandlingAndValidation.ResourceManager.GetString(Convert.ToString(intReturnValue)))))
+                { blnValReturn = true; }
+
+            }
+            else
+            {
+                objDimension_Row = ObjFA_SYS_DimensionMaster_DataTable.NewFA_SYS_DimensionMasterRow();
+                objDimension_Row.Company_ID = intCompanyID;
+                objDimension_Row.Dim_ID = 0;
+                objDimension_Row.DimID = intDimensionId;
+                objDimension_Row.Activity = Convert.ToInt32(ddlActivity.SelectedValue);
+                objDimension_Row.Dim_Type = Convert.ToInt32(ddlDimensionType.SelectedValue);
+                objDimension_Row.Dim_Code = txtDimensionCode.Text.Trim();
+                objDimension_Row.Dim_Desc = txtDimensionDescription.Text.Trim();
+                //if (ddlLocation.SelectedIndex > 0)
+                //    objDimension_Row.Location_Id = ddlLocation.SelectedValue;
+                objDimension_Row.Dim_Pattern = Convert.ToInt32(rblDimensionPattern.SelectedValue);
+                if (ddlDimRefNo.Items.Count > 0 && Convert.ToInt32(ddlDimRefNo.SelectedValue) > 0)
+                    objDimension_Row.Dim1_Ref_ID = Convert.ToInt32(ddlDimRefNo.SelectedValue);
+                objDimension_Row.User_ID = intUserID;
+                objDimension_Row.Is_Active = chkActive.Checked;
+                objDimension_Row.Trans_Date = DateTime.Now;
+                objDimension_Row.XMLLocationDetails = FunPriFormXMLLocationDetails().ToString();
+                objDimension_Row.Dim_Type_Desc = txtdescriptiontypeddescription.Text.Trim();
+                ObjFA_SYS_DimensionMaster_DataTable.AddFA_SYS_DimensionMasterRow(objDimension_Row);
+                intReturnValue = objAdminServiceClient.FunPubInsertUpdateDimensionMaster(FASerializationMode.Binary, FAClsPubSerialize.Serialize(ObjFA_SYS_DimensionMaster_DataTable, FASerializationMode.Binary), "M", strConnectionName);
+            }
+            if (intReturnValue != 701 && intReturnValue != 702)
+            {
+                blnValReturn = true;
+                Utility_FA.FunShowValidationMsg_FA(this, intReturnValue);
+                return;
+            }
+            Utility_FA.FunShowValidationMsg_FA(this, intReturnValue, strRedirectPageAdd, strRedirectPageView, strMode, false);
+        }
+        catch (FaultException<SystemAdminMgtServiceReference.ClsPubFaultException> ex)
+        {
+            if (objAdminServiceClient != null)
+                objAdminServiceClient.Close();
+            throw ex;
+        }
+        catch (Exception ex)
+        {
+            if (objAdminServiceClient != null)
+                objAdminServiceClient.Close();
+            throw ex;
+        }
+    }
+
+    private bool FunPriValidateDim1Ref(ref int intReturnCode)
+    {
+        bool blnStatus = false;
+        try
+        {
+            if (ViewState["vs_dtdim2"] != null)
+            {
+                DataRow[] drList = ((DataTable)ViewState["vs_dtdim2"]).Select("Dim_ID='" + Convert.ToString(ddlDimRefNo.SelectedValue) + "'");
+                if (drList != null && drList.Length > 0)
+                {
+                    if (Convert.ToInt32(rblDimensionPattern.SelectedValue) != Convert.ToInt32(drList[0]["Dim_Pattern"]) && Convert.ToInt32(rblDimensionPattern.SelectedValue) < Convert.ToInt32(drList[0]["Dim_Pattern"]))
+                    {
+                        intReturnCode = 712;
+                        blnStatus = true;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+               FAClsPubCommErrorLog.CustomErrorRoutine(ex, strPageName);
+            throw ex;
+        }
+        return blnStatus;
+    }
+
+    public void FunPubLoadDimension()
+    {
+        try
+        {
+            if (Procparam != null)
+                Procparam.Clear();
+            else
+                Procparam = new Dictionary<string, string>();
+            Procparam.Add("@Company_ID", intCompanyID.ToString());
+            Procparam.Add("@Dim_ID", intDimensionId.ToString());
+            DataTable dtDimension = Utility_FA.GetDataset(SPNames.GetDimensionDetails, Procparam).Tables[0];
+            DataTable dtlocation = Utility_FA.GetDataset(SPNames.GetDimensionDetails, Procparam).Tables[1];
+            ViewState["Locationss"] = dtlocation;
+            if (dtDimension.Rows.Count > 0)
+            {
+                ddlActivity.SelectedValue = Convert.ToString(dtDimension.Rows[0]["Activity"]);
+                FunPubBindDimensionType(intMode, ddlActivity.SelectedValue.ToString());
+                ddlDimensionType.SelectedValue = Convert.ToString(dtDimension.Rows[0]["Dim_Type"]);
+                txtDimensionCode.Text = Convert.ToString(dtDimension.Rows[0]["Dim_Code"]);
+                txtDimensionDescription.Text = Convert.ToString(dtDimension.Rows[0]["Dim_Desc"]);
+                chkActive.Checked = Convert.ToBoolean(dtDimension.Rows[0]["Is_Active"]);
+                //ddlLocation.SelectedValue = Convert.ToString(dtDimension.Rows[0]["Location_ID"]);
+                rblDimensionPattern.SelectedValue = Convert.ToString(dtDimension.Rows[0]["Dim_Pattern"]);
+                txtdescriptiontypeddescription.Text = Convert.ToString(dtDimension.Rows[0]["Dim_Type_Desc"]);
+                if (ObjSession.ProDim2_Linkwith_Dim1RW == true)
+                {
+                    if (ddlDimensionType.SelectedValue == "2")
+                    {
+                        FunPubBindDimensionRefNo();
+                        ddlDimRefNo.SelectedValue = Convert.ToString(dtDimension.Rows[0]["Dim1_Ref_ID"]); 
+                        lblDimRef.Visible = ddlDimRefNo.Visible = rfvDimRefNo.Enabled = true;
+                    }
+                    else 
+                        lblDimRef.Visible = ddlDimRefNo.Visible = rfvDimRefNo.Enabled = false;
+                }
+                else
+                    lblDimRef.Visible = ddlDimRefNo.Visible = rfvDimRefNo.Enabled = false;
+            }
+        }
+        catch (Exception ex)
+        {
+               FAClsPubCommErrorLog.CustomErrorRoutine(ex, strPageName);
+            throw ex;
+        }
+    }
+
+    public void FunPubLoadDimensionHistory()
+    {
+        try
+        {
+            if (Procparam != null)
+                Procparam.Clear();
+            else
+                Procparam = new Dictionary<string, string>();
+            Procparam.Add("@Company_ID", intCompanyID.ToString());
+            Procparam.Add("@dim_type", ddlDimensionType.SelectedValue);
+            if(ddlDimRefNo.SelectedIndex>0)
+            Procparam.Add("@dim1_code", ddlDimRefNo.SelectedValue);
+            dthistory = Utility_FA.GetDefaultData("FA_DIM_HISTORY", Procparam);
+            if (dthistory.Rows.Count > 0)
+            {
+                grvdim2.DataSource = dthistory;
+                grvdim2.DataBind();
+                lblmodalerror.Visible = false;
+               
+                
+            }
+            else
+            {
+                grvdim2.DataSource = dthistory;
+                grvdim2.DataBind();
+                lblmodalerror.Visible = true;
+                lblmodalerror.Text = "No Existing Records Available !";
+            }
+          
+
+            ModalPopupExtenderdim.Show();
+          
+        }
+        catch (Exception ex)
+        {
+               FAClsPubCommErrorLog.CustomErrorRoutine(ex, strPageName);
+            throw ex;
+        }
+    }
+
+
+    public void FunPubReset()
+    {
+        try
+        {
+            ddlActivity.SelectedIndex = ddlDimensionType.SelectedIndex = 0;
+            //Utility_FA.ClearDropDownList_FA(ddlDimRefNo);
+            ddlDimRefNo.Items.Clear();
+            txtDimensionCode.Text = txtDimensionDescription.Text = "";
+            FunPubBindDimensionType(intMode, ddlActivity.SelectedValue.ToString());
+            rblDimensionPattern.ClearSelection();
+            foreach (ListItem li in rblDimensionPattern.Items)
+              li.Enabled = true;
+            
+            ddlDimensionType.SelectedIndex = 0;
+            ddlDimRefNo.Items.Clear();
+            lblDimRef.Visible = ddlDimRefNo.Visible = rfvDimRefNo.Enabled = false;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    public void FunPubSetToolTip()
+    {
+        try
+        {
+            rblDimensionPattern.AddItemToolTipText_FA();
+            ddlDimensionType.AddItemToolTipText_FA();
+            ddlActivity.AddItemToolTipText_FA();
+            ddlDimRefNo.AddItemToolTipText_FA();
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    public void FunPubDisable()
+    {
+        ddlActivity.ClearDropDownList_FA();
+        txtDimensionCode.ReadOnly = true;
+        ddlDimensionType.ClearDropDownList_FA();
+
+        foreach (ListItem li in rblDimensionPattern.Items)
+        {
+            if (li.Selected == false)
+                li.Enabled = false;
+        }
+        if (strMode == "Q")
+        {
+            txtDimensionDescription.ReadOnly = true;
+            if (ddlDimRefNo.Items.Count > 0)
+                ddlDimRefNo.ClearDropDownList_FA();
+        }
+    }
+
+    private void  FunPriDisableControls(int intModeID)
+    {
+
+        switch (intModeID)
+        {
+            case 0: // Create Mode
+                if (!bCreate)
+                {
+                    btnSave.Enabled = false;
+                }
+                lblHeading.Text = FunPubGetPageTitles(enumPageTitle.Create);
+                chkActive.Enabled = false;
+                chkActive.Checked = true;
+                break;
+
+            case 1: // Modify Mode
+                if (!bModify)
+                {
+                    btnSave.Enabled = false;
+                }
+                FunPubLoadDimension();
+                lblHeading.Text = FunPubGetPageTitles(enumPageTitle.Modify);
+                chkActive.Enabled = true;
+                btnClear.Enabled = false;
+                FunPubDisable();
+                break;
+
+            case -1:// Query Mode
+                if (!bQuery)
+                {
+                    Response.Redirect(strRedirectAddPage);
+                }
+                FunPubLoadDimension();
+                lblHeading.Text = FunPubGetPageTitles(enumPageTitle.View);
+                if (!bQuery)
+                {
+                    Response.Redirect(strRedirectPageView);
+                }
+                chkActive.Enabled = false;
+                btnClear.Enabled = false;
+                btnSave.Enabled = false;
+                FunPubDisable();
+                break;
+        }
+    }
+    //private void FunPriGetLocation()
+    //{
+    //    try
+    //    {
+    //        Dictionary<string, string> dictParam = new Dictionary<string, string>();
+    //        dictParam.Add("@Company_ID", Convert.ToString(intCompanyID));
+    //        dictParam.Add("@User_ID", Convert.ToString(intUserID));
+    //        dictParam.Add("@Location_Active", "1");
+    //        dictParam.Add("@Program_ID", "8");
+    //        dictParam.Add("@Is_Operational", "1");
+    //        ddlLocation.BindComboBoxWithALL_FA(SPNames.GetLocation, dictParam, new string[] { "Location_ID", "Location" });
+    //        //ddlLocation.BindDataTable_FA(SPNames.GetLocation, dictParam, new string[] { "Location_ID", "Location" });
+
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //           FAClsPubCommErrorLog.CustomErrorRoutine(ex);
+    //        throw new ApplicationException("Unable To Load Location1");
+    //    }
+    //}
+
+
+    //protected void ddlLocation_SelectedIndexChanged(object sender, EventArgs e)
+    //{
+    //    try
+    //    {
+    //        ddlDimensionType.SelectedIndex = 0;
+
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //           FAClsPubCommErrorLog.CustomErrorRoutine(ex, strPageName);
+    //        cvDim.ErrorMessage = "Unable to Load DIM1 Ref";// strErrorMsg + Resources.ErrorHandlingAndValidation.ResourceManager.GetString("1510") + strErrMsgLast;
+    //        cvDim.IsValid = false;
+    //    }
+    //}
+
+
+    private void FunPriloadLocationTreeview()
+    {
+        try
+        {
+            Procparam = new Dictionary<string, string>();
+            DataSet ds = new DataSet();
+            Procparam.Add("@Company_ID", intCompanyID.ToString());
+            ds = Utility_FA.GetDataset(SPNames.GETLOCATIONTREEVIEW, Procparam);
+            if (ds.Tables[0].Rows.Count > 0)
+                ViewState["TreeviewLocations"] = ds.Tables[0];
+            ds.DataSetName = "Menus";
+            ds.Tables[0].TableName = "Menu";
+            DataRelation relation = new DataRelation("ParentChild",
+            ds.Tables[0].Columns["Location_ID"],
+            ds.Tables[0].Columns["pid"], true);
+            relation.Nested = true;
+            ds.Relations.Add(relation);
+
+            XmlDataSource1.Data = ds.GetXml();
+            XmlDataSource1.DataBind();
+        }
+        //catch (FaultException<SystemAdminMgtServiceReference.ClsPubFaultException> objFaultExp)
+        //{
+        //    lblErrorMessage.Text = objFaultExp.Detail.ProReasonRW;
+        //}
+        catch (Exception ex)
+        {
+               FAClsPubCommErrorLog.CustomErrorRoutine(ex, strPageName);
+            throw ex;
+        }
+    }
+
+    #endregion [Function's]
+
+    protected void treeview_PreRender(object sender, EventArgs e)
+    {
+        try
+        {
+            FunPriTreeViewPreRender();
+        }
+        catch (Exception ex)
+        {
+            //CVAccountCard.ErrorMessage = ex.Message;
+            //CVAccountCard.IsValid = false;
+        }
+    }
+
+    private void FunPriTreeViewPreRender()
+    {
+        try
+        {
+
+            FunPriSetDisableNonoperationalLoc();
+            FunPriCheckLocation();
+            if (string.IsNullOrEmpty(hdnLocString.Value))
+                hdnLocString.Value = Dcountstring + countstring;
+            ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "Display", "onloadByObjectD('" + hdnLocString.Value + "');", true);
+            hdnLocString.Value = Dcountstring + countstring;
+        }
+        catch (Exception ex)
+        {
+               FAClsPubCommErrorLog.CustomErrorRoutine(ex, strPageName);
+            throw ex;
+        }
+    }
+    private void FunPriSetDisableNonoperationalLoc()
+    {
+        try
+        {
+            DataTable dt = new DataTable();
+            if (ViewState["TreeviewLocations"] != null)
+            {
+                dt = (DataTable)ViewState["TreeviewLocations"];
+            }
+            if (dt.Rows.Count > 0)
+            {
+                Dcount = 0;
+                Dcountstring = "";
+                foreach (TreeNode treeviewnode in treeview.Nodes)
+                {
+                    FunNodeDisableMod(treeviewnode, dt);
+
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+               FAClsPubCommErrorLog.CustomErrorRoutine(ex, strPageName);
+            throw ex;
+        }
+    }
+
+    private void FunNodeDisableMod(TreeNode e, DataTable dtLocation)
+    {
+        try
+        {
+
+            for (int i = 0; i < e.ChildNodes.Count; i++)
+            {
+                Dcount++;
+                foreach (DataRow dr in dtLocation.Rows)
+                {
+                    if (dr["Location_ID"].ToString() == e.ChildNodes[i].Value)
+                    {
+                        if (!Convert.ToBoolean(dr["Is_Operational"]))
+                        {
+                            Dcountstring += Dcount.ToString() + ",";
+
+                        }
+                    }
+
+
+                }
+                if (e.ChildNodes[i].ChildNodes.Count > 0)
+                    FunNodeDisableMod(e.ChildNodes[i], dtLocation);
+            }
+        }
+        catch (Exception ex)
+        {
+               FAClsPubCommErrorLog.CustomErrorRoutine(ex, strPageName);
+            throw ex;
+        }
+    }
+
+    private void FunPriCheckLocation()
+    {
+        try
+        {
+            count = 0;
+            countstring = "";
+            foreach (TreeNode treeviewnode in treeview.Nodes)
+            {
+                if (ViewState["Locationss"] != null)
+                {
+                    FunNodeCheckMod(treeviewnode, (DataTable)ViewState["Locationss"]); //to check locations in Treeview
+
+                }
+            }
+
+        }
+        catch (Exception ex)
+        {
+               FAClsPubCommErrorLog.CustomErrorRoutine(ex, strPageName);
+            throw ex;
+        }
+    }
+
+    private void FunNodeCheckMod(TreeNode e, DataTable dtLocation)
+    {
+        try
+        {
+
+            for (int i = 0; i < e.ChildNodes.Count; i++)
+            {
+                count++;
+                foreach (DataRow dr in dtLocation.Rows)
+                {
+                    if (dr["Location_Id"].ToString() == e.ChildNodes[i].Value)
+                    {
+                        e.ChildNodes[i].Checked = true;
+                        
+                    }
+
+
+                }
+                if (e.ChildNodes[i].ChildNodes.Count > 0)
+                    FunNodeCheckMod(e.ChildNodes[i], dtLocation);
+            }
+        }
+        catch (Exception ex)
+        {
+               FAClsPubCommErrorLog.CustomErrorRoutine(ex, strPageName);
+            throw ex;
+        }
+    }
+
+   
+    StringBuilder strbSelLocation = new StringBuilder();
+    /// <summary>
+    /// This method is used to return the Location details in XML format.
+    /// </summary>
+    /// <returns></returns>
+    private StringBuilder FunPriFormXMLLocationDetails()
+    {
+
+        try
+        {
+            //strbSelLocation.Replace(strbSelLocation.ToString(), "");
+            strbSelLocation.Append("<Root>");
+            foreach (TreeNode node in treeview.CheckedNodes)
+            {
+                strbSelLocation.Append(" <Details Location_ID='" + node.Value + "' /> ");
+            }
+            strbSelLocation.Append("</Root>");
+            //foreach (TreeNode treeviewnode in treeview.Nodes)
+            //{
+            //    FunNodeCheckModLoc(treeviewnode); //to check 
+            //}
+
+            //strbSelLocation.Append("</Root>");
+        }
+        catch (Exception ex)
+        {
+            strbSelLocation.Replace(strbSelLocation.ToString(), "<Root></Root>");
+               FAClsPubCommErrorLog.CustomErrorRoutine(ex, strPageName);
+            throw ex;
+        }
+        return strbSelLocation;
+    }
+
+
+}

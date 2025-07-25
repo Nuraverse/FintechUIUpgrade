@@ -1,0 +1,385 @@
+<%@ master language="C#" autoeventwireup="true" inherits="SmartLend3G.FAMasterPageCollapse, App_Web_qjjmdra3" enabletheming="true" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+
+    <script type="text/javascript" src="../Scripts/Common.js"></script>
+    <script type="text/javascript" src="../Scripts/Alert.min.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <title>Smart Fintech Solutions</title>
+    <link href="../Content/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="../Content/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="../Content/css/style_sheet.css" rel="stylesheet" type="text/css" />
+    <link href="../Content/css/font-awesome.css" rel="stylesheet" type="text/css" />
+    <link href="../Content/css/custom.css" rel="stylesheet" type="text/css" />
+    <link href="../Content/css/tabcontol/demo.css" rel="stylesheet" type="text/css" />
+    <link href="../Content/css/tabcontol/reset.css" rel="stylesheet" type="text/css" />
+    <link href="../Content/css/tabcontol/style.css" rel="stylesheet" type="text/css" />
+    <link href="../Content/css/font.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript">
+        function Alert(type, title, msg) {
+            switch (type) {
+                case "basic":
+                    swal(msg);
+                    break;
+                case "success":
+                    swal(title, msg, "success");
+                    break;
+                case "error":
+                    swal(title, msg, "error");
+                    break;
+                case "warning":
+                    swal(title, msg, "warning");
+                    break;
+            }
+
+        }
+
+        // Success Alert & Refresh Page
+        function successRefAlt(title, msg) {
+
+            swal(title, msg, "success").then(
+                function (confirm) {
+                    window.location.reload();
+                });
+        }
+
+        // Success Msg and confirm redirect page
+        function successConfirm(title, text, textQus, url, VwUrl) {
+            swal({
+                title: title,
+                text: text,
+                icon: "success",
+            }).then(function (value) {
+                swal({
+                    title: "Are you sure?",
+                    text: textQus,
+                    buttons: true,
+                    confirmMode: true,
+                }).then(function (confirm) {
+                    if (confirm) {
+                        window.location = url;
+                    }
+                    else {
+                        window.location = VwUrl;
+                    }
+                });
+            });
+
+        }
+
+        // Success Msg and redirect page
+        function successRedir(title, text, url) {
+            swal({
+                title: title,
+                text: text,
+                icon: "success",
+            }).then(
+            function (confirm) {
+                window.location = url;
+            });
+        }
+    </script>
+    
+      <style type="text/css">
+
+</style>
+</head>
+
+
+<body id="bodyMaster" runat="server" style="margin-right: 0px; margin-left: 1px; margin-bottom: 0px; margin-top: 2px"
+    oncontextmenu="return true;">
+    <form id="form1" style="margin: 0px" runat="server">
+        <cc1:ToolkitScriptManager ID="ScriptManager1" runat="server" AsyncPostBackTimeout="300" ScriptMode="Release">
+            <Scripts>
+                <asp:ScriptReference Path="~/Scripts/Webkit.js"></asp:ScriptReference>
+            </Scripts>
+
+        </cc1:ToolkitScriptManager>
+
+
+        <asp:SiteMapDataSource ID="SiteMapDataSource1" runat="server" ShowStartingNode="False" />
+        <%--<div id="up_container">--%>
+        <div class="content_base" id="up_container">
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-xs-6">
+
+                    <asp:SiteMapPath ID="SiteMapPath1" runat="server" PathSeparator=" > " EnableTheming="True"
+                        CssClass="styleSitepath">
+                        <PathSeparatorStyle CssClass="stylePathsep" />
+                        <CurrentNodeStyle CssClass="styleCurrentNode" />
+                        <NodeStyle CssClass="styleNode" />
+                        <RootNodeStyle CssClass="styleRootNode" />
+                    </asp:SiteMapPath>
+
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div align="right">
+                        <a id="imgRefresh" onclick="location.reload();" href="#"><i class="fa fa-refresh"></i></a>&emsp;
+                    </div>
+                </div>
+            </div>
+            <%--<div  id="progress" runat="server" style="background-repeat: repeat-x; width: 140px; height: 30px; position: absolute; top: 50%; left: 50%; margin-top: -30px; margin-left: -30px; z-index: 100001; vertical-align: middle; text-align: left">--%>
+             <div  id="progress" runat="server" class="loder_img" style="display: none">
+                <img src="../Images/MFC_Loader.gif" id="imgLoading2" style="display: none" title="Loading.." />
+                <img id="img1" style="display: none" title="Loading.." />
+                <label id="lblLoading" title="MFC-Please Wait..."></label>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12" onclick="autoResize()">
+
+
+                    <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                    </asp:ContentPlaceHolder>
+                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <asp:HiddenField ID="hdndate" runat="server" />
+
+                </div>
+            </div>
+        </div>
+
+       
+    </form>
+     <script src="../Content/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="../Content/Scripts/tabcontrol/main.js"></script>
+    <script src="../Content/Scripts/bootstrap.js"></script>
+    <script src="../Content/Scripts/UserScript.js"></script>
+    <script type="text/javascript" language="javascript">
+
+
+        function GetSize(img) {
+
+            alert(img.title);
+        }
+
+
+        window.history.forward(1);
+        window.history.forward();
+
+        window.onerror = function () { return true; }
+
+        //Narayanan - start
+
+        var message = "Sorry, that function is disabled.\nThis Page Copyrighted and\nImages and Text protected!\nALL RIGHTS RESERVED";
+
+        // Don't edit below!
+
+        function click(e) {
+            if (document.all) {
+                if (event.button == 2) {
+                    //                    alert(message);
+                    //                    return false;
+                }
+            }
+            if (document.layers) {
+                if (e.which == 3) {
+                    //                    alert(message);
+                    //                    return false;
+                }
+            }
+        }
+        if (document.layers) {
+            document.captureEvents(Event.MOUSEDOWN);
+        }
+        document.onmousedown = click;
+        // --> 
+
+        //Narayanan - End
+
+        window.onload = window_onload;
+        var prm;
+        var focusedElementId = "";
+        function window_onload() {
+            prm = Sys.WebForms.PageRequestManager.getInstance();
+            prm.add_initializeRequest(InitializeRequest);
+            prm.add_endRequest(EndRequest);
+            prm.add_pageLoaded(PageLoaded);
+
+            //document.getElementById('divLoading').style.display='none';
+            //GetMenuVisibility();
+        }
+
+        function InitializeRequest(sender, args) {
+
+            $get('up_container').style.cursor = 'wait';
+            $get('up_container').disabled = true;
+            //  document.getElementById('imgRefresh').style.display = 'none';
+            //  document.getElementById('imgLoading').style.display = 'block';
+            document.getElementById('ctl00_progress').style.display = 'block'
+            document.getElementById('imgLoading2').style.display = 'block';
+
+
+
+            if (prm.get_isInAsyncPostBack()) {
+                args.set_cancel(true);
+            }
+        }
+
+        function PageLoaded(sender, args) {
+
+            $get('up_container').style.cursor = 'auto';
+            $get('up_container').disabled = false;
+            // document.getElementById('imgRefresh').style.display = 'block';
+            //  document.getElementById('imgLoading').style.display = 'none';
+            document.getElementById('ctl00_progress').style.display = 'none';
+              document.getElementById('imgLoading2').style.display = 'none';
+            autoResize();
+        }
+
+        function EndRequest(sender, args) {
+
+            if (args.get_error() != undefined) {
+                $get('up_container').style.cursor = 'auto';
+                $get('up_container').disabled = false;
+                document.getElementById('imgRefresh').style.display = 'block';
+                // document.getElementById('imgLoading').style.display = 'none';
+                document.getElementById('ctl00_progress').style.display = 'none';
+                document.getElementById('imgLoading2').style.display = 'none';
+                args.set_errorHandled(true);
+            }
+        }
+
+
+        function autoResize() {
+            var newheight;
+            var newwidth;
+
+            try {
+                //
+                if (window.frames.frameElement == null) {
+                    window.parent.location.href = '../SessionExpired.aspx';
+                    return;
+                }
+                if (window.parent.document.getElementById('hdnMenuState') != null && window.parent.document.getElementById(window.frames.frameElement.id)) {
+
+                    newheight = window.parent.document.getElementById(window.frames.frameElement.id).contentWindow.document.body.scrollHeight;
+                    newwidth = window.parent.document.getElementById(window.frames.frameElement.id).contentWindow.document.body.scrollWidth;
+
+                    window.parent.document.getElementById(window.frames.frameElement.id).height = newheight;
+                    window.parent.document.getElementById(window.frames.frameElement.id).width = newwidth;
+                    window.parent.document.getElementById(window.frames.frameElement.id).style.minHeight = 420;
+
+                    if (window.parent.document.getElementById('hdnMenuState').value == "0") {
+                        if (newwidth < screen.width - 257) {
+                            window.parent.document.getElementById(window.frames.frameElement.id).width = (screen.width - 257);
+                            window.document.body.style.width = (screen.width - 259);
+                        }
+                        else {
+                            window.parent.document.getElementById(window.frames.frameElement.id).width = newwidth;
+                            window.document.body.style.width = window.document.body.offsetWidth; //newwidth - 3;
+                        }
+                    }
+                    else {
+                        if (newwidth < screen.width - 53) {
+                            window.parent.document.getElementById(window.frames.frameElement.id).width = (screen.width - 53);
+                            window.document.body.style.width = (screen.width - 54);
+                        }
+                        else {
+                            window.parent.document.getElementById(window.frames.frameElement.id).width = newwidth;
+                            window.document.body.style.width = window.document.body.offsetWidth;  //newwidth - 3;
+                        }
+                    }
+                }
+            }
+            catch (e) {
+                //alert(e);
+            }
+        }
+
+
+
+        function shouldCancelbackspace(e) {
+            var key;
+            if (e) {
+                key = e.which ? e.which : e.keyCode;
+                if (key == null || (key != 8 && key != 13)) { // return when the key is not backspace key. 
+                    return false;
+                }
+            } else {
+                return false;
+            }
+
+            if (e.srcElement) { // in IE 
+                tag = e.srcElement.tagName.toUpperCase();
+                type = e.srcElement.type;
+                readOnly = e.srcElement.readOnly;
+                if (type == null) { // Type is null means the mouse focus on a non-form field. disable backspace button 
+                    return true;
+                } else {
+                    type = e.srcElement.type.toUpperCase();
+                }
+
+            } else { // in FF 
+                tag = e.target.nodeName.toUpperCase();
+                type = (e.target.type) ? e.target.type.toUpperCase() : "";
+            }
+
+            // we don't want to cancel the keypress (ever) if we are in an input/text area 
+            if (tag == 'INPUT' || type == 'TEXT' || type == 'TEXTAREA') {
+                if (readOnly == true) // if the field has been dsabled, disbale the back space button 
+                    return true;
+                if (((tag == 'INPUT' && type == 'RADIO') || (tag == 'INPUT' && type == 'CHECKBOX'))
+    && (key == 8 || key == 13)) {
+                    return true; // the mouse is on the radio button/checkbox, disbale the backspace button 
+                }
+                return false;
+            }
+
+            // if we are not in one of the above things, then we want to cancel (true) if backspace 
+            return (key == 8 || key == 13);
+        }
+
+        // check the browser type 
+        function whichBrs() {
+            var agt = navigator.userAgent.toLowerCase();
+            if (agt.indexOf("opera") != -1) return 'Opera';
+            if (agt.indexOf("staroffice") != -1) return 'Star Office';
+            if (agt.indexOf("webtv") != -1) return 'WebTV';
+            if (agt.indexOf("beonex") != -1) return 'Beonex';
+            if (agt.indexOf("chimera") != -1) return 'Chimera';
+            if (agt.indexOf("netpositive") != -1) return 'NetPositive';
+            if (agt.indexOf("phoenix") != -1) return 'Phoenix';
+            if (agt.indexOf("firefox") != -1) return 'Firefox';
+            if (agt.indexOf("safari") != -1) return 'Safari';
+            if (agt.indexOf("skipstone") != -1) return 'SkipStone';
+            if (agt.indexOf("msie") != -1) return 'Internet Explorer';
+            if (agt.indexOf("netscape") != -1) return 'Netscape';
+            if (agt.indexOf("mozilla/5.0") != -1) return 'Mozilla';
+
+            if (agt.indexOf('\/') != -1) {
+                if (agt.substr(0, agt.indexOf('\/')) != 'mozilla') {
+                    return navigator.userAgent.substr(0, agt.indexOf('\/'));
+                } else
+                    return 'Netscape';
+            } else if (agt.indexOf(' ') != -1)
+                return navigator.userAgent.substr(0, agt.indexOf(' '));
+            else
+                return navigator.userAgent;
+        }
+
+        // Global events (every key press) 
+
+        var browser = whichBrs();
+        if (browser == 'Internet Explorer') {
+            document.onkeydown = function () { return !shouldCancelbackspace(event); }
+        } else if (browser == 'Firefox') {
+            document.onkeypress = function (e) { return !shouldCancelbackspace(e); }
+        }
+    </script>
+    <script type="text/javascript">
+        function forceClose() {
+            alert('You have been forcefully logged out by the Administrator!');
+            window.parent.location.href = '../LoginPage.aspx';
+        }
+
+    </script>
+</body>
+</html>
+

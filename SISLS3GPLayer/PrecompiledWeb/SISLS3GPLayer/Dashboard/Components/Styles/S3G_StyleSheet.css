@@ -1,0 +1,176 @@
+﻿body {
+}
+/*Sathish R--24-Dec-2019*/
+.bg-primaryIn {
+    background-color: #007bff!important;
+}
+
+a.bg-primaryIn:focus, a.bg-primaryIn:hover, button.bg-primaryIn:focus, button.bg-primaryIn:hover {
+    background-color: #0062cc!important;
+}
+
+.bg-successIn {
+    background-color: #28a745!important;
+   
+}
+
+a.bg-successIn:focus, a.bg-successIn:hover, buttonbg-successIn:focus, button.bg-successIn:hover {
+    background-color: #1e7e34!important;
+}
+
+.bg-dangerIn {
+    background-color: #dc3545!important;
+}
+
+a.bg-dangerIn:focus, a.bg-dangerIn:hover, button.bg-dangerIn:focus, button.bg-dangerIn:hover {
+    background-color: #bd2130!important;
+}
+
+.bg-warningIn {
+    background-color: #ff9907!important;
+}
+
+a.bg-warningIn:focus, a.bg-warningIn:hover, button.bg-warningIn:focus, button.bg-warningIn:hover {
+    background-color: #ff9907!important;
+}
+
+.bg-infoIn {
+    background-color: #17a2b8!important;
+}
+
+a.bg-infoIn:focus, a.bg-infoIn:hover, button.bg-infoIn:focus, button.bg-infoIn:hover {
+    background-color: #117a8b!important;
+}
+
+.bg-PinkIn {
+    background-color: #276cb0!important;
+}
+
+a.bg-PinkIn:focus, a.bg-PinkIn:hover, button.bg-PinkIn:focus, button.bg-PinkIn:hover {
+    background-color: #276cb0!important;
+}
+
+
+.text-lowercase {
+    text-transform: lowercase!important;
+}
+
+.text-uppercase {
+    text-transform: uppercase!important;
+}
+
+.text-capitalize {
+    text-transform: capitalize!important;
+}
+
+.font-weight-light {
+    font-weight: 300!important;
+}
+
+.font-weight-normal {
+    font-weight: 400!important;
+}
+
+.font-weight-bold {
+    font-weight: 700!important;
+}
+
+.font-italic {
+    font-style: italic!important;
+}
+
+.text-white {
+    color: #fff!important;
+}
+
+.text-primary {
+    color: #009688!important;
+}
+
+a.text-primary:focus,
+a.text-primary:hover {
+    color: #00635a!important;
+}
+
+.text-secondary {
+    color: #6c757d!important;
+}
+
+a.text-secondary:focus,
+a.text-secondary:hover {
+    color: #545b62!important;
+}
+
+.text-success {
+    color: #4caf50!important;
+}
+
+a.text-success:focus,
+a.text-success:hover {
+    color: #3d8b40!important;
+}
+
+.text-info {
+    color: #03a9f4!important;
+}
+
+a.text-info:focus,
+a.text-info:hover {
+    color: #0286c2!important;
+}
+
+.text-warning {
+    color: #ff5722!important;
+}
+
+a.text-warning:focus,
+a.text-warning:hover {
+    color: #ee3900!important;
+}
+
+.text-danger {
+    color: #f44336!important;
+}
+
+a.text-danger:focus,
+a.text-danger:hover {
+    color: #ea1c0d!important;
+}
+
+.text-light {
+    color: #f5f5f5!important;
+}
+
+a.text-light:focus,
+a.text-light:hover {
+    color: #dcdcdc!important;
+}
+
+.text-dark {
+    color: #424242!important;
+}
+
+a.text-dark:focus,
+a.text-dark:hover {
+    color: #292929!important;
+}
+
+.bmd-help,
+.text-muted {
+    color: #6c757d!important;
+}
+
+.large_text {
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.small_txt {
+    font-size: 17px;
+    font-family: Book Antiqua;
+}
+.small_txt {
+    font-size: 17px;
+    
+    font-family: Book Antiqua;
+}

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://siststs3g02.sis.ad:4008/SysAdmin/FAAdminServices.svc?xsd=xsd3" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:import schemaLocation="http://siststs3g02.sis.ad:4008/SysAdmin/FAAdminServices.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/FA_BusEntity" />
+  <xs:element name="FunSetConnection">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Fin_Year" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Company_ID" type="xs:int" />
+        <xs:element minOccurs="0" name="Appl_Type" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunSetConnectionResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunSetConnectionResult" type="xs:int" />
+        <xs:element minOccurs="0" name="strDB_Name" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strInitial_Catalog" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strUSERNAME" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strPASSWORD" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubValidateLogin">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="strUserLoginCode" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strPassword" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubValidateLoginResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubValidateLoginResult" type="xs:int" />
+        <xs:element minOccurs="0" name="intCompanyID" type="xs:int" />
+        <xs:element minOccurs="0" name="intUserID" type="xs:int" />
+        <xs:element minOccurs="0" name="intUser_Level_ID" type="xs:int" />
+        <xs:element minOccurs="0" name="strUserName" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strCompanyName" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strCompanyCode" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="LastLoginDate" type="xs:dateTime" />
+        <xs:element minOccurs="0" name="strTheme" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strAccess" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strCountryName" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strUserType" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strMarquee" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubGetUserMenu">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="intUserId" type="xs:int" />
+        <xs:element minOccurs="0" name="strUserName" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strUserType" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="intCompany_ID" type="xs:int" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubGetUserMenuResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubGetUserMenuResult" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunGetScalarValue">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="strProcName" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+        <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="dctProcParams" nillable="true" type="q1:ArrayOfKeyValueOfstringstring" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunGetScalarValueResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunGetScalarValueResult" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubFillDropdown">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="strProcName" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+        <xs:element xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="dctProcParams" nillable="true" type="q2:ArrayOfKeyValueOfstringstring" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubFillDropdownResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubFillDropdownResult" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubFillDataset">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="strProcName" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+        <xs:element xmlns:q3="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="dctProcParams" nillable="true" type="q3:ArrayOfKeyValueOfstringstring" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubFillDatasetResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubFillDatasetResult" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubFillGridPaging">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="strProcName" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+        <xs:element xmlns:q4="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="dctProcParams" nillable="true" type="q4:ArrayOfKeyValueOfstringstring" />
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="ObjPaging" nillable="true" type="q5:PagingValues" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubFillGridPagingResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubFillGridPagingResult" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="intTotalRecords" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubFillGridPagingWithErrorCode">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="strProcName" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+        <xs:element xmlns:q6="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="dctProcParams" nillable="true" type="q6:ArrayOfKeyValueOfstringstring" />
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="ObjPaging" nillable="true" type="q7:PagingValues" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubFillGridPagingWithErrorCodeResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubFillGridPagingWithErrorCodeResult" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="intTotalRecords" type="xs:int" />
+        <xs:element minOccurs="0" name="intErrorCode" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubPasswordValidation">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="intUserID" type="xs:int" />
+        <xs:element minOccurs="0" name="strPassword" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubPasswordValidationResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubPasswordValidationResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubSysErrorLog">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="strProcName" nillable="true" type="xs:string" />
+        <xs:element xmlns:q8="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="dctProcParams" nillable="true" type="q8:ArrayOfKeyValueOfstringstring" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubSysErrorLogResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubSysErrorLogResult" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateScheduledJobs">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q9:SerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjScheduledJobsDatatable" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateScheduledJobsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubCreateScheduledJobsResult" type="xs:int" />
+        <xs:element minOccurs="0" name="strScheduleJobID" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:3220/UnderWriting/UnderWritingMstServices.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/S3GBusEntity" />
+  <xs:element name="FunPubUnderWritingMSTDetails">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/S3GBusEntity" minOccurs="0" name="SerMode" type="q1:SerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjS3G_UW_MasterDataTable" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubUnderWritingMSTDetailsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubUnderWritingMSTDetailsResult" type="xs:int" />
+        <xs:element minOccurs="0" name="outNoofYear" type="xs:int" />
+        <xs:element minOccurs="0" name="outCreditScoreID" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateUnderWritingAprovalMstDetails">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/S3GBusEntity" minOccurs="0" name="SerMode" type="q2:SerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjS3G_UW_ApprovalMasterDataTable" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateUnderWritingAprovalMstDetailsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubCreateUnderWritingAprovalMstDetailsResult" type="xs:int" />
+        <xs:element minOccurs="0" name="outCreditScoreID" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubQueryUnderWritingMstParameterDetails">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/S3GBusEntity" minOccurs="0" name="SerMode" type="q3:SerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjS3G_UW_MasterDataTable" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubQueryUnderWritingMstParameterDetailsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubQueryUnderWritingMstParameterDetailsResult" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateUnderWritingTransaction">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/S3GBusEntity" minOccurs="0" name="SerMode" type="q4:SerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjS3G_UW_UnderWritingTrans_DataTable" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateUnderWritingTransactionResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubCreateUnderWritingTransactionResult" type="xs:int" />
+        <xs:element minOccurs="0" name="strUWNumber_Out" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubModifyUnderWritingTransaction">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/S3GBusEntity" minOccurs="0" name="SerMode" type="q5:SerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjS3G_UW_UnderWritingTrans_DataTable" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubModifyUnderWritingTransactionResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubModifyUnderWritingTransactionResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateUnderWritingAccessMstDetails">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/S3GBusEntity" minOccurs="0" name="SerMode" type="q6:SerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjS3G_UW_UserAccessMasterDataTable" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateUnderWritingAccessMstDetailsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubCreateUnderWritingAccessMstDetailsResult" type="xs:int" />
+        <xs:element minOccurs="0" name="outUserAccessID" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateUnderWritingAprTranDetails">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/S3GBusEntity" minOccurs="0" name="SerMode" type="q7:SerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjS3G_UW_UserAprTransDataTable" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateUnderWritingAprTranDetailsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubCreateUnderWritingAprTranDetailsResult" type="xs:int" />
+        <xs:element minOccurs="0" name="outAprTransID" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

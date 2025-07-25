@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ScheduledJobMgtServices" targetNamespace="http://tempuri.org/ScheduledJobMgtServices.xsd" xmlns:mstns="http://tempuri.org/ScheduledJobMgtServices.xsd" xmlns="http://tempuri.org/ScheduledJobMgtServices.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection ConnectionStringObject="Data Source=SISCHNSQLDB01;Initial Catalog=S3G_USR_Ver_1.1;User ID=s3g;Password=s3g" IsAppSettingsProperty="false" Modifier="Assembly" Name="sischnsqldb01.S3G_USR_Ver_1.1.dbo" ParameterPrefix="@" Provider="System.Data.SqlClient" />
+        </Connections>
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="ScheduledJobMgtServices" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="ScheduledJobMgtServices" msprop:Generator_UserDSName="ScheduledJobMgtServices">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="S3G_SYSAD_ScheduledJobs" msprop:Generator_UserTableName="S3G_SYSAD_ScheduledJobs" msprop:Generator_RowEvArgName="S3G_SYSAD_ScheduledJobsRowChangeEvent" msprop:Generator_TableVarName="tableS3G_SYSAD_ScheduledJobs" msprop:Generator_TablePropName="S3G_SYSAD_ScheduledJobs" msprop:Generator_RowDeletingName="S3G_SYSAD_ScheduledJobsRowDeleting" msprop:Generator_RowChangingName="S3G_SYSAD_ScheduledJobsRowChanging" msprop:Generator_RowDeletedName="S3G_SYSAD_ScheduledJobsRowDeleted" msprop:Generator_RowEvHandlerName="S3G_SYSAD_ScheduledJobsRowChangeEventHandler" msprop:Generator_TableClassName="S3G_SYSAD_ScheduledJobsDataTable" msprop:Generator_RowChangedName="S3G_SYSAD_ScheduledJobsRowChanged" msprop:Generator_RowClassName="S3G_SYSAD_ScheduledJobsRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Schedule_Job_ID" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnSchedule_Job_ID" msprop:Generator_ColumnPropNameInRow="Schedule_Job_ID" msprop:Generator_ColumnPropNameInTable="Schedule_Job_IDColumn" msprop:Generator_UserColumnName="Schedule_Job_ID" type="xs:int" />
+              <xs:element name="JobDescription" msprop:Generator_ColumnVarNameInTable="columnJobDescription" msprop:Generator_ColumnPropNameInRow="JobDescription" msprop:Generator_ColumnPropNameInTable="JobDescriptionColumn" msprop:Generator_UserColumnName="JobDescription">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="60" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="JobNature" msprop:Generator_ColumnVarNameInTable="columnJobNature" msprop:Generator_ColumnPropNameInRow="JobNature" msprop:Generator_ColumnPropNameInTable="JobNatureColumn" msprop:Generator_UserColumnName="JobNature" type="xs:int" />
+              <xs:element name="Frequency" msprop:Generator_ColumnVarNameInTable="columnFrequency" msprop:Generator_ColumnPropNameInRow="Frequency" msprop:Generator_ColumnPropNameInTable="FrequencyColumn" msprop:Generator_UserColumnName="Frequency" type="xs:int" minOccurs="0" />
+              <xs:element name="StartDateTime" msprop:Generator_ColumnVarNameInTable="columnStartDateTime" msprop:Generator_ColumnPropNameInRow="StartDateTime" msprop:Generator_ColumnPropNameInTable="StartDateTimeColumn" msprop:Generator_UserColumnName="StartDateTime" type="xs:dateTime" />
+              <xs:element name="Holiday" msprop:Generator_ColumnVarNameInTable="columnHoliday" msprop:Generator_ColumnPropNameInRow="Holiday" msprop:Generator_ColumnPropNameInTable="HolidayColumn" msprop:Generator_UserColumnName="Holiday" type="xs:boolean" minOccurs="0" />
+              <xs:element name="Remarks" msprop:Generator_ColumnVarNameInTable="columnRemarks" msprop:Generator_ColumnPropNameInRow="Remarks" msprop:Generator_ColumnPropNameInTable="RemarksColumn" msprop:Generator_UserColumnName="Remarks" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="200" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Created_By" msprop:Generator_ColumnVarNameInTable="columnCreated_By" msprop:Generator_ColumnPropNameInRow="Created_By" msprop:Generator_ColumnPropNameInTable="Created_ByColumn" msprop:Generator_UserColumnName="Created_By" type="xs:int" minOccurs="0" />
+              <xs:element name="Created_On" msprop:Generator_ColumnVarNameInTable="columnCreated_On" msprop:Generator_ColumnPropNameInRow="Created_On" msprop:Generator_ColumnPropNameInTable="Created_OnColumn" msprop:Generator_UserColumnName="Created_On" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="Modified_By" msprop:Generator_ColumnVarNameInTable="columnModified_By" msprop:Generator_ColumnPropNameInRow="Modified_By" msprop:Generator_ColumnPropNameInTable="Modified_ByColumn" msprop:Generator_UserColumnName="Modified_By" type="xs:int" minOccurs="0" />
+              <xs:element name="Modified_On" msprop:Generator_ColumnVarNameInTable="columnModified_On" msprop:Generator_ColumnPropNameInRow="Modified_On" msprop:Generator_ColumnPropNameInTable="Modified_OnColumn" msprop:Generator_UserColumnName="Modified_On" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="Is_Active" msprop:Generator_ColumnVarNameInTable="columnIs_Active" msprop:Generator_ColumnPropNameInRow="Is_Active" msprop:Generator_ColumnPropNameInTable="Is_ActiveColumn" msprop:Generator_UserColumnName="Is_Active" type="xs:boolean" minOccurs="0" />
+              <xs:element name="Company_ID" msprop:Generator_ColumnVarNameInTable="columnCompany_ID" msprop:Generator_ColumnPropNameInRow="Company_ID" msprop:Generator_ColumnPropNameInTable="Company_IDColumn" msprop:Generator_UserColumnName="Company_ID" type="xs:int" />
+              <xs:element name="Location_Code" msprop:Generator_ColumnVarNameInTable="columnLocation_Code" msprop:Generator_ColumnPropNameInRow="Location_Code" msprop:Generator_ColumnPropNameInTable="Location_CodeColumn" msprop:Generator_UserColumnName="Location_Code" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="30" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Time_In_Mins" msprop:Generator_ColumnVarNameInTable="columnTime_In_Mins" msprop:Generator_ColumnPropNameInRow="Time_In_Mins" msprop:Generator_ColumnPropNameInTable="Time_In_MinsColumn" msprop:Generator_UserColumnName="Time_In_Mins" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Schedule_Job" msprop:Generator_ColumnVarNameInTable="columnSchedule_Job" msprop:Generator_ColumnPropNameInRow="Schedule_Job" msprop:Generator_ColumnPropNameInTable="Schedule_JobColumn" msprop:Generator_UserColumnName="Schedule_Job" type="xs:int" />
+              <xs:element name="IsHolidayInclude" msprop:Generator_ColumnVarNameInTable="columnIsHolidayInclude" msprop:Generator_ColumnPropNameInRow="IsHolidayInclude" msprop:Generator_ColumnPropNameInTable="IsHolidayIncludeColumn" msprop:Generator_UserColumnName="IsHolidayInclude" type="xs:boolean" minOccurs="0" />
+              <xs:element name="Time_In_Mins1" msdata:Caption="Time_In_Mins" msprop:Generator_ColumnVarNameInTable="columnTime_In_Mins1" msprop:Generator_ColumnPropNameInRow="Time_In_Mins1" msprop:Generator_ColumnPropNameInTable="Time_In_Mins1Column" msprop:Generator_UserColumnName="Time_In_Mins1" type="xs:int" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:S3G_SYSAD_ScheduledJobs" />
+      <xs:field xpath="mstns:Schedule_Job_ID" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>

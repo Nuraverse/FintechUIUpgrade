@@ -1,0 +1,3 @@
+﻿
+
+<%@ ServiceHost Language="C#" Service="S3GServiceLayer.FileTrack.FileTrackMgtServices" CodeBehind="FileTrackMgtServices.svc.cs" %>

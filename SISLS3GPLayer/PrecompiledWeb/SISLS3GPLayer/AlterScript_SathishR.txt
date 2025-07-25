@@ -1,0 +1,155 @@
+
+-------Pricing Finannce Amount Decimal Amount--CRScripts
+alter table S3G_ORG_Pricing modify  FACILITY_AMOUNT number(18,4);
+alter table S3G_ORG_PricingOfferDet  modify AMOUNT number(18,4);
+ALTER TABLE S3G_ORG_PRICINGASSETDET MODIFY UNIT_VALUE NUMBER(18,4);
+ALTER TABLE S3G_ORG_PricingAssetDet modify FINANCE_AMOUNT number(18,4);
+----------CRM SQL to Oracle 
+
+sp--
+S3G_ORG_INSERT_CRM--Insert Prospect
+
+
+
+---Ensure While Release in Live--
+select * from S3G_LOANAD_LookupTypeDetails where LOOKUPTYPE_CODE=70 --count=9
+
+
+
+
+
+
+
+
+
+
+
+
+
+---------Account Assignment Live Release Start----
+S3G_GET_ASSGNMT_DET
+LA_TL_ASSGNMT
+LA_TL
+S3G_LA_INSUPD_ACC_ASSIGNMT
+LA_GET_MLA_ASSIGNMENT
+LA_INS_ASSAC_CREAT
+SEQ_LA_ACC_ASSIGNMT
+S3G_JV_ASSGNMT
+S3G_LAD_ASSACCAMORTSTRUCTARCH
+S3G_LAD_ASSREPAYSTRUCARCH
+TMP_ACCREPAYMNTDET
+TMP_ACC_CASHFLOW
+S3G_LAD_ACCASSIGNMTGURANTOR
+S3G_LAD_ACCASSIGNMT
+S3G_LAD_ACCASSIGNMT_INDEX1
+S3G_LAD_ACCASSIGNMT_PK
+SEQ_LA_ACC_ASSIGNMT
+---------Account Assignment Live Release End----
+
+
+
+--------Application Finance Amount Decimal Allowing-----
+    alter table  S3G_ORG_APPPROC modify FINANCE_AMOUNT number(18,4);
+    alter table  S3G_ORG_APPPROCASSETDET modify UNIT_VALUE number(18,4);
+    alter table  S3G_ORG_APPPROCASSETDET modify FINANCE_AMOUNT number(18,4);
+    alter table  S3G_ORG_APPPROCASSETDET modify CAPITAL_PORTION number(18,4);
+    alter table  S3G_ORG_APPPROCASSETDET modify NON_CAPITAL_PORTION number(18,4);
+    alter table  S3G_ORG_APPPROCOFFERDET modify AMOUNT number(18,4);
+
+	S3G_OR_GET_PRICGDET
+	S3G_OR_INS_APPDET
+	S3G_COMMON_CREATEFOLLOWUPENT
+    
+
+	----------Account Creation Decimal Change--------
+	LA_GET_APP_PROC_DTL
+	LA_GET_APP_PROC_DTL_AC
+	LA_UPD_AC_CREAT
+	LA_GET_GRP_AC_AST_DTL
+	LA_INS_AC_CREAT
+	alter table S3g_Lad_Acccreation modify FINANCE_AMOUNT number(18,4);
+	alter table S3g_Lad_Accpasadet modify FINANCE_AMOUNT number(18,4);
+	alter table S3G_LAD_ACCPASADET modify FINANCE_AMOUNT number(18,4);
+	alter table S3G_LAD_ACCCREATION modify FINANCE_AMOUNT number(18,4);
+	alter table S3G_LAD_ACCASTDET modify AMOUNT_FINANCED number(18,4);
+	alter table S3G_LAD_ACCASTDET modify CAPITAL_PORTION number(18,4);
+	alter table S3G_LAD_ACCASTDET modify NON_CAPITAL_PORTION number(18,4);
+
+
+
+
+
+	--------Payment Request--------
+
+	LA_GET_PAYMT_REQ_GRD_DTL
+	LA_GET_PAYMT_REQ_GRD_DTL_MOD
+	LA_GET_PAYMT_REQ
+
+
+	---Account Activation--
+	LA_GET_PASA_ID
+	LA_GET_AC_DTL_FOR_CALC
+	LA_GET_EXST_REV
+	LA_GET_AC_SPECI_DTL
+
+
+	-----
+	insert into S3G_ORG_CASHFLOWFLAG values(506,506,'UMFC-LIP Income',1,null,null,null);
+
+
+
+	--------------DMS CheckList----------
+	alter table S_S3G_ORG_CHECKLIST add   PROSPECT_NAME	  varchar2(100);
+alter table S_S3G_ORG_CHECKLIST add   PROSPECT_NAME1	varchar2(100);
+alter table S_S3G_ORG_CHECKLIST add   PROSPECT_NAME2	varchar2(100);
+alter table S_S3G_ORG_CHECKLIST add   PROSPECT_NAME3	varchar2(100);
+alter table S_S3G_ORG_CHECKLIST add   PROSPECT_NAME4	varchar2(100);
+alter table S_S3G_ORG_CHECKLIST add   PROSPECT_NAME5	varchar2(100);
+alter table S_S3G_ORG_CHECKLIST add   PROSPECT_NAME6	varchar2(100);
+alter table S_S3G_ORG_CHECKLIST add   IDENTIFICATION_TYPE	varchar2(100);
+alter table S_S3G_ORG_CHECKLIST add   IDENTIFICATION_NUMBER	varchar2(30);
+alter table S_S3G_ORG_CHECKLIST add   IDENTIFICATION_ISSUE_DATE	date	;
+alter table S_S3G_ORG_CHECKLIST add   IDENTIFICATION_EXPIRY_DATE	date	;
+alter table S_S3G_ORG_CHECKLIST add   CUSTOMER_INDUSTRY	number;
+alter table S_S3G_ORG_CHECKLIST add   PASSPORT_NUMBER	varchar2(30);
+alter table S_S3G_ORG_CHECKLIST add   BCSB_REF	varchar2(50);
+alter table S_S3G_ORG_CHECKLIST add   DATE_OF_BIRTH	date	;
+alter table S_S3G_ORG_CHECKLIST add   POSTAL_CODE	number;
+alter table S_S3G_ORG_CHECKLIST add   POSTBOX_NO	varchar2(30);
+alter table S_S3G_ORG_CHECKLIST add   AREA	varchar2(100);
+alter table S_S3G_ORG_CHECKLIST add   HOUSE_NO	varchar2(100);
+alter table S_S3G_ORG_CHECKLIST add   LAND_MARK	varchar2(100);
+alter table S_S3G_ORG_CHECKLIST add   WAY_NO	varchar2(100);
+alter table S_S3G_ORG_CHECKLIST add   RES_PHONE_NO	varchar2(20);
+alter table S_S3G_ORG_CHECKLIST add   MOB_PHONE_NO	varchar2(20);
+alter table S_S3G_ORG_CHECKLIST add   EMPLOYER_ID	number;
+alter table S_S3G_ORG_CHECKLIST add   DATE_OF_JOIN	date	;
+alter table S_S3G_ORG_CHECKLIST add   DESIGNATION	number;
+alter table S_S3G_ORG_CHECKLIST add   MONTHILY_INCOME	number;
+alter table S_S3G_ORG_CHECKLIST add   OTHER_INCOME_TYPE	varchar2	100;
+alter table S_S3G_ORG_CHECKLIST add   OTHER_INCOME	number	;
+alter table S_S3G_ORG_CHECKLIST add   EXIST_COMMITMENT_TYPE	varchar2	100;
+alter table S_S3G_ORG_CHECKLIST add   EXIST_COMMITMENT	number;
+alter table S_S3G_ORG_CHECKLIST add   EMP_CATEGORY	varchar2	100;
+alter table S_S3G_ORG_CHECKLIST add   GEN_REMARKS	varchar2	4000;
+alter table S_S3G_ORG_CHECKLIST add   CONTRACT_TYPE	number;
+alter table S_S3G_ORG_CHECKLIST add   NATIONALITY	number;
+alter table S_S3G_ORG_CHECKLIST add   PROSPECT_GENDER	number;
+alter table S_S3G_ORG_CHECKLIST add   PROSPECT_MOB_NO	varchar2(20);
+alter table S_S3G_ORG_CHECKLIST add   PROSPECT_BANK	varchar2(255);
+alter table S_S3G_ORG_CHECKLIST add   PROSPECT_BANK_LOCATION	varchar2(255);
+alter table S_S3G_ORG_CHECKLIST add   PROSPECT_BANK_AC_NO	varchar2(25);
+alter table S_S3G_ORG_CHECKLIST add   AMOUNT_REPAID	number;
+alter table S_S3G_ORG_CHECKLIST add   OFFER_VALID_TILL	date	;
+alter table S_S3G_ORG_CHECKLIST add   INTEREST_RATE	number;
+alter table S_S3G_ORG_CHECKLIST add   DEALER_SALES_INCENTIVE 	number;
+alter table S_S3G_ORG_CHECKLIST add   EVALUATION_ASSET_COST	number;
+alter table S_S3G_ORG_CHECKLIST add   PRICING_IRR	number;
+alter table S_S3G_ORG_CHECKLIST add   LIP_AMOUNT	number;
+alter table S_S3G_ORG_CHECKLIST add   TOTAL_INTEREST	number;
+alter table S_S3G_ORG_CHECKLIST add   PROCESSING_FEE	number;
+alter table S_S3G_ORG_CHECKLIST add   TOTAL_RECEIVABLES	number;
+alter table S_S3G_ORG_CHECKLIST add   MARKETING_RISK_RATING	number;
+alter table S_S3G_ORG_CHECKLIST add   RISKTEAM_RISK_RATING	number;
+alter table S_S3G_ORG_CHECKLIST add   SUGGESTED_MITIGANTS	varchar2(2000);
+alter table S_S3G_ORG_CHECKLIST add   MKTG_EXEC_REMARKS	varchar2(2000);

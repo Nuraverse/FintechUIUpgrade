@@ -1,0 +1,666 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:1788/SysAdmin/SystemAdminMgtService.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/FA_BusEntity" />
+  <xs:element name="FunPubInsertCompanyMaster">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q1:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesobjCompanyMasterDataTable" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubInsertCompanyMasterResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubInsertCompanyMasterResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubUpdateCompanyMaster">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q2:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesobjCompanyMasterDataTable" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubUpdateCompanyMasterResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubUpdateCompanyMasterResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubSaveHierachyMaster">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q3:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesobjHierachyMaster_DTB" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubSaveHierachyMasterResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubSaveHierachyMasterResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubInsertLocationCategory">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q4:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesLocationCategory_DTB" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubInsertLocationCategoryResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubInsertLocationCategoryResult" type="xs:int" />
+        <xs:element minOccurs="0" name="strExistingCode" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strExistingDescription" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubUpdateLocationCategory">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q5:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesLocationCategory_DTB" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubUpdateLocationCategoryResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubUpdateLocationCategoryResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubInsertLocationMaster">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q6:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesLocationMaster_DTB" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubInsertLocationMasterResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubInsertLocationMasterResult" type="xs:int" />
+        <xs:element minOccurs="0" name="strExistingMapping" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubUpdateLocationMapping">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q7:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesLocationMaster_DTB" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubUpdateLocationMappingResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubUpdateLocationMappingResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubGetDocTypeList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q8:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesobjDocTypeList_DTB" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubGetDocTypeListResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubGetDocTypeListResult" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubGetDNCDetails_View">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q9:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesobjDNCDetails_DTB" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+        <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="ObjPaging" nillable="true" type="q10:FAPagingValues" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubGetDNCDetails_ViewResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubGetDNCDetails_ViewResult" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="intTotalRecords" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubGetDNCDetails">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q11:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesobjDNCDetails_DTB" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubGetDNCDetailsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubGetDNCDetailsResult" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateDNCDetails">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q12:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesobjDNCMaster_DTB" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateDNCDetailsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubCreateDNCDetailsResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubGetBatchList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q13:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesobjBatchList_DTB" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubGetBatchListResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubGetBatchListResult" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubModifyDNCDetails">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q14="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q14:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesobjDNCMaster_DTB" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubModifyDNCDetailsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubModifyDNCDetailsResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubDeleteDNCDetails">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="intDoc_Number_Seq_ID" type="xs:int" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubDeleteDNCDetailsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubDeleteDNCDetailsResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunRoleCodeMasterInsertInt">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q15="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q15:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjSNXG_RoleCode_MasterDataTable" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunRoleCodeMasterInsertIntResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunRoleCodeMasterInsertIntResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubModifyRoleCodeMaster">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q16="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q16:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjSNXG_RoleCode_MasterDataTable" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubModifyRoleCodeMasterResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubModifyRoleCodeMasterResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateCurrencyInt">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q17="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q17:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjS3G_SYSAD_CurrencyMasterDataTable" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateCurrencyIntResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubCreateCurrencyIntResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubModifyCurrencyInt">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q18="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q18:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjS3G_SYSAD_CurrencyMasterDataTable" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubModifyCurrencyIntResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubModifyCurrencyIntResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubGetDimensionDetails">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q19="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q19:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjFA_SYS_DimensionMasterDataTable" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+        <xs:element xmlns:q20="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="ObjPaging" nillable="true" type="q20:FAPagingValues" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubGetDimensionDetailsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubGetDimensionDetailsResult" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="intTotalRecords" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubInsertUpdateDimensionMaster">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q21="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q21:FASerializationMode" />
+        <xs:element minOccurs="0" name="byteObjFA_DimensionMaster" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strMode" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubInsertUpdateDimensionMasterResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubInsertUpdateDimensionMasterResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubInsertExchangeMaster">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q22="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q22:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesobjExchangeMaster_DTB" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubInsertExchangeMasterResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubInsertExchangeMasterResult" type="xs:int" />
+        <xs:element minOccurs="0" name="intExchangeRate_ID" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubInsertUpdateGPS">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q23="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q23:FASerializationMode" />
+        <xs:element minOccurs="0" name="byteObjFA_GPS" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strMode" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubInsertUpdateGPSResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubInsertUpdateGPSResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateUserInt">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q24="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q24:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjUserManagementDataTable_SERLAY" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateUserIntResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubCreateUserIntResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubQueryUser">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q25="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q25:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjUserManagementDataTable_SERLAY" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubQueryUserResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubQueryUserResult" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubQueryUserPaging">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q26="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q26:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjUserManagementDataTable_SERLAY" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+        <xs:element xmlns:q27="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="ObjPaging" nillable="true" type="q27:FAPagingValues" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubQueryUserPagingResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubQueryUserPagingResult" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="intTotalRecords" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubQueryUserMaster">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q28="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q28:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjUserMasterDataTable_SERLAY" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubQueryUserMasterResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubQueryUserMasterResult" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubQueryBranchRoleDetails">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q29="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q29:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjUserManagementDataTable_SERLAY" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strMode" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubQueryBranchRoleDetailsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubQueryBranchRoleDetailsResult" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunInsertMonthLock">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q30="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q30:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjSNXG_MonthLockDataTable" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strMode" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunInsertMonthLockResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunInsertMonthLockResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunInsertYearLock">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q31="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q31:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjSNXG_YearLockDataTable" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strMode" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunInsertYearLockResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunInsertYearLockResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubInsertDNC_YearOpen">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q32="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q32:FASerializationMode" />
+        <xs:element minOccurs="0" name="byteObjFA_YearOpen" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strMode" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubInsertDNC_YearOpenResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubInsertDNC_YearOpenResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubInsertGL_Sum">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q33="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q33:FASerializationMode" />
+        <xs:element minOccurs="0" name="byteObjFA_YearOpen" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strMode" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubInsertGL_SumResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubInsertGL_SumResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubMoveTableRecord">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="strSchemaName" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubMoveTableRecordResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubMoveTableRecordResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubInsertHolidayMaster">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q34="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q34:FASerializationMode" />
+        <xs:element minOccurs="0" name="byteObjFA_Master" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strMode" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubInsertHolidayMasterResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubInsertHolidayMasterResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubInsertTemplateMaster">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q35="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q35:FASerializationMode" />
+        <xs:element minOccurs="0" name="byteObjFA_Master" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubInsertTemplateMasterResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubInsertTemplateMasterResult" type="xs:int" />
+        <xs:element minOccurs="0" name="intTemplate_ID" type="xs:int" />
+        <xs:element minOccurs="0" name="strDocNo" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateStampDuty">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q36="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q36:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesobjStampDutyMst_List" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateStampDutyResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubCreateStampDutyResult" type="xs:int" />
+        <xs:element minOccurs="0" name="int_stamp_id" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateTDSRate">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q37="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q37:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesobjTDSRateMst_List" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateTDSRateResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubCreateTDSRateResult" type="xs:int" />
+        <xs:element minOccurs="0" name="int_tds_id" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubInsertUpdateOpeningbalance">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q38="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q38:FASerializationMode" />
+        <xs:element minOccurs="0" name="byteObjFA_opening" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strMode" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubInsertUpdateOpeningbalanceResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubInsertUpdateOpeningbalanceResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateAuditTrial">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q39="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q39:FASerializationMode" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="bytesObjAuditTrialDatatable_SERLAY" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateAuditTrialResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubCreateAuditTrialResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubUpdateItemProfSetUp">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q40="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q40:FASerializationMode" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="bytesObjManualLookupDataTable_SERLAY" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubUpdateItemProfSetUpResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubUpdateItemProfSetUpResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunInsertDayOpenClose">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q41="http://schemas.datacontract.org/2004/07/FA_BusEntity" minOccurs="0" name="SerMode" type="q41:FASerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjFA_DAY_OPEN_CLOSEDataTable" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strMode" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunInsertDayOpenCloseResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunInsertDayOpenCloseResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,73 @@
+--Added by Gomathi on 21-Nov-19 for Budget Changes
+--in COA
+FA_SYS_LOCA_MST_TRG
+FA_SYS_LOCA_CAT_TRG
+FA_INSERT_ACCOUNT_DETAILS
+FA_GET_ACCOUNTCARD_DETAIL
+S3G_SA_GET_USRMNUITEMS
+
+--Added by Gomathi on 21-Nov-19 for Budget Changes
+
+--Added by Deepika on 21-Nov-19 for Budget Changes in Budget Line Item Master and sub line item master
+
+BUD_INS_LINEITEM
+BUD_GET_ITEMDETAILS
+BUD_GET_LINEITEM_VIEW
+BUD_GET_LINEITEMDETAILS
+
+BUD_GET_SUBLINEITEM_VIEW
+BUD_GET_SUBLINEITEMDETAILS
+BUD_GET_SUBLINEITEMS
+BUD_INS_SUBLINEITEM
+
+--Added by Deepika on 21-Nov-19 for Budget Changes in Budget Line Item Master
+
+
+--Added by Boobalan on 26-Nov-19 for Budget Changes
+--in Budget Planning Master
+
+BUD_GET_BUDGETPALNNING_LOAD
+BUD_GET_GLACCOUNTS_LIST
+BUD_GET_GL_LOCATIONS
+FA_INS_UP_BUDGET_MST
+BUD_GET_BUDGETPALNNING_MST
+BUD_GET_COPY_PROFILE_LIST
+
+
+--Added by Boobalan on 09-Dec-19 for Budget Changes
+--in Budget File Upload 
+BUD_INS_FILEUPLOADDTLS
+BUD_GET_FILEUPLOAD_FORMAT
+BUD_GET_FILEUPLOAD_LOAD
+FA_GET_BUD_FILEUPLOADDETAILS
+FA_BUD_VLD_FILEUPLOAD
+BUD_FileUpload_SAVE
+BUD_FileUpload_DELETE
+FA_BUD_FILEIMPORTSCHEDULE
+FA_GET_BUDGET_FILEUPLOAD_VIEW
+
+
+--Added by Deepika on 23-Dec-19 for Budget Changes in Budget formula Master
+
+BUD_GET_FORMULAMASTER_VIEW
+BUD_GET_FORMULAMASTERDETAILS
+BUD_INS_FORMULAMASTER
+BUD_GET_ITEMDETAILS
+--Added by Deepika on 23-Dec-19 for Budget Changes in Budget formula Master
+
+--Added by Deepika on 23-Dec-19 for Budget Changes in FA related pages and sps
+
+FA_INS_MJV
+FA_INSERT_PAYMENTREQUEST
+FA_INSERTUPDATE_RECEIPT
+FA_INS_UPD_ASSET_TRAN
+FA_INS_PRIORJV
+FA_INS_EXP_TRANS
+FA_INS_DEBITNOTE
+FA_LAD_TRAN_COMMON_INS_APPR
+FA_VALIDATE_BUDGET
+FA_CHK_BUDGET_VALIDATION
+
+
+--Added by Deepika on 23-Dec-19 for Budget Changes in FA related pages and sps
+

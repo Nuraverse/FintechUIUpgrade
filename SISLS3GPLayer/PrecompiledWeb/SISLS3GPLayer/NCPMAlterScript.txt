@@ -1,0 +1,82 @@
+﻿  
+    CREATE TABLE   S3G_CLN_CHEQRETCHARGE   
+   (	  CHARGE_ID   NUMBER, 
+	  COMPANY_ID   NUMBER, 
+	  FROM_AMT   NUMBER(24,4), 
+	  TO_AMT   NUMBER(24,4), 
+	  CHARGE_AMT   NUMBER(12,4)
+   ) ;
+--------------------------------------------------------
+--  DDL for Index S3G_CLN_CHEQRETCHARGE_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX   S3G_CLN_CHEQRETCHARGE_PK   ON   S3G_CLN_CHEQRETCHARGE   (  CHARGE_ID  ) 
+  ;
+--------------------------------------------------------
+--  Constraints for Table S3G_CLN_CHEQRETCHARGE
+--------------------------------------------------------
+
+  ALTER TABLE   S3G_CLN_CHEQRETCHARGE   ADD CONSTRAINT   S3G_CLN_CHEQRETCHARGE_PK   PRIMARY KEY (  CHARGE_ID  ) ENABLE;
+ 
+  ALTER TABLE   S3G_CLN_CHEQRETCHARGE   MODIFY (  CHARGE_ID   NOT NULL ENABLE);
+ 
+  ALTER TABLE   S3G_CLN_CHEQRETCHARGE   MODIFY (  COMPANY_ID   NOT NULL ENABLE);
+ 
+  ALTER TABLE   S3G_CLN_CHEQRETCHARGE   MODIFY (  FROM_AMT   NOT NULL ENABLE);
+ 
+  ALTER TABLE   S3G_CLN_CHEQRETCHARGE   MODIFY (  TO_AMT   NOT NULL ENABLE);
+ 
+  ALTER TABLE   S3G_CLN_CHEQRETCHARGE   MODIFY (  CHARGE_AMT   NOT NULL ENABLE);
+--------------------------------------------------------
+--  Ref Constraints for Table S3G_CLN_CHEQRETCHARGE
+--------------------------------------------------------
+
+  ALTER TABLE   S3G_CLN_CHEQRETCHARGE   ADD CONSTRAINT   FK_CHERETCHARGE_COMPANYMASTER   FOREIGN KEY (  COMPANY_ID  )
+	  REFERENCES   S3G_SYSAD_COMPANYMASTER   (  COMPANY_ID  ) ENABLE;
+
+  CREATE TABLE   S3G_CLN_CHEQRETCHARGE   
+   (	  CHARGE_ID   NUMBER, 
+	  COMPANY_ID   NUMBER, 
+	  FROM_AMT   NUMBER(24,4), 
+	  TO_AMT   NUMBER(24,4), 
+	  CHARGE_AMT   NUMBER(12,4)
+   ) ;
+--------------------------------------------------------
+--  DDL for Index S3G_CLN_CHEQRETCHARGE_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX   S3G_CLN_CHEQRETCHARGE_PK   ON   S3G_CLN_CHEQRETCHARGE   (  CHARGE_ID  ) 
+  ;
+--------------------------------------------------------
+--  Constraints for Table S3G_CLN_CHEQRETCHARGE
+--------------------------------------------------------
+
+  ALTER TABLE   S3G_CLN_CHEQRETCHARGE   ADD CONSTRAINT   S3G_CLN_CHEQRETCHARGE_PK   PRIMARY KEY (  CHARGE_ID  ) ENABLE;
+ 
+  ALTER TABLE   S3G_CLN_CHEQRETCHARGE   MODIFY (  CHARGE_ID   NOT NULL ENABLE);
+ 
+  ALTER TABLE   S3G_CLN_CHEQRETCHARGE   MODIFY (  COMPANY_ID   NOT NULL ENABLE);
+ 
+  ALTER TABLE   S3G_CLN_CHEQRETCHARGE   MODIFY (  FROM_AMT   NOT NULL ENABLE);
+ 
+  ALTER TABLE   S3G_CLN_CHEQRETCHARGE   MODIFY (  TO_AMT   NOT NULL ENABLE);
+ 
+  ALTER TABLE   S3G_CLN_CHEQRETCHARGE   MODIFY (  CHARGE_AMT   NOT NULL ENABLE);
+--------------------------------------------------------
+--  Ref Constraints for Table S3G_CLN_CHEQRETCHARGE
+--------------------------------------------------------
+
+  ALTER TABLE   S3G_CLN_CHEQRETCHARGE   ADD CONSTRAINT   FK_CHERETCHARGE_COMPANYMASTER   FOREIGN KEY (  COMPANY_ID  )
+	  REFERENCES   S3G_SYSAD_COMPANYMASTER   (  COMPANY_ID  ) ENABLE;
+
+
+
+------------
+
+---------Data For Cheq Return Start-----------------
+
+Insert into S3G_CLN_CHEQRETCHARGE (CHARGE_ID,COMPANY_ID,FROM_AMT,TO_AMT,CHARGE_AMT) values (2,1,1001,10000,100.52);
+Insert into S3G_CLN_CHEQRETCHARGE (CHARGE_ID,COMPANY_ID,FROM_AMT,TO_AMT,CHARGE_AMT) values (3,1,10001,100000,150.56);
+Insert into S3G_CLN_CHEQRETCHARGE (CHARGE_ID,COMPANY_ID,FROM_AMT,TO_AMT,CHARGE_AMT) values (4,1,100001,1000000,200);
+
+---------Data For Cheq Return End-----------------

@@ -1,0 +1,2704 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="btnDelete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="btnSave" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="btnSubmit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="btnUpdate" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Record(s) Successfully Deleted</value>
+  </data>
+  <data name="EnquiryRejectMail" xml:space="preserve">
+    <value>Enquiry rejection mail</value>
+  </data>
+  <data name="EnquiryRejectMailBody" xml:space="preserve">
+    <value>This is enquiry rejection mail notification for the response no</value>
+  </data>
+  <data name="EnquiryResMail" xml:space="preserve">
+    <value>Enquiry response mail</value>
+  </data>
+  <data name="EnquiryResMailBody" xml:space="preserve">
+    <value>This is enquiry response mail notification for the response no</value>
+  </data>
+  <data name="lblAccountingIrr" xml:space="preserve">
+    <value>Accounting IRR</value>
+  </data>
+  <data name="lblAddress1" xml:space="preserve">
+    <value>Address1</value>
+  </data>
+  <data name="lblAddress2" xml:space="preserve">
+    <value>Address2</value>
+  </data>
+  <data name="lblAssetValue" xml:space="preserve">
+    <value>Asset Value</value>
+  </data>
+  <data name="lblBranch" xml:space="preserve">
+    <value>Location</value>
+  </data>
+  <data name="lblBusDoc" xml:space="preserve">
+    <value>Business Offer with Document</value>
+  </data>
+  <data name="lblBusDocRepayment" xml:space="preserve">
+    <value>Business Offer with documents and Repayment  schedule</value>
+  </data>
+  <data name="lblBusinessIrr" xml:space="preserve">
+    <value>Business IRR</value>
+  </data>
+  <data name="lblBusRepayment" xml:space="preserve">
+    <value>Business Offer with repayment schedule</value>
+  </data>
+  <data name="btnCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="lblCity" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="lblCmpnyName" xml:space="preserve">
+    <value>Company Name</value>
+  </data>
+  <data name="lblcompanyIRR" xml:space="preserve">
+    <value>Company IRR</value>
+  </data>
+  <data name="lblcountry" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="lblCustomerCode" xml:space="preserve">
+    <value>Customer Code</value>
+  </data>
+  <data name="lblCustomerName" xml:space="preserve">
+    <value>Customer Name</value>
+  </data>
+  <data name="lblDate" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="lblEmail" xml:space="preserve">
+    <value>EMail ID</value>
+  </data>
+  <data name="lblEnqDate" xml:space="preserve">
+    <value>Enquiry Date</value>
+  </data>
+  <data name="lblEnqRefNo" xml:space="preserve">
+    <value>Enquiry Ref No</value>
+  </data>
+  <data name="lblEnqRespno" xml:space="preserve">
+    <value>Enquiry Response No</value>
+  </data>
+  <data name="lblFacilitytype" xml:space="preserve">
+    <value>Facility Type</value>
+  </data>
+  <data name="lblFaciltyamount" xml:space="preserve">
+    <value>Facility Amount</value>
+  </data>
+  <data name="lblFinanceAmount" xml:space="preserve">
+    <value>Finance Amount</value>
+  </data>
+  <data name="lblFinanceAmountsought" xml:space="preserve">
+    <value>Finance Amount Sought</value>
+  </data>
+  <data name="lblInterest" xml:space="preserve">
+    <value>Interest%</value>
+  </data>
+  <data name="lblInterestType" xml:space="preserve">
+    <value>Interest Type</value>
+  </data>
+  <data name="lblLOB" xml:space="preserve">
+    <value>Line of Business</value>
+  </data>
+  <data name="lblMarginmoney" xml:space="preserve">
+    <value>Margin Money</value>
+  </data>
+  <data name="lblMobile" xml:space="preserve">
+    <value>Mobile </value>
+  </data>
+  <data name="lblPricingNo" xml:space="preserve">
+    <value>Pricing Number</value>
+  </data>
+  <data name="lblPricingNumber" xml:space="preserve">
+    <value>Pricing Number</value>
+  </data>
+  <data name="btnRefresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="lblRemarks" xml:space="preserve">
+    <value>Remarks</value>
+  </data>
+  <data name="lblRespdate" xml:space="preserve">
+    <value>Responded Date</value>
+  </data>
+  <data name="lblRespondedBy" xml:space="preserve">
+    <value>Responded By</value>
+  </data>
+  <data name="lblResptab" xml:space="preserve">
+    <value>Response Tab</value>
+  </data>
+  <data name="lblSalesPersonCode" xml:space="preserve">
+    <value>Sales Person Code</value>
+  </data>
+  <data name="btnShowRepaymentShedule" xml:space="preserve">
+    <value>Show Repayment Schedule</value>
+  </data>
+  <data name="lblState" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="lblTenure" xml:space="preserve">
+    <value>Tenure</value>
+  </data>
+  <data name="lblTenureType" xml:space="preserve">
+    <value>Tenure Type</value>
+  </data>
+  <data name="SaveSuccess" xml:space="preserve">
+    <value>Record(s) Successfully Added </value>
+  </data>
+  <data name="UpdateSuccess" xml:space="preserve">
+    <value>Record(s) Successfully Updated</value>
+  </data>
+  <data name="SaveMail" xml:space="preserve">
+    <value>Record(s) added and mail sent successfully</value>
+  </data>
+  <data name="lblCalendar" xml:space="preserve">
+    <value>மொத்தம்</value>
+  </data>
+  <data name="lblApplicationNo" xml:space="preserve">
+    <value>Application No</value>
+  </data>
+  <data name="DeleteSuccess" xml:space="preserve">
+    <value>Record(s) Successfully Deleted</value>
+  </data>
+  <data name="chkprint" xml:space="preserve">
+    <value>Print</value>
+  </data>
+  <data name="lblApplyTheme" xml:space="preserve">
+    <value>Apply Theme :</value>
+  </data>
+  <data name="lblCompany" xml:space="preserve">
+    <value>Sundaram Finance</value>
+  </data>
+  <data name="lblCompanyName" xml:space="preserve">
+    <value>Company Name :</value>
+  </data>
+  <data name="lblCopyRights" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblLastLogin" xml:space="preserve">
+    <value>Last Log In :</value>
+  </data>
+  <data name="lblWelcome" xml:space="preserve">
+    <value>Welcome :</value>
+  </data>
+  <data name="lnkAbout" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="lnkAboutUs" xml:space="preserve">
+    <value>About Us</value>
+  </data>
+  <data name="lnkContact" xml:space="preserve">
+    <value>Contact</value>
+  </data>
+  <data name="lnkDisclaimer" xml:space="preserve">
+    <value>Disclaimer</value>
+  </data>
+  <data name="lnkHelp" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="lnkHome" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="lnkMore" xml:space="preserve">
+    <value>More..</value>
+  </data>
+  <data name="lnkPrivacy" xml:space="preserve">
+    <value>Privacy Status</value>
+  </data>
+  <data name="lnkSettings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="lnkSignOut" xml:space="preserve">
+    <value>Log Out</value>
+  </data>
+  <data name="lnkSiteMap" xml:space="preserve">
+    <value>Site Map</value>
+  </data>
+  <data name="lnkTerms" xml:space="preserve">
+    <value>Terms</value>
+  </data>
+  <data name="ORG_EnqAssignbtnCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ORG_EnqAssignbtnSave" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="ORG_EnqAssignbtnSchedule" xml:space="preserve">
+    <value>Show Repayment Schedule</value>
+  </data>
+  <data name="ORG_EnqAssignlblAddress" xml:space="preserve">
+    <value>Address1</value>
+  </data>
+  <data name="ORG_EnqAssignlblAddress2" xml:space="preserve">
+    <value>Address2</value>
+  </data>
+  <data name="ORG_EnqAssignlblAssetDetails" xml:space="preserve">
+    <value>Asset Details</value>
+  </data>
+  <data name="ORG_EnqAssignlblBranch" xml:space="preserve">
+    <value>Location</value>
+  </data>
+  <data name="ORG_EnqAssignlblCity" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="ORG_EnqAssignlblConstitution" xml:space="preserve">
+    <value>Constitution</value>
+  </data>
+  <data name="ORG_EnqAssignlblCountry" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="ORG_EnqAssignlblCurrencyCode" xml:space="preserve">
+    <value>Currency Code</value>
+  </data>
+  <data name="ORG_EnqAssignlblCustomerReference" xml:space="preserve">
+    <value>Customer</value>
+  </data>
+  <data name="ORG_EnqAssignlblEmail" xml:space="preserve">
+    <value>EMail Id</value>
+  </data>
+  <data name="ORG_EnqAssignlblEnqDate" xml:space="preserve">
+    <value>Enquiry Date</value>
+  </data>
+  <data name="ORG_EnqAssignlblEnqRefNo" xml:space="preserve">
+    <value>Enquiry Ref. No.</value>
+  </data>
+  <data name="ORG_EnqAssignlblFacilityAmount" xml:space="preserve">
+    <value>Facility Amount</value>
+  </data>
+  <data name="ORG_EnqAssignlblFacilityType" xml:space="preserve">
+    <value>Facility Type</value>
+  </data>
+  <data name="ORG_EnqAssignlblHeadingEnqAssign" xml:space="preserve">
+    <value>Assignment Details</value>
+  </data>
+  <data name="ORG_EnqAssignlblInterestPercentage" xml:space="preserve">
+    <value>Interest %</value>
+  </data>
+  <data name="ORG_EnqAssignlblInterestType" xml:space="preserve">
+    <value>Interest Type</value>
+  </data>
+  <data name="ORG_EnqAssignlblLOB" xml:space="preserve">
+    <value>Line of Business</value>
+  </data>
+  <data name="ORG_EnqAssignlblMargineAmount" xml:space="preserve">
+    <value>Margin Amount</value>
+  </data>
+  <data name="ORG_EnqAssignlblMobile" xml:space="preserve">
+    <value>Mobile</value>
+  </data>
+  <data name="ORG_EnqAssignlblName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ORG_EnqAssignlblNewCustomer" xml:space="preserve">
+    <value>New Customer</value>
+  </data>
+  <data name="ORG_EnqAssignlblPincode" xml:space="preserve">
+    <value>Pincode/Zipcode</value>
+  </data>
+  <data name="ORG_EnqAssignlblProductCode" xml:space="preserve">
+    <value>Product</value>
+  </data>
+  <data name="ORG_EnqAssignlblRemarks" xml:space="preserve">
+    <value>Remarks</value>
+  </data>
+  <data name="ORG_EnqAssignlblResidualValue" xml:space="preserve">
+    <value>Residual Value</value>
+  </data>
+  <data name="ORG_EnqAssignlblState" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="ORG_EnqAssignlblTenure" xml:space="preserve">
+    <value>Tenure</value>
+  </data>
+  <data name="ORG_EnqAssignlblTenureType" xml:space="preserve">
+    <value>Tenure Type</value>
+  </data>
+  <data name="ORG_EnqAssignlblTransactionDate" xml:space="preserve">
+    <value>Transaction Date</value>
+  </data>
+  <data name="ORG_EnqAssignlblUserName" xml:space="preserve">
+    <value>User Name</value>
+  </data>
+  <data name="ORG_EnqAssignlblworkflowSeq" xml:space="preserve">
+    <value>WorkFlow Sequence</value>
+  </data>
+  <data name="ORG_EnqAssignrfvddlBranch" xml:space="preserve">
+    <value>Select a Location</value>
+  </data>
+  <data name="ORG_EnqAssignrfvddlLOB" xml:space="preserve">
+    <value>Select a Line of Business</value>
+  </data>
+  <data name="ORG_EnqAssignrfvddlProductCode" xml:space="preserve">
+    <value>Select a Product</value>
+  </data>
+  <data name="ORG_EnqAssignrfvddlWorkflowSeq" xml:space="preserve">
+    <value>Select a Workflow Sequence to start Program</value>
+  </data>
+  <data name="NoRecordFound" xml:space="preserve">
+    <value>No Record Found</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_Enq_EndDate" xml:space="preserve">
+    <value>End Date should not be greater than System Date</value>
+  </data>
+  <data name="ORG_Enq_StartDate" xml:space="preserve">
+    <value>Start Date should not be greater than System Date</value>
+  </data>
+  <data name="ORG_CUST_lblAccountNo" xml:space="preserve">
+    <value>Account No</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblAccountNumber" xml:space="preserve">
+    <value>Account Number</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblAccountType" xml:space="preserve">
+    <value>Account Type</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblAddressCOm" xml:space="preserve">
+    <value>Communication Address</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblAddressPer" xml:space="preserve">
+    <value>Permanent Address</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblAge" xml:space="preserve">
+    <value>Age</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblBankAddress" xml:space="preserve">
+    <value>Bank Address</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblBankBranch" xml:space="preserve">
+    <value>Bank Branch</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblBankName" xml:space="preserve">
+    <value>Bank Name</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblbookvalue" xml:space="preserve">
+    <value>Book Value of Shares</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblBranchList" xml:space="preserve">
+    <value>Own Branch</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblBusinessProfile" xml:space="preserve">
+    <value>Business Profile</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblByLogin" xml:space="preserve">
+    <value>By Login</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblCEO" xml:space="preserve">
+    <value>CEO/MD Name</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblCEOAge" xml:space="preserve">
+    <value>Age of CEO/MD</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblCEOexperience" xml:space="preserve">
+    <value>Experience in Years</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblCEOWeddingDate" xml:space="preserve">
+    <value>Wedding Anniversary Date</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblChildren" xml:space="preserve">
+    <value>Children</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblComAddress1" xml:space="preserve">
+    <value>Address1</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblComAddress2" xml:space="preserve">
+    <value>Address2</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblComcity" xml:space="preserve">
+    <value>City</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblComCountry" xml:space="preserve">
+    <value>Country</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblComEmail" xml:space="preserve">
+    <value>EMail Id</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblComMobile" xml:space="preserve">
+    <value>Mobile</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblCompincode" xml:space="preserve">
+    <value>Pincode/Zipcode</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblComState" xml:space="preserve">
+    <value>State</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblComTelephone" xml:space="preserve">
+    <value>Telephone</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblComWebSite" xml:space="preserve">
+    <value>Web Site</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblConstitutionName" xml:space="preserve">
+    <value>Constitution Name</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblCurrentMarketValue" xml:space="preserve">
+    <value>Current Market Value</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblCustomercode" xml:space="preserve">
+    <value>Customer Code</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblCustomerName" xml:space="preserve">
+    <value>Customer Name</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblCustomerPostingGroup" xml:space="preserve">
+    <value>Posting Group Code</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblCustomerType" xml:space="preserve">
+    <value>Customer Type</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblDate" xml:space="preserve">
+    <value>Date</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblDirectors" xml:space="preserve">
+    <value>No.of Directors / Partners</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblDOB" xml:space="preserve">
+    <value>Date of Birth</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblfacevalue" xml:space="preserve">
+    <value>Face Value of Shares</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblFacilityType" xml:space="preserve">
+    <value>Facility Type</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblGender" xml:space="preserve">
+    <value>Gender</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblGeographical" xml:space="preserve">
+    <value>Geographical Coverage</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblGovernment" xml:space="preserve">
+    <value>Govt./ Institutional Participation</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblgroupcode" xml:space="preserve">
+    <value>Group Code</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblGroupName" xml:space="preserve">
+    <value>Group Name</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblHouseType" xml:space="preserve">
+    <value>House/Flat</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblIndustryCode" xml:space="preserve">
+    <value>Industry Code</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblIndustryName" xml:space="preserve">
+    <value>Industry Name</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblInvididual" xml:space="preserve">
+    <value>For Invididual</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblJVPartnerName" xml:space="preserve">
+    <value>JV Partner Name</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblJVPartnerStake" xml:space="preserve">
+    <value>JV Partner Stake</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblLOB" xml:space="preserve">
+    <value>Line of Business</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblLOBName" xml:space="preserve">
+    <value>Line of Business</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblMaritalStatus" xml:space="preserve">
+    <value>Marital Status</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblMICRCode" xml:space="preserve">
+    <value>MICR Code</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblnobranch" xml:space="preserve">
+    <value>No.of Branch</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblNonInvididual" xml:space="preserve">
+    <value>For Non Invididual</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblOwn" xml:space="preserve">
+    <value>Own</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblPaidCapital" xml:space="preserve">
+    <value>Paid Up capital</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblPerAddress1" xml:space="preserve">
+    <value>Address1</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblPerAddress2" xml:space="preserve">
+    <value>Address2</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblPerCity" xml:space="preserve">
+    <value>City</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblPerCountry" xml:space="preserve">
+    <value>Country</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblPerEmail" xml:space="preserve">
+    <value>EMail Id</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblPerMobile" xml:space="preserve">
+    <value>Mobile</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblPerpincode" xml:space="preserve">
+    <value>Pincode/Zipcode</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblPerState" xml:space="preserve">
+    <value>State</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblPerTelephone" xml:space="preserve">
+    <value>Telephone</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblPerWebSite" xml:space="preserve">
+    <value>Web Site</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblProductGroup" xml:space="preserve">
+    <value>Product Group</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblProfession" xml:space="preserve">
+    <value>Profession</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblPublic" xml:space="preserve">
+    <value>Public/Closely held</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblQualification" xml:space="preserve">
+    <value>Qualification</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblReason" xml:space="preserve">
+    <value>Reason</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblReleaseDate" xml:space="preserve">
+    <value>Release Date</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblReleasedBy" xml:space="preserve">
+    <value>Released By</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblRemainingLoanValue" xml:space="preserve">
+    <value>Remaining Loan Value</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblResidentialAddress" xml:space="preserve">
+    <value>Residential Address</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblSanctionamt" xml:space="preserve">
+    <value>Sanctioned Amount</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblSpouseName" xml:space="preserve">
+    <value>Spouse Name</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblStake" xml:space="preserve">
+    <value>% of Stake</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblStockExchange" xml:space="preserve">
+    <value>Listed at Stock Exchange</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblTitle" xml:space="preserve">
+    <value>Title</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblTotalDependents" xml:space="preserve">
+    <value>Total Dependents</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblTotNetWorth" xml:space="preserve">
+    <value>Total Net Worth</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblType" xml:space="preserve">
+    <value>Type</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblUtilizedAmt" xml:space="preserve">
+    <value>Utilized Amount</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblValid" xml:space="preserve">
+    <value>Valid upto</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblWeddingdate" xml:space="preserve">
+    <value>Wedding Anniversary Date</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_revComWebsite" xml:space="preserve">
+    <value> Enter the valid Web Site  in Communication Address (like www.s3g.com)</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_revEmailId" xml:space="preserve">
+    <value> Enter the valid EMail Id in Communication Address</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_revPerEmail" xml:space="preserve">
+    <value>Enter the valid EMail Id in Permanent Address</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_revPerWebSite" xml:space="preserve">
+    <value>Enter the valid Web Site in Permanent Address (like www.s3g.com)</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvAccountNumber" xml:space="preserve">
+    <value> Enter the Account Number</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvAccountType" xml:space="preserve">
+    <value>Select a Account Type</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvBankAddress" xml:space="preserve">
+    <value> Enter the Bank Address</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvBankBranch" xml:space="preserve">
+    <value>Enter the Bank Branch</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvBankName" xml:space="preserve">
+    <value> Enter the Bank Name</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvBranchList" xml:space="preserve">
+    <value> Select a Own Branch</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvBusinessProfile" xml:space="preserve">
+    <value>Enter the Business Profile</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvCEOAge" xml:space="preserve">
+    <value>Enter the Age of CEO</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvCEOexperience" xml:space="preserve">
+    <value>Enter the Experience (In Years)</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvCEOName" xml:space="preserve">
+    <value>Enter the CEO Name</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvComAddress1" xml:space="preserve">
+    <value>Enter the Address1 in Communication Address</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvComCity" xml:space="preserve">
+    <value>Enter the City in Communication Address</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvComCountry" xml:space="preserve">
+    <value>Enter the Country  in Communication Address</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvComEmail" xml:space="preserve">
+    <value>Enter the EMail Id in Communication Address</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvComPincode" xml:space="preserve">
+    <value>Enter the Pincode  in Communication Address</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvComState" xml:space="preserve">
+    <value>Enter the State  in Communication Address</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvComTelephone" xml:space="preserve">
+    <value>Enter the Telephone Number  in Communication Address</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvComWebsite" xml:space="preserve">
+    <value>Enter the Web site  in Communication Address (like http://www.s3g.com)</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvConstitutionName" xml:space="preserve">
+    <value>Select a Constitution Name </value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvCustomerType" xml:space="preserve">
+    <value>Select a Customer Type</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvDirectors" xml:space="preserve">
+    <value>Enter the No.of Directors/Partners</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvDOB" xml:space="preserve">
+    <value>Enter the Date of Birth</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvGender" xml:space="preserve">
+    <value>Select a Gender</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvGeographical" xml:space="preserve">
+    <value>Enter the Geographical Coverage</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvHouseType" xml:space="preserve">
+    <value>Select a House Type</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvMICRCode" xml:space="preserve">
+    <value>Enter the MICR Code</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvnobranch" xml:space="preserve">
+    <value>Enter the No.of Branches</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvOwn" xml:space="preserve">
+    <value>Select a Own</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvPerCity" xml:space="preserve">
+    <value>Enter the City in Permanent Address</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvPerCountry" xml:space="preserve">
+    <value>Enter the Country in Permanent Address</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvPerEmail" xml:space="preserve">
+    <value>Enter the Email Id in Permanent Address</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvPerState" xml:space="preserve">
+    <value>Enter the State in Permanent Address</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvPerTelephone" xml:space="preserve">
+    <value>Enter the Telephone Number in Permanent Address</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvPerWebSite" xml:space="preserve">
+    <value>Enter the Web site in Permanent Address (like http://www.s3g.com)</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvPublic" xml:space="preserve">
+    <value>Select a Public/Closely held</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvQualification" xml:space="preserve">
+    <value>Enter the Qualification</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvResidentialAddress" xml:space="preserve">
+    <value>Enter the Residential Address</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvTitle" xml:space="preserve">
+    <value>Select a Title</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvtxtPerAddress1" xml:space="preserve">
+    <value>Enter the Address1 in Permanent Address</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvtxtProfession" xml:space="preserve">
+    <value> Enter the Profession</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rvfPerPincode" xml:space="preserve">
+    <value> Enter the Pincode in Permanent Address</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="SanctionNoQry_btnShowDetails1" xml:space="preserve">
+    <value>Go</value>
+  </data>
+  <data name="SanctionNoQry_lblActualScore" xml:space="preserve">
+    <value>Actual Score</value>
+  </data>
+  <data name="SanctionNoQry_lblApprovalFor" xml:space="preserve">
+    <value>Approval For</value>
+  </data>
+  <data name="SanctionNoQry_lblCreditScore" xml:space="preserve">
+    <value>Credit Score</value>
+  </data>
+  <data name="SanctionNoQry_lblCustomerCode" xml:space="preserve">
+    <value>Customer Code</value>
+  </data>
+  <data name="SanctionNoQry_lblCustomerName" xml:space="preserve">
+    <value>Customer Name</value>
+  </data>
+  <data name="SanctionNoQry_lblEmployeeName" xml:space="preserve">
+    <value>Employee Name</value>
+  </data>
+  <data name="SanctionNoQry_lblEndDate" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="SanctionNoQry_lblFinalSanctionedLimit" xml:space="preserve">
+    <value>Final Sanctioned Limit</value>
+  </data>
+  <data name="SanctionNoQry_lblHeading" xml:space="preserve">
+    <value>Sanction Number Query</value>
+  </data>
+  <data name="SanctionNoQry_lblLOB" xml:space="preserve">
+    <value>Line of Business</value>
+  </data>
+  <data name="SanctionNoQry_lblOfferCard" xml:space="preserve">
+    <value>Offer Card</value>
+  </data>
+  <data name="SanctionNoQry_lblOption" xml:space="preserve">
+    <value>Sanction Number/Date</value>
+  </data>
+  <data name="SanctionNoQry_lblOverride" xml:space="preserve">
+    <value>Over ride</value>
+  </data>
+  <data name="SanctionNoQry_lblPercentage" xml:space="preserve">
+    <value>Percentage of Importance</value>
+  </data>
+  <data name="SanctionNoQry_lblRequiredFacility" xml:space="preserve">
+    <value>Required Facility</value>
+  </data>
+  <data name="SanctionNoQry_lblRequiredScore" xml:space="preserve">
+    <value>Required Score</value>
+  </data>
+  <data name="SanctionNoQry_lblSanctionDate" xml:space="preserve">
+    <value>Sanction Date</value>
+  </data>
+  <data name="SanctionNoQry_lblSanctionedLimit" xml:space="preserve">
+    <value>Sanctioned Limit</value>
+  </data>
+  <data name="SanctionNoQry_lblSanctionNumber" xml:space="preserve">
+    <value>Sanction Number</value>
+  </data>
+  <data name="SanctionNoQry_lblSanctionNumbers" xml:space="preserve">
+    <value>Sanction Number</value>
+  </data>
+  <data name="SanctionNoQry_lblStartDate" xml:space="preserve">
+    <value>Start Date</value>
+  </data>
+  <data name="ORG_CUST_CEOWeddingDate" xml:space="preserve">
+    <value>CEO Wedding date should not greater than system date</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_CustomerDates" xml:space="preserve">
+    <value>Customer Track date should not greater than system date</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_DOBNOTGreater" xml:space="preserve">
+    <value>Date of birth should not greater than system date</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_WEDDNOTGreater" xml:space="preserve">
+    <value>Wedding Date should not be greater than System Date</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="GCPT_ActualScoreForamt" xml:space="preserve">
+    <value> or Actual Scores should be correct numeric format</value>
+  </data>
+  <data name="GCPT_ActualScores" xml:space="preserve">
+    <value>Enter the All Actual Scores</value>
+  </data>
+  <data name="GCPT_ActualScoresGreater" xml:space="preserve">
+    <value>Actual Scores should not be greater than required score</value>
+  </data>
+  <data name="GCPT_btnClear" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="GCPT_btnSave" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="GCPT_btnShowDetails1" xml:space="preserve">
+    <value> Go </value>
+  </data>
+  <data name="GCPT_GlobalCreditParam" xml:space="preserve">
+    <value>Define the Global Credit Parameters</value>
+  </data>
+  <data name="GCPT_lblAddress" xml:space="preserve">
+    <value>Address1</value>
+  </data>
+  <data name="GCPT_lblAddress2" xml:space="preserve">
+    <value>Address2</value>
+  </data>
+  <data name="GCPT_lblBranch" xml:space="preserve">
+    <value>Location</value>
+  </data>
+  <data name="GCPT_lblCity" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="GCPT_lblCountry" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="GCPT_lblCreditParamDate" xml:space="preserve">
+    <value>Credit Parameter Date</value>
+  </data>
+  <data name="GCPT_lblCreditParamNumber" xml:space="preserve">
+    <value>Credit Parameter Number</value>
+  </data>
+  <data name="GCPT_lblCreditScoreDetails" xml:space="preserve">
+    <value>Credit Score Details</value>
+  </data>
+  <data name="GCPT_lblCustomerCode" xml:space="preserve">
+    <value>Customer Code</value>
+  </data>
+  <data name="GCPT_lblCustomerName" xml:space="preserve">
+    <value>Customer Name</value>
+  </data>
+  <data name="GCPT_lblEmailID" xml:space="preserve">
+    <value>EMail Id</value>
+  </data>
+  <data name="GCPT_lblEndDate" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="GCPT_lblEnquiryDate" xml:space="preserve">
+    <value>Enquiry Date</value>
+  </data>
+  <data name="GCPT_lblEnquiryNo" xml:space="preserve">
+    <value>Enquiry Number</value>
+  </data>
+  <data name="GCPT_lblHeading" xml:space="preserve">
+    <value>Credit Parameter Transaction</value>
+  </data>
+  <data name="GCPT_lblLOB" xml:space="preserve">
+    <value>Line of Business</value>
+  </data>
+  <data name="GCPT_lblMobileNo" xml:space="preserve">
+    <value>Mobile</value>
+  </data>
+  <data name="GCPT_lblMode" xml:space="preserve">
+    <value>Query/Save</value>
+  </data>
+  <data name="GCPT_lblOption" xml:space="preserve">
+    <value>Option</value>
+  </data>
+  <data name="GCPT_lblPincode" xml:space="preserve">
+    <value>Pincode/Zipcode</value>
+  </data>
+  <data name="GCPT_lblProductCode" xml:space="preserve">
+    <value>Product Code</value>
+  </data>
+  <data name="GCPT_lblStartDate" xml:space="preserve">
+    <value>Start Date</value>
+  </data>
+  <data name="GCPT_lblState" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="GCPT_lblStatus" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="GCPT_rfvCreditParamNumber" xml:space="preserve">
+    <value>Credit Parameter Number is Not defined in Document control</value>
+  </data>
+  <data name="GCPT_rfvEndDate" xml:space="preserve">
+    <value>Enter the Valid End date</value>
+  </data>
+  <data name="GCPT_rfvEndDate1" xml:space="preserve">
+    <value>Enter the Valid End date</value>
+  </data>
+  <data name="GCPT_rfvStartDate" xml:space="preserve">
+    <value>Enter the Valid Start date</value>
+  </data>
+  <data name="GCPT_rfvStatus" xml:space="preserve">
+    <value>Credit Parameter Status is Not defined in Lookup</value>
+  </data>
+  <data name="ORG_CUST_btnClear" xml:space="preserve">
+    <value>Clear</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_btnQry" xml:space="preserve">
+    <value>Query</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_btnSave" xml:space="preserve">
+    <value>Save</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_lblHeading" xml:space="preserve">
+    <value>Customer Master</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvCustomerCode" xml:space="preserve">
+    <value>Check the Document Sequence Control for Customer Code</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvtxtReason" xml:space="preserve">
+    <value>Enter the Reason</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rvfCustomerName" xml:space="preserve">
+    <value>Enter the Customer Name</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_EnqAssign_btnShowDetails" xml:space="preserve">
+    <value>Show Details</value>
+  </data>
+  <data name="ORG_EnqAssign_Foreignkey" xml:space="preserve">
+    <value>No details exists for this Enquiry Number to be assigned</value>
+  </data>
+  <data name="ORG_EnqAssign_lblEndDate" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="ORG_EnqAssign_lblHeading" xml:space="preserve">
+    <value>Enquiry Assignment</value>
+  </data>
+  <data name="ORG_EnqAssign_lblStartDate" xml:space="preserve">
+    <value>Start Date</value>
+  </data>
+  <data name="ORG_Enq_LessEndDate" xml:space="preserve">
+    <value>Start Date should be less than End Date</value>
+  </data>
+  <data name="CancelError" xml:space="preserve">
+    <value>Unable to Cancel the Customer Details</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ClearError" xml:space="preserve">
+    <value>Unable to Clear the Customer Details</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="InsertError" xml:space="preserve">
+    <value>Unable to Create a Customer</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="PageLoadError" xml:space="preserve">
+    <value>Unable to Load the Customer Master </value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="UpdateError" xml:space="preserve">
+    <value>Unable to Update a Customer</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="AgeCalculateError" xml:space="preserve">
+    <value>Unable to calculate Age</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ConstitutionBindError" xml:space="preserve">
+    <value>Unable to load the Constitutional Documents</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ConstitutionChangeError" xml:space="preserve">
+    <value>Unable to change the Constitution</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="CustomerTypeChangeError" xml:space="preserve">
+    <value>Unable to change the CustomerType</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="GroupChangeError" xml:space="preserve">
+    <value>Unable to change the GroupCode</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="IndustryChangeError" xml:space="preserve">
+    <value>Unable to change the IndustryCode</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="NavigateTabError" xml:space="preserve">
+    <value>Unable to change tha Tab in CustomerMaster</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="TypeChangeError" xml:space="preserve">
+    <value>Unable to change the Type</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="ORG_CUST_rfvtotalnetworth" xml:space="preserve">
+    <value>Entet the Totalnet Worth</value>
+    <comment>CustomerMaster - Origination</comment>
+  </data>
+  <data name="DocNoExceeds" xml:space="preserve">
+    <value>Document Sequence Number limit is exceeded</value>
+  </data>
+  <data name="DocNoNotDefined" xml:space="preserve">
+    <value>Document Sequence Number not defined</value>
+  </data>
+  <data name="LADP_Save" xml:space="preserve">
+    <value>Depreciation service initiated sucessfully</value>
+    <comment>Lease Asset Depreciation - LOANADMIN</comment>
+  </data>
+  <data name="Accountdetailsunavailable" xml:space="preserve">
+    <value>There is no existing record for Rate, Tenure and Finance Amount for selected account</value>
+    <comment>AccountSpecific Revision-LoanAdmin</comment>
+  </data>
+  <data name="Cashflownotfound" xml:space="preserve">
+    <value>There is no Cash Out Flow Records for this type</value>
+    <comment>AccountSpecific Revision-LoanAdmin</comment>
+  </data>
+  <data name="FillRevision" xml:space="preserve">
+    <value>Fill up the Revision Details</value>
+    <comment>AccountSpecific Revision-LoanAdmin  </comment>
+  </data>
+  <data name="IRRcompulsary" xml:space="preserve">
+    <value>Cannot save the details before calculating theIRR</value>
+    <comment>AccountSpecific Revision-LoanAdmin</comment>
+  </data>
+  <data name="NewIRRadded" xml:space="preserve">
+    <value>IRR calculated successfully</value>
+    <comment>AccountSpecific Revision-LoanAdmin</comment>
+  </data>
+  <data name="RepayNotExist" xml:space="preserve">
+    <value>There are no repayment records exists for this MLA</value>
+    <comment>AccountSpecific Revision-LoanAdmin </comment>
+  </data>
+  <data name="RequestError" xml:space="preserve">
+    <value>Request number not available</value>
+    <comment>AccountSpecific Revision-LoanAdmin</comment>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Saved Successfully</value>
+    <comment>AccountSpecific Revision  -LoanAdmin</comment>
+  </data>
+  <data name="SelectValue" xml:space="preserve">
+    <value>Select atleast one revision option</value>
+    <comment>AccountSpecific Revision-LoanAdmin  </comment>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Updated Successfully</value>
+    <comment>AccountSpecific Revision-LoanAdmin</comment>
+  </data>
+  <data name="ReviseValuenotgiven" xml:space="preserve">
+    <value>Revision Details was not specified</value>
+    <comment>AccountSpecific Revision  -LoanAdmin</comment>
+  </data>
+  <data name="AssetverificationUpdate" xml:space="preserve">
+    <value>Asset Verification details updated successfully</value>
+    <comment>Assetverification -Loan Admin</comment>
+  </data>
+  <data name="SizeCheckforfollowup" xml:space="preserve">
+    <value>The combined length of Location , Date and Remarks exceeds the Length set for the Remarks field in the FollowUp Screen</value>
+    <comment>Assetverification -Loan Admin</comment>
+  </data>
+  <data name="LADP_Revoke" xml:space="preserve">
+    <value>Depreciation Revoked sucessfully</value>
+    <comment>OL Depreciation - LOANAdmin</comment>
+  </data>
+  <data name="Level4andAboveApproval" xml:space="preserve">
+    <value>Action allowed for Level 4 and above user only.</value>
+    <comment>Approval Screens - All Module</comment>
+  </data>
+  <data name="lnkChangePassword" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="DateLessSystemDate" xml:space="preserve">
+    <value>Selected date cannot be less than system date</value>
+  </data>
+  <data name="MarketingSlabMaster_EffectiveDate" xml:space="preserve">
+    <value>Effective End Date should be greater than or Equal to Effective Start Date</value>
+    <comment>Collection - Marketing Slab Master</comment>
+  </data>
+  <data name="MarketingSlabMaster_Grid" xml:space="preserve">
+    <value>Enter atleast one slab details</value>
+    <comment>Collection - Marketing Slab Master</comment>
+  </data>
+  <data name="MarketingSlabMaster_Percentage" xml:space="preserve">
+    <value>Percentage / Amount should not be greater than 100</value>
+    <comment>Collection - Marketing Slab Master</comment>
+  </data>
+  <data name="MarketingSlabMaster_Save" xml:space="preserve">
+    <value>Marketing Slab Master Saved Successfully</value>
+    <comment>Collection - Marketing Slab Master</comment>
+  </data>
+  <data name="MarketingSlabMaster_SlabDuplication" xml:space="preserve">
+    <value>Slab Details already exists</value>
+    <comment>Collection - Marketing Slab Master</comment>
+  </data>
+  <data name="MarketingSlabMaster_SlabExists" xml:space="preserve">
+    <value>Slab Master already defined for this combination</value>
+    <comment>Collection - Marketing Slab Master</comment>
+  </data>
+  <data name="MarketingSlabMaster_Update" xml:space="preserve">
+    <value>Marketing Slab Master Updated Successfully</value>
+    <comment>Collection - Marketing Slab Master</comment>
+  </data>
+  <data name="Save_Error" xml:space="preserve">
+    <value>Unable to save details</value>
+  </data>
+  <data name="MarketingIncentiveMaster_ExecutiveDateComparision" xml:space="preserve">
+    <value>Executive Details - End date should not be lesser than start date</value>
+    <comment>Collection - Marketing Incentive Master</comment>
+  </data>
+  <data name="MarketingIncentiveMaster_ExecutiveDuplication" xml:space="preserve">
+    <value>Executive Details already exists</value>
+    <comment>Collection - Marketing Incentive Master</comment>
+  </data>
+  <data name="MarketingIncentiveMaster_HoldInfoMandatory" xml:space="preserve">
+    <value>Enter Hold Info details</value>
+    <comment>Collection - Marketing Incentive Master</comment>
+  </data>
+  <data name="MarketingIncentiveMaster_HoldPercentage" xml:space="preserve">
+    <value>Hold % should not be greater than 100</value>
+    <comment>Collection - Marketing Incentive Master</comment>
+  </data>
+  <data name="MarketingIncentiveMaster_MarginPercentage" xml:space="preserve">
+    <value>Release Percentage should not be greater than 100</value>
+    <comment>Collection - Marketing Incentive Master</comment>
+  </data>
+  <data name="MarketingIncentiveMaster_Save" xml:space="preserve">
+    <value>Marketing Incentive Master Saved Successfully</value>
+    <comment>Collection - Marketing Incentive Master</comment>
+  </data>
+  <data name="MarketingIncentiveMaster_SlabDateComparision" xml:space="preserve">
+    <value>Slab Details - Slab End date should not be lesser than Slab Start date</value>
+    <comment>Collection - Marketing Incentive Master</comment>
+  </data>
+  <data name="MarketingIncentiveMaster_SlabDuplication" xml:space="preserve">
+    <value>Slab Details already exists</value>
+    <comment>Collection - Marketing Incentive Master</comment>
+  </data>
+  <data name="MarketingIncentiveMaster_Update" xml:space="preserve">
+    <value>Marketing Incentive Master Updated Successfully</value>
+    <comment>Collection - Marketing Incentive Master</comment>
+  </data>
+  <data name="MarketingIncentiveMaster_SlabReleaseDate" xml:space="preserve">
+    <value>Slab Details - Release Effective Date should be greater than Slab End Date</value>
+    <comment>Collection - Marketing Incentive Master</comment>
+  </data>
+  <data name="DSCM_Message1" xml:space="preserve">
+    <value>Enter atleast one row in New Asset.</value>
+    <comment>Dealer Sales Commission Master - Collection</comment>
+  </data>
+  <data name="DSCM_Message2" xml:space="preserve">
+    <value>Enter atleast one row in Used Asset.</value>
+    <comment>Dealer Sales Commission Master - Collection</comment>
+  </data>
+  <data name="DSCM_Message3" xml:space="preserve">
+    <value>Amount From should be less than or equal to Amount To</value>
+    <comment>Dealer Sales Commission Master - Collection</comment>
+  </data>
+  <data name="DSCM_Message4" xml:space="preserve">
+    <value>Tenure From should be less than or equal to Tenure To</value>
+    <comment>Dealer Sales Commission Master - Collection</comment>
+  </data>
+  <data name="DSCM_Message5" xml:space="preserve">
+    <value>Combination already exists</value>
+    <comment>Dealer Sales Commission Master - Collection</comment>
+  </data>
+  <data name="DSCM_Message6" xml:space="preserve">
+    <value>End Date should not be lesser than Satrt Date</value>
+    <comment>Dealer Sales Commission Master - Collection</comment>
+  </data>
+  <data name="DSCM_Message7" xml:space="preserve">
+    <value>Dealer Sales Commission Master Saved Successfully</value>
+    <comment>Dealer Sales Commission Master - Collection</comment>
+  </data>
+  <data name="DSCM_Message8" xml:space="preserve">
+    <value>Dealer Sales Commission Master Updated Successfully</value>
+    <comment>Dealer Sales Commission Master - Collection</comment>
+  </data>
+  <data name="MKTINCMSTR_Message1" xml:space="preserve">
+    <value>Incentive Master - End Date should not be lesser than Start Date</value>
+    <comment>Collection - Marketing Incentive Master</comment>
+  </data>
+  <data name="MKTINCMSTR_Message10" xml:space="preserve">
+    <value>Uploaded Image file details character length should not exceed 100.</value>
+    <comment>Collection - Marketing Incentive Master</comment>
+  </data>
+  <data name="MKTINCMSTR_Message2" xml:space="preserve">
+    <value>Enter atleast one Executive Details</value>
+    <comment>Collection - Marketing Incentive Master</comment>
+  </data>
+  <data name="MKTINCMSTR_Message3" xml:space="preserve">
+    <value>Enter atleast one Slab Details</value>
+    <comment>Collection - Marketing Incentive Master</comment>
+  </data>
+  <data name="MKTINCMSTR_Message4" xml:space="preserve">
+    <value>Select Slab Code</value>
+    <comment>Collection - Marketing Incentive Master</comment>
+  </data>
+  <data name="MKTINCMSTR_Message5" xml:space="preserve">
+    <value>Release To Margin should be greater than Release From Margin</value>
+    <comment>Collection - Marketing Incentive Master</comment>
+  </data>
+  <data name="MKTINCMSTR_Message6" xml:space="preserve">
+    <value>Document Path Not Defined</value>
+    <comment>Collection - Marketing Incentive Master</comment>
+  </data>
+  <data name="MKTINCMSTR_Message7" xml:space="preserve">
+    <value>Select Executive Name</value>
+    <comment>Collection - Marketing Incentive Master</comment>
+  </data>
+  <data name="MKTINCMSTR_Message8" xml:space="preserve">
+    <value>Uploaded file format should be BMP/GIF/JPEG/JPG/PNG</value>
+    <comment>Collection - Marketing Incentive Master</comment>
+  </data>
+  <data name="MKTINCMSTR_Message9" xml:space="preserve">
+    <value>Group Name character length should not exceed 100.</value>
+    <comment>Collection - Marketing Incentive Master</comment>
+  </data>
+  <data name="TranApproval_Checklist_Message1" xml:space="preserve">
+    <value>Checklist Approved successfully.</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_Checklist_Message2" xml:space="preserve">
+    <value>Checklist Cancelled successfully.</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_Checklist_Message3" xml:space="preserve">
+    <value>Checklist Rejected successfully.</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_Checklist_Message4" xml:space="preserve">
+    <value>Checklist Revoked successfully.</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_Checklist_Message5" xml:space="preserve">
+    <value>Checklist held successfully.</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_Checklist_Message6" xml:space="preserve">
+    <value>Select atleast one record to Revoke</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_Checklist_Message7" xml:space="preserve">
+    <value>Revoke details failed</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_Checklist_Message8" xml:space="preserve">
+    <value>Document Path Not Defined</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_Checklist_Message9" xml:space="preserve">
+    <value>Approval Added Failed</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="DSCM_Message9" xml:space="preserve">
+    <value>Flat Rate should not be greater than 100%</value>
+    <comment>Dealer Sales Commission Master - Collection</comment>
+  </data>
+  <data name="PDCMaintenance_Message1" xml:space="preserve">
+    <value>Status Processed can not be changed manually</value>
+    <comment>PDCMaintenance - Collection</comment>
+  </data>
+  <data name="PDCMaintenance_Message2" xml:space="preserve">
+    <value>No PDC records found to be modified</value>
+    <comment>PDCMaintenance - Collection</comment>
+  </data>
+  <data name="PDCMaintenance_Message3" xml:space="preserve">
+    <value>Month is not open in GPS</value>
+    <comment>PDCMaintenance - Collection</comment>
+  </data>
+  <data name="PDCMaintenance_Message4" xml:space="preserve">
+    <value>Revised Bank date should be fall inside the Installment Dates</value>
+    <comment>PDCMaintenance - Collection</comment>
+  </data>
+  <data name="PDCMaintenance_Message5" xml:space="preserve">
+    <value>Revised Bank date should not exceed more than 30 days</value>
+    <comment>PDCMaintenance - Collection</comment>
+  </data>
+  <data name="PDCMaintenance_Message6" xml:space="preserve">
+    <value>PDC Status updated sucessfully</value>
+    <comment>PDCMaintenance - Collection</comment>
+  </data>
+  <data name="TranApproval_Factoring_Invoice_Upload_Message1" xml:space="preserve">
+    <value>Invoice Approved successfully.</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_Factoring_Invoice_Upload_Message2" xml:space="preserve">
+    <value>Invoice Cancelled successfully.</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_Factoring_Invoice_Upload_Message3" xml:space="preserve">
+    <value>Invoice Rejected successfully.</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_Factoring_Invoice_Upload_Message4" xml:space="preserve">
+    <value>Invoice Revoked successfully.</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_Factoring_Invoice_Upload_Message5" xml:space="preserve">
+    <value>Invoice held successfully.</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_Factoring_Invoice_Upload_Message6" xml:space="preserve">
+    <value>Select atleast one record to Revoke</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_Factoring_Invoice_Upload_Message7" xml:space="preserve">
+    <value>Revoke details failed</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_Factoring_Invoice_Upload_Message8" xml:space="preserve">
+    <value>Document Path Not Defined</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_Factoring_Invoice_Upload_Message9" xml:space="preserve">
+    <value>Approval Added Failed</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_Application_Approval_Messege1" xml:space="preserve">
+    <value>Application Approved ,Account Created &amp; Activated  Successfully.</value>
+  </data>
+  <data name="TranApproval_Application_Approval_Messege10" xml:space="preserve">
+    <value>Journal Not Tallied</value>
+  </data>
+  <data name="TranApproval_Application_Approval_Messege11" xml:space="preserve">
+    <value>Month locked for the selected  period and Location in FA</value>
+  </data>
+  <data name="TranApproval_Application_Approval_Messege12" xml:space="preserve">
+    <value>GL Account not exists for the selected Location in FA</value>
+  </data>
+  <data name="TranApproval_Application_Approval_Messege13" xml:space="preserve">
+    <value>Journal Cashflow Not Defined</value>
+  </data>
+  <data name="TranApproval_Application_Approval_Messege14" xml:space="preserve">
+    <value>Debug Eror</value>
+  </data>
+  <data name="TranApproval_Application_Approval_Messege2" xml:space="preserve">
+    <value>Application Cancelled successfully.</value>
+  </data>
+  <data name="TranApproval_Application_Approval_Messege3" xml:space="preserve">
+    <value>Application Rejected successfully.</value>
+  </data>
+  <data name="TranApproval_Application_Approval_Messege4" xml:space="preserve">
+    <value>Application held successfully.</value>
+  </data>
+  <data name="TranApproval_Application_Approval_Messege5" xml:space="preserve">
+    <value>Approval Added Failed</value>
+  </data>
+  <data name="TranApproval_Application_Approval_Messege6" xml:space="preserve">
+    <value>Define the Month in MonthEnd Parameters</value>
+  </data>
+  <data name="TranApproval_Application_Approval_Messege7" xml:space="preserve">
+    <value>Account has been activated already.</value>
+  </data>
+  <data name="TranApproval_Application_Approval_Messege8" xml:space="preserve">
+    <value>Account Activation cannot be done in a closed month</value>
+  </data>
+  <data name="TranApproval_Application_Approval_Messege9" xml:space="preserve">
+    <value>Income Recognization Not Defined in GPS</value>
+  </data>
+  <data name="PDCEntry_Message1" xml:space="preserve">
+    <value>Status Processed cannot be changed manually</value>
+    <comment>PDCEntry - Collection</comment>
+  </data>
+  <data name="PDCEntry_Message10" xml:space="preserve">
+    <value>PDC Entry done successfully</value>
+    <comment>PDCEntry - Collection</comment>
+  </data>
+  <data name="PDCEntry_Message11" xml:space="preserve">
+    <value>No PDC Details Found</value>
+    <comment>PDCEntry - Collection</comment>
+  </data>
+  <data name="PDCEntry_Message2" xml:space="preserve">
+    <value>Select Account Number</value>
+    <comment>PDCEntry - Collection</comment>
+  </data>
+  <data name="PDCEntry_Message3" xml:space="preserve">
+    <value>From Installment Number should be less than or equal to </value>
+    <comment>PDCEntry - Collection</comment>
+  </data>
+  <data name="PDCEntry_Message4" xml:space="preserve">
+    <value>Number of PDC cannot exceed number of installments </value>
+    <comment>PDCEntry - Collection</comment>
+  </data>
+  <data name="PDCEntry_Message5" xml:space="preserve">
+    <value>Enter MICR No</value>
+    <comment>PDCEntry - Collection</comment>
+  </data>
+  <data name="PDCEntry_Message6" xml:space="preserve">
+    <value>Transaction Date should be greater than or equal to account creation date </value>
+    <comment>PDCEntry - Collection</comment>
+  </data>
+  <data name="PDCEntry_Message7" xml:space="preserve">
+    <value>Transaction Date should be lesser than or equal to account closing date </value>
+    <comment>PDCEntry - Collection</comment>
+  </data>
+  <data name="PDCEntry_Message8" xml:space="preserve">
+    <value>Revised Bank Date Should be Greater than or Equal to Account Creation Date</value>
+    <comment>PDCEntry - Collection</comment>
+  </data>
+  <data name="PDCEntry_Message9" xml:space="preserve">
+    <value>PDC Entry Details Updated successfully</value>
+    <comment>PDCEntry - Collection</comment>
+  </data>
+  <data name="TranApproval_Factoring_Invoice_Upproval_Messege1" xml:space="preserve">
+    <value>Due to Data Problem Unnable to Approve the Transaction</value>
+    <comment>Due to Data Problem Unnable to Approve the Transaction</comment>
+  </data>
+  <data name="TranApproval_Factoring_Invoice_Upproval_Messege2" xml:space="preserve">
+    <value>Approved Invoice Not Exists</value>
+    <comment>Approved Invoice Not Exists</comment>
+  </data>
+  <data name="TranApproval_Factoring_Invoice_Upproval_Messege3" xml:space="preserve">
+    <value>Cashflow Not Defined For Factoring Invoice Approva Cashflow Not Defined For Factoring Invoice Approva Program</value>
+    <comment>Cashflow Not Defined For Factoring Invoice Approva Cashflow Not Defined For Factoring Invoice Approva Program</comment>
+  </data>
+  <data name="TranApproval_Factoring_Invoice_Upproval_Messege4" xml:space="preserve">
+    <value>Finance Amount Debit Cashflow Not Defined For Factoring Invoice Approval Program</value>
+    <comment>Finance Amount Debit Cashflow Not Defined For Factoring Invoice Approval Program</comment>
+  </data>
+  <data name="TranApproval_Factoring_Invoice_Upproval_Messege5" xml:space="preserve">
+    <value>Finance Amount Credit Cashflow Not Defined For Factoring Invoice Approval Program</value>
+    <comment>Finance Amount Credit Cashflow Not Defined For Factoring Invoice Approval Program</comment>
+  </data>
+  <data name="TranApproval_Factoring_Invoice_Upproval_Messege6" xml:space="preserve">
+    <value>Invoice Charge Cash Flow Not Defined</value>
+  </data>
+  <data name="TranApproval_Factoring_Invoice_Upproval_Messege7" xml:space="preserve">
+    <value>Journal Not Talied</value>
+  </data>
+  <data name="TranApproval_Factoring_Invoice_Upproval_Messege8" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TranApproval_PYMT_Message1" xml:space="preserve">
+    <value>Payment Approved successfully.</value>
+  </data>
+  <data name="TranApproval_PYMT_Message2" xml:space="preserve">
+    <value>Payment Cancelled successfully.</value>
+  </data>
+  <data name="TranApproval_PYMT_Message3" xml:space="preserve">
+    <value>Payment Rejected successfully.</value>
+  </data>
+  <data name="TranApproval_PYMT_Message4" xml:space="preserve">
+    <value>Payment Revoked successfully.</value>
+  </data>
+  <data name="TranApproval_PYMT_Message5" xml:space="preserve">
+    <value>Payment  held successfully.</value>
+  </data>
+  <data name="TranApproval_PYMT_Message6" xml:space="preserve">
+    <value>Select atleast one record to Revoke</value>
+  </data>
+  <data name="TranApproval_PYMT_Message7" xml:space="preserve">
+    <value>Revoke details failed</value>
+  </data>
+  <data name="TranApproval_PYMT_Message8" xml:space="preserve">
+    <value>Document Path Not Defined</value>
+  </data>
+  <data name="TranApproval_PYMT_Message9" xml:space="preserve">
+    <value>Approval Added Failed</value>
+  </data>
+  <data name="Application_Process_Error_Messege1" xml:space="preserve">
+    <value>Tenure and Recovery Pattern are not matching</value>
+  </data>
+  <data name="Application_Process_Error_Messege10" xml:space="preserve">
+    <value>Total Amount Should be equal to finance amount</value>
+  </data>
+  <data name="Application_Process_Error_Messege11" xml:space="preserve">
+    <value>Customers sublimit should not exceed the Client Credit Limit</value>
+  </data>
+  <data name="Application_Process_Error_Messege12" xml:space="preserve">
+    <value>Client not Allowed here</value>
+  </data>
+  <data name="Application_Process_Error_Messege13" xml:space="preserve">
+    <value>Amount Should be greater than Zero</value>
+  </data>
+  <data name="Application_Process_Error_Messege14" xml:space="preserve">
+    <value>Customer already Exists</value>
+  </data>
+  <data name="Application_Process_Error_Messege15" xml:space="preserve">
+    <value>Supplier already Added</value>
+  </data>
+  <data name="Application_Process_Error_Messege16" xml:space="preserve">
+    <value>There should be atleast one row in the grid</value>
+  </data>
+  <data name="Application_Process_Error_Messege17" xml:space="preserve">
+    <value>Define ROI Rule Modification in GlobalParameter setup</value>
+  </data>
+  <data name="Application_Process_Error_Messege18" xml:space="preserve">
+    <value>Define startup-screen in GlobalParameter setup</value>
+  </data>
+  <data name="Application_Process_Error_Messege19" xml:space="preserve">
+    <value>Asset is mandatory for the selected LOB and Product</value>
+  </data>
+  <data name="Application_Process_Error_Messege2" xml:space="preserve">
+    <value>Tenure type should be months for PTF/PLF/PMF</value>
+  </data>
+  <data name="Application_Process_Error_Messege20" xml:space="preserve">
+    <value>Finance Amount Exceeds</value>
+  </data>
+  <data name="Application_Process_Error_Messege21" xml:space="preserve">
+    <value>Tenure Exceeds</value>
+  </data>
+  <data name="Application_Process_Error_Messege22" xml:space="preserve">
+    <value>Due to Data Problem,Unable to Modify an Application</value>
+  </data>
+  <data name="Application_Process_Error_Messege23" xml:space="preserve">
+    <value>Due to Data Problem,Unable to Create an Application</value>
+  </data>
+  <data name="Application_Process_Error_Messege24" xml:space="preserve">
+    <value>Total Amount Should be equal to finance amount</value>
+  </data>
+  <data name="Application_Process_Error_Messege25" xml:space="preserve">
+    <value>Enter the Finance Amount in AssetDetails</value>
+  </data>
+  <data name="Application_Process_Error_Messege26" xml:space="preserve">
+    <value>The sum of Finance Amount in Asset Details should be equal to Finance Amount</value>
+  </data>
+  <data name="Application_Process_Error_Messege27" xml:space="preserve">
+    <value>The sum of Margin Amount in Asset Details should be greater than or equal to Margin Amount in ROI Rules</value>
+  </data>
+  <data name="Application_Process_Error_Messege28" xml:space="preserve">
+    <value>Discount cashflow should be added in Cash Inflow details</value>
+  </data>
+  <data name="Application_Process_Error_Messege29" xml:space="preserve">
+    <value>Total amount financed in Cashoutflow should be equal to amount financed</value>
+  </data>
+  <data name="Application_Process_Error_Messege3" xml:space="preserve">
+    <value>Define the Cashflow for UMFC in Cashflow Master</value>
+  </data>
+  <data name="Application_Process_Error_Messege30" xml:space="preserve">
+    <value>Total break up percentage should be equal to 100%</value>
+  </data>
+  <data name="Application_Process_Error_Messege31" xml:space="preserve">
+    <value>Dealer Commission Paramaters not Matching or  Commission Details not defined in Dealer Commission</value>
+  </data>
+  <data name="Application_Process_Error_Messege32" xml:space="preserve">
+    <value>Dealer Commission Cashflow not Defined</value>
+  </data>
+  <data name="Application_Process_Error_Messege33" xml:space="preserve">
+    <value>Life Insurance Company Cashflow not Defined against Application Process</value>
+  </data>
+  <data name="Application_Process_Error_Messege34" xml:space="preserve">
+    <value>StrErrorMsg</value>
+  </data>
+  <data name="Application_Process_Error_Messege35" xml:space="preserve">
+    <value>Please Select Entity/Customer id from Asset Details</value>
+  </data>
+  <data name="Application_Process_Error_Messege36" xml:space="preserve">
+    <value>Unmatured Finance Charges (UMFC) should be equal to Interest</value>
+  </data>
+  <data name="Application_Process_Error_Messege37" xml:space="preserve">
+    <value>Recalculate IRR</value>
+  </data>
+  <data name="Application_Process_Error_Messege38" xml:space="preserve">
+    <value>Total amount financed in Cashoutflow should be equal to amount financed</value>
+  </data>
+  <data name="Application_Process_Error_Messege39" xml:space="preserve">
+    <value>Payment Cashflow Description not available in Outflow Details</value>
+  </data>
+  <data name="Application_Process_Error_Messege4" xml:space="preserve">
+    <value>Cannot add duplicate Cash inflow</value>
+  </data>
+  <data name="Application_Process_Error_Messege40" xml:space="preserve">
+    <value>Enter the Margin Amount in Asset(s)</value>
+  </data>
+  <data name="Application_Process_Error_Messege41" xml:space="preserve">
+    <value>Total Margin Amount in Outflow should be less or equal to Margin Amount in Inflow</value>
+  </data>
+  <data name="Application_Process_Error_Messege42" xml:space="preserve">
+    <value>Asset is Mandatory, If Margin is applicable</value>
+  </data>
+  <data name="Application_Process_Error_Messege43" xml:space="preserve">
+    <value>Recalculate IRR</value>
+  </data>
+  <data name="Application_Process_Error_Messege44" xml:space="preserve">
+    <value>Cash Outflow should be More than one for Deferred Structured</value>
+  </data>
+  <data name="Application_Process_Error_Messege45" xml:space="preserve">
+    <value>Outflow date should be greater than or equal to Application date</value>
+  </data>
+  <data name="Application_Process_Error_Messege46" xml:space="preserve">
+    <value>Outflow date should be greater than Application date for Deferred Payment</value>
+  </data>
+  <data name="Application_Process_Error_Messege47" xml:space="preserve">
+    <value>Outflow date should be greater than Application date for Deferred Payment</value>
+  </data>
+  <data name="Application_Process_Error_Messege48" xml:space="preserve">
+    <value>Outflow date should be equal to Application date for Normal Payment/Trade Advance</value>
+  </data>
+  <data name="Application_Process_Error_Messege49" xml:space="preserve">
+    <value>Cash Outflow should be More than one for Deferred Structured/Project finance</value>
+  </data>
+  <data name="Application_Process_Error_Messege5" xml:space="preserve">
+    <value>Outflow date cannot be less than Application date</value>
+  </data>
+  <data name="Application_Process_Error_Messege50" xml:space="preserve">
+    <value>Define Installment Flag in Cashflow Master for selected Line of Business</value>
+  </data>
+  <data name="Application_Process_Error_Messege51" xml:space="preserve">
+    <value>Define Principal and Interest Flags in Cashflow Master for selected Line of Business</value>
+  </data>
+  <data name="Application_Process_Error_Messege52" xml:space="preserve">
+    <value>Define Installment Flag in Cashflow Master for selected Line of Business</value>
+  </data>
+  <data name="Application_Process_Error_Messege53" xml:space="preserve">
+    <value>Incorrect cashflow Details,Unable to Generate Repayment Structure/Calculate IRR</value>
+  </data>
+  <data name="Application_Process_Error_Messege54" xml:space="preserve">
+    <value>ex.Message</value>
+  </data>
+  <data name="Application_Process_Error_Messege55" xml:space="preserve">
+    <value>Add atleast one Repayment Details</value>
+  </data>
+  <data name="Application_Process_Error_Messege56" xml:space="preserve">
+    <value>Total Amount Should be equal to finance amount</value>
+  </data>
+  <data name="Application_Process_Error_Messege57" xml:space="preserve">
+    <value>Principal Amount Should be equal to finance amount</value>
+  </data>
+  <data name="Application_Process_Error_Messege58" xml:space="preserve">
+    <value>Interest Amount Should be equal to</value>
+  </data>
+  <data name="Application_Process_Error_Messege59" xml:space="preserve">
+    <value>No Principal and Interest amount entered to calculate</value>
+  </data>
+  <data name="Application_Process_Error_Messege6" xml:space="preserve">
+    <value>Finance amount Outflow date should</value>
+  </data>
+  <data name="Application_Process_Error_Messege60" xml:space="preserve">
+    <value>No Principal amount entered to calculate</value>
+  </data>
+  <data name="Application_Process_Error_Messege61" xml:space="preserve">
+    <value>No Interest amount entered to calculate</value>
+  </data>
+  <data name="Application_Process_Error_Messege62" xml:space="preserve">
+    <value>Total Amount Should be equal to finance amount</value>
+  </data>
+  <data name="Application_Process_Error_Messege63" xml:space="preserve">
+    <value>Total break up percentage should be equal to 100%"</value>
+  </data>
+  <data name="Application_Process_Error_Messege64" xml:space="preserve">
+    <value>Total amount financed in Cashoutflow should be equal to amount financed</value>
+  </data>
+  <data name="Application_Process_Error_Messege65" xml:space="preserve">
+    <value>Add atleast one Repayment Details</value>
+  </data>
+  <data name="Application_Process_Error_Messege66" xml:space="preserve">
+    <value>Asset(s) should be mapped with Entity only</value>
+  </data>
+  <data name="Application_Process_Error_Messege67" xml:space="preserve">
+    <value>Due to data Problem Unnable to Load Proposal Details</value>
+  </data>
+  <data name="Application_Process_Error_Messege68" xml:space="preserve">
+    <value>Proposal Details not available</value>
+  </data>
+  <data name="Application_Process_Error_Messege69" xml:space="preserve">
+    <value>From Date should be greater than or equal to Application Date</value>
+  </data>
+  <data name="Application_Process_Error_Messege7" xml:space="preserve">
+    <value>Outflow date should be equal to Application date for Normal Payment/Trade Advance</value>
+  </data>
+  <data name="Application_Process_Error_Messege70" xml:space="preserve">
+    <value>Define Installment Flag in Cashflow Master for selected Line of Business</value>
+  </data>
+  <data name="Application_Process_Error_Messege71" xml:space="preserve">
+    <value>Residual amount should be less than or equal to Finance amount</value>
+  </data>
+  <data name="Application_Process_Error_Messege72" xml:space="preserve">
+    <value>Percentage Should not Exceed 100%</value>
+  </data>
+  <data name="Application_Process_Error_Messege73" xml:space="preserve">
+    <value>End Slab Amount should be Greater than the Start Slab</value>
+  </data>
+  <data name="Application_Process_Error_Messege74" xml:space="preserve">
+    <value>Record Added Successfully</value>
+  </data>
+  <data name="Application_Process_Error_Messege75" xml:space="preserve">
+    <value>Record Removed Successfully</value>
+  </data>
+  <data name="Application_Process_Error_Messege76" xml:space="preserve">
+    <value>Record Removed Successfully</value>
+  </data>
+  <data name="Application_Process_Error_Messege77" xml:space="preserve">
+    <value>Select the Contract No</value>
+  </data>
+  <data name="Application_Process_Error_Messege78" xml:space="preserve">
+    <value>Contract Information not Available</value>
+  </data>
+  <data name="Application_Process_Error_Messege79" xml:space="preserve">
+    <value>Contract No Exists</value>
+  </data>
+  <data name="Application_Process_Error_Messege8" xml:space="preserve">
+    <value>Cannot add duplicate Cash outflow</value>
+  </data>
+  <data name="Application_Process_Error_Messege80" xml:space="preserve">
+    <value>Insurance Company Rate or Customer Rate not Defined in Entity Master</value>
+  </data>
+  <data name="Application_Process_Error_Messege81" xml:space="preserve">
+    <value>Facility End Date Should be Greater than or equal to Facility Start Date</value>
+  </data>
+  <data name="Application_Process_Error_Messege82" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Application_Process_Error_Messege83" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Application_Process_Error_Messege9" xml:space="preserve">
+    <value>strErrorMessage</value>
+  </data>
+  <data name="PDCUPLOAD_Message1" xml:space="preserve">
+    <value>Select a file to upload</value>
+    <comment>PDCUpload - Collection</comment>
+  </data>
+  <data name="PDCUPLOAD_Message2" xml:space="preserve">
+    <value>Document Path is not Configured.Please Configure and Upload</value>
+    <comment>PDCUpload - Collection</comment>
+  </data>
+  <data name="PDCUPLOAD_Message3" xml:space="preserve">
+    <value>PDC Saved Successfully</value>
+    <comment>PDCUpload - Collection</comment>
+  </data>
+  <data name="PDCUPLOAD_Message4" xml:space="preserve">
+    <value>PDC Save Failed</value>
+    <comment>PDCUpload - Collection</comment>
+  </data>
+  <data name="PDCUPLOAD_Message5" xml:space="preserve">
+    <value>Uploaded file has been deleted successfully</value>
+    <comment>PDCUpload - Collection</comment>
+  </data>
+  <data name="PDCUPLOAD_Message6" xml:space="preserve">
+    <value>PDC Uploaded Successfully</value>
+    <comment>PDCUpload - Collection</comment>
+  </data>
+  <data name="PDCUPLOAD_Message7" xml:space="preserve">
+    <value>PDC Uploaded Failed Due to following reasons.Ensure Date Format should be dd-MM-yyyy Or Amount field should be numeric Or Check the Exception message below Upload button.</value>
+    <comment>PDCUpload - Collection</comment>
+  </data>
+  <data name="Billing_Message1" xml:space="preserve">
+    <value>Service is not running. Contact S3G Admin to start the service</value>
+  </data>
+  <data name="Billing_Message10" xml:space="preserve">
+    <value>Start Date ,End Date Range should be 7 days</value>
+  </data>
+  <data name="Billing_Message11" xml:space="preserve">
+    <value>Start Date ,End Date Range should be 15 days</value>
+  </data>
+  <data name="Billing_Message12" xml:space="preserve">
+    <value>Start Date ,End Date Range should be 60 days</value>
+  </data>
+  <data name="Billing_Message13" xml:space="preserve">
+    <value>Start Date ,End Date Range should be greater than 90 days</value>
+  </data>
+  <data name="Billing_Message14" xml:space="preserve">
+    <value>Start Date ,End Date Range should be greater than 181 days</value>
+  </data>
+  <data name="Billing_Message15" xml:space="preserve">
+    <value>Start Date ,End Date Range should be greater than 365 days</value>
+  </data>
+  <data name="Billing_Message16" xml:space="preserve">
+    <value>Select a Date for scheduling</value>
+  </data>
+  <data name="Billing_Message17" xml:space="preserve">
+    <value>Enter the Time for scheduling</value>
+  </data>
+  <data name="Billing_Message18" xml:space="preserve">
+    <value>Schedule Date should be greater than or equal to Current Date</value>
+  </data>
+  <data name="Billing_Message19" xml:space="preserve">
+    <value>Schduled Time should be greater than or equal to 5 minutes for current time</value>
+  </data>
+  <data name="Billing_Message2" xml:space="preserve">
+    <value>Select a Date for scheduling</value>
+  </data>
+  <data name="Billing_Message20" xml:space="preserve">
+    <value>Define the Document Path for Billing in Document Path Setup</value>
+  </data>
+  <data name="Billing_Message21" xml:space="preserve">
+    <value>Previous Month/Year should be locked for selected Location(s)</value>
+  </data>
+  <data name="Billing_Message22" xml:space="preserve">
+    <value>Select atleast one Location for Bill Generation</value>
+  </data>
+  <data name="Billing_Message23" xml:space="preserve">
+    <value>Select atleast one Cashflow for Bill Generation</value>
+  </data>
+  <data name="Billing_Message3" xml:space="preserve">
+    <value>Enter the Time for scheduling</value>
+  </data>
+  <data name="Billing_Message4" xml:space="preserve">
+    <value>Schedule Date should be greater than or equal to Current Date</value>
+  </data>
+  <data name="Billing_Message5" xml:space="preserve">
+    <value>Schduled Time should be greater than or equal to 5 minutes for current time</value>
+  </data>
+  <data name="Billing_Message6" xml:space="preserve">
+    <value>Start Date Month should be equal to Month/Year</value>
+  </data>
+  <data name="Billing_Message7" xml:space="preserve">
+    <value>End Date Month should be equal to Month/Year</value>
+  </data>
+  <data name="Billing_Message8" xml:space="preserve">
+    <value>End Date should be greater than Start Date</value>
+  </data>
+  <data name="Billing_Message9" xml:space="preserve">
+    <value>Start Date ,End Date Range should be greater than or equal to 28 days</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege1" xml:space="preserve">
+    <value>The Factoring Line of Business is not Activated</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege10" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege11" xml:space="preserve">
+    <value>Total Eligible Amount cannot be Zero. Add valid Invoice Details</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege12" xml:space="preserve">
+    <value>Total Invoice amount should be greater than or Equal to the Invoice Load value</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege13" xml:space="preserve">
+    <value>Select atleast one Valid record for Uploading</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege14" xml:space="preserve">
+    <value>Document Number Not yet Defined</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege15" xml:space="preserve">
+    <value>FIL Date month is closed. Factoring Invoice details cannot be created or updated</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege16" xml:space="preserve">
+    <value>Current FIL Date should be greater than the Last FIL Date for the given combination</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege17" xml:space="preserve">
+    <value>Document Number exceeded</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege18" xml:space="preserve">
+    <value>Invoice Details exist for the given combination</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege19" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege2" xml:space="preserve">
+    <value>Add atleast one Invoice Details</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege20" xml:space="preserve">
+    <value>Invoice Value exceeds the credit limit for the party</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege21" xml:space="preserve">
+    <value>Client/Customer Mapping Details Not Availbale</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege22" xml:space="preserve">
+    <value>Excel Sheet Contains no Data</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege23" xml:space="preserve">
+    <value>Set the Excel Configuration or Excel Sheet Contains Empty Data or OLE Db Provider Error</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege24" xml:space="preserve">
+    <value>Records Validated.</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege25" xml:space="preserve">
+    <value>Excel Files can only be Uploaded</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege26" xml:space="preserve">
+    <value>Document path not defined for Factoring Invoice Loading</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege27" xml:space="preserve">
+    <value>Return Date is Invalid Format, Check and then Proceed</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege28" xml:space="preserve">
+    <value>Uploaded File does not contain Column</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege29" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege3" xml:space="preserve">
+    <value>Enter the Invoice No in SI No.</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege30" xml:space="preserve">
+    <value>Invoice Amount exceeds the Credit Limit.</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege31" xml:space="preserve">
+    <value>FIL already exists for this Account</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege32" xml:space="preserve">
+    <value>Factoring Invoice gap days is not defined in the Global Parameter Setup</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege33" xml:space="preserve">
+    <value>Sub account not exists. Cannot proceed further.</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege34" xml:space="preserve">
+    <value>sum of Invoice Amount selected is greater than Credit Available</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege35" xml:space="preserve">
+    <value>sum of Invoice Amount selected is greater than Credit Available</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege36" xml:space="preserve">
+    <value>sum of Invoice Amount selected for this Party exceeds the Sub Limit defined in Customer Master</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege37" xml:space="preserve">
+    <value>sum of Invoice Amount selected for this Party exceeds the Sub Limit defined in Customer Master</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege38" xml:space="preserve">
+    <value>Total Invoice Amount exceeds the Credit Available</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege39" xml:space="preserve">
+    <value>Atleast one record should be selected</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege4" xml:space="preserve">
+    <value>Enter the Invoice Date in SI No.</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege40" xml:space="preserve">
+    <value>No Valid Records Found to display</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege41" xml:space="preserve">
+    <value>There are no InValid Records found to display</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege42" xml:space="preserve">
+    <value>Invoice Amount exceeds the Credit Limit.</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege43" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege5" xml:space="preserve">
+    <value>Enter the Invoice Amount in SI No</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege6" xml:space="preserve">
+    <value>Enter the Credit Days</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege7" xml:space="preserve">
+    <value>Enter the Invoice Load Value in SI No.</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege8" xml:space="preserve">
+    <value>Select the FIL date</value>
+  </data>
+  <data name="Factoring_Invoice_Loading_Error_Messege9" xml:space="preserve">
+    <value>Maturity Date should be greater than the FIL Date in SI No.</value>
+  </data>
+  <data name="Payment_Message1" xml:space="preserve">
+    <value>Modification is not allowed for a closed month</value>
+  </data>
+  <data name="Payment_Message10" xml:space="preserve">
+    <value>Payment not defined for the selected Customer/Entity</value>
+  </data>
+  <data name="Payment_Message11" xml:space="preserve">
+    <value>select Add or Less</value>
+  </data>
+  <data name="Payment_Message12" xml:space="preserve">
+    <value>Incorrect Password</value>
+  </data>
+  <data name="Payment_Message13" xml:space="preserve">
+    <value>To Date should be greater than From Date</value>
+  </data>
+  <data name="Payment_Message14" xml:space="preserve">
+    <value>No Disbursements available for the selection</value>
+  </data>
+  <data name="Payment_Message15" xml:space="preserve">
+    <value>Enter Favouring Name</value>
+  </data>
+  <data name="Payment_Message16" xml:space="preserve">
+    <value>Add atleast one Payment details</value>
+  </data>
+  <data name="Payment_Message17" xml:space="preserve">
+    <value>Payment Total amount should be greater than zero</value>
+  </data>
+  <data name="Payment_Message18" xml:space="preserve">
+    <value>Payment Requested Date Month is closed</value>
+  </data>
+  <data name="Payment_Message19" xml:space="preserve">
+    <value>Document sequence number not defined for payment request</value>
+  </data>
+  <data name="Payment_Message2" xml:space="preserve">
+    <value>Amount cannot be zero</value>
+  </data>
+  <data name="Payment_Message20" xml:space="preserve">
+    <value>Document sequence number exceeded for payment request</value>
+  </data>
+  <data name="Payment_Message21" xml:space="preserve">
+    <value>Calling</value>
+  </data>
+  <data name="Payment_Message22" xml:space="preserve">
+    <value>Payment Request Date Month is not open in GPS</value>
+  </data>
+  <data name="Payment_Message23" xml:space="preserve">
+    <value>Payment date cannot be less than account creation date</value>
+  </data>
+  <data name="Payment_Message24" xml:space="preserve">
+    <value>Payment Total amount should be equal to Document Amount</value>
+  </data>
+  <data name="Payment_Message25" xml:space="preserve">
+    <value>Add atleast one record for payment details</value>
+  </data>
+  <data name="Payment_Message26" xml:space="preserve">
+    <value>Selected row already exist</value>
+  </data>
+  <data name="Payment_Message27" xml:space="preserve">
+    <value>select the SL Account.</value>
+  </data>
+  <data name="Payment_Message28" xml:space="preserve">
+    <value>Credit/ Debit Note Exceed than given Amount</value>
+  </data>
+  <data name="Payment_Message29" xml:space="preserve">
+    <value>Select the sub account number.</value>
+  </data>
+  <data name="Payment_Message3" xml:space="preserve">
+    <value>Selected bank GL Account is not in Account setup master.</value>
+  </data>
+  <data name="Payment_Message30" xml:space="preserve">
+    <value>Payment should made either through account or pay type.</value>
+  </data>
+  <data name="Payment_Message31" xml:space="preserve">
+    <value>Invoice Vendor Entry not Available for the Selected Account</value>
+  </data>
+  <data name="Payment_Message32" xml:space="preserve">
+    <value>Payment cannot be duplicated.</value>
+  </data>
+  <data name="Payment_Message33" xml:space="preserve">
+    <value>Cash Flow not yet Defined</value>
+  </data>
+  <data name="Payment_Message34" xml:space="preserve">
+    <value>The Target Directory was not found in the server to generate the PDF file</value>
+  </data>
+  <data name="Payment_Message35" xml:space="preserve">
+    <value>Error in creating a PDF file</value>
+  </data>
+  <data name="Payment_Message36" xml:space="preserve">
+    <value>Unable to delete.</value>
+  </data>
+  <data name="Payment_Message37" xml:space="preserve">
+    <value>Should not allowed to remove Payment details,atleast one record needed</value>
+  </data>
+  <data name="Payment_Message38" xml:space="preserve">
+    <value>Select the Requested number to cancel</value>
+  </data>
+  <data name="Payment_Message39" xml:space="preserve">
+    <value>Payment Request cancelled successfully</value>
+  </data>
+  <data name="Payment_Message4" xml:space="preserve">
+    <value>No Exchange Rate value found</value>
+  </data>
+  <data name="Payment_Message40" xml:space="preserve">
+    <value>Error in cancelling this Payment Request</value>
+  </data>
+  <data name="Payment_Message41" xml:space="preserve">
+    <value>Error in generating Cheque</value>
+  </data>
+  <data name="Payment_Message42" xml:space="preserve">
+    <value>Error in Regenerating Cheque</value>
+  </data>
+  <data name="Payment_Message43" xml:space="preserve">
+    <value>Error in updating the status</value>
+  </data>
+  <data name="Payment_Message44" xml:space="preserve">
+    <value>Selected date cannot be greater than system date</value>
+  </data>
+  <data name="Payment_Message45" xml:space="preserve">
+    <value>Selected row already exist</value>
+  </data>
+  <data name="Payment_Message46" xml:space="preserve">
+    <value>Unable to Save the Payment Details</value>
+  </data>
+  <data name="Payment_Message5" xml:space="preserve">
+    <value>Payment not made for the selected Customer/Entity</value>
+  </data>
+  <data name="Payment_Message6" xml:space="preserve">
+    <value>Payment already made / not applicable for the selected Account Number</value>
+  </data>
+  <data name="Payment_Message7" xml:space="preserve">
+    <value>GL Account is not defined for the selected Pay Type</value>
+  </data>
+  <data name="Payment_Message8" xml:space="preserve">
+    <value>Payment already made for this account</value>
+  </data>
+  <data name="Payment_Message9" xml:space="preserve">
+    <value>Payment not made for this account</value>
+  </data>
+  <data name="TranApproval_ROPCANC_Message1" xml:space="preserve">
+    <value>ROP Cancellation Approved successfully.</value>
+    <comment>ROP Cancellation</comment>
+  </data>
+  <data name="TranApproval_ROPCANC_Message2" xml:space="preserve">
+    <value>ROP Cancellation Rejected successfully.</value>
+  </data>
+  <data name="TranApproval_NOC_Message1" xml:space="preserve">
+    <value>NOC Approved successfully.</value>
+    <comment>NOC</comment>
+  </data>
+  <data name="TranApproval_NOC_Message2" xml:space="preserve">
+    <value>NOC Rejected successfully.</value>
+  </data>
+  <data name="Chqrtn_Message1" xml:space="preserve">
+    <value>Revised Banking Date should be greater than the Document Date</value>
+    <comment>Collection - Cheque Return</comment>
+  </data>
+  <data name="Chqrtn_Message10" xml:space="preserve">
+    <value>Instrument not Banked - Cannot Process Return</value>
+    <comment>Collection - Cheque Return</comment>
+  </data>
+  <data name="Chqrtn_Message11" xml:space="preserve">
+    <value>The Instrument number not exists / Bank details not exists.</value>
+    <comment>Collection - Cheque Return</comment>
+  </data>
+  <data name="Chqrtn_Message2" xml:space="preserve">
+    <value>Month is not open in GPS</value>
+    <comment>Collection - Cheque Return</comment>
+  </data>
+  <data name="Chqrtn_Message3" xml:space="preserve">
+    <value>Revised Bank date should be fall inside the Installment Dates</value>
+    <comment>Collection - Cheque Return</comment>
+  </data>
+  <data name="Chqrtn_Message4" xml:space="preserve">
+    <value>Revised Bank date should not exceed more than 30 days</value>
+    <comment>Collection - Cheque Return</comment>
+  </data>
+  <data name="Chqrtn_Message5" xml:space="preserve">
+    <value>Select the Line of Business and Branch</value>
+    <comment>Collection - Cheque Return</comment>
+  </data>
+  <data name="Chqrtn_Message6" xml:space="preserve">
+    <value>Select the Line of Business</value>
+    <comment>Collection - Cheque Return</comment>
+  </data>
+  <data name="Chqrtn_Message7" xml:space="preserve">
+    <value>Select the Branch</value>
+    <comment>Collection - Cheque Return</comment>
+  </data>
+  <data name="Chqrtn_Message8" xml:space="preserve">
+    <value>Memo Master not defined for Cheque Return charges</value>
+    <comment>Collection - Cheque Return</comment>
+  </data>
+  <data name="Chqrtn_Message9" xml:space="preserve">
+    <value>Error occured in cheque return processing</value>
+    <comment>Collection - Cheque Return</comment>
+  </data>
+  <data name="CHQRTNUPLOAD_Message1" xml:space="preserve">
+    <value>Select a file to upload</value>
+    <comment>Collection - Cheque Return Upload</comment>
+  </data>
+  <data name="CHQRTNUPLOAD_Message2" xml:space="preserve">
+    <value>Document Path is not Configured.Please Configure and Upload</value>
+    <comment>Collection - Cheque Return Upload</comment>
+  </data>
+  <data name="CHQRTNUPLOAD_Message3" xml:space="preserve">
+    <value>Cheque Return Saved Successfully</value>
+    <comment>Collection - Cheque Return Upload</comment>
+  </data>
+  <data name="CHQRTNUPLOAD_Message4" xml:space="preserve">
+    <value>Cheque Return Save Failed</value>
+    <comment>Collection - Cheque Return Upload</comment>
+  </data>
+  <data name="CHQRTNUPLOAD_Message5" xml:space="preserve">
+    <value>Uploaded file has been deleted successfully</value>
+    <comment>Collection - Cheque Return Upload</comment>
+  </data>
+  <data name="CHQRTNUPLOAD_Message6" xml:space="preserve">
+    <value>Cheque Return Uploaded Successfully</value>
+    <comment>Collection - Cheque Return Upload</comment>
+  </data>
+  <data name="CHQRTNUPLOAD_Message7" xml:space="preserve">
+    <value>Cheque Return Uploaded Failed.Kindly ensure date field values to be in dd-MM-yyyy format Or Check Exceptions mentioned under upload button.</value>
+    <comment>Collection - Cheque Return Upload</comment>
+  </data>
+  <data name="TranApproval_Chqrtn_Message1" xml:space="preserve">
+    <value>Cheque Return Approved successfully.</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_Chqrtn_Message2" xml:space="preserve">
+    <value>Cheque Return Cancelled successfully.</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_Chqrtn_Message3" xml:space="preserve">
+    <value>Cheque Return Rejected successfully.</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_Chqrtn_Message4" xml:space="preserve">
+    <value>Cheque Return Revoked successfully.</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_Chqrtn_Message5" xml:space="preserve">
+    <value>Cheque Return held successfully.</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="PDCEntry_Message12" xml:space="preserve">
+    <value>Unable to Save PDC Entry.</value>
+    <comment>PDC Entry - Collection</comment>
+  </data>
+  <data name="PDCEntry_Message13" xml:space="preserve">
+    <value>Cheque Start Number should not be 0</value>
+    <comment>PDC Entry - Collection</comment>
+  </data>
+  <data name="PDCEntry_Message14" xml:space="preserve">
+    <value>Number of PDC should not be 0</value>
+    <comment>Collection-PDC Entry</comment>
+  </data>
+  <data name="PDCEntry_Message15" xml:space="preserve">
+    <value>From Installment Number should not be 0</value>
+    <comment>Collection-PDC Entry</comment>
+  </data>
+  <data name="TranApproval_PYMT_Message10" xml:space="preserve">
+    <value>Payment Approval details added failed.</value>
+  </data>
+  <data name="TranApproval_PYMT_Message11" xml:space="preserve">
+    <value>Enter the Payment Bank details tab in payment request</value>
+  </data>
+  <data name="TranApproval_PYMT_Message12" xml:space="preserve">
+    <value>Enter the Instrument Number in Payment Bank details tab in payment request.</value>
+  </data>
+  <data name="TranApproval_PYMT_Message13" xml:space="preserve">
+    <value>Enter the Instrument Date in Payment Bank details tab in payment request.</value>
+  </data>
+  <data name="TranApproval_PYMT_Message14" xml:space="preserve">
+    <value>Enter the Payment Bank details tab in payment request.</value>
+  </data>
+  <data name="TranApproval_PYMT_Message15" xml:space="preserve">
+    <value>GL_Code Does not Exist For respective location</value>
+  </data>
+  <data name="TranApproval_PYMT_Message16" xml:space="preserve">
+    <value>Voucher Not Tallied</value>
+  </data>
+  <data name="Chqrtn_Message12" xml:space="preserve">
+    <value>Template Master not defined</value>
+    <comment>Cheque Return - Collection</comment>
+  </data>
+  <data name="PDCUPLOAD_Message8" xml:space="preserve">
+    <value>No Pending Installments found.</value>
+  </data>
+  <data name="CDS_Generation_1" xml:space="preserve">
+    <value>Challan cancelled successfully</value>
+  </data>
+  <data name="CDS_Generation_2" xml:space="preserve">
+    <value>Error in cancelling this Challan Number</value>
+  </data>
+  <data name="CDS_Generation_3" xml:space="preserve">
+    <value>Select the Challan number to cancel</value>
+  </data>
+  <data name="TranApproval_Challan_Message1" xml:space="preserve">
+    <value>Challan Approval Iniatiated Successfully.</value>
+  </data>
+  <data name="TranApproval_Challan_Message2" xml:space="preserve">
+    <value>Challan Cancelled successfully.</value>
+  </data>
+  <data name="TranApproval_Challan_Message3" xml:space="preserve">
+    <value>Challan Rejected successfully.</value>
+  </data>
+  <data name="TranApproval_Challan_Message4" xml:space="preserve">
+    <value>Challan Revoked successfully.</value>
+  </data>
+  <data name="TranApproval_Challan_Message5" xml:space="preserve">
+    <value>Challan held successfully.</value>
+  </data>
+  <data name="CHQRTNUPLOAD_Message8" xml:space="preserve">
+    <value>Invalid File Format</value>
+  </data>
+  <data name="Chqrtn_Message13" xml:space="preserve">
+    <value>Template not defined in template master</value>
+  </data>
+  <data name="Payment_Message47" xml:space="preserve">
+    <value>Document Amount Cannot be Zero</value>
+  </data>
+  <data name="Payment_Message48" xml:space="preserve">
+    <value>Add atleast one account details for selected Line of Business and Branch</value>
+  </data>
+  <data name="Payment_Message49" xml:space="preserve">
+    <value>Amount cannot be empty</value>
+  </data>
+  <data name="TranApproval_RiskApproval_Message1" xml:space="preserve">
+    <value>Risk Proposal Approved successfully.</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_RiskApproval_Message2" xml:space="preserve">
+    <value>Risk Proposal Cancelled successfully.</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_RiskApproval_Message3" xml:space="preserve">
+    <value>Risk Proposal Rejected successfully.</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_RiskApproval_Message4" xml:space="preserve">
+    <value>Risk Proposal  Revoked successfully.</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_RiskApproval_Message5" xml:space="preserve">
+    <value>Risk Proposal held successfully.</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_RiskApproval_Message6" xml:space="preserve">
+    <value>Select atleast one record to Revoke</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_RiskApproval_Message7" xml:space="preserve">
+    <value>Revoke details failed</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_RiskApproval_Message8" xml:space="preserve">
+    <value>Document Path Not Defined</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="TranApproval_RiskApproval_Message9" xml:space="preserve">
+    <value>Approval Added Failed</value>
+    <comment>TransactionApproval - LoanAdmin</comment>
+  </data>
+  <data name="Payment_Message50" xml:space="preserve">
+    <value>Bank General Ledger Account Not Yet Define</value>
+  </data>
+  <data name="TranApproval_DRCR_Message1" xml:space="preserve">
+    <value>Debit Credit Note Approved successfully.</value>
+  </data>
+  <data name="TranApproval_DRCR_Message10" xml:space="preserve">
+    <value>Debit Credit Note Approval details added failed.</value>
+  </data>
+  <data name="TranApproval_DRCR_Message11" xml:space="preserve">
+    <value>Enter the Payment Bank details tab in payment request</value>
+  </data>
+  <data name="TranApproval_DRCR_Message12" xml:space="preserve">
+    <value>Enter the Instrument Number in Payment Bank details tab in payment request.</value>
+  </data>
+  <data name="TranApproval_DRCR_Message13" xml:space="preserve">
+    <value>Enter the Instrument Date in Payment Bank details tab in payment request.</value>
+  </data>
+  <data name="TranApproval_DRCR_Message14" xml:space="preserve">
+    <value>Enter the Payment Bank details tab in payment request.</value>
+  </data>
+  <data name="TranApproval_DRCR_Message15" xml:space="preserve">
+    <value>GL_Code Does not Exist For respective location</value>
+  </data>
+  <data name="TranApproval_DRCR_Message16" xml:space="preserve">
+    <value>Voucher Not Tallied</value>
+  </data>
+  <data name="TranApproval_DRCR_Message2" xml:space="preserve">
+    <value>Debit Credit Note Cancelled successfully.</value>
+  </data>
+  <data name="TranApproval_DRCR_Message3" xml:space="preserve">
+    <value>Debit Credit Note Rejected successfully.</value>
+  </data>
+  <data name="TranApproval_DRCR_Message4" xml:space="preserve">
+    <value>Debit Credit Note Revoked successfully.</value>
+  </data>
+  <data name="TranApproval_DRCR_Message5" xml:space="preserve">
+    <value>Debit Credit Note  held successfully.</value>
+  </data>
+  <data name="TranApproval_DRCR_Message6" xml:space="preserve">
+    <value>Select atleast one record to Revoke</value>
+  </data>
+  <data name="TranApproval_DRCR_Message7" xml:space="preserve">
+    <value>Revoke details failed</value>
+  </data>
+  <data name="TranApproval_DRCR_Message8" xml:space="preserve">
+    <value>Document Path Not Defined</value>
+  </data>
+  <data name="TranApproval_DRCR_Message9" xml:space="preserve">
+    <value>Approval Added Failed</value>
+  </data>
+  <data name="TranApproval_LFUPE_Message1" xml:space="preserve">
+    <value>Lawyer Follow-up Entry Approved successfully.</value>
+    <comment>Lawyer Follow-up Entry</comment>
+  </data>
+  <data name="TranApproval_LFUPE_Message2" xml:space="preserve">
+    <value>Lawyer Follow-up Entry Rejected successfully.</value>
+    <comment>Lawyer Follow-up Entry</comment>
+  </data>
+  <data name="Manual_Journal_Message1" xml:space="preserve">
+    <value>Manual Journal Approved Successfully</value>
+  </data>
+  <data name="Manual_Journal_Message2" xml:space="preserve">
+    <value>Manual Journal Revoked Successfully</value>
+  </data>
+  <data name="TranApproval_NFB_Message11" xml:space="preserve">
+    <value>NFB Approved successfully.</value>
+    <comment>NFB</comment>
+  </data>
+  <data name="TranApproval_NFB_Message21" xml:space="preserve">
+    <value>NFB Rejected successfully.</value>
+    <comment>NFB</comment>
+  </data>
+  <data name="Receipt_Approval_Message1" xml:space="preserve">
+    <value>Receipt Authorization Approved Successfully</value>
+  </data>
+  <data name="Receipt_Approval_Message2" xml:space="preserve">
+    <value>Receipt Authorization Revoked Successfully</value>
+  </data>
+  <data name="TranApproval_RCPT_Message10" xml:space="preserve">
+    <value>Receipt Authorization details added failed.</value>
+  </data>
+  <data name="TranApproval_RCPT_Message11" xml:space="preserve">
+    <value>Enter the Receipt Bank details tab in payment request</value>
+  </data>
+  <data name="TranApproval_RCPT_Message12" xml:space="preserve">
+    <value>Enter the Instrument Number in Receipt Bank details tab in payment request.</value>
+  </data>
+  <data name="TranApproval_RCPT_Message13" xml:space="preserve">
+    <value>Enter the Instrument Date in Receipt Bank details tab in payment request.</value>
+  </data>
+  <data name="TranApproval_RCPT_Message14" xml:space="preserve">
+    <value>Enter the Receipt Bank details tab in Receipt Processing.</value>
+  </data>
+  <data name="TranApproval_RCPT_Message15" xml:space="preserve">
+    <value>GL_Code Does not Exist For respective location</value>
+  </data>
+  <data name="TranApproval_RCPT_Message16" xml:space="preserve">
+    <value>Voucher Not Tallied</value>
+  </data>
+  <data name="FileRequest_Error_Messege1" xml:space="preserve">
+    <value>Due to Data Problem,Unable to Modify an Application</value>
+  </data>
+  <data name="FileRequest_Error_Messege2" xml:space="preserve">
+    <value>Due to Data Problem,Unable to Create an Application</value>
+  </data>
+</root>

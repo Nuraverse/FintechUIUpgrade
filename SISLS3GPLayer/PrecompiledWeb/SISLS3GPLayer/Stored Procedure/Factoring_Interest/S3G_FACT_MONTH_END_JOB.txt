@@ -1,0 +1,178 @@
+﻿create or replace
+PROCEDURE S3G_FACT_MONTH_END_JOB
+(
+    p_Company_ID IN NUMBER DEFAULT NULL                            
+) AS 
+
+/* _____________________________________________________________________________
+
+    Created By    : SATHISH R
+    Created On    : 16-MARCH-2019
+    Purpose       : MFC-RUN FACTORING MONTH END ACTIVITY
+    
+  
+   _____________________________________________________________________________*/
+   
+  D_CUT_OFF_DATE DATE; 
+  D_FIRST_DAY_OF_MONTH date;
+  D_Location_Id number;
+  D_LOB_ID NUMBER;
+  D_ERRORCODE NUMBER;
+  D_CNTMONTHLOCK NUMBER;
+  D_NO_DAYS NUMBER;
+  D_COUNT NUMBER;
+  D_RESULTSET SYS_REFCURSOR;
+  P_OUT_PENAL_INT SYS_REFCURSOR;
+  D_LOCATION_NAME VARCHAR(50);
+  D_LOCATION VARCHAR(50);
+  D_PREMONTHDATE DATE;
+  D_CATEGORY_ID NUMBER;
+  D_CATEGORY_CODE VARCHAR2(100);   
+  D_LOCATION_CODE VARCHAR(200);
+
+BEGIN
+    DELETE FROM TMP_LA_ODI_LOCATIONS;
+    DELETE FROM TMP_LA_ODI_MNTHLCK;
+   
+  D_LOB_ID:=4;
+  D_LOCATION_ID:=D_LOCATION_ID;
+  D_CUT_OFF_DATE:='19-MAR-2019';
+   
+      
+           BEGIN
+              IF(D_CUT_OFF_DATE IS NULL)THEN
+                  BEGIN
+                   SELECT  LAST_DAY(SYSDATE) INTO D_CUT_OFF_DATE FROM DUAL;
+                  END;
+              END IF;
+            
+            SELECT ADD_MONTHS((LAST_DAY(SYSDATE)+1),-1) INTO D_FIRST_DAY_OF_MONTH FROM DUAL;
+            
+             SELECT EXTRACT(DAY FROM LAST_DAY(SYSDATE)) INTO D_NO_DAYS FROM DUAL;
+
+             
+              IF (D_CUT_OFF_DATE!=TRUNC(sysdate))then
+                BEGIN
+                 S3G_FAC_MNTH_END_IN_ER_LOG('JOB TRIRED EARLY MONTH END','MONTH-DATE COMPARE');
+                RETURN;
+                end;
+              end if;
+            END;  
+      
+   
+   
+   
+     
+             SELECT COUNT('X') INTO d_Count 
+             FROM S3G_CLN_MemoMAst 
+             WHERE 
+               COMPANY_ID = P_COMPANY_ID 
+               and (LOB_ID = D_LOB_ID or LOB_ID is null) 
+               AND (Location_id = D_Location_Id OR Location_Id IS NULL)  
+               AND memo_type = '24' AND Memo_Type_Code = '36' AND Is_Active = '1';
+           
+             IF (D_COUNT = 0) THEN
+               begin
+                  S3G_FAC_MNTH_END_IN_ER_LOG('Memo Master Not Defined','Memo Flag(ODI) Condition Checking');
+                  RETURN;
+               end;   
+             END IF;
+
+   
+
+         BEGIN--GET LOCATIONS START
+            S3G_SA_Get_BrnList(p_Company_ID,1,'85',Null,D_LOB_id,1 , NULL,d_RESULTSET);
+            LOOP
+              FETCH D_RESULTSET INTO D_LOCATION_ID, D_LOCATION_CODE,D_LOCATION_NAME, 
+                       D_CATEGORY_CODE, D_CATEGORY_ID  ,D_LOCATION;
+              
+              INSERT INTO TMP_LA_ODI_LOCATIONS(LOCATION_ID, LOCATION_NAME,
+                   CATEGORY_CODE, CATEGORY_ID  , LOCATION,LOCATION_CODE )
+              VALUES(D_LOCATION_ID, D_LOCATION_NAME, 
+                       D_CATEGORY_CODE, D_CATEGORY_ID  ,D_LOCATION,D_LOCATION_CODE);
+           
+              EXIT WHEN d_RESULTSET%NOTFOUND;
+                    
+             END LOOP;
+            CLOSE D_RESULTSET;
+          END;--GET LOCATIONS END  
+     
+   
+          D_PREMONTHDATE := ADD_MONTHS(D_CUT_OFF_DATE, -1);  
+          --D('D_PREMONTHDATE==>'||D_PREMONTHDATE);
+          
+                 /* MONTH LOCK CHECKING */  
+                 INSERT INTO TMP_LA_ODI_MNTHLCK
+                (LOB_ID,LOCATION_CODE,LOCATION_ID
+                )
+              SELECT DISTINCT LO.LOB_ID,
+                DTLS.Location_Code ,
+                DTLS.LOCATION_ID
+              FROM S3G_SYSAD_EOM_PARAMSLOBDETAILS LO
+              INNER JOIN S3G_SYSAD_MONTHENDPARAMSDETAIL DTLS
+              ON LO.Month_End_Params_ID = DTLS.Month_End_Params_ID
+              INNER JOIN S3G_SYSAD_MonthEndParams MEP
+              ON LO.Month_End_Params_ID = MEP.Month_End_Params_ID
+              INNER JOIN S3G_SYSAD_GlobalParameterSetup HDR
+              ON HDR.GLOBAL_PARAMETERS_ID            =MEP.GLOBAL_PARAMETERS_ID
+              WHERE TO_CHAR(SUBSTR(Month_Value,0,4)) = TO_CHAR(D_CUT_OFF_DATE, 'YYYY')
+              AND TO_CHAR(SUBSTR(MONTH_VALUE,5,2))   = TO_CHAR(D_CUT_OFF_DATE, 'MM')
+              AND HDR.Company_ID                     =p_Company_ID
+              AND DTLS.Location_id                  IN
+                (SELECT Location_id FROM TMP_LA_ODI_LOCATIONS
+                )
+              AND LOB_ID            =NVL(D_LOB_ID,LOB_ID)
+              AND MONTH_LOCK        =0
+              AND DTLS.LOCATION_ID IN
+                (SELECT DISTINCT DTLS.Location_id
+                FROM S3G_SYSAD_EOM_PARAMSLOBDETAILS LO
+                INNER JOIN S3G_SYSAD_MONTHENDPARAMSDETAIL DTLS
+                ON LO.Month_End_Params_ID = DTLS.Month_End_Params_ID
+                INNER JOIN S3G_SYSAD_MonthEndParams MEP
+                ON LO.Month_End_Params_ID = MEP.Month_End_Params_ID
+                INNER JOIN S3G_SYSAD_GlobalParameterSetup HDR
+                ON HDR.Global_Parameters_ID   =MEP.Global_Parameters_ID
+                WHERE SUBSTR(Month_Value,0,4) = TO_CHAR(d_PreMonthDate, 'YYYY')
+                AND SUBSTR(Month_Value,5,2)   = TO_CHAR(d_PreMonthDate, 'MM')
+                AND HDR.COMPANY_ID            =P_COMPANY_ID
+                AND DTLS.LOCATION_ID         IN
+                  (SELECT LOCATION_id FROM TMP_LA_ODI_LOCATIONS
+                  )
+                AND LOB_ID     =NVL(d_LOB_ID,LOB_ID)
+                AND Month_Lock = 1
+                ) ;
+              /* Month Lock Previous Month checking */
+              
+              
+              
+              
+          SELECT count(*) INTO d_CntMonthLock FROM TMP_LA_ODI_MNTHLCK; 
+           
+           IF(D_CNTMONTHLOCK=0) THEN
+           BEGIN
+                S3G_FAC_MNTH_END_IN_ER_LOG('To Calculate ODI - Current Month Should be Opened and Previous Month Should be Locked','ODI Month Lock Checking');
+                RETURN; 
+           end;   
+           END IF;
+               
+      
+        FOR L1 IN(SELECT LOCATION_ID FROM TMP_LA_ODI_MNTHLCK  GROUP BY LOCATION_ID)  
+        LOOP
+          BEGIN--Penal Interest start
+          --D('L1.LOCATION_ID==>'||L1.LOCATION_ID);
+          S3G_FACT_PENAL_INTEREST(P_COMPANY_ID,L1.LOCATION_ID,NULL,NULL,0,D_CUT_OFF_DATE,P_OUT_PENAL_INT); 
+          END;
+        END LOOP;
+        
+        FOR L2 IN(SELECT LOCATION_ID FROM TMP_LA_ODI_MNTHLCK  GROUP BY LOCATION_ID)  
+        LOOP
+          BEGIN--Penal Interest start
+          --D('L1.LOCATION_ID==>'||L1.LOCATION_ID);
+          S3G_FACT_REGULAR_INT(P_COMPANY_ID,L2.LOCATION_ID,NULL,D_CUT_OFF_DATE,0,P_OUT_PENAL_INT); 
+          END;
+        END LOOP;
+  
+       
+       
+       
+END S3G_FACT_MONTH_END_JOB;

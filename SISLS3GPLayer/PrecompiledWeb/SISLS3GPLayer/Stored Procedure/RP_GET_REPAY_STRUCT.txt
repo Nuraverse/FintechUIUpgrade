@@ -1,0 +1,172 @@
+﻿create or replace
+PROCEDURE "RP_GET_REPAY_STRUCT" 
+ (
+P_Company_Id In Number,    
+ P_Panum      In Varchar2,    
+ P_Sanum      In Varchar2:= Null,    
+ P_Type       In Varchar2,
+P_Is_Print_Seq_Update  In Varchar2,
+P_Is_Print_Seq_No in Varchar2,
+P_User_id in Number,
+P_Outtbl     Out Sys_Refcursor,
+P_Outtb2     OUT SYS_REFCURSOR
+)---------  R -  Repay,A -  Amort    
+As        
+-- =============================================                                                            
+-- Author   : Nalan G
+-- Create Date  : 17-2-2012                                                            
+-- Description  : To get Repayment Details    
+-- SQL : S3G_RPT_GetRepaymentStructure
+-- Modified By: Ponnurajesh
+-- Modified On: 5/Mar/2012
+-- Reason: Alias name for GPSSuffix was given as D_GPSSuffix.Same was fixed.
+-- =============================================         
+D_Gpssuffix Number;
+D_Financecharges Number;
+d_insacount number;
+D_Pos Number;
+D_Company_Name Varchar(100);
+D_Rpt_Prnt_Sequence Varchar(50);
+D_PA_SA_REF_ID number;
+D_INSTALMENT_LIPCUMP number;
+D_INSTALMENT_LIPCUST NUMBER;
+Begin        
+--declare @GPSSuffix int    
+
+
+If(P_Is_Print_Seq_Update='1')Then
+  S3g_Sysad_Trans_History(132,P_Is_Print_Seq_No,P_Panum,To_Char(Systimestamp,'MM/DD/YYYY'),P_User_id,1);
+  return;
+end if;
+
+    Begin
+      Select Currency_Max_Dec_Digit 
+        Into D_Gpssuffix
+        From S3g_Sysad_Globalparametersetup 
+      Where Company_Id=P_Company_Id
+        And Rownum < 2;
+    Exception
+       When Others Then
+       Null;
+    End;
+  
+select PA_SA_REF_ID into d_PA_SA_REF_ID from S3g_Lad_Accpasadet where panum=P_Panum; 
+  
+S3G_OR_GET_DOCCTRLNO(P_COMPANY_ID ,'CTN',0,0,0,D_RPT_PRNT_Sequence);
+select COMPANY_NAME into d_COMPANY_NAME from S3g_Sysad_Companymaster ;
+Select count(1) into d_insacount From S3g_Lad_Accrepaystruct Where Panum=P_Panum;
+
+Open P_Outtbl For
+Select Ac.Panum As "Acno",Cm.Customer_Code||'-'||Cm.Customer_Name As "Customer_Name",Ac.Finance_Amount As "FinAmount",Look.Lookup_Description As "Status",D_Insacount As "Installment" 
+,d_COMPANY_NAME as "Company_Name",sysdate as "Report_Start_Date",D_RPT_PRNT_Sequence as "RPT_PRT_SEQ"
+From S3g_Lad_Acccreation Ac 
+Inner Join S3g_Lad_Accpasadet Pasa
+on Pasa.Account_Creation_Id=Ac.Account_Creation_Id
+Inner Join S3g_Org_Custmaster Cm
+On Cm.Customer_Id=Ac.Customer_Id
+Inner Join S3g_Lad_Lookuptypedet Look
+on (look.LOOKUP_CODE=Pasa.Sa_Status_Code and Look.Lookuptype_Code=25)
+where ac.panum=P_Panum;
+
+If P_Type='R' Then    
+--      Begin    
+      --print 'R'  
+       Select Sum(Financecharges) Into D_Financecharges From S3g_Lad_Accrepaystruct Where PA_SA_REF_ID = d_PA_SA_REF_ID  ;
+       select sum(PRINCIPALAMOUNT) into d_POS from S3g_Lad_Accrepaystruct where PA_SA_REF_ID = d_PA_SA_REF_ID  ;
+      Open P_Outtb2 For
+        Select Distinct     
+          --GPSSUFFIX=CAST(D_GPSSuffix AS VARCHAR(10)),    
+          To_Char(D_Gpssuffix) Gpssuffix,
+          Acc.Installment_No  "INSTALLMENTNO",    
+          Getuserdateformat(Acc.Installmentdate,P_Company_Id)  "Installmentdate",    
+          S3g_Fn_Getgpsdecimalformat(Nvl(Acc.Installmentamount,0)+Nvl(Extn.Instalment_Amount,0),P_Company_Id) "Installmentamount" ,    
+          Nvl(Acc.Installmentamount,0)+Nvl(Extn.Instalment_Amount,0) As Installmentamount_1,
+          S3g_Fn_Getgpsdecimalformat(Nvl(Acc.Principalamount,0)+Nvl(ExtnPrin.Instalment_Amount,0),P_Company_Id) "Principalamount",    
+          Nvl(Acc.Principalamount,0)+Nvl(ExtnPrin.Instalment_Amount,0) As Principalamount_1,
+          S3g_Fn_Getgpsdecimalformat(Nvl(Acc.Financecharges,0)+Nvl(ExtnPrin.Instalment_Amount,0)-Nvl(Extn.Instalment_Amount,0),P_Company_Id)  "Financecharges",  
+          Nvl(Acc.Financecharges,0)+Nvl(ExtnPrin.Instalment_Amount,0)-Nvl(Extn.Instalment_Amount,0) As Financecharges_1,
+          d_FINANCECHARGES as  "UMFC",    
+          S3g_Fn_Getgpsdecimalformat(Nvl(Acc.Insuranceamount,0) ,P_Company_Id)  Insuranceamount,  
+          NVL(ACC.INSURANCEAMOUNT,0) as INSURANCEAMOUNT_1,
+          S3g_Fn_Getgpsdecimalformat(Nvl(Acc.Others,0) ,P_Company_Id) Others,  
+          NVL(ACC.OTHERS,0) as OTHERS_1,
+          S3G_FN_GETGPSDECIMALFORMAT(NVL(ACC.TAX,0)-NVL(ACC.TAXSETOFF,0),P_COMPANY_ID) VATRECOVERY,    
+          S3g_Fn_Getgpsdecimalformat(Nvl(Acc.Tax,0) ,P_Company_Id) Tax,    
+          S3G_FN_GETGPSDECIMALFORMAT(NVL(ACC.TAXSETOFF,0), P_COMPANY_ID) TAXSETOFF    ,
+          S3G_FN_GETGPSDECIMALFORMAT(ac.FINANCE_AMOUNT, p_company_id) FACILITYAMOUNT,
+          
+          Tenure, Ac.Accounting_Irr As Irr,
+          To_Char(Acc.Installmentdate,'Mon')||'-'||To_Char(Acc.Installmentdate,'YYYY') As "Acmth",
+          d_POS  AS "TOTAL_POS"
+          
+          From S3g_Lad_Accrepaystruct Acc     
+          INNER JOIN S3G_LAD_AccCashFlowDet CASH ON ACC.PA_SA_REF_ID=CASH.PA_SA_REF_ID --AND ACC.SANUM=CASH.SANUM   
+          Inner Join S3g_Lad_Accpasadet Ac On Ac.Pa_Sa_Ref_Id = Acc.Pa_Sa_Ref_Id
+          Left Join S3g_Lad_Accrepaystruct_Extn Extn
+          on (Extn.Pa_Sa_Ref_Id=Ac.Pa_Sa_Ref_Id and Extn.INSTALMENT_NO=Acc.INSTALLMENT_NO and extn.CASHFLOW_FLAG_ID=108)
+          Left Join S3g_Lad_Accrepaystruct_Extn ExtnPrin
+          on (ExtnPrin.Pa_Sa_Ref_Id=Ac.Pa_Sa_Ref_Id and ExtnPrin.INSTALMENT_NO=Acc.INSTALLMENT_NO and ExtnPrin.CASHFLOW_FLAG_ID=109)
+           
+            
+         WHERE      
+          CASH.COMPANY_ID=P_COMPANY_ID    
+           And Acc.Panum = P_Panum     
+           --AND ACC.SANUM = NVL(P_SANUM,ACC.SANUM)  
+           --AND  CASHFLOW.CASHFLOW_FLAG_ID=34    
+           --AND  CASH.CASHFLOW_TYPE=53    
+         Order By Acc.Installment_No;    
+         --Print 'R'  
+--      END    
+Else    
+    --  Begin    
+    
+    Select Sum(Financecharges) Into D_Financecharges From S3g_Lad_Accamortstruct Where PA_SA_REF_ID = d_PA_SA_REF_ID ;
+    select sum(PRINCIPALAMOUNT) into d_POS from S3g_Lad_Accamortstruct where PA_SA_REF_ID = d_PA_SA_REF_ID  ;
+    
+     select SUM(NVL(INSTALMENT_AMOUNT,0)) into D_INSTALMENT_LIPCUST from S3G_LAD_ACCAMORTSTRUCT_EXTN where PA_SA_REF_ID = D_PA_SA_REF_ID   and CASHFLOW_FLAG_ID=108;
+     select sum(NVL(INSTALMENT_AMOUNT,0)) into D_INSTALMENT_LIPCUMP from S3g_Lad_Accamortstruct_extn where PA_SA_REF_ID = d_PA_SA_REF_ID   AND CASHFLOW_FLAG_ID=109;
+     
+     D_POS:=D_POS+D_INSTALMENT_LIPCUMP;
+     D_Financecharges:=D_Financecharges+D_INSTALMENT_LIPCUST-D_INSTALMENT_LIPCUMP;
+     
+    
+      Open P_Outtb2 For          
+        Select Distinct     
+          --GPSSUFFIX=CAST(D_GPSSuffix AS VARCHAR(10)),    
+          To_Char(D_Gpssuffix) Gpssuffix,
+          Amort.Installment_No "INSTALLMENTNO",    
+          Getuserdateformat(Amort.Installmentdate,P_Company_Id) "Installmentdate",    
+          S3g_Fn_Getgpsdecimalformat(Nvl(Amort.Installmentamount,0)+Nvl(Extn.Instalment_Amount,0) ,P_Company_Id) "Installmentamount" ,  
+            Nvl(Amort.Installmentamount,0)+Nvl(Extn.Instalment_Amount,0) As Installmentamount_1,
+          S3g_Fn_Getgpsdecimalformat(Nvl(Amort.Principalamount,0)+nvl(ExtnPrin.Instalment_Amount,0) ,P_Company_Id) "Principalamount",  
+          NVL(AMORT.PRINCIPALAMOUNT,0)+NVL(EXTNPRIN.INSTALMENT_AMOUNT,0) as PRINCIPALAMOUNT_1,
+          S3G_FN_GETGPSDECIMALFORMAT(NVL(AMORT.FINANCECHARGES,0)+NVL(EXTN.INSTALMENT_AMOUNT,0)-NVL(EXTNPRIN.INSTALMENT_AMOUNT,0) ,P_COMPANY_ID) "Financecharges",    
+          Nvl(Amort.Financecharges,0)+nvl(extn.Instalment_Amount,0)-nvl(ExtnPrin.Instalment_Amount,0) As Financecharges_1,
+          d_FINANCECHARGES as "UMFC",    
+          S3g_Fn_Getgpsdecimalformat(Nvl(Amort.Insuranceamount,0) ,P_Company_Id) Insuranceamount,    
+          NVL(AMORT.INSURANCEAMOUNT,0) as Insuranceamount_1,
+          S3g_Fn_Getgpsdecimalformat(Nvl(Amort.Others,0) ,P_Company_Id) Others,    
+          Nvl(Amort.Others,0) as Others_1,
+          S3G_FN_GETGPSDECIMALFORMAT(NVL(AMORT.TAX,0)-NVL(AMORT.TAXSETOFF,0),P_COMPANY_ID) VATRECOVERY,    
+          S3G_FN_GETGPSDECIMALFORMAT(NVL(AMORT.TAX,0),P_COMPANY_ID) TAX,    
+          S3g_Fn_Getgpsdecimalformat(Nvl(Amort.Taxsetoff,0) ,P_Company_Id) Taxsetoff    ,
+          To_Char(Amort.Installmentdate,'Mon')||'-'||To_Char(Amort.Installmentdate,'YYYY') As "Acmth",
+          d_POS  AS "TOTAL_POS"
+         
+          From S3g_Lad_Accamortstruct Amort     
+          INNER JOIN S3G_LAD_AccCashFlowDet CASH ON AMORT.PA_SA_REF_ID=CASH.PA_SA_REF_ID --AND AMORT.SANUM=CASH.SANUM   
+          Left Join S3G_LAD_ACCAMORTSTRUCT_EXTN Extn
+          on (Extn.Pa_Sa_Ref_Id=Amort.Pa_Sa_Ref_Id and Extn.INSTALMENT_NO=Amort.INSTALLMENT_NO and extn.CASHFLOW_FLAG_ID=108)
+         Left Join S3G_LAD_ACCAMORTSTRUCT_EXTN ExtnPrin
+          on (ExtnPrin.Pa_Sa_Ref_Id=Amort.Pa_Sa_Ref_Id and ExtnPrin.INSTALMENT_NO=Amort.INSTALLMENT_NO and ExtnPrin.CASHFLOW_FLAG_ID=109)
+           
+          --INNER JOIN S3G_ORG_CASHFLOWMASTER  CASHFLOW ON CASH.COMPONENT_CODE=CASHFLOW.CASHFLOW_ID    
+         WHERE     
+          CASH.COMPANY_ID=P_COMPANY_ID    
+           And Amort.Panum = P_Panum     
+           --AND AMORT.SANUM = NVL(P_SANUM,AMORT.SANUM)    
+           --AND  CASHFLOW.CASHFLOW_FLAG_ID=34    
+           --AND  CASH.CASHFLOW_TYPE=53    
+         Order By Amort.Installment_No;
+End If;
+END;

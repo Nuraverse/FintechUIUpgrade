@@ -1,0 +1,1111 @@
+﻿#region Page Header
+
+/// <Program Summary>
+/// Module Name			: Common  
+/// Screen Name			: S3G Chart Control
+/// Created By			: Shibu 
+/// Created Date		: 21 Jan 2014
+/// Purpose	            : 
+#endregion
+
+
+using System;
+using System.Collections;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Web;
+using System.Web.UI.DataVisualization.Charting.S3GCharts;
+using System.Web.SessionState;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.DataVisualization.Charting;
+using System.Web.UI.DataVisualization.Charting.Utilities;
+using System.Net;
+using System.Collections.Generic;
+
+public partial class UserControls_S3GChartControl : System.Web.UI.UserControl
+{
+    //Series1 X,Y
+    List<string> oListDetaX1;
+    List<decimal> oListValueY1;
+
+    //Series2 X,Y
+    List<string> oListDetaX2;
+    List<decimal> oListValueY2;
+
+    //Series3 X,Y
+    List<string> oListDetaX3;
+    List<decimal> oListValueY3;
+
+
+    //Palette Colors 
+    List<System.Drawing.Color> oColorPalette;
+
+
+    protected int _width = 300;
+    public int setChartWidth   //Set Chart Width
+    {
+        set
+        {
+            _width = value;
+        }
+    }
+    protected int _height = 300;
+    public int setChartHeight //Set Chart Height
+    {
+        set
+        {
+            _height = value;
+        }
+    }
+    protected bool _setChart3D;
+    public bool setChart3D  //Set Chart 3D Option
+    {
+        set
+        {
+            _setChart3D = value;
+        }
+    }
+    protected bool _setPieLabelStyle = false;
+    public bool setPieLabelStyle  //Set Pie Chart Style Inside Or Outside
+    {
+        set
+        {
+            _setPieLabelStyle = value;
+        }
+    }
+    
+    protected bool _setChart3DCustomesRotate;
+    public bool setChart3DCustomesRotate  //Set Chart 3D Option
+    {
+        set
+        {
+            _setChart3DCustomesRotate = value;
+        }
+    }
+    protected int _showChart3DRotateAngle = 0;
+    public int showChart3DRotateAngle  //Set Chart 3D Option
+    {
+        set
+        {
+            _showChart3DRotateAngle = value;
+        }
+    }
+    protected string _showPieLabelStyle;
+    public string showPieLabelStyle  //Set Pie Chart Style Inside Or Outside
+    {
+        set
+        {
+            _showPieLabelStyle = value;
+        }
+    }
+    protected string _showDrillDownChartPath;
+    public string showDrillDownChartPath  //Set Drill Down ChartPath (To Click Chart Series Open New Tabs to Display Dirll Down Chart)
+    {
+        set
+        {
+            _showDrillDownChartPath = value;
+        }
+    }
+    
+    public string showChartTitle //Set Chart Header/Title
+    {
+        set
+        {
+            lblChartTitle.Text = value;
+        }
+    }
+    protected int _fontSize = 9;
+    public int setChartFontSize // Set Chart Font Size
+    {
+        set
+        {
+            _fontSize = value;
+        }
+    }
+    protected bool _setCustomePalette;
+    public bool setCustomePalette  //Set Chart Customes Palette Colors Opetion
+    {
+        set
+        {
+            _setCustomePalette = value;
+        }
+    }
+    protected bool _setSecondaryCustomePalette;
+    public bool setSecondaryCustomePalette  //Set Chart Customes Palette Colors Opetion
+    {
+        set
+        {
+            _setCustomePalette = value;
+        }
+    }
+    protected string _customesPaletteColor;
+    public string showCustomesPaletteColor  //Set Chart Customes Palette Colors
+    {
+        set
+        {
+            _customesPaletteColor = value;
+        }
+    }
+    protected string _customesSecondaryPaletteColor;
+    public string showCustomesSecondaryPaletteColor  //Set Chart Customes Palette Colors
+    {
+        set
+        {
+            _customesSecondaryPaletteColor = value;
+        }
+    }
+    protected bool _setLableValue;
+    public bool setLableValue  //Set Chart Lable Value
+    {
+        set
+        {
+            _setLableValue = value;
+        }
+    }
+    protected bool _setSecondaryLableValue;
+    public bool setSecondaryLableValue  //Set Chart Lable Value
+    {
+        set
+        {
+            _setSecondaryLableValue = value;
+        }
+    }
+    protected bool _setLegends; //Set Chart Legend Option
+    public bool setLegendsValue
+    {
+        set
+        {
+            _setLegends = value;
+        }
+    }
+    protected bool _setDrawStyleCylinder; //Set Chart Drawing Style
+    public bool setDrawStyleCylinder
+    {
+        set
+        {
+            _setDrawStyleCylinder = value;
+        }
+    }
+    //protected string _setDrawStyle; //Set Chart Drawing Style
+    //public string setDrawingStyle
+    //{ 
+    //    set
+    //    {
+    //        _setDrawStyle = value;
+    //    }
+    //}
+    protected bool _setSecondaryLegends; //Set Chart Legend Option
+    public bool setSecondaryLegendsValue
+    {
+        set
+        {
+            _setSecondaryLegends = value;
+        }
+    }
+    protected bool _setToolTipValues;
+    public bool setToolTipValues // Show Tooltip
+    {
+        set
+        {
+            _setToolTipValues = value;
+        }
+    }
+    protected bool _setToolTipNameAnValues;
+    public bool setToolTipNameAnValues // Show Tooltip Value An Series Name
+    {
+        set
+        {
+            _setToolTipNameAnValues = value;
+        }
+    }
+    protected bool _setToolTipDrillChart;
+    public bool setToolTipDrillChart // Show Tooltip Chart
+    {
+        set
+        {
+            _setToolTipDrillChart = value;
+        }
+    }
+    protected bool _setToolTipChart;
+    public bool setToolTipChart // Show Tooltip Chart
+    {
+        set
+        {
+            _setToolTipChart = value;
+        }
+    }
+    protected bool _setClickDrillChartDetails;
+    public bool setClickDrillChartDetails // Click Chart Series to Open New Tab an Chart
+    {
+        set
+        {
+            _setClickDrillChartDetails = value;
+        }
+    }
+    protected bool _setSecondaryToolTipValues;
+    public bool setSecondaryToolTipValues // Show Secondary Tooltip
+    {
+        set
+        {
+            _setSecondaryToolTipValues = value;
+        }
+    }
+    protected bool _setSecondaryToolTipNameAnValues; // Show Secondary Tooltip Value An Name
+    public bool setSecondaryToolTipNameAnValues
+    {
+        set
+        {
+            _setSecondaryToolTipNameAnValues = value;
+        }
+    }
+    protected bool _setChartOrder; // Order Based on Value 
+    public bool setChartOrder
+    {
+        set
+        {
+            _setChartOrder = value;
+        }
+    }
+    protected bool _setMinimumChartColor; // Set Minimum value Color
+    public bool setMinimumChartColor
+    {
+
+        set
+        {
+            _setMinimumChartColor = value;
+        }
+    }
+    protected bool _setMaximumChartColor; // Set Maximum value Color
+    public bool setMaximumChartColor
+    {
+        set
+        {
+            _setMaximumChartColor = value;
+        }
+    }
+    protected bool _saveImage; // Save Chart Image In Local Folder
+    public bool setSaveChartImage
+    {
+        set
+        {
+            _saveImage = value;
+        }
+    }
+    protected string _returnSaveImagePath; // Return Saved Chart Image Path
+    public string returnSaveImagePath
+    {
+        get
+        {
+            return _returnSaveImagePath;
+        }
+        set
+        {
+            _returnSaveImagePath = value;
+        }
+    }
+    protected string _showMinimumChartColor; // Assign Minimum Value Color
+    public string showMinimumChartColor
+    {
+
+        set
+        {
+            _showMinimumChartColor = value;
+        }
+    }
+    protected string _showMaximumChartColor; // Assign Maximun Value Color
+    public string showMaximumChartColor
+    {
+        set
+        {
+            _showMaximumChartColor = value;
+        }
+    }
+    protected System.Web.UI.DataVisualization.Charting.PointSortOrder _chartOrder; //Sort Order In Only Axis Level (Asending / Decending
+    public System.Web.UI.DataVisualization.Charting.PointSortOrder showChartOrder
+    {
+        set
+        {
+            _chartOrder = value;
+        }
+    }
+    protected System.Web.UI.DataVisualization.Charting.SeriesChartType _chartType;
+    public System.Web.UI.DataVisualization.Charting.SeriesChartType showChartType
+    {
+        set
+        {
+            _chartType = value;
+        }
+    }
+    protected bool _setUserDefineCondition;
+    public bool setUserDefineCondition
+    {
+        set
+        {
+            _setUserDefineCondition = value;
+        }
+    }
+    protected string _showUserDefineCondition;
+    public string showUserDefineCondition
+    {
+        set
+        {
+            _showUserDefineCondition = value;
+        }
+    }
+    protected bool _setChartSecondaryLine;
+    public bool setChartSecondaryLine
+    {
+        set
+        {
+            _setChartSecondaryLine = value;
+        }
+    }
+    protected bool _setChartLableInPercent;
+    public bool setChartLableInPercent
+    {
+        set
+        {
+            _setChartLableInPercent = value;
+        }
+    }
+    protected bool _setChartLableFormat;
+    public bool setChartLableFormat
+    {
+        set
+        {
+            _setChartLableFormat = value;
+        }
+    }
+    protected bool _setChartMultipleSeries=false;
+    public bool setChartMultipleSeries
+    {
+        set
+        {
+            _setChartMultipleSeries = value;
+        }
+    }
+    protected System.Web.UI.DataVisualization.Charting.SeriesChartType _chartSecondaryType;
+    public System.Web.UI.DataVisualization.Charting.SeriesChartType showChartSecondaryType
+    {
+        set
+        {
+            _chartSecondaryType = value;
+        }
+    }
+
+    protected string _Series1 = string.Empty;
+    public string setChartSeries1  //Set Chart Series
+    {
+        set
+        {
+            _Series1 = value;
+        }
+    }
+    protected string _Series2 = string.Empty;
+    public string setChartSeries2  //Set Chart Series
+    {
+        set
+        {
+            _Series2 = value;
+        }
+    }
+    protected string _Series3 = string.Empty;
+    public string setChartSeries3  //Set Chart Series
+    {
+        set
+        {
+            _Series3 = value;
+        }
+    }
+    protected DataTable _dataTableSeries1;
+    public DataTable setDataTableSeries1 // To Return DataTable For Series Chart1
+    {
+        set
+        {
+            _dataTableSeries1 = value;
+        }
+    }
+    protected DataTable _dataTableSeries2;
+    public DataTable setDataTableSeries2 // To Return DataTable For Series Chart2
+    {
+        set
+        {
+            _dataTableSeries2 = value;
+        }
+    }
+    protected DataTable _dataTableSeries3;
+    public DataTable setDataTableSeries3 // To Return DataTable For Series Chart3
+    {
+        set
+        {
+            _dataTableSeries3 = value;
+        }
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        //Chart1.Series[0].ChartType = SeriesChartType.Column;
+    }
+    public enum DrawingStyle
+    {
+        Cylinder = 1
+    }
+    public void BindChart()
+    {
+        try
+        {
+            // To Chart Series
+            trErrorChart.Visible = false;
+            trChart.Visible = true;
+            Chart1.Series.Clear();
+           
+            
+            Chart1.Width = _width;
+            Chart1.Height = _height;
+           
+            Title TitetFontColor = new Title(lblChartTitle.Text, Docking.Top, new System.Drawing.Font("Segoe UI", 9, System.Drawing.FontStyle.Bold), System.Drawing.ColorTranslator.FromHtml("#003d9e"));
+            TitetFontColor.Alignment = System.Drawing.ContentAlignment.TopCenter;
+            Chart1.Titles.Add(TitetFontColor);
+            if (_setChartMultipleSeries)
+                BindXLableChart();
+            else
+                BindSeriesChart();
+            
+            if (_setChartOrder)
+            {
+                if (PointSortOrder.Ascending == _chartOrder)
+                    Chart1.AlignDataPointsByAxisLabel(PointSortOrder.Ascending);
+                else
+                    Chart1.AlignDataPointsByAxisLabel(PointSortOrder.Descending);
+            }
+            if (_saveImage)
+            {string sImgName=DateTime.Now.ToString("yyyyMMddhhmmss") + "_" + lblChartTitle.Text + ".PNG";
+            string sChartFile = Request.PhysicalApplicationPath + "Dashboard\\Image\\" + sImgName;
+                Chart1.SaveImage(sChartFile, ChartImageFormat.Png);
+                _returnSaveImagePath = sImgName;
+            }
+        }
+        catch (Exception Ex)
+        {
+            trErrorChart.Visible = true;
+            trChart.Visible = false;
+        }
+    }
+
+    protected void BindSecondaryChart()
+    {
+        oListDetaX2 = new List<string>();
+        oListValueY2 = new List<decimal>();
+        Chart1.Series.Add(_Series2);
+        GetChartType(_Series2, _chartSecondaryType);
+        foreach (DataRow drow in _dataTableSeries2.Rows)
+        {
+            oListDetaX2.Add(drow["Data"].ToString());
+            oListValueY2.Add(Convert.ToDecimal(drow["Value"]));
+        }
+       
+        Chart1.Series[_Series2].Points.DataBindXY(oListDetaX2, oListValueY2);
+        //To Show Secondary Legends Value
+        if (_setSecondaryLegends)
+            Chart1.Series[_Series2].IsVisibleInLegend = true;
+        else
+            Chart1.Series[_Series2].IsVisibleInLegend = false;
+        //To Show Secondary Lable Value
+        if (_setSecondaryLableValue)
+            Chart1.Series[_Series2].IsValueShownAsLabel = true;
+        else
+            Chart1.Series[_Series2].IsValueShownAsLabel = false;
+        //To Show Secondary Tooltip Value
+        if (_setSecondaryToolTipValues)
+            Chart1.Series[_Series2].ToolTip = " #VALY{###,###,###,###.##} ";
+        //To Show Secondary Tooltip Value an Name
+
+        if (_setSecondaryToolTipNameAnValues)
+            Chart1.Series[_Series2].ToolTip = "#AXISLABEL" + " ( #VALY{###,###,###,###.##} )";
+
+        Chart1.Series[_Series2].MarkerColor = Color.LightGreen;
+        Chart1.Series[_Series2].MarkerBorderColor = Color.MidnightBlue;
+        Chart1.Series[_Series2].MarkerStyle = MarkerStyle.Circle;
+        Chart1.Series[_Series2].MarkerSize = 8;
+
+    }
+
+    //protected void BindXSecondaryChart()
+    //{
+    //    oListDetaX2 = new List<string>();
+    //    oListValueY2 = new List<decimal>();
+    //    Chart1.Series.Add(_Series2);
+    //    GetChartType(_Series2, _chartSecondaryType);
+    //    foreach (DataRow drow in _dataTableSeries2.Rows)
+    //    {
+    //        oListDetaX2.Add(drow["Data"].ToString());
+    //        oListValueY2.Add(Convert.ToDecimal(drow["Value"]));
+    //    }
+
+    //    Chart1.Series[_Series2].Points.DataBindXY(oListDetaX2, oListValueY2);
+    //    //To Show Secondary Legends Value
+    //    if (_setSecondaryLegends)
+    //        Chart1.Series[_Series2].IsVisibleInLegend = true;
+    //    else
+    //        Chart1.Series[_Series2].IsVisibleInLegend = false;
+    //    //To Show Secondary Lable Value
+    //    if (_setSecondaryLableValue)
+    //        Chart1.Series[_Series2].IsValueShownAsLabel = true;
+    //    else
+    //        Chart1.Series[_Series2].IsValueShownAsLabel = false;
+    //    //To Show Secondary Tooltip Value
+    //    if (_setSecondaryToolTipValues)
+    //        Chart1.Series[_Series2].ToolTip = " #VALY{###,###,###,###.##} ";
+    //    //To Show Secondary Tooltip Value an Name
+
+    //    if (_setSecondaryToolTipNameAnValues)
+    //        Chart1.Series[_Series2].ToolTip = "#AXISLABEL" + " ( #VALY{###,###,###,###.##} )";
+
+    //    Chart1.Series[_Series2].MarkerColor = Color.LightGreen;
+    //    Chart1.Series[_Series2].MarkerBorderColor = Color.MidnightBlue;
+    //    Chart1.Series[_Series2].MarkerStyle = MarkerStyle.Circle;
+    //    Chart1.Series[_Series2].MarkerSize = 8;
+
+    //}
+
+    protected void GetChartType(string sSeries, System.Web.UI.DataVisualization.Charting.SeriesChartType chartType)
+    {
+        if (SeriesChartType.Pie == chartType)
+            Chart1.Series[sSeries].ChartType = SeriesChartType.Pie;
+        else if (SeriesChartType.Line == chartType)
+            Chart1.Series[sSeries].ChartType = SeriesChartType.Line;
+        else if (SeriesChartType.Bar == chartType)
+            Chart1.Series[sSeries].ChartType = SeriesChartType.Bar;
+        else if (SeriesChartType.Column == chartType)
+            Chart1.Series[sSeries].ChartType = SeriesChartType.Column;
+        else if (SeriesChartType.Doughnut == chartType)
+            Chart1.Series[sSeries].ChartType = SeriesChartType.Doughnut;
+        else if (SeriesChartType.Pyramid == chartType)
+            Chart1.Series[sSeries].ChartType = SeriesChartType.Pyramid;
+        else if (SeriesChartType.StackedArea == chartType)
+            Chart1.Series[sSeries].ChartType = SeriesChartType.StackedArea;
+        else if (SeriesChartType.StackedColumn == chartType)
+            Chart1.Series[sSeries].ChartType = SeriesChartType.StackedColumn;
+        else if (SeriesChartType.Stock == chartType)
+            Chart1.Series[sSeries].ChartType = SeriesChartType.Stock;
+        else if (SeriesChartType.StackedBar == chartType)
+            Chart1.Series[sSeries].ChartType = SeriesChartType.StackedBar;
+        else if (SeriesChartType.Bubble == chartType)
+            Chart1.Series[sSeries].ChartType = SeriesChartType.Bubble;
+        else if (SeriesChartType.Funnel == chartType)
+            Chart1.Series[sSeries].ChartType = SeriesChartType.Funnel;
+        else if (SeriesChartType.Candlestick == chartType)
+            Chart1.Series[sSeries].ChartType = SeriesChartType.Candlestick;
+        else if (SeriesChartType.Range == chartType)
+            Chart1.Series[sSeries].ChartType = SeriesChartType.Range;
+        else if (SeriesChartType.Radar == chartType)
+            Chart1.Series[sSeries].ChartType = SeriesChartType.Radar;
+    }
+
+    protected void GetChartPaletteColor(string sSeries)
+    {
+        oColorPalette = new List<Color>();
+        string[] arrColor = _customesPaletteColor.Split('~');
+        for (int i = 0; i < arrColor.Length; i++)
+        {
+            oColorPalette.Add(System.Drawing.ColorTranslator.FromHtml(arrColor[i].ToString()));
+        }
+        Chart1.Palette = ChartColorPalette.None;
+        Chart1.PaletteCustomColors = oColorPalette.ToArray();
+    }
+
+    protected void TooltipAttrib()
+    {
+
+        // Set series tooltips
+        foreach (Series series in Chart1.Series)
+        {
+            for (int pointIndex = 0; pointIndex < series.Points.Count; pointIndex++)
+            {
+            
+                string toolChart = string.Empty;
+                string toolTip = string.Empty;
+                if (_setToolTipChart)
+                {
+                    // toolTip = "<img src=DrillChart.aspx />";
+                    toolChart = "<img src=../Dashboard/DrillChart.aspx?SeriesValue=" + series.Points[pointIndex].AxisLabel + "/>";
+                    //toolTip = "<img src=DrillChart.aspx?Month=" + series.Points[pointIndex].AxisLabel + "&region=" + ddlLocation.SelectedItem.Text + "&region_ID=1/>";
+                    //toolTip = "<img src=../Images/downarrow_07.png />";
+                    toolTip = " onmouseover=\"DisplayTooltip('" + toolChart + "')\";onmouseout=\"DisplayTooltip('');\"";
+                }
+                string sClickURL = string.Empty;
+                if (_setClickDrillChartDetails)
+                {                    
+                    //if (_setChartMultipleSeries)
+                    //sURL = "/SISLS3GPLayer/LoanAdmin/DrillDownChartDetails.aspx?SeriesValue=" + series.Points[pointIndex].AxisLabel;
+                    //else
+                    string sUDCondition=string.Empty;
+                    if (_setUserDefineCondition)
+                        sUDCondition ="&"+_showUserDefineCondition;
+
+                    string sURL = "../Dashboard/" + _showDrillDownChartPath + "?SeriesValue=" + series.Points[pointIndex].AxisLabel + "&SeriesName=" + series.Name.ToString() + sUDCondition;
+                    sClickURL = "onclick=\"parent.CreateTabForChild('"+ series.Points[pointIndex].AxisLabel + " - " + series.Name.ToString() + "','" + sURL + "');\"";
+                }
+                series.Points[pointIndex].MapAreaAttributes = sClickURL + toolTip;
+                // series.Points[pointIndex].Url = "parent.CreateTabForChild('DrillDownChartDetails.aspx?region=" + series.Points[pointIndex].AxisLabel + "','" + series.Points[pointIndex].AxisLabel + "');";
+                //series.Points[pointIndex].LegendMapAreaAttributes = "parent.CreateTabForChild('DrillDownChartDetails.aspx?region=" + series.Points[pointIndex].AxisLabel + "','" + series.Points[pointIndex].AxisLabel + "');";
+            }
+        }
+
+    }
+
+    //Single Series Based On Chart
+    protected void BindSeriesChart()
+    {
+        Chart1.Series.Add(_Series1);
+        oListDetaX1 = new List<string>();
+        oListValueY1 = new List<decimal>();
+        foreach (DataRow drow in _dataTableSeries1.Rows)
+        {
+            oListDetaX1.Add(drow["Data"].ToString());
+            oListValueY1.Add(Convert.ToDecimal(drow["Value"]));
+        }
+
+        //To Get Chart Type
+        GetChartType(_Series1, _chartType);
+        if (_setDrawStyleCylinder)
+            Chart1.Series[_Series1]["DrawingStyle"] = "Cylinder";
+        //Get Pie Chart Lable Style Only For Pie Chart
+        if (_setPieLabelStyle)
+        {
+            if (_showPieLabelStyle.Contains("Outside"))
+                Chart1.Series[_Series1]["PieLabelStyle"] = "Outside";
+            else
+                Chart1.Series[_Series1]["PieLabelStyle"] = "Inside";
+        }
+        //To Show Chart Value
+        if (_setLableValue)
+            Chart1.Series[_Series1].IsValueShownAsLabel = true;
+        else
+            Chart1.Series[_Series1].IsValueShownAsLabel = false;
+
+        //To Show Chart Legends Value
+        if (_setLegends)
+            Chart1.Series[_Series1].IsVisibleInLegend = true;
+        else
+            Chart1.Series[_Series1].IsVisibleInLegend = false;
+
+
+        //To Show Chart Option 3D Or Normal
+        if (_setChart3D)
+            Chart1.ChartAreas[0].Area3DStyle.Enable3D = true;
+        else
+            Chart1.ChartAreas[0].Area3DStyle.Enable3D = false;
+
+        if (_setChart3DCustomesRotate)
+            Chart1.ChartAreas[0].Area3DStyle.Rotation = _showChart3DRotateAngle;
+
+        // Chart1.Series[_Series1].Label = "#PERCENT{P0}"; 
+       // Chart1.ChartAreas[0].AxisX.LabelStyle.Format = "#PERCENT{P0}"; 
+        if (_setChartLableInPercent)
+        {
+            Chart1.Series[_Series1].Label = "#PERCENT";
+            Chart1.Series[_Series1].LegendText = "#AXISLABEL";
+        }
+        if (_setChartLableFormat)
+        {
+            Chart1.Series[_Series1].Label = "#VALY{###,###,###,###.##}";
+            Chart1.Series[_Series1].LegendText = "#AXISLABEL";
+        }
+        Chart1.ChartAreas[0].AxisX.LabelStyle.Font = new System.Drawing.Font("Segoe UI", _fontSize);
+        Chart1.ChartAreas[0].AxisY.LabelStyle.Font = new System.Drawing.Font("Segoe UI", _fontSize);
+        Chart1.ChartAreas[0].BackColor = Color.White;
+        Chart1.ChartAreas[0].BackSecondaryColor = Color.White;
+       
+        //Bind Chart
+        Chart1.Series[_Series1].Points.DataBindXY(oListDetaX1, oListValueY1);
+        if (_setMaximumChartColor)
+            Chart1.Series[_Series1].Points.FindMaxByValue().Color = System.Drawing.ColorTranslator.FromHtml(_showMaximumChartColor);// Color.Green;
+        if (_setMinimumChartColor)
+            Chart1.Series[_Series1].Points.FindMinByValue().Color = System.Drawing.ColorTranslator.FromHtml(_showMinimumChartColor); //Color.Red;
+
+
+        if (_setToolTipValues)
+            Chart1.Series[_Series1].ToolTip = " #VALY{###,###,###,###.##} ";
+        if (_setToolTipNameAnValues)
+            Chart1.Series[_Series1].ToolTip = "#AXISLABEL" + " ( #VALY{###,###,###,###.##} )";
+        if (_setToolTipDrillChart)
+            TooltipAttrib();
+        //Bind Secondary Chart
+        if (_setChartSecondaryLine)
+            BindSecondaryChart();
+
+        if (_setCustomePalette)
+            GetChartPaletteColor(_Series1);
+
+        //ChartDataTableHelper TableHelper = new ChartDataTableHelper();
+        //TableHelper.Initialize(Chart1, false);
+        //TableHelper.TableColor = System.Drawing.Color.White;
+        //TableHelper.BorderColor = System.Drawing.Color.FromArgb(64, 64, 64, 64);
+
+    }
+
+    //Multiple Series Chart
+    protected void BindXLableChart()
+    {
+        Chart1.Series.Clear();
+        //To Show Chart Option 3D Or Normal
+        if (_setChart3D)
+            Chart1.ChartAreas[0].Area3DStyle.Enable3D = true;
+        else
+            Chart1.ChartAreas[0].Area3DStyle.Enable3D = false;
+
+        //Chart1.ChartAreas[0].Area3DStyle.PointDepth = 0;
+
+        if (_setChart3DCustomesRotate)
+            Chart1.ChartAreas[0].Area3DStyle.Rotation = _showChart3DRotateAngle;
+
+      
+        Chart1.ChartAreas[0].AxisX.LabelStyle.Font = new System.Drawing.Font("Segoe UI", _fontSize);
+        Chart1.ChartAreas[0].AxisY.LabelStyle.Font = new System.Drawing.Font("Segoe UI", _fontSize);
+        Chart1.ChartAreas[0].BackColor = Color.White;
+        Chart1.ChartAreas[0].BackSecondaryColor = Color.White;
+        Chart1.ChartAreas[0].AxisX.IsLabelAutoFit = true;
+        Chart1.ChartAreas[0].AxisX.LabelAutoFitStyle = LabelAutoFitStyles.LabelsAngleStep30 | LabelAutoFitStyles.LabelsAngleStep45 | LabelAutoFitStyles.LabelsAngleStep90 | LabelAutoFitStyles.WordWrap;
+
+
+
+        Chart1.DataBindCrossTable(_dataTableSeries1.CreateDataReader(), "Series", "xAxis", "Data", "");
+        foreach (Series item in Chart1.Series)
+        {
+              //To Get Chart Type
+                   GetChartType(item.Name.ToString(), _chartType);
+
+                   if (_setChartLableInPercent)
+                   {
+                       item.Label = "#PERCENT";
+                       item.LegendText = "#AXISLABEL";
+                   }
+                   if (_setChartLableFormat)
+                   {
+                       item.Label = "#VALY{###,###,###,###.##}";
+                      
+                   }
+                if (_setMaximumChartColor)
+                    item.Points.FindMaxByValue().Color = System.Drawing.ColorTranslator.FromHtml(_showMaximumChartColor);// Color.Green;
+                if (_setMinimumChartColor)
+                    item.Points.FindMinByValue().Color = System.Drawing.ColorTranslator.FromHtml(_showMinimumChartColor); //Color.Red;
+
+
+                if (_setToolTipValues)
+                    item.ToolTip = " #VALY{###,###,###,###.##} ";
+                if (_setToolTipNameAnValues)
+                    item.ToolTip = "#AXISLABEL" + " ( #VALY{###,###,###,###.##} )";
+                if (_setToolTipDrillChart)
+                    TooltipAttrib();
+
+
+
+                if (_setCustomePalette)
+                    GetChartPaletteColor(item.Name.ToString());
+
+                if (_setDrawStyleCylinder)
+                    item["DrawingStyle"] = "Cylinder";
+
+                //To Show Chart Value
+                if (_setLableValue)
+                    item.IsValueShownAsLabel = true;
+                else
+                    item.IsValueShownAsLabel = false;
+
+                //To Show Chart Legends Value
+                if (_setLegends)
+                    item.IsVisibleInLegend = true;
+                else
+                    item.IsVisibleInLegend = false;
+            }
+
+        //   // BindSecondaryChart
+        if (_setChartSecondaryLine)
+            BindSecondaryChart();
+    }
+
+
+    ////Multiple Series An Chart Area Chart
+    //protected void BindXLableChartArea()
+    //{
+    //    Chart1.Series.Clear();
+    //    //To Show Chart Option 3D Or Normal
+    //    if (_setChart3D)
+    //        Chart1.ChartAreas[0].Area3DStyle.Enable3D = true;
+    //    else
+    //        Chart1.ChartAreas[0].Area3DStyle.Enable3D = false;
+
+    //    if (_setChart3DCustomesRotate)
+    //        Chart1.ChartAreas[0].Area3DStyle.Rotation = _showChart3DRotateAngle;
+
+
+    //    Chart1.ChartAreas[0].AxisX.LabelStyle.Font = new System.Drawing.Font("Segoe UI", _fontSize);
+    //    Chart1.ChartAreas[0].AxisY.LabelStyle.Font = new System.Drawing.Font("Segoe UI", _fontSize);
+    //    Chart1.ChartAreas[0].BackColor = Color.White;
+    //    Chart1.ChartAreas[0].BackSecondaryColor = Color.White;
+    //    Chart1.ChartAreas[0].AxisX.IsLabelAutoFit = true;
+    //    Chart1.ChartAreas[0].AxisX.LabelAutoFitStyle = LabelAutoFitStyles.LabelsAngleStep30 | LabelAutoFitStyles.LabelsAngleStep45 | LabelAutoFitStyles.LabelsAngleStep90 | LabelAutoFitStyles.WordWrap;
+
+    //    //BindSecondaryChart
+    //    //if (_setChartSecondaryLine)
+    //    //    BindSecondaryChart();
+
+    //    Chart1.DataBindCrossTable(_dataTableSeries1.CreateDataReader(), "Series", "xAxis", "Data", "");
+    //    foreach (Series item in Chart1.Series)
+    //    {
+    //        //To Get Chart Type
+    //        //if (item.Name != _Series2)
+    //        //    GetChartType(item.Name.ToString(), _chartSecondaryType);
+    //        //else
+    //            GetChartType(item.Name.ToString(), _chartType);
+
+    //        if (_setMaximumChartColor)
+    //            item.Points.FindMaxByValue().Color = System.Drawing.ColorTranslator.FromHtml(_showMaximumChartColor);// Color.Green;
+    //        if (_setMinimumChartColor)
+    //            item.Points.FindMinByValue().Color = System.Drawing.ColorTranslator.FromHtml(_showMinimumChartColor); //Color.Red;
+
+
+    //        if (_setToolTipValues)
+    //            item.ToolTip = " #VALY{###,###,###,###.##} ";
+    //        if (_setToolTipNameAnValues)
+    //            item.ToolTip = "#AXISLABEL" + " ( #VALY{###,###,###,###.##} )";
+    //        if (_setToolTipDrillChart)
+    //            TooltipAttrib();
+
+
+    //        if (_setCustomePalette)
+    //            GetChartPaletteColor(item.Name.ToString());
+
+    //        if (_setDrawStyleCylinder)
+    //            item["DrawingStyle"] = "Cylinder";
+
+    //        //To Show Chart Value
+    //        if (_setLableValue)
+    //            item.IsValueShownAsLabel = true;
+    //        else
+    //            item.IsValueShownAsLabel = false;
+
+    //        //To Show Chart Legends Value
+    //        if (_setLegends)
+    //            item.IsVisibleInLegend = true;
+    //        else
+    //            item.IsVisibleInLegend = false;
+
+    //    }
+    //   // BindSecondaryChart
+    //    if (_setChartSecondaryLine)
+    //        BindSecondaryChart();
+          
+    //}
+
+    //protected void DataBindChart()
+    //{
+
+    //    if (!_Series1.Equals(string.Empty))
+    //    {
+    //        oListDetaX1 = new List<string>();
+    //        oListValueY1 = new List<decimal>();
+    //        foreach (DataRow drow in _dataTableSeries1.Rows)
+    //        {
+    //            oListDetaX1.Add(drow["Data"].ToString());
+    //            oListValueY1.Add(Convert.ToDecimal(drow["Value"]));
+    //        }
+    //        GetChartType(_Series1);
+
+    //        //To Show Chart Value
+    //        if (_showLableValue)
+    //            Chart1.Series[_Series1].IsValueShownAsLabel = true;
+    //        else
+    //            Chart1.Series[_Series1].IsValueShownAsLabel = true;
+
+    //        //To Show Chart Legends Value
+    //        if (_showLegends)
+    //            Chart1.Series[_Series1].IsVisibleInLegend = true;
+    //        else
+    //            Chart1.Series[_Series1].IsVisibleInLegend = false;
+
+    //        Chart1.Series[_Series1].Points.DataBindXY(oListDetaX1, oListValueY1);
+    //    }
+    //    else if (!_Series2.Equals(string.Empty))
+    //    {
+    //        oListDetaX2 = new List<string>();
+    //        oListValueY2 = new List<decimal>();
+    //        foreach (DataRow drow in _dataTableSeries2.Rows)
+    //        {
+    //            oListDetaX2.Add(drow["Data"].ToString());
+    //            oListValueY2.Add(Convert.ToDecimal(drow["Value"]));
+    //        }
+    //        GetChartType(_Series2);
+    //        //To Show Chart Value
+    //        if (_showLableValue)
+    //            Chart1.Series[_Series2].IsValueShownAsLabel = true;
+    //        else
+    //            Chart1.Series[_Series2].IsValueShownAsLabel = true;
+
+    //        //To Show Chart Legends Value
+    //        if (_showLegends)
+    //            Chart1.Series[_Series2].IsVisibleInLegend = true;
+    //        else
+    //            Chart1.Series[_Series2].IsVisibleInLegend = false;
+
+    //        Chart1.Series[_Series2].Points.DataBindXY(oListDetaX2, oListValueY2);
+
+    //    }
+    //    else if (!_Series3.Equals(string.Empty))
+    //    {
+    //        oListDetaX3 = new List<string>();
+    //        oListValueY3 = new List<decimal>();
+    //        foreach (DataRow drow in _dataTableSeries3.Rows)
+    //        {
+    //            oListDetaX3.Add(drow["Data"].ToString());
+    //            oListValueY3.Add(Convert.ToDecimal(drow["Value"]));
+    //        }
+    //        GetChartType(_Series3);
+
+    //        //To Show Chart Value
+    //        if (_showLableValue)
+    //            Chart1.Series[_Series3].IsValueShownAsLabel = true;
+    //        else
+    //            Chart1.Series[_Series3].IsValueShownAsLabel = true;
+
+    //        //To Show Chart Legends Value
+    //        if (_showLegends)
+    //            Chart1.Series[_Series3].IsVisibleInLegend = true;
+    //        else
+    //            Chart1.Series[_Series3].IsVisibleInLegend = false;
+    //        Chart1.Series[_Series3].Points.DataBindXY(oListDetaX3, oListValueY3);
+    //    }
+    //    else
+    //    {
+    //        return;
+    //    }
+
+    //}
+
+
+
+    //public void BindChart()
+    //{
+    //    if (!_Series1.Equals(string.Empty))
+    //        Chart1.Series.Add(_Series1);
+    //    else if (!_Series2.Equals(string.Empty))
+    //        Chart1.Series.Add(_Series2);
+    //    else if (!_Series3.Equals(string.Empty))
+    //        Chart1.Series.Add(_Series2);
+    //    else
+    //        return;
+
+    //    if (_showChart3D)
+    //        Chart1.ChartAreas[0].Area3DStyle.Enable3D = true;
+    //    else
+    //        Chart1.ChartAreas[0].Area3DStyle.Enable3D = false;
+    //    Chart1.ChartAreas[0].AxisX.LabelStyle.Font = new System.Drawing.Font("Segoe UI Light", _fontSize);
+    //    Chart1.ChartAreas[0].AxisY.LabelStyle.Font = new System.Drawing.Font("Segoe UI Light", _fontSize);
+
+    //    DataBindChart();
+    //    if (_setChartOrder)
+    //    {
+    //        if (PointSortOrder.Ascending == _chartOrder)
+    //            Chart1.AlignDataPointsByAxisLabel(PointSortOrder.Ascending);
+    //        else
+    //            Chart1.AlignDataPointsByAxisLabel(PointSortOrder.Descending);
+    //    }
+    //    if (_showCustomePalette)
+    //        GetChartPaletteColor();
+    //}
+    //protected void DataBindChart()
+    //{
+
+    //    if (!_Series1.Equals(string.Empty))
+    //    {
+    //        oListDetaX1 = new List<string>();
+    //        oListValueY1 = new List<decimal>();
+    //        foreach (DataRow drow in _dataTableSeries1.Rows)
+    //        {
+    //            oListDetaX1.Add(drow["Data"].ToString());
+    //            oListValueY1.Add(Convert.ToDecimal(drow["Value"]));
+    //        }
+    //        GetChartType(_Series1);
+
+    //        //To Show Chart Value
+    //        if (_showLableValue)
+    //            Chart1.Series[_Series1].IsValueShownAsLabel = true;
+    //        else
+    //            Chart1.Series[_Series1].IsValueShownAsLabel = true;
+
+    //        //To Show Chart Legends Value
+    //        if (_showLegends)
+    //            Chart1.Series[_Series1].IsVisibleInLegend = true;
+    //        else
+    //            Chart1.Series[_Series1].IsVisibleInLegend = false;
+
+    //        Chart1.Series[_Series1].Points.DataBindXY(oListDetaX1, oListValueY1);
+    //    }
+    //    else if (!_Series2.Equals(string.Empty))
+    //    {
+    //        oListDetaX2 = new List<string>();
+    //        oListValueY2 = new List<decimal>();
+    //        foreach (DataRow drow in _dataTableSeries2.Rows)
+    //        {
+    //            oListDetaX2.Add(drow["Data"].ToString());
+    //            oListValueY2.Add(Convert.ToDecimal(drow["Value"]));
+    //        }
+    //        GetChartType(_Series2);
+    //        //To Show Chart Value
+    //        if (_showLableValue)
+    //            Chart1.Series[_Series2].IsValueShownAsLabel = true;
+    //        else
+    //            Chart1.Series[_Series2].IsValueShownAsLabel = true;
+
+    //        //To Show Chart Legends Value
+    //        if (_showLegends)
+    //            Chart1.Series[_Series2].IsVisibleInLegend = true;
+    //        else
+    //            Chart1.Series[_Series2].IsVisibleInLegend = false;
+
+    //        Chart1.Series[_Series2].Points.DataBindXY(oListDetaX2, oListValueY2);
+
+    //    }
+    //    else if (!_Series3.Equals(string.Empty))
+    //    {
+    //        oListDetaX3 = new List<string>();
+    //        oListValueY3 = new List<decimal>();
+    //        foreach (DataRow drow in _dataTableSeries3.Rows)
+    //        {
+    //            oListDetaX3.Add(drow["Data"].ToString());
+    //            oListValueY3.Add(Convert.ToDecimal(drow["Value"]));
+    //        }
+    //        GetChartType(_Series3);
+
+    //        //To Show Chart Value
+    //        if (_showLableValue)
+    //            Chart1.Series[_Series3].IsValueShownAsLabel = true;
+    //        else
+    //            Chart1.Series[_Series3].IsValueShownAsLabel = true;
+
+    //        //To Show Chart Legends Value
+    //        if (_showLegends)
+    //            Chart1.Series[_Series3].IsVisibleInLegend = true;
+    //        else
+    //            Chart1.Series[_Series3].IsVisibleInLegend = false;
+    //        Chart1.Series[_Series3].Points.DataBindXY(oListDetaX3, oListValueY3);
+    //    }
+    //    else
+    //    {
+    //        return;
+    //    }
+
+    //}
+
+
+    protected void GetChartAreaValueXY()
+    {
+
+
+    }
+           
+}

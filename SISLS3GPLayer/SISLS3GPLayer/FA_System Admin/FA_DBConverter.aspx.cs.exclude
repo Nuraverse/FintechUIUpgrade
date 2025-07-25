@@ -1,0 +1,377 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
+using System.IO;
+using Microsoft.SqlServer.Management.Smo;
+using Microsoft.SqlServer.Management.Common;
+
+public partial class System_Admin_FA_DBConverter : ApplyThemeForProject_FA
+{
+    #region Page Events
+    string strConnectionString = string.Empty;
+    string strSchema = string.Empty;
+    string strConnectionName = string.Empty;
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        FormsAuthenticationTicket fromTicket = FormsAuthentication.Decrypt(Request.QueryString.Get("qsConnection"));
+        strConnectionString = fromTicket.Name;
+        strSchema = Request.QueryString.Get("qsSchema");
+        if (!IsPostBack)
+        {
+            FunProInitializeGrid();
+            if (Session["DBConverted1"] != null)
+            {
+                pnlProgress.Controls.Clear();
+                pnlProgress.Visible = true;
+                FunProSetProgress(47);
+                btnMove.Enabled = false;
+
+                foreach (GridViewRow gRow in grvConvert.Rows)
+                {
+                    Image imgStatus = (Image)gRow.FindControl("imgStatus");
+                    imgStatus.ImageUrl = "~/Images/bullet.png";
+                }
+            }
+        }
+    }
+
+    protected new void Page_PreInit(object sender, EventArgs e)
+    {
+        try
+        {
+            this.Page.MasterPageFile = "~/Common/MasterPage.master";
+            UserInfo_FA ObjUserInfo_FA = new UserInfo_FA();
+            this.Page.Theme = ObjUserInfo_FA.ProUserThemeRW;
+        }
+        catch (Exception objException)
+        {
+            throw new ApplicationException("Unable to Initialise the Controls in Vendor Invoice");
+        }
+    }
+
+    #endregion
+
+    #region Other Events
+
+    protected void Timer1_Tick(object sender, EventArgs e)
+    {
+        if (ViewState["Processed"].ToString() == ViewState["grdRow"].ToString())
+        {
+            ViewState["grdRow"] = Convert.ToInt32(Convert.ToString(ViewState["grdRow"])) + 1;
+            FunProDBProcess(Convert.ToInt32(Convert.ToString(ViewState["grdRow"])));
+        }
+    }
+
+    protected void btnConvert_Click(object sender, EventArgs e)
+    {
+        FunProSetProcessImage();
+        FunProDBProcess(0);
+        Timer1.Enabled = true;
+        btnMove.Enabled = false;
+        btnClose.Enabled = false;
+    }
+
+    #endregion
+
+    #region User Methods
+
+    protected void FunProInitializeGrid()
+    {
+        DataTable dt = new DataTable();
+        dt.Columns.Add("SNO");
+        dt.Columns.Add("Status");
+        dt.Columns.Add("Process");
+
+        DataRow dRow = dt.NewRow();
+        dRow["SNO"] = "1";
+        dRow["Status"] = "False";
+        dRow["Process"] = "Table Creation";
+        dt.Rows.Add(dRow);
+
+        dRow = dt.NewRow();
+        dRow["SNO"] = "2";
+        dRow["Status"] = "False";
+        dRow["Process"] = "Procedure Creation";
+        dt.Rows.Add(dRow);
+
+        dRow = dt.NewRow();
+        dRow["SNO"] = "3";
+        dRow["Status"] = "False";
+        dRow["Process"] = "Views Creation";
+        dt.Rows.Add(dRow);
+
+        dRow = dt.NewRow();
+        dRow["SNO"] = "4";
+        dRow["Status"] = "False";
+        dRow["Process"] = "Function Creation";
+        dt.Rows.Add(dRow);
+
+        dRow = dt.NewRow();
+        dRow["SNO"] = "5";
+        dRow["Status"] = "False";
+        dRow["Process"] = "Data Transmission";
+        dt.Rows.Add(dRow);
+
+        grvConvert.DataSource = dt;
+        grvConvert.DataBind();
+
+        FunProSetProgress(0);
+        ViewState["intCount"] = "0";
+        ViewState["grdRow"] = "0";
+    }
+
+    protected void FunProSetProgress(int intCount)
+    {
+        for (int i = 0; i <= intCount; i++)
+        {
+            Image img = new Image();
+            img.ImageUrl = "../Images/bg-menu-main.png";
+            img.ID = "img" + i.ToString();
+            img.Style.Add("padding-right", "1px");
+            img.Style.Add("padding-top", "2px");
+            img.Style.Add("height", "12px");
+            img.Style.Add("max-height", "12px");
+            img.Style.Add("width", "6px");
+            pnlProgress.Controls.Add(img);
+        }
+    }
+
+    protected void FunProSetProgressAttribute()
+    {
+        if (Convert.ToString(ViewState["intCount"]) == "36")
+        {
+            ViewState["intCount"] = "47";
+            FunProSetProgress(Convert.ToInt32(Convert.ToString(ViewState["intCount"])));
+            Timer1.Enabled = false;
+        }
+        else
+        {
+            ViewState["intCount"] = Convert.ToInt32(Convert.ToString(ViewState["intCount"])) + 9;
+            FunProSetProgress(Convert.ToInt32(Convert.ToString(ViewState["intCount"])));
+        }
+    }
+
+    protected void FunProDBProcess(int intRowID)
+    {
+        try
+        {
+            Image imgStatus = new Image();
+            Label lblProcess = new Label();
+            if (intRowID <= 4)
+            {
+                imgStatus = (Image)grvConvert.Rows[intRowID].FindControl("imgStatus");
+                lblProcess = (Label)grvConvert.Rows[intRowID].FindControl("lblProcess");
+            }
+
+            string strFunctionFolderName = "";
+            string strFunctionFileName = "";
+
+            switch (intRowID)
+            {
+                case 0:
+
+                    //Code for Table creation
+                    strFunctionFolderName = Server.MapPath(".") + "\\FA_SQLScripts\\FA_TableScript\\";
+                    strFunctionFileName = "FA_TableScript.sql";
+                    if (strFunctionFileName == string.Empty)
+                    {
+                        Utility_FA.FunShowAlertMsg_FA(this, "The Table Script File is not Present");
+                    }
+                    else
+                    {
+                        FunRunScript(strFunctionFolderName, strFunctionFileName);
+                    }
+
+                    ViewState["Processed"] = intRowID.ToString();
+                    imgStatus.ImageUrl = "~/Images/bullet.png";
+                    lblProcess.Font.Bold = true;
+
+                    FunProSetProgressAttribute();
+
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Window", "window.onbeforeunload = function(){return false;}", true);
+                    break;
+
+
+
+                case 1:
+
+                    //Code for SP creation
+                    strFunctionFolderName = Server.MapPath(".") + "\\FA_SQLScripts\\FA_SPScript\\";
+                    strFunctionFileName = "FA_SPScript.sql";
+                    if (strFunctionFileName == string.Empty)
+                    {
+                        Utility_FA.FunShowAlertMsg_FA(this, "The Function Script File is not Present");
+                    }
+                    else
+                    {
+                        FunRunScript(strFunctionFolderName, strFunctionFileName);
+                    }
+
+                    ViewState["Processed"] = intRowID.ToString();
+                    imgStatus.ImageUrl = "~/Images/bullet.png";
+                    lblProcess.Font.Bold = true;
+
+                    FunProSetProgressAttribute();
+                    break;
+
+
+                case 2:
+
+                    //Code for Views creation
+                    strFunctionFolderName = Server.MapPath(".") + "\\FA_SQLScripts\\FA_ViewsScript\\";
+                    strFunctionFileName = "FA_ViewsScript.sql";
+                    if (strFunctionFileName == string.Empty)
+                    {
+                        Utility_FA.FunShowAlertMsg_FA(this, "The Function Script File is not Present");
+                    }
+                    else
+                    {
+                        FunRunScript(strFunctionFolderName, strFunctionFileName);
+                    }
+                    ViewState["Processed"] = intRowID.ToString();
+                    imgStatus.ImageUrl = "~/Images/bullet.png";
+                    lblProcess.Font.Bold = true;
+                    FunProSetProgressAttribute();
+                    break;
+
+
+                case 3:
+
+                    //Code for Function creation
+                    strFunctionFolderName = Server.MapPath(".") + "\\FA_SQLScripts\\FA_FunctionsScript\\";
+                    strFunctionFileName = "FA_FunctionsScript.sql";
+                    if (strFunctionFileName == string.Empty)
+                    {
+                        Utility_FA.FunShowAlertMsg_FA(this, "The Function Script File is not Present");
+                    }
+                    else
+                    {
+                        FunRunScript(strFunctionFolderName, strFunctionFileName);
+                    }
+                    ViewState["Processed"] = intRowID.ToString();
+                    imgStatus.ImageUrl = "~/Images/bullet.png";
+                    lblProcess.Font.Bold = true;
+                    FunProSetProgressAttribute();
+                    break;
+
+                case 4:
+
+                    //Code for Date move
+                    FunProMoveTableDate();
+                    ViewState["Processed"] = intRowID.ToString();
+                    imgStatus.ImageUrl = "~/Images/bullet.png";
+                    lblProcess.Font.Bold = true;
+                    FunProSetProgressAttribute();
+                    btnClose.Enabled = true;
+                    Session["DBConverted"] = "1";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Window", "window.onbeforeunload = function(){};", true);
+                    break;
+
+                default:
+                    Timer1.Enabled = false;
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            Timer1.Enabled = false;
+           // Utility_FA.FunShowAlertMsg_FA(this, "Unable to Load Script");
+        }
+    }
+
+    protected void FunProSetProcessImage()
+    {
+        pnlProgress.Visible = true;
+        foreach (GridViewRow gRow in grvConvert.Rows)
+        {
+            Image imgStatus = (Image)gRow.FindControl("imgStatus");
+            imgStatus.ImageUrl = "~/Images/animation_processing.gif";
+        }
+    }
+
+    protected void FunProMoveTableDate()
+    {
+        SystemAdminMgtServiceReference.SystemAdminMgtServiceClient objAdminServiceClient;
+        objAdminServiceClient = new SystemAdminMgtServiceReference.SystemAdminMgtServiceClient();
+        try
+        {
+            FASession objSession = new FASession();
+            int intErrorCode = objAdminServiceClient.FunPubMoveTableRecord(strSchema, objSession.ProConnectionName);
+            if (intErrorCode == 0)
+            {
+            }
+            else
+            {
+            }
+        }
+        catch (Exception ex)
+        {
+            Timer1.Enabled = false;
+        }
+        finally
+        {
+            objAdminServiceClient.Close();
+        }
+    }
+
+    private void FunRunScript(string strFolder, string strFileName)
+    {
+
+        if (strConnectionName != "Empty")
+        {
+            string scriptDirectory = strFolder;
+            string sqlConnectionString = strConnectionString;
+            SqlCommand cmd = new SqlCommand();
+            DirectoryInfo di = new DirectoryInfo(scriptDirectory);
+            FileInfo[] rgFiles = di.GetFiles(strFileName);
+            foreach (FileInfo fi in rgFiles)
+            {
+                FileInfo fileInfo = new FileInfo(fi.FullName);
+                string script = fileInfo.OpenText().ReadToEnd();
+                SqlConnection connection = new SqlConnection(sqlConnectionString);
+                Server server = new Server(new ServerConnection(connection));
+                connection.Open();
+
+                try
+                {
+                    server.ConnectionContext.BeginTransaction();
+                    server.ConnectionContext.ExecuteNonQuery(script);
+                    server.ConnectionContext.CommitTransaction();
+                }
+                catch (Exception ex)
+                {
+                    server.ConnectionContext.RollBackTransaction();
+                    Timer1.Enabled = false;
+                }
+                finally
+                {
+                    if (connection.State == ConnectionState.Open)
+                        connection.Close();
+                }
+
+            }
+        }
+        else
+        {
+
+        }
+    }
+
+    #endregion
+
+    protected void btnClose_Click(object sender, EventArgs e)
+    {
+        ScriptManager.RegisterStartupScript(this, this.GetType(), "Insert", "opener.location.reload(true);window.close();", true);
+    }
+}

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="3f398f4c-e34b-4a42-9228-9df850275a60" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://siststs3g02.sis.ad:4008/SysAdmin/FAAdminServices.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="FAAdminServices.xsd" MetadataType="Schema" ID="ece17526-a6e0-45cc-a050-6ac4945947ba" SourceId="1" SourceUrl="http://siststs3g02.sis.ad:4008/SysAdmin/FAAdminServices.svc?xsd=xsd3" />
+    <MetadataFile FileName="FAAdminServices1.xsd" MetadataType="Schema" ID="c3c5a6bf-740e-4b4f-8787-8fc96b6c1998" SourceId="1" SourceUrl="http://siststs3g02.sis.ad:4008/SysAdmin/FAAdminServices.svc?xsd=xsd4" />
+    <MetadataFile FileName="FAAdminServices2.xsd" MetadataType="Schema" ID="70954cd7-1d8f-4333-a1b6-268433b7b626" SourceId="1" SourceUrl="http://siststs3g02.sis.ad:4008/SysAdmin/FAAdminServices.svc?xsd=xsd1" />
+    <MetadataFile FileName="FAAdminServices.disco" MetadataType="Disco" ID="74f05b0f-0850-4eac-a5f6-6594c16ecc02" SourceId="1" SourceUrl="http://siststs3g02.sis.ad:4008/SysAdmin/FAAdminServices.svc?disco" />
+    <MetadataFile FileName="FAAdminServices.wsdl" MetadataType="Wsdl" ID="f01b8ecd-597a-4b01-8984-989aa39a2dd6" SourceId="1" SourceUrl="http://siststs3g02.sis.ad:4008/SysAdmin/FAAdminServices.svc?wsdl" />
+    <MetadataFile FileName="FAAdminServices3.xsd" MetadataType="Schema" ID="811b515b-c3ed-417f-8bb8-c179e39fc20d" SourceId="1" SourceUrl="http://siststs3g02.sis.ad:4008/SysAdmin/FAAdminServices.svc?xsd=xsd2" />
+    <MetadataFile FileName="FAAdminServices4.xsd" MetadataType="Schema" ID="82d0655c-a720-4c73-a5de-f49c2f817175" SourceId="1" SourceUrl="http://siststs3g02.sis.ad:4008/SysAdmin/FAAdminServices.svc?xsd=xsd0" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:3220/Collection/ClnDataMgtServices.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/S3GBusEntity" />
+  <xs:element name="FunPubCreateFollowUpProcess">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/S3GBusEntity" minOccurs="0" name="SerMode" type="q1:SerializationMode" />
+        <xs:element minOccurs="0" name="bytesFollowUpDAL_SERLAY" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateFollowUpProcessResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubCreateFollowUpProcessResult" type="xs:int" />
+        <xs:element minOccurs="0" name="intFollowUpID" type="xs:int" />
+        <xs:element minOccurs="0" name="strDocNo" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateCRM">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/S3GBusEntity" minOccurs="0" name="SerMode" type="q2:SerializationMode" />
+        <xs:element minOccurs="0" name="byteCRMService" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateCRMResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubCreateCRMResult" type="xs:int" />
+        <xs:element minOccurs="0" name="intCRMID" type="xs:int" />
+        <xs:element minOccurs="0" name="strDocNo" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="intCustomerID" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateProspect">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/S3GBusEntity" minOccurs="0" name="SerMode" type="q3:SerializationMode" />
+        <xs:element minOccurs="0" name="bytesPspct_Data" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateProspectResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubCreateProspectResult" type="xs:int" />
+        <xs:element minOccurs="0" name="intCRMID" type="xs:long" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateLead">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/S3GBusEntity" minOccurs="0" name="SerMode" type="q4:SerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjS3G_Colection_Customer_DataTable" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateLeadResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubCreateLeadResult" type="xs:int" />
+        <xs:element minOccurs="0" name="strDocNo" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="intLeadID" type="xs:long" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateTrackDetails">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/S3GBusEntity" minOccurs="0" name="SerMode" type="q5:SerializationMode" />
+        <xs:element minOccurs="0" name="bytesTrack_Data" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateTrackDetailsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubCreateTrackDetailsResult" type="xs:int" />
+        <xs:element minOccurs="0" name="intTrackID" type="xs:long" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateDocumentDetails">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/S3GBusEntity" minOccurs="0" name="SerMode" type="q6:SerializationMode" />
+        <xs:element minOccurs="0" name="bytesDoc_Data" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateDocumentDetailsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubCreateDocumentDetailsResult" type="xs:int" />
+        <xs:element minOccurs="0" name="intDocID" type="xs:long" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateSalesCampaign">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/S3GBusEntity" minOccurs="0" name="SerMode" type="q7:SerializationMode" />
+        <xs:element minOccurs="0" name="bytesSales_Data" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateSalesCampaignResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubCreateSalesCampaignResult" type="xs:int" />
+        <xs:element minOccurs="0" name="strDocNo" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="intSalesID" type="xs:long" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateEnquiry">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/S3GBusEntity" minOccurs="0" name="SerMode" type="q8:SerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjS3G_Colection_CRM_DataTable" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateEnquiryResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubCreateEnquiryResult" type="xs:int" />
+        <xs:element minOccurs="0" name="intErrorCode" type="xs:int" />
+        <xs:element minOccurs="0" name="strDocNo" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateDC">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/S3GBusEntity" minOccurs="0" name="SerMode" type="q9:SerializationMode" />
+        <xs:element minOccurs="0" name="bytesDC_Data" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateDCResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubCreateDCResult" type="xs:int" />
+        <xs:element minOccurs="0" name="strDocNo" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="intDCID" type="xs:long" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateDraweeBankMaster">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/S3GBusEntity" minOccurs="0" name="SerMode" type="q10:SerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjS3G_CLN_DRAWEEBANKMASTERDataTable" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateDraweeBankMasterResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubCreateDraweeBankMasterResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateDCFollowUp">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/S3GBusEntity" minOccurs="0" name="SerMode" type="q11:SerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjS3G_CLN_DCFollowUp" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateDCFollowUpResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubCreateDCFollowUpResult" type="xs:int" />
+        <xs:element minOccurs="0" name="intFollowUpID" type="xs:int" />
+        <xs:element minOccurs="0" name="strErrorMsg" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateDCFollwUpRemarks">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/S3GBusEntity" minOccurs="0" name="SerMode" type="q12:SerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjS3G_CLN_DCFlwUpRemarks" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateDCFollwUpRemarksResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubCreateDCFollwUpRemarksResult" type="xs:int" />
+        <xs:element minOccurs="0" name="strTicketNO" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="strErrorMsg" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateUpdateMarketing_Inc_Proc">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/S3GBusEntity" minOccurs="0" name="SerMode" type="q13:SerializationMode" />
+        <xs:element minOccurs="0" name="bytesobjMarketing_Inc_Proc_DataTable" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubCreateUpdateMarketing_Inc_ProcResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubCreateUpdateMarketing_Inc_ProcResult" type="xs:int" />
+        <xs:element minOccurs="0" name="intIncProcessIDc" type="xs:int" />
+        <xs:element minOccurs="0" name="strDocCode_Out" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubInsertNFBExposureEntry">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q14="http://schemas.datacontract.org/2004/07/S3GBusEntity" minOccurs="0" name="SerMode" type="q14:SerializationMode" />
+        <xs:element minOccurs="0" name="bytesobjNFB_Exposure_EntryDataTable" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="strConnectionName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubInsertNFBExposureEntryResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubInsertNFBExposureEntryResult" type="xs:int" />
+        <xs:element minOccurs="0" name="strDocNumber" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubINSUpdateDCFollowUp">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q15="http://schemas.datacontract.org/2004/07/S3GBusEntity" minOccurs="0" name="SerMode" type="q15:SerializationMode" />
+        <xs:element minOccurs="0" name="bytesObjS3G_CLN_DCFlwUpRemarks" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FunPubINSUpdateDCFollowUpResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="FunPubINSUpdateDCFollowUpResult" type="xs:int" />
+        <xs:element minOccurs="0" name="intDCFollowUpID" type="xs:int" />
+        <xs:element minOccurs="0" name="strErrorMsg" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

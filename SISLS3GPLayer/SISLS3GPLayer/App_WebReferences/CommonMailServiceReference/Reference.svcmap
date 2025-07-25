@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="6a2c961e-2356-4531-988b-665809fefc65" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:3220/CommonMail.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="CommonMail.xsd" MetadataType="Schema" ID="092ad12f-75fb-455a-955c-ca194fb95920" SourceId="1" SourceUrl="http://localhost:3220/CommonMail.svc?xsd=xsd4" />
+    <MetadataFile FileName="CommonMail.disco" MetadataType="Disco" ID="80a29d96-22bc-43f3-9632-344352e4bb08" SourceId="1" SourceUrl="http://localhost:3220/CommonMail.svc?disco" />
+    <MetadataFile FileName="CommonMail.wsdl" MetadataType="Wsdl" ID="d8bc76f0-dc66-4f32-8dc6-3519f66082fa" SourceId="1" SourceUrl="http://localhost:3220/CommonMail.svc?wsdl" />
+    <MetadataFile FileName="CommonMail1.xsd" MetadataType="Schema" ID="32cd4251-8fea-4017-adf6-b9edd0522ce2" SourceId="1" SourceUrl="http://localhost:3220/CommonMail.svc?xsd=xsd2" />
+    <MetadataFile FileName="CommonMail2.xsd" MetadataType="Schema" ID="bc977115-7e3e-48b3-8dbb-88120c0c68cd" SourceId="1" SourceUrl="http://localhost:3220/CommonMail.svc?xsd=xsd3" />
+    <MetadataFile FileName="CommonMail3.xsd" MetadataType="Schema" ID="c75008cb-8333-4f30-9329-6f04c8fee9f5" SourceId="1" SourceUrl="http://localhost:3220/CommonMail.svc?xsd=xsd0" />
+    <MetadataFile FileName="CommonMail4.xsd" MetadataType="Schema" ID="2a347934-702d-4656-a79a-21304690577b" SourceId="1" SourceUrl="http://localhost:3220/CommonMail.svc?xsd=xsd1" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

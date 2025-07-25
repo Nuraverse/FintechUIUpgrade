@@ -1,0 +1,1304 @@
+/*
+body, td, th {
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 11px;
+	color: #333;
+}
+*/
+.error
+{
+    FONT-SIZE: 16px;
+    COLOR: red;
+    FONT-FAMILY: 'RopaSansRegular', Arial, Helvetica, Tahoma, Geneva, sans-serif;
+    TEXT-DECORATION: none
+}
+body {
+	font-family: 'RopaSansRegular', Arial, Helvetica, Tahoma, Geneva, sans-serif;
+	font-size: 11px;
+	color: #333;
+}
+td {
+	font-family: /*Tahoma, Geneva, sans-serif;*/'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	color: #333;
+}
+th {
+	font-family: /*Tahoma, Geneva, sans-serif;*/'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	color: #333;
+}
+body {
+	background: #d9e3eb;
+	margin: 0px;
+}
+a {
+	color: #39c;
+	text-decoration: none;
+}
+.more {
+	color: #2906ec;
+	text-decoration: none;
+}
+a:hover {
+	color: #333;
+	text-decoration: none;
+}
+h1, h2, h3, h4, h5, h6, p {
+	margin: 0;
+	padding: 0 0 10px 0;
+}
+h1, h2, h3, h4, h5, h6 {
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	color: #39c;
+}
+h1 {
+	font-size: 32px;
+}
+h2 {
+	font-size: 26px;
+}
+h3 {
+	font-size: 22px;
+}
+h4 {
+	font-size: 18px;
+}
+h5 {
+	font-size: 16px;
+}
+h6 {
+	font-size: 14px;
+}
+img {
+	border: 0;
+}
+form {
+	margin: 0;
+	padding: 0;
+}
+input, select, textarea {
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 11px;
+	color: #333;
+}
+hr {
+	border: none 0;
+	border-top: 1px solid #d2d2d2;
+	height: 1px;
+	margin: 10px 0 20px 0;
+}
+.clearfloat {
+	clear: both;
+	height: 0;
+	font-size: 1px;
+	line-height: 0px;
+}
+.vcLoginBox {
+	width: 520px;
+	margin: 135px auto;
+	padding: 30px 0 0 0;
+	background: #FFF url(../images/login_bg.jpg) no-repeat;
+	-webkit-border-radius: 20px;
+	-moz-border-radius: 20px;
+	border-radius: 20px;
+	box-shadow: 0px 0px 15px #9ba8b1;
+}
+.vcLoginBox .footer {
+	background: url(../images/login_footer_bg.png);
+	color: #FFF;
+	padding: 13px 40px;
+	-webkit-border-bottom-right-radius: 20px;
+	-webkit-border-bottom-left-radius: 20px;
+	-moz-border-radius-bottomright: 20px;
+	-moz-border-radius-bottomleft: 20px;
+	border-bottom-right-radius: 20px;
+	border-bottom-left-radius: 20px;
+}
+.loginContent {
+	padding: 0 45px;
+}
+.loginContent .logo {
+	float: left;
+}
+.loginContent .language {
+	float: right;
+	padding: 20px 0 0 0;
+}
+.loginContent .inputs {
+	padding: 3px 0 10px 0;
+}
+.loginInput {
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	color: #A7A7A7;
+	border: 1px solid #CCC;
+	padding: 8px;
+	width: 414px;
+	margin: 0 0 10px 0vcLoginBox
+}
+
+
+.loginButton_Prodcut_Header {
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 22px;
+	color: #FFF;
+	background: #02a8de url(../images/login_btn_bg.png) repeat-x;
+	border: 1px solid #02a8de;
+	padding: 6px 60px;
+	cursor: pointer;
+	text-shadow: 1px 1px 1px #1497c0;
+}
+
+
+.loginButton {
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 22px;
+	color: #FFF;
+	background: #02a8de url(../images/login_btn_bg.png) repeat-x;
+	border: 1px solid #02a8de;
+	padding: 6px 60px;
+	cursor: pointer;
+	text-shadow: 1px 1px 1px #1497c0;
+}
+.loginButton:hover {
+	background: #02a8de;
+}
+.loginButton:focus {
+	color: #0FF;
+	border: 1px solid #02a8de;
+}
+.loginContent .buttons {
+	padding: 0 0 25px 0;
+}
+.loginContent .buttons .lft {
+	float: left;
+}
+.loginContent .buttons .rgt {
+	float: right;
+	padding: 12px 0 0 0;
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 14px;
+}
+.vcContainer {
+	background: #FFF;
+	min-width: 980px;
+}
+.vcHeader {
+	height: 70px;
+}
+.vcHeader .logo {
+	float: left;
+	width: 150px;
+	border-right: 1px solid #b2b2b2;
+	margin: 10px 0;
+}
+.vcHeader .tools {
+	float: right;
+	padding: 4px 0 0 0;
+	width: 140px;
+}
+.ClientLogo {
+    width: 80%;
+	float: right;
+    margin: 0 auto;
+}
+/*.vcHeader .tools {
+	float: right;
+	padding: 21px 0 0 0;
+	width: 200px;
+}*/
+.vcMainNav {
+	float: left;
+	height: 70px;
+}
+#vcMainNav {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+/* make the LI display inline */
+/* it's position relative so that position absolute */
+/* can be used in submenu */
+#vcMainNav li {
+	float: left;
+	display: block;
+	position: relative;
+	z-index: 97;
+}
+/* this is the parent menu */
+#vcMainNav li a {
+	display: block;
+	float: left;
+	width: 75px;
+	height: 23px;
+	padding: 47px 0 0 0;
+	text-align: center;
+	text-decoration: none;
+	color: #7793a2;
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	outline: none;
+}
+#vcMainNav li a:hover {
+	color: #000;
+}
+#vcMainNav .admin {
+	background: url(../images/navicon_admin.png) no-repeat center top;
+}
+#vcMainNav .dashboard {
+	background: url(../images/navicon_dashboard.png) no-repeat center top;
+}
+#vcMainNav .browse {
+	background: url(../images/navicon_browse.png) no-repeat center top;
+}
+#vcMainNav .search {
+	background: url(../images/navicon_search.png) no-repeat center top;
+}
+#vcMainNav .manage {
+	background: url(../images/navicon_manage.png) no-repeat center top;
+}
+#vcMainNav .my {
+	background: url(../images/navicon_my.png) no-repeat center top;
+}
+#vcMainNav .social {
+	background: url(../images/navicon_social.png) no-repeat center top;
+}
+#vcMainNav .workflow {
+	background: url(../images/navicon_workflow.png) no-repeat center top;
+}
+#vcMainNav .externalforms {
+	background: url(../images/navicon_newform.png) no-repeat center top;
+}
+#vcMainNav .rms {
+	background: url(../images/navicon_RMS.png) no-repeat center top;
+}
+#vcMainNav .Reports {
+	background: url(../images/navicon_Reports.png) no-repeat center top;
+}
+#vcMainNav .PDM {
+	background: url(../images/navicon_PDM.png) no-repeat center top;
+}
+#vcMainNav .ETS {
+	background: url(../images/navicon_ETS.png) no-repeat center top;
+}
+#vcMainNav .DC {
+	background: url(../images/navicon_docclassification.png) no-repeat center top;
+}
+#vcMainNav .DocTranmtls {
+	background: url(../images/navicon_DOCTransmittals.png) no-repeat center top;
+}
+#vcMainNav .TasksUI {
+	background: url(../images/navicon_newform.png) no-repeat center top;
+}
+/* submenu, it's hidden by default */
+#vcMainNav ul {
+	position: absolute;
+	left: 1px;
+	top: 70px;
+	display: none;
+	margin: 0 0 0 -1px;
+	padding: 0;
+	list-style: none;
+	width: 120px;
+}
+/* display block will make the link fill the whole area of LI */
+#vcMainNav ul a {
+	display: block;
+	padding: 4px;
+	background: #0099ff;
+	line-height: normal;
+	height: auto;
+	width: 110px;
+	border-right: none;
+	text-align: left;
+	text-decoration: none;
+	color: #FFF;
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 15px;
+}
+/*Radhika: Monday, December 09, 2013 01:22:52 PM: To work properly in windows 7 and chrome */
+#vcMainNav li ul li {
+    top: 1px;
+	background: #0099ff;
+	border-bottom: 1px solid #FFF; 
+	line-height: normal;
+}
+#vcMainNav li ul li a:hover {
+   background: #99ccff;
+}
+#vcMainNav li ul > li:last-child { 
+  border-bottom: 0px; 
+}
+/* End */
+.btnHelp {
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 18px;
+	color: #737373;
+	background: url(../images/btnicon_help.png) no-repeat right center;
+	padding: 0 28px 0 0;
+	line-height: 25px;
+	height: 25px;
+	display: block;
+	width: 30px;
+	margin: 0 0 0 80px;
+}
+.btnSearchHelp{
+    font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 18px;
+	color: #737373;
+	background: url(../images/btnicon_help.png) no-repeat right center;
+	padding: 0 28px 0 0;
+	line-height: 25px;
+	height: 25px;
+	display: block;
+	width: 30px;
+	margin: 0 0 0 80px;
+}
+.searchInput {
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #a2a2a2;
+	border: 1px solid #b9b9b9;
+	width: 158px;
+}
+.searchBtn {
+	border: none;
+	background: url(../images/btnicon_search.png) no-repeat;
+	width: 20px;
+	cursor: pointer;
+	text-indent: -1000px;
+	padding: 3px;
+}
+.vcTitleBar {
+	background: #45b2d8 url(../images/title_bg.jpg) no-repeat right;
+	height: 38px;
+	line-height: 38px;
+	color: #FFF;
+	overflow: hidden;
+	padding: 0 3px;
+}
+.vcTitleBar .title {
+	float: left;
+}
+.vcTitleBar .links {
+	float: right;
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 14px;
+}
+.vcTitleBar .links a {
+	color: #FFF;
+}
+.vcTitleBar .links a:hover {
+	color: #FC6;
+}
+.vcTitleBar h1 {
+	color: #FFF;
+	font-size: 22px;
+	margin: 0;
+	padding: 0;
+}
+.vcFooter {
+	background: #e3eaec;
+	padding: 8px 20px;
+	text-align: center;
+	border-top: 1px solid #d5d8da;
+	font-size: 11px;
+	color: #717171;
+}
+.vcContentArea .lftPanel {
+	padding: 0px 0 15px 0px;
+}
+.vcContentArea .rgtPanel {
+	border-left: 3px solid #d5d8da;
+}
+.vcContentArea2 {
+/*	padding: 20px; */
+	padding: 0 !important;
+}
+
+.vcPopContentArea {
+	background: #ffffff;
+}
+.vcBookmarkTable {
+	margin: 0 0 20px 0;
+}
+.vcBookmarkTable td {
+	border-bottom: 1px dashed #c8c8c8;
+	padding: 10px;
+	color: #666;
+}
+.vcBookmarkTable tr:hover {
+	background: #eff8ff;
+}
+.vcBookmarkTable .title {
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 18px;
+	color: #39c;
+}
+.vcBookmarkTable .value {
+	color: #000;
+}
+.vcBookmarkTable .noPadding {
+	padding: 0 !important;
+}
+.starActive {
+	width: 16px;
+	height: 16px;
+	background: url(../images/icon_star_act.png) no-repeat;
+	margin: 0 auto;
+}
+.starDisable {
+	width: 16px;
+	height: 16px;
+	background: url(../images/icon_star_dis.png) no-repeat;
+	margin: 0 auto;
+}
+.bookmarkTools {
+	border-left: 1px solid #ccd3d9;
+	width: 100px;
+}
+.bookmarkTools .link {
+	display: block;
+	width: 30px;
+	height: 16px;
+	line-height: 16px;
+	padding: 2px 0;
+	float: left;
+	text-align: center;
+}
+.moreLinksBox {
+	position: absolute;
+	margin: 0 -100px;
+	background: #dbefff;
+	width: 200px;
+	padding: 10px 10px;
+}
+.moreLinksBox ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	float: left;
+}
+.moreLinksBox li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.moreLinksBox a {
+	background: url(../images/arrow_smrgt.png) no-repeat;
+	padding: 3px 5px 3px 12px;
+	height: 12px;
+	line-height: 12px;
+	display: block;
+	width: 72px;
+}
+.browse4MoreLinksBox {
+	position: absolute;
+	display: block;
+	margin: 0 -70px;
+	background: #dbefff;
+	width: 140px;
+	/*padding: 5px 5px;*/
+	text-align: center;
+}
+.browse4MoreLinksBox  ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	float: left;
+}
+.browse4MoreLinksBox  li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	float: center;
+	text-align: center;
+}
+.browse4MoreLinksBox  a {
+/*	background: url(../images/arrow_smrgt.png) no-repeat; */
+	padding: 3px 3px 3px 8px;
+	line-height: 12px;
+	display: block;
+	width: 15px;
+	height: 20px;
+	outline: none;
+}
+#browse4MoreLinksBox ul li a span {
+display:none;
+}
+.vcTopTools {
+	background: #e3eaec;
+	padding: 12px 6px;
+	height: 14px;
+	line-height: 20px;
+}
+#vcTopNav {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	
+}
+/* make the LI display inline */
+/* it's position relative so that position absolute */
+/* can be used in submenu */
+#vcTopNav li {
+	float: left;
+	left: 0px;
+	display: block;
+	position: relative;
+	//padding-right: 15px;
+    border-right: 1px solid #c0c9cc;
+	z-index: 96;
+}
+/* this is the parent menu */
+#vcTopNav li a {
+	display: block;
+	float: left;
+	height: 20px;
+	text-decoration: none;
+	color: #000;
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	//border-right: 1px solid #c0c9cc;
+	padding: 0 15px;
+	outline: none;
+}
+#vcTopNav .browse {
+	background: url(../images/icon_browse.png) no-repeat 10px 0;
+	padding: 0 15px 0 35px !important;
+}
+#vcTopNav .newfolder {
+	background: url(../images/icon_newfolder.png) no-repeat 10px 0;
+	padding: 0 15px 0 35px !important;
+}
+#vcTopNav .upload {
+	background: url(../images/icon_upload.png) no-repeat 10px 0;
+	padding: 0 15px 0 35px !important;
+}
+#vcTopNav .selected {
+	background: url(../images/arrow_down.png) no-repeat right;
+	padding: 0 15px 0 15px !important;
+}
+#vcTopNav .disabled {
+	color: #9fafb4 !important;
+	padding: 0 15px 0 15px !important;
+}
+/* submenu, it's hidden by default */
+#vcTopNav ul {
+	position: absolute;
+	left: 1px;
+	top: 20px;
+	display: none;
+	margin: 0 0 0 -1px;
+	padding: 0;
+	list-style: none;
+	width: 130px;
+	height: 20px;
+}
+#vcTopNav ul a {
+	display: block;
+	padding: 5px;
+	background: #c0c9cc;
+	line-height: normal;
+	height: auto;
+	width: 100px;
+    left: 1px;
+	border-right: none;
+	text-align: left;
+	text-decoration: none;
+	color: #222222;
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 15px;
+}
+/*Radhika: Monday, December 09, 2013 01:22:52 PM: To work properly in windows 7 and chrome */
+#vcTopNav li ul:first-child li {
+	top: 1px;
+	left: 10px;
+	background: #c0c9cc;
+	border-bottom: 1px solid #FFF; 
+	line-height: normal;
+}
+#vcTopNav li ul li a:hover {
+   background: #99ccff;
+   color: #666;
+}
+#vcTopNav li ul > li:last-child { 
+	border-right: none;
+    border-bottom: 0px; 
+}
+/* End */
+/* display block will make the link fill the whole area of LI */
+#vcTopNav ul a:hover
+{
+	background: #99ccff;
+	color: #FFF;
+}
+.vcBcru {
+	height: 16px;
+	padding: 12px 20px;
+	color: #515151;
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	line-height: 16px;
+}
+.vcBcru a {
+	color: #515151;
+	padding: 0 7px;
+}
+.vcBcru a:hover {
+	color: #069;
+}
+.vcPageCount {
+	background: #efefef;
+	height: 16px;
+	padding: 7px 20px;
+	color: #515151;
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	line-height: 16px;
+}
+.vcPageCount .lft {
+	float: left;
+}
+.vcPageCount .rgt {
+	float: right;
+}
+.vcGenericSearch {
+	padding: 10px;
+	background: #EAEAEA;
+	border: 1px solid #CCC;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	margin: 0 0 20px 0;
+}
+.vcInput {
+	border: 1px solid #999;
+	padding: 3px;
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #333;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+.vcButton {
+	outline: none;
+	border: 1px solid #2068A0;
+	padding: 3px 15px;
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #FFF;
+	cursor: pointer;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	margin: 0 5px;
+	background: #309ed1;
+	background: -moz-linear-gradient(top, #309ed1 0%, #2068a0 50%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #309ed1), color-stop(50%, #2068a0));
+	background: -webkit-linear-gradient(top, #309ed1 0%, #2068a0 50%);
+	background: -o-linear-gradient(top, #309ed1 0%, #2068a0 50%);
+	background: -ms-linear-gradient(top, #309ed1 0%, #2068a0 50%);
+	background: linear-gradient(to bottom, #309ed1 0%, #2068a0 50%);
+ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#309ed1', endColorstr='#2068a0', GradientType=0 );
+}
+.vcButton:hover {
+	color: #FFF;
+	background: #2068A0;
+	border: 1px solid #2068A0;
+}
+.vcButton:focus {
+	color: #0FF;
+	background: #2068A0;
+	border: 1px solid #2068A0;
+}
+.vcGenericTable {
+	margin: 0 0 20px 0;
+	table-layout: fixed;
+	border-right: 1px solid #ccc; 
+	border-bottom: 1px solid #ccc;
+}
+.vcGenericTable th {
+	border-left: 1px solid #ccc; 
+	border-top: 1px solid #ccc;
+	padding: 0px;
+	background: #3399CC url(../images/tableheader_bg.png) repeat-x;
+	color: #FFF;
+}
+.vcGenericTable th a, .vcGenericTable th a:hover {
+	color: #FFF;
+	text-decoration: none;
+}
+.vcGenericTable td {
+	/*border-left: 1px solid #ccc; */
+	border-top: 1px solid #ccc;	
+	border-right: 1px solid #ccc;
+	padding: 7px;
+}
+.vcGenericTable tr:nth-child(odd) {
+	/*background-color: #F0F0F0;*/
+}
+.vcGenericTable tr:nth-child(even) {
+	background-color: #fff;
+} 
+.vcGenericTable table td {
+	border: none !important;
+}
+.vcGenericTable table tr:nth-child(odd) {
+	background-color: #fff;
+}
+.vcGenericTable table tr:nth-child(even) {
+	background-color: #fff;
+}
+.vcGenericHeader {
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	padding: 10px;
+	color: #FFF;
+	background: #00b7ea;
+	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwYjdlYSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDllYzMiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+	background: -moz-linear-gradient(top, #00b7ea 0%, #009ec3 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #00b7ea), color-stop(100%, #009ec3));
+	background: -webkit-linear-gradient(top, #00b7ea 0%, #009ec3 100%);
+	background: -o-linear-gradient(top, #00b7ea 0%, #009ec3 100%);
+	background: -ms-linear-gradient(top, #00b7ea 0%, #009ec3 100%);
+	background: linear-gradient(to bottom, #00b7ea 0%, #009ec3 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00b7ea', endColorstr='#009ec3', GradientType=0 );
+}
+.vcGenericContent {
+	padding: 20px;
+	background: #FFF;
+	border: 1px solid #009ec3;
+}
+.vcGenericContentForm {
+	margin: 0 0 20px 0;
+}
+.vcGenericContentForm td {
+	padding: 5px;
+}
+.vcGenericContentForm tr:nth-child(odd) {
+	background-color: #FFFFFF;
+}
+.vcGenericContentForm tr:nth-child(even) {
+	background-color: #F7F9F9;
+}
+.vcGenericContentInput {
+	outline: none;
+	border: 1px solid #999;
+	padding: 5px;
+	color: #333;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+.divClass {
+	BORDER-RIGHT: white 1px solid;
+	BORDER-TOP: white 1px solid;
+	OVERFLOW: auto;
+	BORDER-LEFT: white 1px solid;
+	SCROLLBAR-ARROW-COLOR: #003366;
+	border-bottom: white 1px solid;
+	SCROLLBAR-DARKSHADOW-COLOR: #f2f2f2;
+	SCROLLBAR-BASE-COLOR: #e1e8f2;
+	/*width:300px;*/
+	HEIGHT: 50px
+}
+span.folder, span.file, span.folderclose {
+	padding: 1px 0 1px 16px;
+	display: block;
+}
+span.folder {
+	background: url(treeview_images/folder.gif) 0 0 no-repeat;
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	color: #036;
+}
+span.file {
+	background: url(treeview_images/file.gif) 0 0 no-repeat;
+}
+span.folderclose {
+	background: url(treeview_images/folder-closed.gif) 0 0 no-repeat;
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	color: #036;
+}
+.divClass {
+	BORDER-RIGHT: white 1px solid;
+	BORDER-TOP: white 1px solid;
+	OVERFLOW: auto;
+	BORDER-LEFT: white 1px solid;
+	SCROLLBAR-ARROW-COLOR: #003366;
+	border-bottom: white 1px solid;
+	SCROLLBAR-DARKSHADOW-COLOR: #f2f2f2;
+	SCROLLBAR-BASE-COLOR: #e1e8f2;
+	/*    POSITION: relative; */
+	HEIGHT: 200px
+}
+.SearchDiv {
+	FLOAT: left;
+	VISIBILITY: inherit;
+	LETTER-SPACING: normal;
+	Display: inline;
+}
+.vcloginbody {
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 11px;
+	color: #333;
+}
+.vcPassword {
+	font-family: Verdana,sans-serif;
+	border: 1px solid #999;
+	padding: 3px;
+	font-size: 12px;
+	width: 128px;
+	color: #333;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	border-left:3px solid #F00;
+}
+.vcLoginPassword {
+	font-family: Verdana,sans-serif;
+	font-size: 14px;
+	color: #A7A7A7;
+	border: 1px solid #CCC;
+	padding: 8px;
+	width: 414px;
+	margin: 0 0 10px 0;
+}
+.vcUserInput {
+	border: 1px solid #999;
+	padding: 3px;
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	width: 130px;
+	color: #333;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;	 
+}
+.vcUserInputM {
+	border: 1px solid #999;
+	padding: 3px;
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	width: 128px;
+	color: #333;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;	 
+	border-left:3px solid #F00;
+}
+.red
+{
+    COLOR: red;
+}
+.divLinksVerViewAttProp {
+	position: absolute;
+	display: block;
+	margin-left: -10px;
+	margin-top: -6px;
+	background: #dbefff;
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	width: 117px;
+	line-height: 24px;
+	/*padding: 5px 5px;*/
+	text-align: left;
+	float: center; 
+	/*padding-left:0px; */
+	border:1px solid #296CCB;
+	/*-moz-border-radius: 8px;
+	border-radius: 8px;*/
+	z-index:1; 
+}
+.CrtFolder
+{
+	color: #8E6CED;
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 15px;
+}
+.bg01
+{
+	/*-moz-border-radius: 8px;
+	border-radius: 8px;	*/
+	padding: 5px 5px;
+    BACKGROUND-COLOR: #ffffff;
+}
+.bg02
+{
+	/*-moz-border-radius: 8px;
+	border-radius: 8px;	*/
+    /*BACKGROUND-COLOR: #e1e8f2 */
+	padding: 5px 5px;
+	BACKGROUND-COLOR: #f2f2f2;
+}
+.vcPopupTools {
+	background: #e3eaec;
+	padding: 6px 6px;
+	height: 12px;
+	line-height: 20px;
+}
+.VSkin
+{
+	position:absolute;
+	width:120px;
+	margin-left: -10px;
+	border:1px solid black;
+	background-color:menu;
+	font-family:'RopaSansRegular', Arial, Helvetica, sans-serif;
+	line-height:8px;
+	cursor:default;
+	font-size:14px;
+	text-align: left;
+	z-index:1;
+}
+/*.sublinks
+{
+    FONT-WEIGHT: normal;
+    FONT-SIZE: 14px;
+    COLOR: #133e83;
+    FONT-FAMILY: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+    TEXT-DECORATION: underline
+}
+.sublinks:hover
+{
+    FONT-WEIGHT: normal;
+    FONT-SIZE: 14px;
+    COLOR: #ff3300;
+    FONT-FAMILY: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+    TEXT-DECORATION: underline
+} */
+.vcStatus
+{
+	float:right;
+	line-height:15px
+}
+div.k-window-titlebar
+  
+{
+    font-size: 1.5em;
+    line-height: 1.2;
+    FONT-FAMILY: 'RopaSansRegular', Arial, Helvetica, Tahoma, Geneva, sans-serif;
+	background: #02a8de url(../images/btn_bg.png) repeat-x;
+    color: #FFF;
+}
+.divLinksVerActRevProp {
+	position: absolute;
+	display: block;
+	margin-left: -10px;
+	background: #dbefff;
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	width: 85px;
+	line-height: 24px;
+	/*padding: 5px 5px;*/
+	text-align: left;
+	float: center; 
+	/*padding-left:0px; */
+	border:1px solid #296CCB;
+	/*-moz-border-radius: 8px;
+	border-radius: 8px;*/
+	z-index:1; 
+}
+.placeholder-container 
+{
+	border-radius: 3px; border: 1px solid #CCC; padding: 5px; background: white;
+}
+.placeholder-container span,input {
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	color: #333;
+	/*color: #A7A7A7;*/
+}
+.iconAlignRight {
+	float: right;
+	margin: 0 0 0 5px;
+	padding:3px 1px 3px 1px;
+}
+ #gauge-container {
+		background: url(../images/gauge-container.png) no-repeat ;
+		width: 269px;
+		height: 266px;
+		text-align: center;
+		margin: 0 0 0 0;
+	}
+
+#gauge {
+	width: 220px;
+	height: 220px;
+	margin: 0 auto 0;
+}
+.ColorUrgent
+{
+    BACKGROUND-COLOR: #FF0000;
+	font: "13px Tahoma, Geneva, sans-serif"
+}
+.ColorHigh
+{
+    BACKGROUND-COLOR:#FFA500;
+	font: "13px Tahoma, Geneva, sans-serif"
+}
+
+.ColorMedium
+{
+    BACKGROUND-COLOR: #007bc3;
+	font: "13px Tahoma, Geneva, sans-serif"
+}
+.ColorLow
+{
+    BACKGROUND-COLOR: #76b800;
+	font: "13px Tahoma, Geneva, sans-serif"
+}
+/*Radhika 06-05-2014 popup help file display: block;*/
+.btnPopupHelp {
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 18px;display: inline-block;
+	color: #737373;
+	background: url(../images/btnicon_help.png) no-repeat right center;
+	padding: 0 28px 0 0;	
+	width: 30px;
+	margin: 0 0 0 0px;
+}
+.vcTableHeader {
+	border-left: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+	padding: 7px;
+	background: #3399CC url(../images/tableheader_bg.png) repeat-x;
+	color: #FFF;
+}
+.vcTableHeader a, .vcTableHeader a:hover {
+	color: #FFF;
+	text-decoration: none;
+}
+.vcTableHeaderbg02 {
+	background-color: #F0F0F0;
+}
+.vcTableHeaderbg01 {
+	background-color: #fff;
+}
+.vcPopContentArea .lftPanel {
+	padding: 0px 0 15px 0px;
+}
+.vcPopContentArea .rgtPanel {
+	border-left: 3px solid #d5d8da;
+}
+/* Radhika 30-12-2014 11:44: */
+.vcTopTools
+{
+	padding: 0px 0px;
+	height: 35px;
+	line-height: 35px;
+}
+#vcTopNav ul {
+	top: 28px;
+}
+#vcTopNav li a
+{
+	height: 100%;    
+	//border-right: 1px solid #c0c9cc;
+}
+.vcTopTools ul li.active
+{
+	/* background-color:#0099ff; */ 
+	background: #0099ff;
+	background: linear-gradient(to top, #98d2f4 0%, #0099ff 50%, #0099ff 51%, #1794dc 78%, #98d2f4 100%);
+	background: -moz-linear-gradient(to top, #98d2f4 0%, #0099ff 50%, #0099ff 51%, #1794dc 78%, #98d2f4 100%);
+	background: -webkit-gradient(linear, top, #98d2f4 0%, #0099ff 50%, #0099ff 51%, #1794dc 78%, #98d2f4 100%);
+	background: -webkit-linear-gradient( top, #98d2f4 0%, #0099ff 50%, #0099ff 51%, #1794dc 78%, #98d2f4 100%);
+	background: -o-linear-gradient(to top, #98d2f4 0%, #0099ff 50%, #0099ff 51%, #1794dc 78%, #98d2f4 100%);
+	background: -ms-linear-gradient(to top, #98d2f4 0%, #0099ff 50%, #0099ff 51%, #1794dc 78%, #98d2f4 100%);
+	background: linear-gradient(to top, #98d2f4 0%, #0099ff 50%, #0099ff 51%, #1794dc 78%, #98d2f4 100%);
+}
+.divButtons
+{
+	position:fixed;
+	text-align: center;
+	width:100%;
+	height:50px;
+	bottom:0px;
+}
+.mandatory
+{
+    FONT-SIZE: 16px;
+    COLOR: red;
+    FONT-FAMILY: 'RopaSansRegular', Arial, Helvetica, Tahoma, Geneva, sans-serif;
+    TEXT-DECORATION: none
+}
+.lnkActive
+{
+    color: orange;
+}
+.vcAlternate
+{
+	color: White;
+}
+.vcAlternate:hover
+{
+	color: black;
+}
+#vcRightNav {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	
+}
+/* make the LI display inline */
+/* it's position relative so that position absolute */
+/* can be used in submenu */
+#vcRightNav li {
+	float: left;
+	left: 0px;
+	display: block;
+	position: relative;
+	//padding-right: 15px;
+    border-right: 1px solid 0099ff;
+	z-index: 96;
+}
+/* this is the parent menu */
+#vcRightNav li a {
+	display: block;
+	float: left;
+	height: 20px;
+	text-decoration: none;
+	color: #000;
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	//border-right: 1px solid #c0c9cc;
+	padding: 0 15px;
+	outline: none;
+}
+#vcRightNav .browse {
+	background: url(../images/icon_browse.png) no-repeat 10px 0;
+	padding: 0 15px 0 35px !important;
+}
+#vcRightNav .newfolder {
+	background: url(../images/icon_newfolder.png) no-repeat 10px 0;
+	padding: 0 15px 0 35px !important;
+}
+#vcRightNav .upload {
+	background: url(../images/icon_upload.png) no-repeat 10px 0;
+	padding: 0 15px 0 35px !important;
+}
+#vcRightNav .selected {
+	background: url(../images/arrow_down.png) no-repeat right;
+	padding: 0 15px 0 15px !important;
+}
+#vcRightNav .disabled {
+	color: #9fafb4 !important;
+	padding: 0 15px 0 15px !important;
+}
+/* submenu, it's hidden by default */
+#vcRightNav ul {
+	position: absolute;
+	left: 1px;
+	top: 2px;
+	display: none;
+	margin: 0 0 0 -1px;
+	padding: 0;
+	list-style: none;
+	width: 130px;
+	height: 20px;
+}
+#vcRightNav ul a {
+	display: block;
+	padding: 5px;
+	background: 0099ff;
+	line-height: normal;
+	height: auto;
+	width: 100px;
+    left: 1px;
+	border-right: none;
+	text-align: left;
+	text-decoration: none;
+	color: #FFF;
+	font-family: 'RopaSansRegular', Arial, Helvetica, sans-serif;
+	font-size: 15px;
+}
+/*Radhika: Monday, December 09, 2013 01:22:52 PM: To work properly in windows 7 and chrome */
+#vcRightNav li ul:first-child li {
+	top: 0px;
+	left: 12px;
+	background: 0099ff;
+	border-bottom: 1px solid #FFF; 
+	line-height: normal;
+}
+#vcRightNav li ul li a:hover {
+   background: #99ccff;
+   color: #FFF;
+}
+#vcRightNav li ul > li:last-child { 
+	border-right: none;
+    border-bottom: 0px; 
+}
+/* End */
+/* display block will make the link fill the whole area of LI */
+#vcRightNav ul a:hover
+{
+	background: #99ccff;
+	color: #FFF;
+}
+#vcRightNav ul {
+	top: 0px;
+}
+#vcRightNav li a
+{
+	height: 100%;    
+	//border-right: 1px solid #c0c9cc;
+}
+#vcRightNav #idProcess ul{
+	visibility:hidden;
+	position:absolute;
+	width: 100px;
+	left:92%;
+	top:0;
+	opacity:0;
+	-moz-transition:all 0.5s;
+	-webkit-transition:opacity 0.5s;
+	-o-transition:opacity 0.5s,visibility 0.5s;
+	transition:opacity 0.5s;
+	border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	padding:0;
+}
+#vcRightNav #idProcess li:hover>ul{
+	visibility:visible;
+	opacity:1;
+}
+
+#vcRightNav #idProcess span{
+	overflow:visible;
+	background-image:url("../images/arrowsub.gif");
+	background-position:right center;
+	background-repeat:no-repeat;
+	padding-right:20px;
+	content: "";
+}
+
+#vcRightNav #idProcess ul span{
+	overflow:visible;
+	background-image:url("../images/arrowsub.gif");
+	background-position:right center;
+	background-repeat:no-repeat;
+	padding-right:20px;
+	content: "";
+}
+.btnanchorcls
+{
+	border: 0px solid black;
+	padding: -7px -12px;
+	font-size: 20px;
+	margin: 0px 1px;
+	cursor: pointer;		   
+	width: 65px;
+	background: url(../images/btnicon_help.png) no-repeat right center;
+	font-size: 18px;
+}
+.btnanchorcls:hover
+{
+  color: #333;
+  text-decoration:none;
+}

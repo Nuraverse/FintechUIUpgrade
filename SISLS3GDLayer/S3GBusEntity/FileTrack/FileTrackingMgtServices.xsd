@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="FileTrackingMgtServices" targetNamespace="http://tempuri.org/FileTrackingMgtServices.xsd" xmlns:mstns="http://tempuri.org/FileTrackingMgtServices.xsd" xmlns="http://tempuri.org/FileTrackingMgtServices.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="FileTrackingMgtServices" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="FileTrackingMgtServices" msprop:Generator_UserDSName="FileTrackingMgtServices">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="S3G_FILETR_GEN_MST" msprop:Generator_TableClassName="S3G_FILETR_GEN_MSTDataTable" msprop:Generator_TableVarName="tableS3G_FILETR_GEN_MST" msprop:Generator_TablePropName="S3G_FILETR_GEN_MST" msprop:Generator_RowDeletingName="S3G_FILETR_GEN_MSTRowDeleting" msprop:Generator_RowChangingName="S3G_FILETR_GEN_MSTRowChanging" msprop:Generator_RowEvHandlerName="S3G_FILETR_GEN_MSTRowChangeEventHandler" msprop:Generator_RowDeletedName="S3G_FILETR_GEN_MSTRowDeleted" msprop:Generator_UserTableName="S3G_FILETR_GEN_MST" msprop:Generator_RowChangedName="S3G_FILETR_GEN_MSTRowChanged" msprop:Generator_RowEvArgName="S3G_FILETR_GEN_MSTRowChangeEvent" msprop:Generator_RowClassName="S3G_FILETR_GEN_MSTRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Company_ID" msprop:Generator_ColumnVarNameInTable="columnCompany_ID" msprop:Generator_ColumnPropNameInRow="Company_ID" msprop:Generator_ColumnPropNameInTable="Company_IDColumn" msprop:Generator_UserColumnName="Company_ID" type="xs:int" minOccurs="0" />
+              <xs:element name="FILE_GEN_MST_ID" msprop:Generator_ColumnVarNameInTable="columnFILE_GEN_MST_ID" msprop:Generator_ColumnPropNameInRow="FILE_GEN_MST_ID" msprop:Generator_ColumnPropNameInTable="FILE_GEN_MST_IDColumn" msprop:Generator_UserColumnName="FILE_GEN_MST_ID" type="xs:int" minOccurs="0" />
+              <xs:element name="FILE_TYPE_ID" msprop:Generator_ColumnVarNameInTable="columnFILE_TYPE_ID" msprop:Generator_ColumnPropNameInRow="FILE_TYPE_ID" msprop:Generator_ColumnPropNameInTable="FILE_TYPE_IDColumn" msprop:Generator_UserColumnName="FILE_TYPE_ID" type="xs:int" minOccurs="0" />
+              <xs:element name="BR_RF_FILE_NUMBER" msprop:nullValue="_null" msprop:Generator_ColumnPropNameInRow="BR_RF_FILE_NUMBER" msprop:Generator_ColumnVarNameInTable="columnBR_RF_FILE_NUMBER" msprop:Generator_ColumnPropNameInTable="BR_RF_FILE_NUMBERColumn" msprop:Generator_UserColumnName="BR_RF_FILE_NUMBER" type="xs:string" minOccurs="0" />
+              <xs:element name="APPLICATION_PROCESS_ID" msprop:nullValue="_null" msprop:Generator_ColumnPropNameInRow="APPLICATION_PROCESS_ID" msprop:Generator_ColumnVarNameInTable="columnAPPLICATION_PROCESS_ID" msprop:Generator_ColumnPropNameInTable="APPLICATION_PROCESS_IDColumn" msprop:Generator_UserColumnName="APPLICATION_PROCESS_ID" type="xs:string" minOccurs="0" />
+              <xs:element name="PA_SA_REF_ID" msprop:Generator_ColumnVarNameInTable="columnPA_SA_REF_ID" msprop:Generator_ColumnPropNameInRow="PA_SA_REF_ID" msprop:Generator_ColumnPropNameInTable="PA_SA_REF_IDColumn" msprop:Generator_UserColumnName="PA_SA_REF_ID" type="xs:string" minOccurs="0" />
+              <xs:element name="CREATED_BY" msprop:Generator_ColumnVarNameInTable="columnCREATED_BY" msprop:Generator_ColumnPropNameInRow="CREATED_BY" msprop:Generator_ColumnPropNameInTable="CREATED_BYColumn" msprop:Generator_UserColumnName="CREATED_BY" type="xs:int" minOccurs="0" />
+              <xs:element name="BR_RF_FILE_NUMBER_CPOUCH" msprop:Generator_ColumnVarNameInTable="columnBR_RF_FILE_NUMBER_CPOUCH" msprop:Generator_ColumnPropNameInRow="BR_RF_FILE_NUMBER_CPOUCH" msprop:Generator_ColumnPropNameInTable="BR_RF_FILE_NUMBER_CPOUCHColumn" msprop:Generator_UserColumnName="BR_RF_FILE_NUMBER_CPOUCH" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="S3G_FILETR_REQ_MST" msprop:Generator_TableClassName="S3G_FILETR_REQ_MSTDataTable" msprop:Generator_TableVarName="tableS3G_FILETR_REQ_MST" msprop:Generator_RowChangedName="S3G_FILETR_REQ_MSTRowChanged" msprop:Generator_TablePropName="S3G_FILETR_REQ_MST" msprop:Generator_RowDeletingName="S3G_FILETR_REQ_MSTRowDeleting" msprop:Generator_RowChangingName="S3G_FILETR_REQ_MSTRowChanging" msprop:Generator_RowEvHandlerName="S3G_FILETR_REQ_MSTRowChangeEventHandler" msprop:Generator_RowDeletedName="S3G_FILETR_REQ_MSTRowDeleted" msprop:Generator_RowClassName="S3G_FILETR_REQ_MSTRow" msprop:Generator_UserTableName="S3G_FILETR_REQ_MST" msprop:Generator_RowEvArgName="S3G_FILETR_REQ_MSTRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Company_ID" msprop:Generator_ColumnVarNameInTable="columnCompany_ID" msprop:Generator_ColumnPropNameInRow="Company_ID" msprop:Generator_ColumnPropNameInTable="Company_IDColumn" msprop:Generator_UserColumnName="Company_ID" type="xs:int" minOccurs="0" />
+              <xs:element name="FILE_REQ_ID" msprop:Generator_ColumnVarNameInTable="columnFILE_REQ_ID" msprop:Generator_ColumnPropNameInRow="FILE_REQ_ID" msprop:Generator_ColumnPropNameInTable="FILE_REQ_IDColumn" msprop:Generator_UserColumnName="FILE_REQ_ID" type="xs:int" minOccurs="0" />
+              <xs:element name="FILE_TYPE_ID" msprop:Generator_ColumnVarNameInTable="columnFILE_TYPE_ID" msprop:Generator_ColumnPropNameInRow="FILE_TYPE_ID" msprop:Generator_ColumnPropNameInTable="FILE_TYPE_IDColumn" msprop:Generator_UserColumnName="FILE_TYPE_ID" type="xs:int" minOccurs="0" />
+              <xs:element name="LOCATION_ID" msprop:Generator_ColumnVarNameInTable="columnLOCATION_ID" msprop:Generator_ColumnPropNameInRow="LOCATION_ID" msprop:Generator_ColumnPropNameInTable="LOCATION_IDColumn" msprop:Generator_UserColumnName="LOCATION_ID" type="xs:int" minOccurs="0" />
+              <xs:element name="APPLICATION_PROCESS_ID" msprop:Generator_ColumnVarNameInTable="columnAPPLICATION_PROCESS_ID" msprop:Generator_ColumnPropNameInRow="APPLICATION_PROCESS_ID" msprop:Generator_ColumnPropNameInTable="APPLICATION_PROCESS_IDColumn" msprop:Generator_UserColumnName="APPLICATION_PROCESS_ID" type="xs:int" minOccurs="0" />
+              <xs:element name="PA_SA_REF_ID" msprop:Generator_ColumnVarNameInTable="columnPA_SA_REF_ID" msprop:Generator_ColumnPropNameInRow="PA_SA_REF_ID" msprop:Generator_ColumnPropNameInTable="PA_SA_REF_IDColumn" msprop:Generator_UserColumnName="PA_SA_REF_ID" type="xs:int" minOccurs="0" />
+              <xs:element name="Reason_For_Request" msprop:nullValue="_null" msprop:Generator_ColumnPropNameInRow="Reason_For_Request" msprop:Generator_ColumnVarNameInTable="columnReason_For_Request" msprop:Generator_ColumnPropNameInTable="Reason_For_RequestColumn" msprop:Generator_UserColumnName="Reason_For_Request" type="xs:string" minOccurs="0" />
+              <xs:element name="Xml_Request" msprop:nullValue="_null" msprop:Generator_ColumnPropNameInRow="Xml_Request" msprop:Generator_ColumnVarNameInTable="columnXml_Request" msprop:Generator_ColumnPropNameInTable="Xml_RequestColumn" msprop:Generator_UserColumnName="Xml_Request" type="xs:string" minOccurs="0" />
+              <xs:element name="CREATED_BY" msprop:Generator_ColumnVarNameInTable="columnCREATED_BY" msprop:Generator_ColumnPropNameInRow="CREATED_BY" msprop:Generator_ColumnPropNameInTable="CREATED_BYColumn" msprop:Generator_UserColumnName="CREATED_BY" type="xs:int" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="S3G_FILETR_DASHBOARD_ENTRY" msprop:Generator_TableClassName="S3G_FILETR_DASHBOARD_ENTRYDataTable" msprop:Generator_TableVarName="tableS3G_FILETR_DASHBOARD_ENTRY" msprop:Generator_RowChangedName="S3G_FILETR_DASHBOARD_ENTRYRowChanged" msprop:Generator_TablePropName="S3G_FILETR_DASHBOARD_ENTRY" msprop:Generator_RowDeletingName="S3G_FILETR_DASHBOARD_ENTRYRowDeleting" msprop:Generator_RowChangingName="S3G_FILETR_DASHBOARD_ENTRYRowChanging" msprop:Generator_RowEvHandlerName="S3G_FILETR_DASHBOARD_ENTRYRowChangeEventHandler" msprop:Generator_RowDeletedName="S3G_FILETR_DASHBOARD_ENTRYRowDeleted" msprop:Generator_RowClassName="S3G_FILETR_DASHBOARD_ENTRYRow" msprop:Generator_UserTableName="S3G_FILETR_DASHBOARD_ENTRY" msprop:Generator_RowEvArgName="S3G_FILETR_DASHBOARD_ENTRYRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Company_ID" msprop:Generator_ColumnVarNameInTable="columnCompany_ID" msprop:Generator_ColumnPropNameInRow="Company_ID" msprop:Generator_ColumnPropNameInTable="Company_IDColumn" msprop:Generator_UserColumnName="Company_ID" type="xs:int" minOccurs="0" />
+              <xs:element name="Request_Date_From" msprop:nullValue="_null" msprop:Generator_ColumnPropNameInRow="Request_Date_From" msprop:Generator_ColumnVarNameInTable="columnRequest_Date_From" msprop:Generator_ColumnPropNameInTable="Request_Date_FromColumn" msprop:Generator_UserColumnName="Request_Date_From" type="xs:string" minOccurs="0" />
+              <xs:element name="Request_Date_To" msprop:nullValue="_null" msprop:Generator_ColumnPropNameInRow="Request_Date_To" msprop:Generator_ColumnVarNameInTable="columnRequest_Date_To" msprop:Generator_ColumnPropNameInTable="Request_Date_ToColumn" msprop:Generator_UserColumnName="Request_Date_To" type="xs:string" minOccurs="0" />
+              <xs:element name="XML_File_Request" msprop:Generator_ColumnVarNameInTable="columnXML_File_Request" msprop:Generator_ColumnPropNameInRow="XML_File_Request" msprop:Generator_ColumnPropNameInTable="XML_File_RequestColumn" msprop:Generator_UserColumnName="XML_File_Request" type="xs:string" minOccurs="0" />
+              <xs:element name="Created_By" msprop:Generator_ColumnVarNameInTable="columnCreated_By" msprop:Generator_ColumnPropNameInRow="Created_By" msprop:Generator_ColumnPropNameInTable="Created_ByColumn" msprop:Generator_UserColumnName="Created_By" type="xs:int" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="S3G_FILETR_INWARD_ENTRY" msprop:Generator_TableClassName="S3G_FILETR_INWARD_ENTRYDataTable" msprop:Generator_TableVarName="tableS3G_FILETR_INWARD_ENTRY" msprop:Generator_TablePropName="S3G_FILETR_INWARD_ENTRY" msprop:Generator_RowDeletingName="S3G_FILETR_INWARD_ENTRYRowDeleting" msprop:Generator_RowChangingName="S3G_FILETR_INWARD_ENTRYRowChanging" msprop:Generator_RowEvHandlerName="S3G_FILETR_INWARD_ENTRYRowChangeEventHandler" msprop:Generator_RowDeletedName="S3G_FILETR_INWARD_ENTRYRowDeleted" msprop:Generator_UserTableName="S3G_FILETR_INWARD_ENTRY" msprop:Generator_RowChangedName="S3G_FILETR_INWARD_ENTRYRowChanged" msprop:Generator_RowEvArgName="S3G_FILETR_INWARD_ENTRYRowChangeEvent" msprop:Generator_RowClassName="S3G_FILETR_INWARD_ENTRYRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Company_ID" msprop:Generator_ColumnVarNameInTable="columnCompany_ID" msprop:Generator_ColumnPropNameInRow="Company_ID" msprop:Generator_ColumnPropNameInTable="Company_IDColumn" msprop:Generator_UserColumnName="Company_ID" type="xs:int" minOccurs="0" />
+              <xs:element name="Created_By" msprop:Generator_ColumnVarNameInTable="columnCreated_By" msprop:Generator_ColumnPropNameInRow="Created_By" msprop:Generator_ColumnPropNameInTable="Created_ByColumn" msprop:Generator_UserColumnName="Created_By" type="xs:int" minOccurs="0" />
+              <xs:element name="APPLICATION_PROCESS_ID" msprop:Generator_ColumnVarNameInTable="columnAPPLICATION_PROCESS_ID" msprop:Generator_ColumnPropNameInRow="APPLICATION_PROCESS_ID" msprop:Generator_ColumnPropNameInTable="APPLICATION_PROCESS_IDColumn" msprop:Generator_UserColumnName="APPLICATION_PROCESS_ID" type="xs:string" minOccurs="0" />
+              <xs:element name="FILE_TYPE_ID" msprop:Generator_ColumnVarNameInTable="columnFILE_TYPE_ID" msprop:Generator_ColumnPropNameInRow="FILE_TYPE_ID" msprop:Generator_ColumnPropNameInTable="FILE_TYPE_IDColumn" msprop:Generator_UserColumnName="FILE_TYPE_ID" type="xs:string" minOccurs="0" />
+              <xs:element name="PA_SA_REF_ID" msprop:nullValue="_null" msprop:Generator_ColumnPropNameInRow="PA_SA_REF_ID" msprop:Generator_ColumnVarNameInTable="columnPA_SA_REF_ID" msprop:Generator_ColumnPropNameInTable="PA_SA_REF_IDColumn" msprop:Generator_UserColumnName="PA_SA_REF_ID" type="xs:string" minOccurs="0" />
+              <xs:element name="XML_Inward_Dtl" msprop:nullValue="_null" msprop:Generator_ColumnPropNameInRow="XML_Inward_Dtl" msprop:Generator_ColumnVarNameInTable="columnXML_Inward_Dtl" msprop:Generator_ColumnPropNameInTable="XML_Inward_DtlColumn" msprop:Generator_UserColumnName="XML_Inward_Dtl" type="xs:string" minOccurs="0" />
+              <xs:element name="CREATED_ON" msprop:Generator_ColumnVarNameInTable="columnCREATED_ON" msprop:Generator_ColumnPropNameInRow="CREATED_ON" msprop:nullValue="_null" msprop:Generator_ColumnPropNameInTable="CREATED_ONColumn" msprop:Generator_UserColumnName="CREATED_ON" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

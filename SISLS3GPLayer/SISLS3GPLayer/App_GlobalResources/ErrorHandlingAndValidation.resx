@@ -1,0 +1,1587 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="1" xml:space="preserve">
+    <value>Invalid User Id</value>
+  </data>
+  <data name="10" xml:space="preserve">
+    <value>Select GL Account </value>
+    <comment>General</comment>
+  </data>
+  <data name="100" xml:space="preserve">
+    <value>GL_Code Does not Exist For respective Branch</value>
+  </data>
+  <data name="1000" xml:space="preserve">
+    <value>Treasury Bucket updated successfully</value>
+  </data>
+  <data name="10000" xml:space="preserve">
+    <value />
+  </data>
+  <data name="10006" xml:space="preserve">
+    <value>Combination already Exists</value>
+  </data>
+  <data name="1001" xml:space="preserve">
+    <value>Account Card details added successfully. \n\n Would you like to add one more Account card?</value>
+    <comment>Account Card</comment>
+  </data>
+  <data name="1002" xml:space="preserve">
+    <value>Account Card details Updated successfully</value>
+    <comment>Account Card</comment>
+  </data>
+  <data name="1003" xml:space="preserve">
+    <value>Account Number already exists</value>
+    <comment>Account Card</comment>
+  </data>
+  <data name="1004" xml:space="preserve">
+    <value>Select atleast one Branch</value>
+    <comment>Account Card</comment>
+  </data>
+  <data name="1005" xml:space="preserve">
+    <value>GL Code already mapped with other Account Nature</value>
+    <comment>Account Card</comment>
+  </data>
+  <data name="10051" xml:space="preserve">
+    <value>Unable to save line item details</value>
+  </data>
+  <data name="10052" xml:space="preserve">
+    <value>Line Item Details saved successfully</value>
+  </data>
+  <data name="10053" xml:space="preserve">
+    <value>Line Item Details updated successfully</value>
+  </data>
+  <data name="10054" xml:space="preserve">
+    <value>Subline item saved successfully</value>
+  </data>
+  <data name="10055" xml:space="preserve">
+    <value>Subline item updated successfully</value>
+  </data>
+  <data name="10056" xml:space="preserve">
+    <value>Unable to save subline item</value>
+  </data>
+  <data name="10057" xml:space="preserve">
+    <value>Add Line Item</value>
+  </data>
+  <data name="10058" xml:space="preserve">
+    <value>Combination already exists</value>
+  </data>
+  <data name="10059" xml:space="preserve">
+    <value>Select Item Header</value>
+  </data>
+  <data name="1006" xml:space="preserve">
+    <value>Account Number contains active Sub Account</value>
+    <comment>AccountCard</comment>
+  </data>
+  <data name="10060" xml:space="preserve">
+    <value>Select Account Nature</value>
+  </data>
+  <data name="10061" xml:space="preserve">
+    <value>Select Effective from date</value>
+  </data>
+  <data name="10062" xml:space="preserve">
+    <value>Select Effective to date</value>
+  </data>
+  <data name="10063" xml:space="preserve">
+    <value>Select Account group</value>
+  </data>
+  <data name="10064" xml:space="preserve">
+    <value>Effective to date should be greater than Effective from date</value>
+  </data>
+  <data name="10065" xml:space="preserve">
+    <value>Selected Line Item already exists</value>
+  </data>
+  <data name="10066" xml:space="preserve">
+    <value>Add Sub Line Item</value>
+  </data>
+  <data name="10067" xml:space="preserve">
+    <value>Enter Sub total name</value>
+  </data>
+  <data name="10068" xml:space="preserve">
+    <value>Selected Sub line item already exists</value>
+  </data>
+  <data name="10069" xml:space="preserve">
+    <value>Select Sub line item type</value>
+  </data>
+  <data name="1007" xml:space="preserve">
+    <value>Account Number cannot deactivate,Transaction exists</value>
+    <comment>AccountCard</comment>
+  </data>
+  <data name="10070" xml:space="preserve">
+    <value>Select Line Item</value>
+  </data>
+  <data name="10071" xml:space="preserve">
+    <value>Select Sub Line Item</value>
+  </data>
+  <data name="10072" xml:space="preserve">
+    <value>Formula master saved successfully.</value>
+  </data>
+  <data name="10073" xml:space="preserve">
+    <value>Formula master updated successfully.</value>
+  </data>
+  <data name="10074" xml:space="preserve">
+    <value>Unable to save formula master details.</value>
+  </data>
+  <data name="10075" xml:space="preserve">
+    <value>Invalid formula</value>
+  </data>
+  <data name="10076" xml:space="preserve">
+    <value>Formula not found</value>
+  </data>
+  <data name="10077" xml:space="preserve">
+    <value>Choose item</value>
+  </data>
+  <data name="10078" xml:space="preserve">
+    <value>Choose an item to delete</value>
+  </data>
+  <data name="10079" xml:space="preserve">
+    <value>Selected SL_Code already exists</value>
+  </data>
+  <data name="1008" xml:space="preserve">
+    <value>Sub account cannot deactivate,Transaction exists</value>
+    <comment>AccountCard</comment>
+  </data>
+  <data name="10080" xml:space="preserve">
+    <value>File upload details saved successfully</value>
+  </data>
+  <data name="10081" xml:space="preserve">
+    <value>Defined formula is invalid</value>
+  </data>
+  <data name="1009" xml:space="preserve">
+    <value>Selected combination already exists</value>
+    <comment>Account card</comment>
+  </data>
+  <data name="101" xml:space="preserve">
+    <value>Currency already mapped with Branch</value>
+  </data>
+  <data name="1010" xml:space="preserve">
+    <value>Cheque Number should not be overlapped</value>
+    <comment>Account card</comment>
+  </data>
+  <data name="1011" xml:space="preserve">
+    <value>Cheque start number should not be greater than Cheque end number</value>
+    <comment>Account card</comment>
+  </data>
+  <data name="1012" xml:space="preserve">
+    <value>Financial month details in GPS is not defined</value>
+    <comment>Account Card</comment>
+  </data>
+  <data name="1013" xml:space="preserve">
+    <value>Contact Person \"Unique Id\" should be unique</value>
+    <comment>Account Card</comment>
+  </data>
+  <data name="1014" xml:space="preserve">
+    <value>Transaction exists cannot be modified</value>
+    <comment>AccountCard</comment>
+  </data>
+  <data name="1015" xml:space="preserve">
+    <value>Enter Sub Ledger Description</value>
+    <comment>Account card</comment>
+  </data>
+  <data name="1016" xml:space="preserve">
+    <value>Entered Account Number is in deactive mode</value>
+    <comment>Account Card</comment>
+  </data>
+  <data name="1017" xml:space="preserve">
+    <value>Account Number is in deactive cannot activate sub Ledger</value>
+    <comment>Account Card</comment>
+  </data>
+  <data name="102" xml:space="preserve">
+    <value>Selected Branch already defined</value>
+  </data>
+  <data name="103" xml:space="preserve">
+    <value>Select atleast one Applicable Currency from Currency details</value>
+  </data>
+  <data name="104" xml:space="preserve">
+    <value>Select atleast one Default Currency from Currency details</value>
+  </data>
+  <data name="105" xml:space="preserve">
+    <value>Enter a Valid Password</value>
+  </data>
+  <data name="107" xml:space="preserve">
+    <value>User Name already exists</value>
+  </data>
+  <data name="108" xml:space="preserve">
+    <value>Company Code already exists</value>
+  </data>
+  <data name="109" xml:space="preserve">
+    <value>Company Name already exists</value>
+  </data>
+  <data name="11" xml:space="preserve">
+    <value>Select the Branch</value>
+    <comment>Common</comment>
+  </data>
+  <data name="110" xml:space="preserve">
+    <value>PAN/TAX Number already exists</value>
+  </data>
+  <data name="111" xml:space="preserve">
+    <value>Company Master details added successfully</value>
+  </data>
+  <data name="112" xml:space="preserve">
+    <value>Company Master details updated successfully </value>
+  </data>
+  <data name="12" xml:space="preserve">
+    <value>Unable to Load </value>
+    <comment>Page Load</comment>
+  </data>
+  <data name="1201" xml:space="preserve">
+    <value>Unable to Load Budget Master Details</value>
+    <comment>Budget Master</comment>
+  </data>
+  <data name="1202" xml:space="preserve">
+    <value>Unable to Load Budget Details Grid</value>
+    <comment>Budget Master</comment>
+  </data>
+  <data name="1203" xml:space="preserve">
+    <value>Unable to Save Budget Details</value>
+    <comment>Budget Master</comment>
+  </data>
+  <data name="1220" xml:space="preserve">
+    <value>Budget Details Added successfully\n\n Would You Like to Add One More Budget Details?</value>
+    <comment>Budget Master</comment>
+  </data>
+  <data name="1222" xml:space="preserve">
+    <value>Budget Details Updated Successfully</value>
+    <comment>Budget Master</comment>
+  </data>
+  <data name="1250" xml:space="preserve">
+    <value>Select the Month</value>
+  </data>
+  <data name="1251" xml:space="preserve">
+    <value>Enter the Amount</value>
+  </data>
+  <data name="1252" xml:space="preserve">
+    <value>Add atleast one month</value>
+  </data>
+  <data name="1260" xml:space="preserve">
+    <value>Budget for the same combination already exists</value>
+  </data>
+  <data name="13" xml:space="preserve">
+    <value>Unable to Clear_FA</value>
+    <comment>Clear_FA alert</comment>
+  </data>
+  <data name="1301" xml:space="preserve">
+    <value>Exchange Rate Details Added Successfully. \n\n Would You Like to Add One More Exchange Rate Details?</value>
+  </data>
+  <data name="1302" xml:space="preserve">
+    <value>Exchange Rate Details Updated Successfully</value>
+  </data>
+  <data name="1303" xml:space="preserve">
+    <value>Unable to Save Exchange Rate Details</value>
+  </data>
+  <data name="1304" xml:space="preserve">
+    <value>Unable to Load Exchange Rate Details</value>
+  </data>
+  <data name="1305" xml:space="preserve">
+    <value>Unable to Load Exchange Rate Master</value>
+  </data>
+  <data name="1306" xml:space="preserve">
+    <value>Unable to Load Exchange Currency Details</value>
+  </data>
+  <data name="1307" xml:space="preserve">
+    <value>Unable to Clear_FA Exchange Rate Details</value>
+  </data>
+  <data name="1310" xml:space="preserve">
+    <value>Exchange Rate Details Already Exists For the Same Time</value>
+    <comment>Exchange Rate Master</comment>
+  </data>
+  <data name="1360" xml:space="preserve">
+    <value>Stamp Duty Details Added successfully\n\n Would You Like to Add One More Stamp Duty Details?</value>
+    <comment>Stamp Duty</comment>
+  </data>
+  <data name="1362" xml:space="preserve">
+    <value>Stamp Duty Details Updated Successfully</value>
+    <comment>Stamp Duty</comment>
+  </data>
+  <data name="14" xml:space="preserve">
+    <value>Unable to Save</value>
+    <comment>Save alert</comment>
+  </data>
+  <data name="1401" xml:space="preserve">
+    <value>Funder Master Doc_No Details Added Successfully. \n\n Would You Like to Add One More Funder Details?</value>
+    <comment>Funder Master</comment>
+  </data>
+  <data name="1402" xml:space="preserve">
+    <value>Funder Master Details Updated Successfully</value>
+    <comment>Funder Master</comment>
+  </data>
+  <data name="1403" xml:space="preserve">
+    <value>Unable to Load Funder Master Details</value>
+    <comment>Funder Master</comment>
+  </data>
+  <data name="1404" xml:space="preserve">
+    <value>Unable to Save Funder Master Details</value>
+    <comment>Funder Master</comment>
+  </data>
+  <data name="1405" xml:space="preserve">
+    <value>Unable to Clear_FA Funder Master Details</value>
+    <comment>Funder Master</comment>
+  </data>
+  <data name="1406" xml:space="preserve">
+    <value>Unable to Copy Communication Address Details to Permanent Address Details</value>
+    <comment>Funder Master</comment>
+  </data>
+  <data name="1407" xml:space="preserve">
+    <value>Unable to Load Communication/Permanent Address Details</value>
+    <comment>Funder Master</comment>
+  </data>
+  <data name="1408" xml:space="preserve">
+    <value>Unable to Load Condition details Grid</value>
+    <comment>Funder Master</comment>
+  </data>
+  <data name="1409" xml:space="preserve">
+    <value>Unable to Update Condition details in Grid</value>
+    <comment>Funder Master</comment>
+  </data>
+  <data name="1431" xml:space="preserve">
+    <value>Funder Transaction Doc_No Details Added Successfully. \n\n Would You Like to Add One More Funder Transaction Details?</value>
+    <comment>Funder Transaction</comment>
+  </data>
+  <data name="1432" xml:space="preserve">
+    <value>Funder Transaction Details Updated Successfully</value>
+    <comment>Funder Transaction</comment>
+  </data>
+  <data name="1433" xml:space="preserve">
+    <value>Unable to Load Funder Transaction Details</value>
+    <comment>Funder Transaction</comment>
+  </data>
+  <data name="1434" xml:space="preserve">
+    <value>Unable to Save Funder Transaction Details</value>
+    <comment>Funder Transaction</comment>
+  </data>
+  <data name="1435" xml:space="preserve">
+    <value>Unable to Clear_FA Funder Transaction Details</value>
+    <comment>Funder Transaction</comment>
+  </data>
+  <data name="1436" xml:space="preserve">
+    <value>Unable to Load Receiving Schedule Details Grid</value>
+    <comment>Funder Transaction</comment>
+  </data>
+  <data name="1461" xml:space="preserve">
+    <value>Funder Loading Doc_No Details Added Successfully. \n\n Would You Like to Add One More Funder Loading  Details?</value>
+    <comment>Funder Loading</comment>
+  </data>
+  <data name="1462" xml:space="preserve">
+    <value>Funder Loading  Details Updated Successfully</value>
+    <comment>Funder Loading</comment>
+  </data>
+  <data name="1463" xml:space="preserve">
+    <value>Unable to Save Funder Loading  Details</value>
+    <comment>Funder Loading</comment>
+  </data>
+  <data name="1464" xml:space="preserve">
+    <value>Unable to Load Funder Loading  Details</value>
+    <comment>Funder Loading</comment>
+  </data>
+  <data name="1465" xml:space="preserve">
+    <value>Unable to Clear_FA Funder Loading  Details</value>
+    <comment>Funder Loading</comment>
+  </data>
+  <data name="1466" xml:space="preserve">
+    <value>Unable to Load Account Details</value>
+    <comment>Funder Loading</comment>
+  </data>
+  <data name="15" xml:space="preserve">
+    <value>Unable to Load Activity</value>
+    <comment>Activity</comment>
+  </data>
+  <data name="1501" xml:space="preserve">
+    <value>Investment master details added successfully. \n\n Would you like to add one more Investment Details?</value>
+    <comment>Investment Master</comment>
+  </data>
+  <data name="1502" xml:space="preserve">
+    <value>Investment master details Updated successfully.</value>
+    <comment>Investment Master</comment>
+  </data>
+  <data name="1510" xml:space="preserve">
+    <value>Unexpected error occurred!</value>
+    <comment>Investment Master</comment>
+  </data>
+  <data name="1511" xml:space="preserve">
+    <value>Investment code Already Exists.</value>
+    <comment>Investment Master</comment>
+  </data>
+  <data name="1512" xml:space="preserve">
+    <value>Investment details not exists.</value>
+    <comment>Investment Master</comment>
+  </data>
+  <data name="1513" xml:space="preserve">
+    <value>Investment Description Already Exists.</value>
+    <comment>Investment Master</comment>
+  </data>
+  <data name="1540" xml:space="preserve">
+    <value>Investment Transation Doc_No Details Added Successfully. \n\n Would You Like to Add One More Investment Transation Details?</value>
+    <comment>Investment Transaction Details</comment>
+  </data>
+  <data name="1541" xml:space="preserve">
+    <value>Investment Transaction Details updated successfully.</value>
+    <comment>Investment Transaction Details</comment>
+  </data>
+  <data name="1542" xml:space="preserve">
+    <value>Define the Interest type for selected Investment.</value>
+    <comment>Investment Transaction Details</comment>
+  </data>
+  <data name="1543" xml:space="preserve">
+    <value>Define the Nature of Interest for selected Investment.</value>
+    <comment>Investment Transaction Details</comment>
+  </data>
+  <data name="1544" xml:space="preserve">
+    <value>Define the Denominator days in Global Parameter setup.</value>
+    <comment>Investment Transaction Details</comment>
+  </data>
+  <data name="1545" xml:space="preserve">
+    <value>Define the Interest Frequency for selected Investment.</value>
+    <comment>Investment Transaction Details</comment>
+  </data>
+  <data name="1546" xml:space="preserve">
+    <value>Define the Rate of Interest for selected Investment.</value>
+    <comment>Investment Transaction Details</comment>
+  </data>
+  <data name="1547" xml:space="preserve">
+    <value>Generate Repayment schedule</value>
+    <comment>Investment Transaction details</comment>
+  </data>
+  <data name="1550" xml:space="preserve">
+    <value>Unable to insert the Investment Transaction Details.</value>
+    <comment>Investment Transaction Details</comment>
+  </data>
+  <data name="1551" xml:space="preserve">
+    <value>Unable to update the Investment Transaction Details.</value>
+    <comment>Investment Transaction Details</comment>
+  </data>
+  <data name="1560" xml:space="preserve">
+    <value>Investment Transaction Details Authorized Successfully.</value>
+    <comment>Investment Transaction Details</comment>
+  </data>
+  <data name="1561" xml:space="preserve">
+    <value>Unable to Authorize the Investment Transaction details.</value>
+    <comment>Investment Transaction Details</comment>
+  </data>
+  <data name="1565" xml:space="preserve">
+    <value>Investment Document Name already exists.</value>
+    <comment>Investment Transaction Details</comment>
+  </data>
+  <data name="1566" xml:space="preserve">
+    <value>Investment Document Reference Number already exists.</value>
+    <comment>Investment Transaction Details</comment>
+  </data>
+  <data name="1567" xml:space="preserve">
+    <value>Investment Document Name and Reference Number already exists.</value>
+    <comment>Investment Transaction Details</comment>
+  </data>
+  <data name="1568" xml:space="preserve">
+    <value>Investment Transaction Details cancelled successfully. </value>
+    <comment>Investment Transaction Details</comment>
+  </data>
+  <data name="1569" xml:space="preserve">
+    <value>Unable to cancel the Investment Transaction Details</value>
+    <comment>Investment Transaction Details</comment>
+  </data>
+  <data name="1570" xml:space="preserve">
+    <value>Cash flow master not defined for payment.</value>
+    <comment>Investment Transaction details</comment>
+  </data>
+  <data name="1571" xml:space="preserve">
+    <value>Cash flow master not defined for receipt.</value>
+    <comment>Investment Transaction details</comment>
+  </data>
+  <data name="1572" xml:space="preserve">
+    <value>Selected date cannot be less than last calculated date.</value>
+    <comment>Investment Transaction Details</comment>
+  </data>
+  <data name="1573" xml:space="preserve">
+    <value>Selected date cannot be less than period ending date.</value>
+    <comment>Investment Transaction Details</comment>
+  </data>
+  <data name="16" xml:space="preserve">
+    <value>Selected date cannot be greater than system date</value>
+    <comment>Common</comment>
+  </data>
+  <data name="1601" xml:space="preserve">
+    <value>Investment Interest Doc_No details added successfully. \n\n Would you like to raise one more Investment Interest?</value>
+  </data>
+  <data name="1611" xml:space="preserve">
+    <value>No Details found for post</value>
+    <comment>Investment Interest Accrued</comment>
+  </data>
+  <data name="17" xml:space="preserve">
+    <value>Selected Date should be within the Financial year</value>
+    <comment>Common</comment>
+  </data>
+  <data name="1720" xml:space="preserve">
+    <value>Funder Interest Doc_No details added successfully. \n\n Would you like to add one more Interest Details?</value>
+    <comment>Funder Interest Accrued</comment>
+  </data>
+  <data name="1721" xml:space="preserve">
+    <value>Funder Interest Updated Successfully</value>
+  </data>
+  <data name="1750" xml:space="preserve">
+    <value>GL Code not defined for the selected funder</value>
+    <comment>Interest accrued</comment>
+  </data>
+  <data name="1760" xml:space="preserve">
+    <value>TDS Rate Details Added successfully\n\n Would You Like to Add One More TDS Rate Details?</value>
+    <comment>TDS Master</comment>
+  </data>
+  <data name="1762" xml:space="preserve">
+    <value>TDS Rate Details Updated Successfully</value>
+    <comment>TDS Master</comment>
+  </data>
+  <data name="18" xml:space="preserve">
+    <value>Selected Date cannot be less than the location created month</value>
+    <comment>Common</comment>
+  </data>
+  <data name="1801" xml:space="preserve">
+    <value>Payment Request Doc_No details added successfully. \n\n Would you like to raise one more Payment Request?</value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="1802" xml:space="preserve">
+    <value>Payment Request Updated Successfully.</value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="1803" xml:space="preserve">
+    <value>Payment Request cancelled Successfully</value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="1804" xml:space="preserve">
+    <value>Enter instrument details in payment request</value>
+    <comment>payment Approval</comment>
+  </data>
+  <data name="1805" xml:space="preserve">
+    <value>Enter instrument details in Account card</value>
+    <comment>payment Approval</comment>
+  </data>
+  <data name="1806" xml:space="preserve">
+    <value>Enter Bank details in payment request</value>
+    <comment>payment Approval</comment>
+  </data>
+  <data name="1807" xml:space="preserve">
+    <value>Selected Investment reference number already exists.</value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="1808" xml:space="preserve">
+    <value>Selected Funder reference number already exists.</value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="1809" xml:space="preserve">
+    <value>Payment exceeds for the selected reference number </value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="1810" xml:space="preserve">
+    <value>\"To Date\" should be greater than \"From Date\".</value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="1811" xml:space="preserve">
+    <value>Amount should be greater than zero</value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="1812" xml:space="preserve">
+    <value>Total Amount should be equal to Doc Amount</value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="1813" xml:space="preserve">
+    <value>Amount cannot empty in payment details</value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="1815" xml:space="preserve">
+    <value>Payment not defined for the selected  PayType</value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="1816" xml:space="preserve">
+    <value>Cash paid successfully.</value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="1817" xml:space="preserve">
+    <value>Selected Account already added</value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="1818" xml:space="preserve">
+    <value>Payment not defined for the selected funder.</value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="1819" xml:space="preserve">
+    <value>Amount in funder should be equal to the amount in payment details</value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="1820" xml:space="preserve">
+    <value>Add Funder details in others tab</value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="1821" xml:space="preserve">
+    <value>Select Investment Sequence No</value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="1822" xml:space="preserve">
+    <value>Select Funder Ref No</value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="1823" xml:space="preserve">
+    <value>Month locked for the selected Instrument Date</value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="1824" xml:space="preserve">
+    <value>Month Locked For the Selected Value Date</value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="1825" xml:space="preserve">
+    <value>Month Locked For the Selected Date</value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="1826" xml:space="preserve">
+    <value>Amount in Investment should be equal to the amount in payment details</value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="1827" xml:space="preserve">
+    <value>Add Investment details in others tab</value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="1828" xml:space="preserve">
+    <value>Account not mapped to the selected fund type</value>
+    <comment>Payment Reauest</comment>
+  </data>
+  <data name="1829" xml:space="preserve">
+    <value>Amount Exceeded</value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="1830" xml:space="preserve">
+    <value>Instrument Number updated.</value>
+    <comment>Payment Request</comment>
+  </data>
+  <data name="1831" xml:space="preserve">
+    <value>Existing Instrument Number satus should be changed to Damaged or Lost</value>
+    <comment>Payment request</comment>
+  </data>
+  <data name="1832" xml:space="preserve">
+    <value>Payment cannot be Approved since Cheque Leaf Status got Damaged/Cancelled/Lost</value>
+  </data>
+  <data name="19" xml:space="preserve">
+    <value>Month Locked for the selected Date</value>
+    <comment>Common</comment>
+  </data>
+  <data name="1901" xml:space="preserve">
+    <value>Receipt Details Doc_No Added Successfully. \n\n Would You Like to Add One More Receipt Details?</value>
+    <comment>Receipt Processing</comment>
+  </data>
+  <data name="1902" xml:space="preserve">
+    <value>Receipt Details Updated successfully.</value>
+    <comment>Receipt Processing</comment>
+  </data>
+  <data name="1903" xml:space="preserve">
+    <value>Receipt Cancelled successfully.</value>
+    <comment>Receipt Processing</comment>
+  </data>
+  <data name="1904" xml:space="preserve">
+    <value>Month Locked For the Selected Value Date</value>
+  </data>
+  <data name="1905" xml:space="preserve">
+    <value>Month Locked For the Selected Document Date</value>
+  </data>
+  <data name="1906" xml:space="preserve">
+    <value>Document Amount Should be equal to Instrument Amount</value>
+  </data>
+  <data name="1907" xml:space="preserve">
+    <value>Doc Date Should be Open Month Date</value>
+  </data>
+  <data name="1908" xml:space="preserve">
+    <value>Month locked for the selected Date</value>
+  </data>
+  <data name="1909" xml:space="preserve">
+    <value>Value Date Should be Open Month Date</value>
+  </data>
+  <data name="1910" xml:space="preserve">
+    <value>Month locked for the selected Value Date</value>
+  </data>
+  <data name="1911" xml:space="preserve">
+    <value>Document Amount Should be equal to Sum of Amount in Account and AddLess Details</value>
+    <comment>Receipt Processing</comment>
+  </data>
+  <data name="1912" xml:space="preserve">
+    <value>Add atleast one row in Receipt Description</value>
+    <comment>Receipt Processing</comment>
+  </data>
+  <data name="1913" xml:space="preserve">
+    <value>Add atleast one row in Funder reference number</value>
+    <comment>Receipt Processing</comment>
+  </data>
+  <data name="1914" xml:space="preserve">
+    <value>The Funder Loan Receivable amount and sum of Funder Reference amount should be equal.</value>
+    <comment>Receipt Processing</comment>
+  </data>
+  <data name="1915" xml:space="preserve">
+    <value>Select Dimension1.</value>
+    <comment>Receipt Processing </comment>
+  </data>
+  <data name="1916" xml:space="preserve">
+    <value>Add atleast one row in Investment reference number</value>
+    <comment>Receipt Processing</comment>
+  </data>
+  <data name="1917" xml:space="preserve">
+    <value>The Investment Loan Receivable amount and sum of Investment Reference amount should be equal.</value>
+    <comment>Receipt Processing</comment>
+  </data>
+  <data name="1918" xml:space="preserve">
+    <value>The Investment Interest Receivable amount and sum of Investment Reference amount should be equal.</value>
+    <comment>Receipt Processing</comment>
+  </data>
+  <data name="1921" xml:space="preserve">
+    <value>Selected Description already Exists.</value>
+    <comment>Receipt Processing </comment>
+  </data>
+  <data name="1922" xml:space="preserve">
+    <value>Selected Funder reference number already Exists.</value>
+    <comment>Receipt Processing</comment>
+  </data>
+  <data name="1950" xml:space="preserve">
+    <value>Unable to insert the Receipt Details.</value>
+    <comment>Receipt Processing</comment>
+  </data>
+  <data name="1951" xml:space="preserve">
+    <value>Unable to update the Receipt Details.</value>
+    <comment>Receipt Processing</comment>
+  </data>
+  <data name="1952" xml:space="preserve">
+    <value>Unable to cancel the Receipt.</value>
+    <comment>Receipt Processing</comment>
+  </data>
+  <data name="1953" xml:space="preserve">
+    <value>Instrument Number Already Exists</value>
+    <comment>Receipt Processing</comment>
+  </data>
+  <data name="1955" xml:space="preserve">
+    <value>IRS Transaction Doc_No Details Added Successfully. \n\n Would You Like to Add One More IRS Transaction Details?</value>
+    <comment>IRS </comment>
+  </data>
+  <data name="1956" xml:space="preserve">
+    <value>IRS Transaction Modified Successfully</value>
+    <comment>IRS</comment>
+  </data>
+  <data name="1957" xml:space="preserve">
+    <value>LPO Cancelled Successfully</value>
+    <comment>LPO</comment>
+  </data>
+  <data name="1958" xml:space="preserve">
+    <value>LPO cannot be cancelled. transaction Exists</value>
+  </data>
+  <data name="1959" xml:space="preserve">
+    <value>Local Purchase Order Details Updated Successfully</value>
+  </data>
+  <data name="1960" xml:space="preserve">
+    <value>Asset Already exists.</value>
+    <comment>Local Purchase Order</comment>
+  </data>
+  <data name="1961" xml:space="preserve">
+    <value>Select Asset Group Description</value>
+  </data>
+  <data name="1962" xml:space="preserve">
+    <value>Select Asset Code Description</value>
+  </data>
+  <data name="1963" xml:space="preserve">
+    <value>Enter Model Description</value>
+  </data>
+  <data name="1964" xml:space="preserve">
+    <value>Enter Unit Quantity</value>
+  </data>
+  <data name="1965" xml:space="preserve">
+    <value>Enter Unit Value</value>
+  </data>
+  <data name="1966" xml:space="preserve">
+    <value>Discount Cannot Exceed Unit Value</value>
+  </data>
+  <data name="1967" xml:space="preserve">
+    <value>GL Code Already Exists.Please Select for Another Gl code</value>
+  </data>
+  <data name="1968" xml:space="preserve">
+    <value>LPO date should be in Open month</value>
+  </data>
+  <data name="1969" xml:space="preserve">
+    <value>LPO date should be in Open month</value>
+  </data>
+  <data name="1970" xml:space="preserve">
+    <value>Credit Days should be less than 999</value>
+  </data>
+  <data name="1971" xml:space="preserve">
+    <value>The Unit Value Should Always Greater than 0 Unit Value =(Discount/ Unit Quantity)</value>
+  </data>
+  <data name="2" xml:space="preserve">
+    <value>Invalid Password</value>
+  </data>
+  <data name="20" xml:space="preserve">
+    <value>Authorization not defined</value>
+    <comment>Common</comment>
+  </data>
+  <data name="200" xml:space="preserve">
+    <value>Voucher Not Tallied</value>
+    <comment>To Check Voucher</comment>
+  </data>
+  <data name="2000" xml:space="preserve">
+    <value>Local Purchase Order details added successfully. \n\n Would you like to add one more Local Purchase Order Detail?</value>
+  </data>
+  <data name="2001" xml:space="preserve">
+    <value>Challan Doc_No details added successfully. \n\n Would you like to raise one more challan?</value>
+    <comment>Challan Generation</comment>
+  </data>
+  <data name="20011" xml:space="preserve">
+    <value>Challan Doc_No details added successfully. \n\n Would you like to raise one more challan?</value>
+    <comment>Challan Generation</comment>
+  </data>
+  <data name="2002" xml:space="preserve">
+    <value>Challan details Updated successfully</value>
+    <comment>Challan Generation</comment>
+  </data>
+  <data name="201" xml:space="preserve">
+    <value>Hierarchy Details Saved Successfully</value>
+    <comment>Hierarchy Master</comment>
+  </data>
+  <data name="2010" xml:space="preserve">
+    <value>Authorization not defined</value>
+    <comment>Common</comment>
+  </data>
+  <data name="202" xml:space="preserve">
+    <value>Hierarchy Details Updated Successfully</value>
+    <comment>Hierarchy Master</comment>
+  </data>
+  <data name="203" xml:space="preserve">
+    <value>Hierarchy is Mapped with Location</value>
+    <comment>Hierarchy Master</comment>
+  </data>
+  <data name="204" xml:space="preserve">
+    <value>Unable to Save Hierarchy Master Details</value>
+    <comment>Hierarchy Master</comment>
+  </data>
+  <data name="205" xml:space="preserve">
+    <value>Unable to Load Hierarchy Master Details</value>
+    <comment>Hierarchy Master</comment>
+  </data>
+  <data name="206" xml:space="preserve">
+    <value>Enter the width value in Hierarchy </value>
+    <comment>Hierarchy Master</comment>
+  </data>
+  <data name="207" xml:space="preserve">
+    <value>Enter the Location Description in Hierarchy </value>
+    <comment>Hierarchy Master</comment>
+  </data>
+  <data name="208" xml:space="preserve">
+    <value>All the Location width should be Less than or Equal to Eight</value>
+    <comment>Hierarchy Master</comment>
+  </data>
+  <data name="209" xml:space="preserve">
+    <value>Enter the values in Sequence order</value>
+    <comment>Hierarchy Master</comment>
+  </data>
+  <data name="21" xml:space="preserve">
+    <value>Authorization not defined for the respective Amount</value>
+    <comment>Common</comment>
+  </data>
+  <data name="210" xml:space="preserve">
+    <value>Add atleast one row in hierachy details</value>
+    <comment>Hierarchy Master</comment>
+  </data>
+  <data name="2101" xml:space="preserve">
+    <value>Cheque Return Added Successfully. \n\n Would You Like to Add One More Cheque Return?</value>
+    <comment>Cheque Return</comment>
+  </data>
+  <data name="2102" xml:space="preserve">
+    <value>Cheque Return Updated successfully.</value>
+    <comment>Cheque Return</comment>
+  </data>
+  <data name="2103" xml:space="preserve">
+    <value>Cheque Return Cancelled successfully.</value>
+    <comment>Cheque Return</comment>
+  </data>
+  <data name="211" xml:space="preserve">
+    <value>Duplicate Location Description :</value>
+    <comment>Hierarchy Master</comment>
+  </data>
+  <data name="2110" xml:space="preserve">
+    <value>Selected Receipt/instrument Number Not Exists</value>
+    <comment>Cheque Return</comment>
+  </data>
+  <data name="2111" xml:space="preserve">
+    <value>Selected Receipt/instrument Number Already Processed.</value>
+    <comment>Cheque Return</comment>
+  </data>
+  <data name="2113" xml:space="preserve">
+    <value>Enter Valid Receipt/instrument Number</value>
+    <comment>Cheque Return</comment>
+  </data>
+  <data name="2114" xml:space="preserve">
+    <value>Funder Interest has been Calculated for the Selected Receipt </value>
+    <comment>Cheque Return</comment>
+  </data>
+  <data name="2150" xml:space="preserve">
+    <value>Unable to insert the Cheque Return Details.</value>
+    <comment>Cheque Return</comment>
+  </data>
+  <data name="2151" xml:space="preserve">
+    <value>Unable to update the Cheque Return Details.</value>
+    <comment>Cheque Return</comment>
+  </data>
+  <data name="2152" xml:space="preserve">
+    <value>Unable to cancel the Cheque Return.</value>
+    <comment>Cheque Return</comment>
+  </data>
+  <data name="22" xml:space="preserve">
+    <value>Level 4 and above user only can approve</value>
+    <comment>common</comment>
+  </data>
+  <data name="2201" xml:space="preserve">
+    <value>Manual Journal Doc_No Details Added Successfully. \n\n Would You Like to Add One More Manual Journal  Details?</value>
+    <comment>Manual Journal</comment>
+  </data>
+  <data name="2202" xml:space="preserve">
+    <value>Manual Journal Details Updated Successfully</value>
+    <comment>Manual Journal</comment>
+  </data>
+  <data name="2203" xml:space="preserve">
+    <value>Unable to Load Manual Journal Details</value>
+    <comment>Manual Journal</comment>
+  </data>
+  <data name="2204" xml:space="preserve">
+    <value>Unable to Save Manual Journal Details</value>
+    <comment>Manual Journal</comment>
+  </data>
+  <data name="2205" xml:space="preserve">
+    <value>Unable to Clear_FA Manual Journal Details</value>
+    <comment>Manual Journal</comment>
+  </data>
+  <data name="2206" xml:space="preserve">
+    <value>Manual Journal Details Cancelled Successfully</value>
+    <comment>Manual Journal</comment>
+  </data>
+  <data name="2207" xml:space="preserve">
+    <value>Document Number Control Not Defined for InterBranch Account</value>
+  </data>
+  <data name="2208" xml:space="preserve">
+    <value>Document Number Control Exceeded for InterBranch Account</value>
+  </data>
+  <data name="2210" xml:space="preserve">
+    <value>Month Locked For the Selected MJV Value Date</value>
+    <comment>Manual Journal</comment>
+  </data>
+  <data name="2211" xml:space="preserve">
+    <value>Check the transaction amount in all Tabs</value>
+    <comment>MJV</comment>
+  </data>
+  <data name="23" xml:space="preserve">
+    <value>Level 3,4,5 user only can approve</value>
+    <comment>Common</comment>
+  </data>
+  <data name="2301" xml:space="preserve">
+    <value>Unable to load Debit Credit note</value>
+  </data>
+  <data name="2302" xml:space="preserve">
+    <value>Amount should not Exceed Reference Document Amount</value>
+  </data>
+  <data name="2320" xml:space="preserve">
+    <value>Debit Credit Note Doc_No details added successfully. \n\n Would you like to add one more Debit Credit NoteDetails?</value>
+  </data>
+  <data name="2321" xml:space="preserve">
+    <value>Debit Credit Note Updated Successfully</value>
+  </data>
+  <data name="2322" xml:space="preserve">
+    <value>Select the Entity Name</value>
+    <comment>DC Note</comment>
+  </data>
+  <data name="2323" xml:space="preserve">
+    <value>Select the Funder Name</value>
+    <comment>DC Note</comment>
+  </data>
+  <data name="2324" xml:space="preserve">
+    <value>Select the Entity Type</value>
+    <comment>DC Note</comment>
+  </data>
+  <data name="2325" xml:space="preserve">
+    <value>Select SL Account</value>
+    <comment>DC Note</comment>
+  </data>
+  <data name="2326" xml:space="preserve">
+    <value>Enter atleast one row in Account Details Grid</value>
+    <comment>DC Note</comment>
+  </data>
+  <data name="2327" xml:space="preserve">
+    <value>Select Branch</value>
+    <comment>DC Note</comment>
+  </data>
+  <data name="2328" xml:space="preserve">
+    <value>Month Locked For the Selected  Doc Date</value>
+  </data>
+  <data name="2329" xml:space="preserve">
+    <value>The selected Entity Account cannot be debited</value>
+  </data>
+  <data name="2330" xml:space="preserve">
+    <value>The selected Entity Account cannot be Credited</value>
+  </data>
+  <data name="2331" xml:space="preserve">
+    <value>Invoice Number Already Exists</value>
+  </data>
+  <data name="2350" xml:space="preserve">
+    <value>Note cannot be Deleted </value>
+  </data>
+  <data name="2351" xml:space="preserve">
+    <value>Note Cancelled successfully</value>
+  </data>
+  <data name="2398" xml:space="preserve">
+    <value>The Selected Entity Account can only be Credited</value>
+    <comment>Debit Credit Note</comment>
+  </data>
+  <data name="2399" xml:space="preserve">
+    <value>The Selected Entity Account can only be Debited</value>
+    <comment>Debit Credit Note</comment>
+  </data>
+  <data name="24" xml:space="preserve">
+    <value>Invalid password</value>
+    <comment>common</comment>
+  </data>
+  <data name="2401" xml:space="preserve">
+    <value>Month Lock saved Sucessfully</value>
+    <comment>Month Lock</comment>
+  </data>
+  <data name="25" xml:space="preserve">
+    <value>Approved Successfully</value>
+    <comment>common</comment>
+  </data>
+  <data name="26" xml:space="preserve">
+    <value>Revoked Successfully</value>
+    <comment>common</comment>
+  </data>
+  <data name="2601" xml:space="preserve">
+    <value>Prior Period JV Doc_No Details Added Successfully. \n\n Would You Like to Add One More Prior Period JV Details?</value>
+    <comment>Prior Period JV</comment>
+  </data>
+  <data name="2602" xml:space="preserve">
+    <value>Prior Period JV Details Updated Successfully</value>
+    <comment>Prior Period JV</comment>
+  </data>
+  <data name="2603" xml:space="preserve">
+    <value>Unable to Load Prior Period JV Details</value>
+    <comment>Prior Period JV</comment>
+  </data>
+  <data name="2604" xml:space="preserve">
+    <value>Unable to Save Prior Period JV Details</value>
+    <comment>Prior Period JV</comment>
+  </data>
+  <data name="2605" xml:space="preserve">
+    <value>Unable to Clear_FA Prior Period JV Details</value>
+    <comment>Prior Period JV</comment>
+  </data>
+  <data name="2606" xml:space="preserve">
+    <value>Prior Period JV Details Cancelled Successfully</value>
+    <comment>Prior Period JV</comment>
+  </data>
+  <data name="27" xml:space="preserve">
+    <value>Rejected Successfully</value>
+    <comment>Approval</comment>
+  </data>
+  <data name="2701" xml:space="preserve">
+    <value>Deal Master Details Added Successfully. \n\n Would You Like to Add One More Deal Details?</value>
+  </data>
+  <data name="2702" xml:space="preserve">
+    <value>Deal master Updated Sucessfully</value>
+  </data>
+  <data name="28" xml:space="preserve">
+    <value>Approver not having access to approve</value>
+    <comment>common</comment>
+  </data>
+  <data name="2800" xml:space="preserve">
+    <value>Collateral Master Details Added Successfully. \n\n Would You Like to Add One More Collateral Master Details?</value>
+  </data>
+  <data name="2801" xml:space="preserve">
+    <value>Collateral Master Updated Successfully</value>
+  </data>
+  <data name="29" xml:space="preserve">
+    <value>Approval should be in sequence as defined in Rule Card</value>
+    <comment>common</comment>
+  </data>
+  <data name="3" xml:space="preserve">
+    <value>Invalid User ID or Password</value>
+  </data>
+  <data name="30" xml:space="preserve">
+    <value>Template Master Not defined</value>
+  </data>
+  <data name="3001" xml:space="preserve">
+    <value>Actual Interest updated sucessfully</value>
+    <comment>acutal Interest</comment>
+  </data>
+  <data name="3101" xml:space="preserve">
+    <value>Call Put details saved successfully.</value>
+    <comment>CallPut</comment>
+  </data>
+  <data name="3102" xml:space="preserve">
+    <value>Call Put details updated successfully.</value>
+    <comment>CallPut</comment>
+  </data>
+  <data name="3201" xml:space="preserve">
+    <value>Hedging Details Added Successfully. \n\n Would You Like to Add One More Hedging Details?</value>
+    <comment>Hedging</comment>
+  </data>
+  <data name="3202" xml:space="preserve">
+    <value>Hedging details updated successfully.</value>
+    <comment>Hedging</comment>
+  </data>
+  <data name="3301" xml:space="preserve">
+    <value>Asset Details Doc_No Added Successfully. \n\n Would You Like to Add One More Asset Details?</value>
+    <comment>Asset Transaction</comment>
+  </data>
+  <data name="3302" xml:space="preserve">
+    <value>Asset details updated successfully.</value>
+    <comment>Asset Transaction</comment>
+  </data>
+  <data name="3303" xml:space="preserve">
+    <value>Asset Transaction Cancelled Successfully</value>
+  </data>
+  <data name="3315" xml:space="preserve">
+    <value>GL Code is not defined in Asset Master</value>
+    <comment>Asset Transaction</comment>
+  </data>
+  <data name="3316" xml:space="preserve">
+    <value>CashFlow is not defined for Profit on sale</value>
+    <comment>Asset Transaction</comment>
+  </data>
+  <data name="3317" xml:space="preserve">
+    <value>CashFlow is not defined for Loss on sale</value>
+    <comment>Asset Transaction</comment>
+  </data>
+  <data name="3350" xml:space="preserve">
+    <value>Purchase Bill Journal Details Added Successfully.\n Would you like to add one more Purchase Bill Journal Details?</value>
+    <comment>Expense Transaction</comment>
+  </data>
+  <data name="3351" xml:space="preserve">
+    <value>Purchase Bill Journal Details Updated Successfully</value>
+    <comment>Expense Transaction</comment>
+  </data>
+  <data name="3352" xml:space="preserve">
+    <value>Purchase Bill Journal Transaction Cancelled Successfully</value>
+    <comment>Expense Transaction</comment>
+  </data>
+  <data name="3353" xml:space="preserve">
+    <value>Purchase Bill journal cannot be Cancelled. Transaction Exists</value>
+  </data>
+  <data name="3380" xml:space="preserve">
+    <value>Value date should be less than or equal to the document date</value>
+  </data>
+  <data name="3381" xml:space="preserve">
+    <value>Quantity 0 Exceeded</value>
+  </data>
+  <data name="3382" xml:space="preserve">
+    <value>Invoice date should not be greater than the document date</value>
+  </data>
+  <data name="3383" xml:space="preserve">
+    <value>GRN date should not be greater than the document date</value>
+  </data>
+  <data name="3384" xml:space="preserve">
+    <value>Add Invoice Details in Other Details Tab</value>
+  </data>
+  <data name="3385" xml:space="preserve">
+    <value>Add atleast one Asset details</value>
+  </data>
+  <data name="3386" xml:space="preserve">
+    <value>Select Line Entry Value in all Rows</value>
+  </data>
+  <data name="3387" xml:space="preserve">
+    <value>Quantity should not exceed the PO Asset Quantity</value>
+  </data>
+  <data name="3388" xml:space="preserve">
+    <value>Asset Number Duplicated</value>
+  </data>
+  <data name="3389" xml:space="preserve">
+    <value>Document Date should be greater than or equal to the last document date</value>
+  </data>
+  <data name="3390" xml:space="preserve">
+    <value>Invoice number Duplicated</value>
+  </data>
+  <data name="3391" xml:space="preserve">
+    <value>Unable to Cancel the Transaction</value>
+  </data>
+  <data name="3392" xml:space="preserve">
+    <value>Select atleast one PO Number</value>
+  </data>
+  <data name="3393" xml:space="preserve">
+    <value>Document Date Should be greater than or equal to the LPO Date</value>
+  </data>
+  <data name="3401" xml:space="preserve">
+    <value>Asset Depreciation  Doc_No Added Successfully. \n\n Would You Like to Add One More Asset Depreciation Details?</value>
+    <comment>Asset Depreciation</comment>
+  </data>
+  <data name="3402" xml:space="preserve">
+    <value>Asset Depreciation details updated successfully.</value>
+    <comment>Asset Depreciation</comment>
+  </data>
+  <data name="3416" xml:space="preserve">
+    <value>Cashflow not defined for Depreciation</value>
+    <comment>Asset Depreciation</comment>
+  </data>
+  <data name="3501" xml:space="preserve">
+    <value>BRS Doc_No Added Successfully. \n\n Would You Like to Add One More BRS Details?</value>
+  </data>
+  <data name="3502" xml:space="preserve">
+    <value>BRS details updated successfully.</value>
+  </data>
+  <data name="4" xml:space="preserve">
+    <value>Document Sequence Number limit is exceeded</value>
+  </data>
+  <data name="4101" xml:space="preserve">
+    <value>Closure Details Added Successfully. \n\n Would You Like to Add One More Closure Details?</value>
+    <comment>NCD Closure</comment>
+  </data>
+  <data name="4102" xml:space="preserve">
+    <value>Closure details updated successfully.</value>
+    <comment>NCD Closure</comment>
+  </data>
+  <data name="4103" xml:space="preserve">
+    <value>Account is not defined in funder master</value>
+    <comment>NCD Closure</comment>
+  </data>
+  <data name="4500" xml:space="preserve">
+    <value>Provisional Interest details Posted successfully</value>
+    <comment>Provisional Interest</comment>
+  </data>
+  <data name="4502" xml:space="preserve">
+    <value>Cashflow not defined for Provisional interest</value>
+    <comment>Provisional Interest</comment>
+  </data>
+  <data name="5" xml:space="preserve">
+    <value>Document Sequence Number Not Defined</value>
+  </data>
+  <data name="50" xml:space="preserve">
+    <value>Unexpected error occurred! Unable to save the records</value>
+  </data>
+  <data name="5000" xml:space="preserve">
+    <value>Holiday Master Saved Successfully.\n\n Would you like to add one more Holiday Master Details?</value>
+    <comment>Holiday Master</comment>
+  </data>
+  <data name="5001" xml:space="preserve">
+    <value>Holiday Master Updated Successfully</value>
+  </data>
+  <data name="5002" xml:space="preserve">
+    <value>Multi Location Journal Doc_No Details Added Successfully. \n\n Would You Like to Add One More Multi Location Journal  Details?</value>
+  </data>
+  <data name="5003" xml:space="preserve">
+    <value>Multi Location Journal Details Updated Successfully</value>
+  </data>
+  <data name="5004" xml:space="preserve">
+    <value>Template Master Added Successfully. \n\n Would You Like to Add One More Template Master Details?</value>
+    <comment>Template Master</comment>
+  </data>
+  <data name="5005" xml:space="preserve">
+    <value>Template Master Details Updated successfully</value>
+    <comment>Template Master</comment>
+  </data>
+  <data name="5006" xml:space="preserve">
+    <value>Debit credit Mismatch</value>
+  </data>
+  <data name="501" xml:space="preserve">
+    <value>Enter valid Password</value>
+    <comment>User Management add</comment>
+  </data>
+  <data name="502" xml:space="preserve">
+    <value>Reporting level and Higher level cannot be the same user</value>
+    <comment>User Management add</comment>
+  </data>
+  <data name="503" xml:space="preserve">
+    <value>Select atleast one Location</value>
+    <comment>User Management add</comment>
+  </data>
+  <data name="504" xml:space="preserve">
+    <value>Select atleast one Role Code</value>
+    <comment>User Management add</comment>
+  </data>
+  <data name="505" xml:space="preserve">
+    <value>User details added successfully. \n\n Would you like to add one more User Details?</value>
+    <comment>User Management add</comment>
+  </data>
+  <data name="506" xml:space="preserve">
+    <value>User details Updated successfully</value>
+    <comment>User Management add</comment>
+  </data>
+  <data name="507" xml:space="preserve">
+    <value>User Code already exists</value>
+    <comment>User Management add</comment>
+  </data>
+  <data name="51" xml:space="preserve">
+    <value>Could not find file</value>
+    <comment>For Common error </comment>
+  </data>
+  <data name="52" xml:space="preserve">
+    <value>Could not find following Document file</value>
+    <comment>For Common error</comment>
+  </data>
+  <data name="6" xml:space="preserve">
+    <value>Key User Validity Exceeds</value>
+  </data>
+  <data name="61" xml:space="preserve">
+    <value>Define the Default Currency</value>
+    <comment>Common</comment>
+  </data>
+  <data name="62" xml:space="preserve">
+    <value>Define the Exchange rate for selected currency</value>
+    <comment>common</comment>
+  </data>
+  <data name="6201" xml:space="preserve">
+    <value>Asset Master Added Successfully. \n\n Would You Like to Add One More Asset?</value>
+    <comment>Asset Master</comment>
+  </data>
+  <data name="6202" xml:space="preserve">
+    <value>Asset details updated successfully.</value>
+    <comment>Asset Master</comment>
+  </data>
+  <data name="7" xml:space="preserve">
+    <value>Invalid Login</value>
+    <comment>Log in</comment>
+  </data>
+  <data name="7000" xml:space="preserve">
+    <value>Day already opened</value>
+  </data>
+  <data name="7001" xml:space="preserve">
+    <value>Day open cannot be done on Holiday</value>
+  </data>
+  <data name="7002" xml:space="preserve">
+    <value>Previous day should be closed/Authorised</value>
+  </data>
+  <data name="7003" xml:space="preserve">
+    <value>Previous day Closing Balance should be equal to opening balance</value>
+  </data>
+  <data name="7004" xml:space="preserve">
+    <value>Day Open Not Done</value>
+  </data>
+  <data name="7005" xml:space="preserve">
+    <value>Cash balance and Closing Balance not tallied</value>
+  </data>
+  <data name="7009" xml:space="preserve">
+    <value>cash receipt No not tallied</value>
+  </data>
+  <data name="701" xml:space="preserve">
+    <value>Dimension master details added successfully. \n\n Would you like to add one more dimension Details?</value>
+    <comment>Dimension Master</comment>
+  </data>
+  <data name="7010" xml:space="preserve">
+    <value>Enter Cash Balance in Box</value>
+  </data>
+  <data name="7011" xml:space="preserve">
+    <value>Day close already done for closing date</value>
+  </data>
+  <data name="7012" xml:space="preserve">
+    <value>Pending Challan Available, Can not process day close.</value>
+    <comment>Pending Challan Available, Can not process day close.</comment>
+  </data>
+  <data name="702" xml:space="preserve">
+    <value>Dimension master details Updated successfully</value>
+    <comment>Dimension Master</comment>
+  </data>
+  <data name="7020" xml:space="preserve">
+    <value>No cash Receipt available for Previous date</value>
+  </data>
+  <data name="711" xml:space="preserve">
+    <value>Dimension code already exists.</value>
+    <comment>Dimension Master</comment>
+  </data>
+  <data name="712" xml:space="preserve">
+    <value>Dimension master details not exists.</value>
+    <comment>Dimension Master</comment>
+  </data>
+  <data name="713" xml:space="preserve">
+    <value>Define Dimension1 Before Dimension2</value>
+    <comment>Dimension master</comment>
+  </data>
+  <data name="714" xml:space="preserve">
+    <value>Dimension1 should be Header Level</value>
+    <comment>Dimension master</comment>
+  </data>
+  <data name="715" xml:space="preserve">
+    <value>Already Exists Dimension1 at Detail Level</value>
+    <comment>Dimension master</comment>
+  </data>
+  <data name="716" xml:space="preserve">
+    <value>Already Exists Dimension1 at Header Level</value>
+    <comment>Dimension master</comment>
+  </data>
+  <data name="717" xml:space="preserve">
+    <value>Dimension1 is Defined at Detail Level.\nDimension2 at Header Level not Allowed</value>
+    <comment>Dimension master</comment>
+  </data>
+  <data name="718" xml:space="preserve">
+    <value>Already Exists Dimension2 at Detail Level</value>
+    <comment>Dimension master</comment>
+  </data>
+  <data name="719" xml:space="preserve">
+    <value>Already Exists Dimension2 at Header Level</value>
+    <comment>Dimension master</comment>
+  </data>
+  <data name="720" xml:space="preserve">
+    <value>Dimension Decscription already exists</value>
+    <comment>Dimension Master</comment>
+  </data>
+  <data name="721" xml:space="preserve">
+    <value>Atleast one Dimension1 should be active when Dimension2 is Active</value>
+    <comment>Dimension master</comment>
+  </data>
+  <data name="725" xml:space="preserve">
+    <value>Define Dimensions(DIM1 &amp; DIM2) in Dimension Master</value>
+    <comment>Dimension Master</comment>
+  </data>
+  <data name="726" xml:space="preserve">
+    <value>Unable to Load Dimension1 Reference</value>
+    <comment>Dimension Master</comment>
+  </data>
+  <data name="727" xml:space="preserve">
+    <value>No Dimension1 is defined for Reference</value>
+    <comment>Dimension Master</comment>
+  </data>
+  <data name="8" xml:space="preserve">
+    <value>Cash Flow Master Not Defined</value>
+  </data>
+  <data name="8000" xml:space="preserve">
+    <value>LPO cannot be Revoked, Purchase Bill journal exists</value>
+  </data>
+  <data name="8001" xml:space="preserve">
+    <value>LPO cannot be Revoked, Asset Transaction  exists</value>
+  </data>
+  <data name="8002" xml:space="preserve">
+    <value>LPO cannot be Revoked, Payment has been processed</value>
+  </data>
+  <data name="8003" xml:space="preserve">
+    <value>PBJ Cannot be Revoked, Debit Note processed</value>
+  </data>
+  <data name="8004" xml:space="preserve">
+    <value>PBJ Cannot be Revoked, Payment has been Processed</value>
+  </data>
+  <data name="855" xml:space="preserve">
+    <value>ALM Parameter updated successfully</value>
+  </data>
+  <data name="90" xml:space="preserve">
+    <value>Transaction Amount not Tallied</value>
+  </data>
+  <data name="900" xml:space="preserve">
+    <value>Opening Balance details updated Successfully</value>
+    <comment>Opening Balance</comment>
+  </data>
+  <data name="901" xml:space="preserve">
+    <value>Global Parameter details added successfully.</value>
+    <comment>GPS</comment>
+  </data>
+  <data name="902" xml:space="preserve">
+    <value>Global Parameter details updated successfully.</value>
+    <comment>GPS</comment>
+  </data>
+  <data name="903" xml:space="preserve">
+    <value>Unexpected error occurred!</value>
+    <comment>GPS</comment>
+  </data>
+  <data name="99" xml:space="preserve">
+    <value>Batch Number Already Exists</value>
+    <comment>Document Number Control</comment>
+  </data>
+</root>

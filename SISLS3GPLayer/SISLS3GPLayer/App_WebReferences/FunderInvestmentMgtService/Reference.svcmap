@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="eec4af31-4eed-45c0-ab73-639e01c0dc31" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:1788/FinancialAccounting/FunderInvestmentMgtService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="FunderInvestmentMgtService.disco" MetadataType="Disco" ID="c9d093d8-9767-4e4f-8857-c985cb935122" SourceId="1" SourceUrl="http://localhost:1788/FinancialAccounting/FunderInvestmentMgtService.svc?disco" />
+    <MetadataFile FileName="FunderInvestmentMgtService.wsdl" MetadataType="Wsdl" ID="1a4f3a7d-058c-4934-855f-fd6999d4c8e1" SourceId="1" SourceUrl="http://localhost:1788/FinancialAccounting/FunderInvestmentMgtService.svc?wsdl" />
+    <MetadataFile FileName="FunderInvestmentMgtService.xsd" MetadataType="Schema" ID="eec3e636-fe27-4464-99ea-0b3f530267ef" SourceId="1" SourceUrl="http://localhost:1788/FinancialAccounting/FunderInvestmentMgtService.svc?xsd=xsd1" />
+    <MetadataFile FileName="FunderInvestmentMgtService1.xsd" MetadataType="Schema" ID="5bb9ac23-b1aa-4799-ab92-7f55123425f3" SourceId="1" SourceUrl="http://localhost:1788/FinancialAccounting/FunderInvestmentMgtService.svc?xsd=xsd0" />
+    <MetadataFile FileName="FunderInvestmentMgtService2.xsd" MetadataType="Schema" ID="2acb5f96-3b26-4bbe-8df7-1534c0a43ab3" SourceId="1" SourceUrl="http://localhost:1788/FinancialAccounting/FunderInvestmentMgtService.svc?xsd=xsd3" />
+    <MetadataFile FileName="FunderInvestmentMgtService3.xsd" MetadataType="Schema" ID="47c57c8b-7457-47e9-8e17-84711695f16e" SourceId="1" SourceUrl="http://localhost:1788/FinancialAccounting/FunderInvestmentMgtService.svc?xsd=xsd2" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

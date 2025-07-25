@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="fd5a8d3c-7016-49fd-85d7-ec104f634157" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:1788/Budget/BudgetMaster.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="BudgetMaster.wsdl" MetadataType="Wsdl" ID="886b8b4e-270f-4931-8ba9-cb316efdfb2a" SourceId="1" SourceUrl="http://localhost:1788/Budget/BudgetMaster.svc?wsdl" />
+    <MetadataFile FileName="BudgetMaster.xsd" MetadataType="Schema" ID="c80c73e4-e6b9-4925-a447-e20d73f9f184" SourceId="1" SourceUrl="http://localhost:1788/Budget/BudgetMaster.svc?xsd=xsd0" />
+    <MetadataFile FileName="BudgetMaster1.xsd" MetadataType="Schema" ID="9b23e3fa-ff5d-4457-995c-6af4b03f56ff" SourceId="1" SourceUrl="http://localhost:1788/Budget/BudgetMaster.svc?xsd=xsd1" />
+    <MetadataFile FileName="BudgetMaster2.xsd" MetadataType="Schema" ID="c7d3d753-380f-41a5-886d-6973bcc8bd61" SourceId="1" SourceUrl="http://localhost:1788/Budget/BudgetMaster.svc?xsd=xsd2" />
+    <MetadataFile FileName="BudgetMaster3.xsd" MetadataType="Schema" ID="2d92044a-b8c8-4775-8c66-1094c7a6ac55" SourceId="1" SourceUrl="http://localhost:1788/Budget/BudgetMaster.svc?xsd=xsd3" />
+    <MetadataFile FileName="BudgetMaster.disco" MetadataType="Disco" ID="85f26038-dda2-4ff7-a9b7-ea4adbc94695" SourceId="1" SourceUrl="http://localhost:1788/Budget/BudgetMaster.svc?disco" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

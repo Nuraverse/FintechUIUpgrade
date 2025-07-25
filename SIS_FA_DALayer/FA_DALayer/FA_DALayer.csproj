@@ -1,0 +1,181 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C7DBBD77-CA7C-471D-A609-0B6ED54C68A9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FA_DALayer</RootNamespace>
+    <AssemblyName>FA_DALayer</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Common">
+      <HintPath>..\..\..\..\SMLLeasing\BEASTS3GMFC\SISLS3GDLayer\S3GBusEntity\bin\Debug\Microsoft.Practices.EnterpriseLibrary.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Data">
+      <HintPath>..\..\..\..\SMLLeasing\BEASTS3GMFC\SISLS3GDLayer\S3GBusEntity\bin\Debug\Microsoft.Practices.EnterpriseLibrary.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Logging">
+      <HintPath>..\..\..\..\SMLLeasing\BEASTS3GMFC\SISLS3GDLayer\S3GBusEntity\bin\Debug\Microsoft.Practices.EnterpriseLibrary.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ObjectBuilder2">
+      <HintPath>..\..\..\..\SMLLeasing\BEASTS3GMFC\SISLS3GDLayer\S3GBusEntity\bin\Debug\Microsoft.Practices.ObjectBuilder2.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity">
+      <HintPath>..\..\..\..\SMLLeasing\BEASTS3GMFC\SISLS3GDLayer\S3GBusEntity\bin\Debug\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\System.configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.OracleClient, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\System.Data.OracleClient.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Budget\ClsPubBudgetFileUpload.cs" />
+    <Compile Include="Budget\ClsPubBudgetItemMaster.cs" />
+    <Compile Include="Budget\ClsPubBudgetMaster.cs" />
+    <Compile Include="ClsPubCommErrorLogDal.cs" />
+    <Compile Include="Common\ClsIniFileAccess.cs" />
+    <Compile Include="Common\FunPubCommonDB.cs" />
+    <Compile Include="FinancialAccounting\ClsPubAccountCard.cs" />
+    <Compile Include="FinancialAccounting\ClsPubApproval.cs" />
+    <Compile Include="FinancialAccounting\ClsPubAssetDepreciation.cs" />
+    <Compile Include="FinancialAccounting\ClsPubAssetMst.cs" />
+    <Compile Include="FinancialAccounting\ClsPubAssetTransaction.cs" />
+    <Compile Include="FinancialAccounting\ClsPubAuthorizationRC.cs" />
+    <Compile Include="FinancialAccounting\ClsPubBRS.cs" />
+    <Compile Include="FinancialAccounting\ClsPubBRSFileFormat.cs" />
+    <Compile Include="FinancialAccounting\ClsPubBudget.cs" />
+    <Compile Include="FinancialAccounting\ClsPubCashFlowMaster.cs" />
+    <Compile Include="FinancialAccounting\ClsPubChallanGeneration.cs" />
+    <Compile Include="FinancialAccounting\ClsPubChequeReturnProcessing.cs" />
+    <Compile Include="FinancialAccounting\ClsPubCollateralCapture.cs" />
+    <Compile Include="FinancialAccounting\ClsPubCollateralMaster.cs" />
+    <Compile Include="FinancialAccounting\ClsPubConsortiumMaster.cs" />
+    <Compile Include="FinancialAccounting\ClsPubDealMaster.cs" />
+    <Compile Include="FinancialAccounting\ClsPubDebitCreditNote.cs" />
+    <Compile Include="FinancialAccounting\ClsPubDeliveryInstruction.cs" />
+    <Compile Include="FinancialAccounting\ClsPubExpensesBooking.cs" />
+    <Compile Include="FinancialAccounting\ClsPubFunderInterest.cs" />
+    <Compile Include="FinancialAccounting\ClsPubFunderLoading.cs" />
+    <Compile Include="FinancialAccounting\ClsPubFunderMaster.cs" />
+    <Compile Include="FinancialAccounting\ClsPubFunderTransaction.cs" />
+    <Compile Include="FinancialAccounting\ClsPubHedging.cs" />
+    <Compile Include="FinancialAccounting\ClsPubInvestmentInterestAccrued.cs" />
+    <Compile Include="FinancialAccounting\ClsPubInvestmentMaster.cs" />
+    <Compile Include="FinancialAccounting\ClsPubInvestmentTransaction.cs" />
+    <Compile Include="FinancialAccounting\ClsPubManualJournal.cs" />
+    <Compile Include="FinancialAccounting\ClsPubMultiJournal.cs" />
+    <Compile Include="FinancialAccounting\ClsPubNCDUpload.cs" />
+    <Compile Include="FinancialAccounting\ClsPubPaymentRequest.cs" />
+    <Compile Include="FinancialAccounting\ClsPubPriorPeriodJV.cs" />
+    <Compile Include="FinancialAccounting\ClsPubProvProcess.cs" />
+    <Compile Include="FinancialAccounting\ClsPubRatingDetails.cs" />
+    <Compile Include="FinancialAccounting\ClsPubReceiptProcessing.cs" />
+    <Compile Include="FinancialAccounting\ClsPubTemplateMaster.cs" />
+    <Compile Include="FinancialAccounting\Treasury_Bucket.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SysAdmin\ClsPubCompanyMaster.cs" />
+    <Compile Include="SysAdmin\ClsPubCurrencyMaster.cs" />
+    <Compile Include="SysAdmin\ClsPubDayOpenClose.cs" />
+    <Compile Include="SysAdmin\ClsPubDoucmentNoControl.cs" />
+    <Compile Include="SysAdmin\ClsPubExchangeMaster.cs" />
+    <Compile Include="SysAdmin\ClsPubFAAdmin.cs" />
+    <Compile Include="SysAdmin\ClsPubFADimensionMaster.cs" />
+    <Compile Include="SysAdmin\ClsPubGlobalParameterSetup.cs" />
+    <Compile Include="SysAdmin\ClsPubHierachyMaster.cs" />
+    <Compile Include="SysAdmin\ClsPubHolidaymaster.cs" />
+    <Compile Include="SysAdmin\ClsPubLocationMaster.cs" />
+    <Compile Include="SysAdmin\ClsPubMonthYearLock.cs" />
+    <Compile Include="SysAdmin\ClsPubOpeningbalance.cs" />
+    <Compile Include="SysAdmin\ClsPubRoleCenterMaster.cs" />
+    <Compile Include="SysAdmin\ClsPubStampDutyMaster.cs" />
+    <Compile Include="SysAdmin\ClsPubTDSRateMaster.cs" />
+    <Compile Include="SysAdmin\ClsPubUserManagement.cs" />
+    <Compile Include="SysAdmin\ClsYearOpening.cs" />
+    <Compile Include="SysAdmin\ScheduledJobs\ClsPubMail.cs" />
+    <Compile Include="SysAdmin\ScheduledJobs\ClsPubScheduledJobs.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Debug\FA_BusEntity.dll" />
+    <Content Include="bin\Debug\FA_BusEntity.pdb" />
+    <Content Include="bin\Debug\FA_DALayer.dll" />
+    <Content Include="bin\Debug\FA_DALayer.pdb" />
+    <Content Include="bin\Debug\Microsoft.Practices.EnterpriseLibrary.Common.dll" />
+    <Content Include="bin\Debug\Microsoft.Practices.EnterpriseLibrary.Data.dll" />
+    <Content Include="bin\Debug\Microsoft.Practices.EnterpriseLibrary.Logging.dll" />
+    <Content Include="bin\Debug\Microsoft.Practices.ObjectBuilder2.dll" />
+    <Content Include="bin\Debug\Microsoft.Practices.Unity.dll" />
+    <Content Include="obj\Debug\FA_DALayer.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\FA_DALayer.dll" />
+    <Content Include="obj\Debug\FA_DALayer.pdb" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="obj\Debug\ResolveAssemblyReference.cache" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="obj\Debug\TempPE\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FA_BusEntity\FA_BusEntity.csproj">
+      <Project>{542744c7-af05-4e50-aa5c-f57947b5517e}</Project>
+      <Name>FA_BusEntity</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

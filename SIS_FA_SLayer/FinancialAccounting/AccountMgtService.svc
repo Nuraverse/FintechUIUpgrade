@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="SIS_FA_SLayer.FinancialAccounting.AccountMgtService" CodeBehind="AccountMgtService.svc.cs" %>

@@ -1,0 +1,831 @@
+create or replace
+PROCEDURE S3G_FACT_PENAL_INTEREST
+(     
+     P_COMPANY_ID NUMBER:=NULL
+    ,P_LOCATION_ID number:=null
+    ,P_PA_SA_REF_ID NUMBER:=NULL
+    ,P_USERID int:=null
+    ,P_TRANSACTION_TYPE INT:=0--Query,1--Transaction
+    ,P_CUT_OFF_DATE DATE
+    ,P_SCHEDULEJOB_STATUS_ID INT:=NULL
+    ,P_OUT_PENAL_INT OUT SYS_REFCURSOR
+)      
+as      
+  D_COUNT number:=0;
+  D_CUT_OFF_DATE date;
+  D_CUSTOMER_ID number; 
+  D_NO_DAYS number:=0;
+  D_NO_DAYS2 number;
+  D_REGULAR_DENOMINATOR number:=0;
+  D_LOC_DENOMINATOR number:=0;
+  D_FIRST_DAY_OF_MONTH date;
+  D_PREV_DOCUMENT_DATE date;
+  D_USER_ID NUMBER;
+  D_PANUM VARCHAR(50);
+  D_SANUM VARCHAR(50);
+  D_ODIID number;
+  D_FINANCIAL_MONTH varchar(50);
+  D_ODIGROUPID number;
+  D_INVOICE_OS number;
+  D_MEMO_LINK_KEY number;
+  D_MEMODISTINCTNO number;
+  D_TYPEDESC     varchar2(100);
+  D_LAS_MONTH_OS_AMNT NUMBER;
+  D_LAST_ODI_DATE DATE;
+  D_CUR_DOCUMENT_DATE DATE;
+  D_PENAL_INTEREST NUMBER;
+  D_PENAL_INTEREST_RATE NUMBER;
+  D_CUR_INVOICE_OS number;
+  D_PENAL_INTEREST_PREV number;
+  D_PENAL_INTEREST_CUR number;
+  D_PA_SA_REF_ID number;
+  D_FACTORING_INV_LOAD_DET_ID number;
+  D_ROW_ID number;
+  D_PREV_PNL_INT    NUMBER;
+  D_USER_CODE VARCHAR(50);
+  D_CREATED_BY number;
+ 
+begin    
+  --CREATED BY:SATHISH R
+  --CREATED ON:12-MAR-2019
+  --USE:FACTORING MONTH END JOB ACTIVITY
+  
+  execute immediate ('Alter session set NLS_COMP = LINGUISTIC');
+  execute immediate ('Alter session set NLS_SORT = BINARY_CI');
+  
+  delete from TMP_INVOICE_DTLS_PNLSTG1;
+  delete from TMP_INVOICE_DTLS_PNLSTG2;
+  DELETE FROM TMP_INVOICE_DTLS_PNLSTG3;
+
+  delete from TMP_CLN_MEMODISTINCT;
+  DELETE FROM TMP_INVOICE_DTLS_PNLSTG5;
+  
+
+ 
+
+  D_CUSTOMER_ID:=null;
+  D_REGULAR_DENOMINATOR:=365;
+  D_LOC_DENOMINATOR:=1200;
+  D_CUT_OFF_DATE:=P_CUT_OFF_DATE;
+     
+  --D('D_MONTH_END_DATE==>'||D_MONTH_END_DATE);     
+    IF(P_TRANSACTION_TYPE=0)THEN
+      BEGIN
+         DELETE FROM S3G_TMP_INVOICE_DTLS_ODI WHERE SCHEDULEJOB_STATUS_ID=P_SCHEDULEJOB_STATUS_ID;
+      END;
+    end if;
+    
+          begin
+              BEGIN
+              
+              IF(D_CUT_OFF_DATE IS NULL)THEN
+              BEGIN
+                  SELECT LAST_DAY(SYSDATE) INTO D_CUT_OFF_DATE FROM DUAL;
+              END;
+              END IF;
+                  SELECT ADD_MONTHS((LAST_DAY(SYSDATE)+1),-1)
+                  INTO D_FIRST_DAY_OF_MONTH
+                  FROM DUAL;
+                  select EXTRACT(day from LAST_DAY(sysdate)) into D_NO_DAYS from DUAL;
+              END;    
+            END;
+           
+              BEGIN   
+                Select Count(1) Into D_Count 
+                From S3G_GLOBAL_PARAMETERS                                   
+                INNER JOIN S3G_GLOBAL_PARAMETERVALUES 
+                ON S3G_GLOBAL_PARAMETERS.PARAM_SET_ID = S3G_GLOBAL_PARAMETERVALUES.PARAM_SET_ID                                                                                      
+                WHERE S3G_GLOBAL_PARAMETERS.LOB_ID = 4                                  
+                 And S3g_Global_Parametervalues.Parameter_Code = '23'                                              
+                 AND S3G_GLOBAL_PARAMETERS.COMPANY_ID = P_COMPANY_ID;
+             END;
+           
+           
+           If ( D_Count > 0 ) Then
+            Begin
+              Select NVL(Parameter_Value,0) INTO D_REGULAR_DENOMINATOR                                   
+                From S3G_GLOBAL_PARAMETERS                                   
+                INNER JOIN S3G_GLOBAL_PARAMETERVALUES 
+                ON S3G_GLOBAL_PARAMETERS.PARAM_SET_ID = S3G_GLOBAL_PARAMETERVALUES.PARAM_SET_ID                                                                                      
+                WHERE S3G_GLOBAL_PARAMETERS.LOB_ID = 4                                  
+                And S3g_Global_Parametervalues.Parameter_Code = '23'                                              
+                AND S3G_GLOBAL_PARAMETERS.COMPANY_ID = p_Company_ID and rownum < 2;    
+            End;
+          Else
+            BEGIN
+              S3G_FAC_MNTH_END_IN_ER_LOG('Assign the Denominator Days in Global Parameter Setup','S3G_FACT_PENAL_INTEREST');
+              RETURN; 
+            end;
+          End IF;  
+                 
+                
+          begin  --Base Invoice Opening Start
+          
+          BEGIN--OS FLAG 1 START
+              insert into TMP_INVOICE_DTLS_PNLSTG1
+              (
+              
+              FACTORING_INV_LOAD_ID,
+              FACTORING_INV_LOAD_DETAILS_ID,
+              INVOICE_NO,
+              INVOICE_AMOUNT,
+              INVOICE_DATE,
+              REGULAR_INVOICE,
+              OVER_DUE_INVOICE,
+              DEFAULT_INVOICE,
+              IS_PREPAYMENT_ALLOWED,
+              INOVICE_PAID,
+              INVOICE_RECEIVED,
+              INVOICE_OS,
+              LAST_ODI_DATE,
+              OS_FLAG,
+              NO_DAYS,
+              NO_DAYS_FALG2,
+              PENAL_INTEREST_RATE,
+              DOCUMENT_DATE,
+              PA_SA_REF_ID,
+              LOCATION_CODE,
+              LOCATION_ID,
+              GRACE_PERIOD_DAYS,
+              FIL_DATE,
+              INVOICE_CHARGE_AMNT,
+              CREATION_DATE
+              )
+            
+              select  
+              LOADET.FACTORING_INV_LOAD_ID,
+              LOADET.FACTORING_INV_LOAD_DETAILS_ID,
+              LOADET.INVOICE_NO,
+              LOADET.INVOICE_AMOUNT,
+              LOADET.INVOICE_DATE as INVOICE_DATE,
+              LOAD.FIL_DATE+NVL(PASA.CREDIT_PERIOD_DAYS,0) as REGULAR_INVOICE,
+              LOAD.FIL_DATE+NVL(PASA.CREDIT_PERIOD_DAYS,0)+NVL(PASA.GRACE_PERIOD_DAYS,0)  as OVER_DUE_INVOICE,
+              LOAD.FIL_DATE+NVL(PASA.CREDIT_PERIOD_DAYS,0)+NVL(PASA.GRACE_PERIOD_DAYS,0)+1  AS DEFAULT_INVOICE,
+              LOADET.IS_PREPAYMENT_ALLOWED,
+              NVL(LOADET.PAID_AMOUNT,0),
+              NVL(LOADET.RECEIVED_AMOUNT,0),
+              NVL(odibrkp.odi_chargeable_amount,0),
+              LOADET.LAST_ODI_DATE,
+              1,--PREVOS
+              TRUNC(D_CUT_OFF_DATE)-TRUNC(DECODE(LOADET.LAST_ODI_DATE,NULL,LOAD.FIL_DATE)),
+              TRUNC(D_CUT_OFF_DATE)-TRUNC(DECODE(LOADET.LAST_ODI_DATE,null,LOAD.FIL_DATE)),
+              PASA.PENAL_RATE,
+              TRUNC(DECODE(LOADET.LAST_ODI_DATE,null,LOAD.FIL_DATE)),
+              PASA.PA_SA_REF_ID,
+              AC.LOCATION_CODE,
+              AC.LOCATION_ID,
+              NVL(PASA.GRACE_PERIOD_DAYS,0),
+              LOAD.FIL_DATE,
+              NVL(LOADET.PAID_AMOUNT,0)-NVL(LOADET.RECEIVED_AMOUNT,0),
+              AC.CREATION_DATE
+              
+              from S3G_LAD_FACTRNGINVLOADING LOAD
+              inner join S3G_LAD_FACTRNGINVLOADINGDET LOADET
+              on LOADET.FACTORING_INV_LOAD_ID=LOAD.FACTORING_INV_LOAD_ID
+              inner join S3G_LAD_ACCPASADET PASA
+              on PASA.PA_SA_REF_ID=LOAD.PA_SA_REF_ID
+              inner join S3G_LAD_ACCCREATION AC
+              on AC.ACCOUNT_CREATION_ID=PASA.ACCOUNT_CREATION_ID
+              inner join S3G_SYSAD_LOBMASTER LOBM
+              on LOBM.LOB_ID=AC.LOB_ID
+              left join S3G_LAD_ODIBREAKUP ODIBRKP
+              on (ODIBRKP.FACTORING_INV_LOAD_DETAILS_ID=LOADET.FACTORING_INV_LOAD_DETAILS_ID and ODIBRKP.ODI_TO_DATE<D_CUT_OFF_DATE)
+              WHERE LOBM.LOB_CODE='FT'  
+              and PASA.PA_SA_REF_ID=NVL(P_PA_SA_REF_ID,PASA.PA_SA_REF_ID)
+              and PASA.SA_STATUS_CODE=3
+              and LOAD.FIL_DATE+NVL(PASA.CREDIT_PERIOD_DAYS,0)+NVL(PASA.GRACE_PERIOD_DAYS,0)<D_CUT_OFF_DATE
+              --AND NVL(LOADET.PAID_AMOUNT,0)-NVL(LOADET.RECEIVED_AMOUNT,0)>0
+              AND LOAD.STATUS_ID=2 AND LOADET.STATUS_ID=2
+              AND AC.LOCATION_ID=NVL(P_LOCATION_ID,AC.LOCATION_ID)
+              ;
+           end;--OS FLAG 1 END 
+           
+           
+           
+
+            begin
+              insert into TMP_INVOICE_DTLS_PNLSTG3
+              (
+              
+              FACTORING_INV_LOAD_ID,
+              FACTORING_INV_LOAD_DETAILS_ID,
+              INVOICE_OS,
+              PENAL_INTEREST_RATE,
+              DOCUMENT_DATE,
+              PA_SA_REF_ID,
+              TXTN_TYPE,
+              TXTN_DOC,
+              ROW_ID,
+              INVOICE_NO,
+              INVOICE_AMOUNT,
+              INVOICE_DATE,
+              INOVICE_PAID,
+              INVOICE_RECEIVED,
+              CHQ_GAP_DAYS
+              
+              )
+              --RECIPT OS FLAG 3 START
+              select 
+              T.FACTORING_INV_LOAD_ID  ,
+              T.FACTORING_INV_LOAD_DETAILS_ID,
+              T.INVOICE_OS,
+              T.PENAL_INTEREST_RATE,
+              T.DOCUMENT_DATE,
+              T.PA_SA_REF_ID,
+              T.TXTN_TYPE,
+              T.TXTN_NO,
+              ROW_NUMBER() over (partition by T.FACTORING_INV_LOAD_DETAILS_ID order by  T.DOCUMENT_DATE),
+              INVOICE_NO,
+              INVOICE_AMOUNT,
+              INVOICE_DATE,
+              
+              INOVICE_PAID,
+              INVOICE_RECEIVED,
+              CHQ_GAP_DAYS
+              
+              from (
+               select  
+              LOAD.FACTORING_INV_LOAD_ID AS FACTORING_INV_LOAD_ID,
+              LOAD.FACTORING_INV_LOAD_DETAILS_ID,
+              INVOICE_OS as INVOICE_OS,--OS
+              LOAD.PENAL_INTEREST_RATE as PENAL_INTEREST_RATE,
+              LAST_ODI_DATE+1 AS DOCUMENT_DATE, 
+              LOAD.PA_SA_REF_ID,
+              0 as TXTN_TYPE,
+              INVOICE_NO as TXTN_NO,
+              LOAD.INVOICE_NO as INVOICE_NO,
+              LOAD.INVOICE_AMOUNT,
+              LOAD.INVOICE_DATE,
+              NVL(INVOICE_OS,0) as INOVICE_PAID,
+              NVL(0,0) as INVOICE_RECEIVED,
+              0 as CHQ_GAP_DAYS
+              from TMP_INVOICE_DTLS_PNLSTG1 LOAD where INVOICE_OS>0
+              union              
+              --PAYMENT OS FLAG 3 START
+              select  
+              LOAD.FACTORING_INV_LOAD_ID AS FACTORING_INV_LOAD_ID,
+              LOAD.FACTORING_INV_LOAD_DETAILS_ID,
+              0 as INVOICE_OS,--OS
+              LOAD.PENAL_INTEREST_RATE as PENAL_INTEREST_RATE,
+              --PY.PAYMENT_REQUEST_DATE AS DOCUMENT_DATE,
+              PY.PAYMENT_REQUEST_DATE AS DOCUMENT_DATE, 
+              LOAD.PA_SA_REF_ID,
+              1 as TXTN_TYPE,
+              PY.PAYMENT_REQUEST_NO as TXTN_NO,
+              LOAD.INVOICE_NO,
+              LOAD.INVOICE_AMOUNT,
+              LOAD.INVOICE_DATE,
+              NVL(PYDET.AMOUNT,0) as INOVICE_PAID,
+              NVL(0,0) as INVOICE_RECEIVED,
+              0 as CHQ_GAP_DAYS
+
+
+              
+              from TMP_INVOICE_DTLS_PNLSTG1 LOAD
+              INNER join S3G_LAD_PAYMENTREQSTDET PYDET
+              on (PYDET.PA_SA_REF_ID=LOAD.PA_SA_REF_ID  
+              and PYDET.ASSET_NUMBER=LOAD.FACTORING_INV_LOAD_DETAILS_ID)
+              INNER JOIN S3G_LAD_PYMNTREQST PY
+              ON (PY.REQUEST_NO=PYDET.REQUEST_NO AND PY.PMT_VOUCHER_STATUS=3 AND PY.PAYMENT_REQUEST_DATE>= NVL(LOAD.LAST_ODI_DATE+1,LOAD.CREATION_DATE)
+              )--Approved
+              WHERE TRUNC(PY.PAYMENT_REQUEST_DATE)<=TRUNC(D_CUT_OFF_DATE)
+              --and    NVL(LOAD.INOVICE_PAID,0)-NVL(LOAD.INVOICE_RECEIVED,0)>0
+              ---Payment End
+              
+              union
+              --Debit Note Start
+              SELECT LOAD.FACTORING_INV_LOAD_ID AS FACTORING_INV_LOAD_ID,
+              LOAD.FACTORING_INV_LOAD_DETAILS_ID,
+              0 as INVOICE_OS,--OS
+              LOAD.PENAL_INTEREST_RATE as PENAL_INTEREST_RATE,
+              CRDR.DOCUMENT_DATE AS DOCUMENT_DATE,
+              LOAD.PA_SA_REF_ID,
+              3 as TXTN_TYPE,
+              CRDR.DOCUMENT_NO as TXTN_NO,
+              
+              LOAD.INVOICE_NO,
+              LOAD.INVOICE_AMOUNT,
+              LOAD.INVOICE_DATE,
+              
+              NVL(CRDR.TXN_AMOUNT,0),
+              NVL(0,0),
+              0 as CHQ_GAP_DAYS
+
+              
+              from TMP_INVOICE_DTLS_PNLSTG1 LOAD
+              INNER join S3G_DBT_CRDT_DET CRDRDET
+              on CRDRDET.FACTORING_INV_LOAD_DETAILS_ID=LOAD.FACTORING_INV_LOAD_DETAILS_ID
+              inner join S3G_DBT_CRDT_HDR CRDR
+              on (CRDR.LINK_DNCN_KEY=CRDRDET.LINK_DNCN_KEY and TRAN_TYPE=2 and CRDR.DOC_STAT=3 and  CRDR.DOCUMENT_DATE>=NVL(LOAD.LAST_ODI_DATE+1,LOAD.CREATION_DATE)
+              )--1-CREDIT NOTE 2-DEBIT NOTE ,AUTH_STAT--2--APPROVED
+              where TRUNC(CRDR.DOCUMENT_DATE)<=TRUNC(D_CUT_OFF_DATE)
+              --Debit Note End
+              
+              
+              
+              union
+               ------RECEIPT OS START
+              select 
+              LOAD.FACTORING_INV_LOAD_ID AS FACTORING_INV_LOAD_ID,
+              LOAD.FACTORING_INV_LOAD_DETAILS_ID,
+              0 as INVOICE_OS,--OS
+              LOAD.PENAL_INTEREST_RATE as PENAL_INTEREST_RATE,
+              RCPT.RECEIPT_DATE AS DOCUMENT_DATE,
+              LOAD.PA_SA_REF_ID,
+              2 as TXTN_TYPE,
+              RCPT.RECEIPT_NO as TXTN_NO,
+              
+              LOAD.INVOICE_NO,
+              LOAD.INVOICE_AMOUNT,
+              LOAD.INVOICE_DATE,
+              
+              NVL(0,0) as INOVICE_PAID,
+              NVL(RCPTINV.AMOUNT,0) as INVOICE_RECEIVED,
+              0 as CHQ_GAP_DAYS
+               
+              
+              from TMP_INVOICE_DTLS_PNLSTG1 LOAD
+              INNER join S3G_CLN_RCPT_INV RCPTINV
+              on (RCPTINV.INV_DTL_ID=LOAD.FACTORING_INV_LOAD_DETAILS_ID )
+              inner join S3G_CLN_RCPTPROC RCPT
+              on (RCPT.RECEIPT_ID=RCPTINV.RECEIPT_ID and RCPT.RECEIPT_STATUS=5 and RCPT.RECEIPT_DATE>=NVL(LOAD.LAST_ODI_DATE+1,LOAD.CREATION_DATE)
+              )
+              inner join S3G_CLN_RCPTPROCDTL RCDTL
+              ON (RCDTL.RECEIPT_PROC_DETAILS_ID=RCPTINV.RECEIPT_DTL_ID AND RCDTL.PA_SA_REF_ID=LOAD.PA_SA_REF_ID)
+              
+              where trunc(RCPT.RECEIPT_DATE)<=trunc(D_CUT_OFF_DATE) AND CHEQUE_RETURN_STATUS=0
+               --RECIPT OS FLAG 3 END
+
+              union
+              --Credit Note Start
+              SELECT LOAD.FACTORING_INV_LOAD_ID AS FACTORING_INV_LOAD_ID,
+              LOAD.FACTORING_INV_LOAD_DETAILS_ID,
+              0 as INVOICE_OS,--OS
+              LOAD.PENAL_INTEREST_RATE as PENAL_INTEREST_RATE,
+              CRDR.DOCUMENT_DATE AS DOCUMENT_DATE,
+              LOAD.PA_SA_REF_ID,
+              3 as TXTN_TYPE,
+              CRDR.DOCUMENT_NO as TXTN_NO,
+              
+              LOAD.INVOICE_NO,
+              LOAD.INVOICE_AMOUNT,
+              LOAD.INVOICE_DATE,
+              
+              NVL(0,0),
+              NVL(CRDR.TXN_AMOUNT,0),
+              0 as CHQ_GAP_DAYS
+
+              
+              from TMP_INVOICE_DTLS_PNLSTG1 LOAD
+              INNER join S3G_DBT_CRDT_DET CRDRDET
+              on CRDRDET.FACTORING_INV_LOAD_DETAILS_ID=LOAD.FACTORING_INV_LOAD_DETAILS_ID
+              inner join S3G_DBT_CRDT_HDR CRDR
+              on (CRDR.LINK_DNCN_KEY=CRDRDET.LINK_DNCN_KEY and TRAN_TYPE=1 and CRDR.DOC_STAT=3 and  CRDR.DOCUMENT_DATE>=NVL(LOAD.LAST_ODI_DATE+1,LOAD.CREATION_DATE)
+              )--1-CREDIT NOTE 2-DEBIT NOTE ,AUTH_STAT--2--APPROVED
+              where trunc(CRDR.DOCUMENT_DATE)<=trunc(D_CUT_OFF_DATE)
+              --Credit Note End
+              ------Cheque Return Start
+              union
+              SELECT LOAD.FACTORING_INV_LOAD_ID AS FACTORING_INV_LOAD_ID,
+              LOAD.FACTORING_INV_LOAD_DETAILS_ID,
+              0 as INVOICE_OS,--OS
+              LOAD.PENAL_INTEREST_RATE as PENAL_INTEREST_RATE,
+              CHQRCPT.CHEQUE_RETURN_ADVICE_DATE AS DOCUMENT_DATE,
+              LOAD.PA_SA_REF_ID,
+              4 as TXTN_TYPE,
+              RCPTCHQRTN.RECEIPT_NO as TXTN_NO,
+              
+              LOAD.INVOICE_NO,
+              LOAD.INVOICE_AMOUNT,
+              LOAD.INVOICE_DATE,
+              
+              NVL(RCPTINVCHQ.AMOUNT,0),
+              NVL(0,0),
+              trunc(CHQRCPT.CHEQUE_RETURN_ADVICE_DATE)-trunc(DDS4.VALUE_DATE) as CHQ_GAP_DAYS
+              
+              from TMP_INVOICE_DTLS_PNLSTG1 LOAD
+              INNER join S3G_CLN_RCPT_INV RCPTINVCHQ
+              on (RCPTINVCHQ.INV_DTL_ID=LOAD.FACTORING_INV_LOAD_DETAILS_ID )
+              INNER join S3G_CLN_RCPTPROC RCPTCHQRTN
+              on (RCPTCHQRTN.RECEIPT_ID=RCPTINVCHQ.RECEIPT_ID and RCPTCHQRTN.RECEIPT_STATUS=5--RECEIPT APPROVED 
+              and RCPTCHQRTN.CHEQUE_RETURN_STATUS=1--CHEQUE RETURND 
+              )  
+              inner join S3G_CLN_CHEQRETPROC CHQRCPT
+              ON (CHQRCPT.RECEIPT_ID=RCPTCHQRTN.RECEIPT_ID and CHQRCPT.CHEQUE_RETURN_ADVICE_DATE>=NVL(LOAD.LAST_ODI_DATE+1,LOAD.CREATION_DATE))
+              INNER JOIN S3G_CLN_RCPTPROCDTL RCDTL
+              on (RCDTL.RECEIPT_PROC_DETAILS_ID=RCPTINVCHQ.RECEIPT_DTL_ID and RCDTL.PA_SA_REF_ID=LOAD.PA_SA_REF_ID)
+              inner join S3G_CLN_DMDDS4 DDS4
+              on DDS4.DOCUMENT_NUMBER=CHQRCPT.CHEQUE_RETURN_ADVICE_NO
+              where trunc(CHQRCPT.CHEQUE_RETURN_ADVICE_DATE)<=trunc(D_CUT_OFF_DATE)
+              )T 
+              ------Cheque Return End
+             
+              ;
+            END;
+        end;-----Base Invoice Opening SEnd    
+                 
+                 
+                 begin--PENAL INTEREST FOR OS FLAG1 START
+                     update TMP_INVOICE_DTLS_PNLSTG1 a set a.PENAL_INTEREST=ROUND(NVL(a.PENAL_INTEREST,0)+a.INVOICE_OS*(1 / (100 * D_REGULAR_DENOMINATOR ) ) * a.PENAL_INTEREST_RATE*a.NO_DAYS ,3) 
+                     where a.OS_FLAG=1 and not exists(
+                     select 1 from TMP_INVOICE_DTLS_PNLSTG3 B where B.PA_SA_REF_ID=a.PA_SA_REF_ID 
+                     AND A.FACTORING_INV_LOAD_ID=B.FACTORING_INV_LOAD_ID AND A.FACTORING_INV_LOAD_DETAILS_ID=B.FACTORING_INV_LOAD_DETAILS_ID
+                     )  ;
+                 END;--PENAL INTEREST FOR OS FLAG1 START
+               
+               
+                    BEGIN--INVOICE GROUPING SAME DATE START
+                      insert into  TMP_INVOICE_DTLS_PNLSTG5
+                      (
+                      ROW_ID,PA_SA_REF_ID,FACTORING_INV_LOAD_ID,FACTORING_INV_LOAD_DETAILS_ID,INOVICE_PAID,INVOICE_RECEIVED,DOCUMENT_DATE,
+                      PENAL_INTEREST_RATE,NO_DAYS,INVOICE_NO,INVOICE_AMOUNT,INVOICE_DATE
+                      )
+                      SELECT ROW_NUMBER() over (partition by FACTORING_INV_LOAD_DETAILS_ID order by  DOCUMENT_DATE),T.* FROM(
+                      select PA_SA_REF_ID,FACTORING_INV_LOAD_ID,FACTORING_INV_LOAD_DETAILS_ID, SUM(INOVICE_PAID) as INOVICE_PAID,
+                      SUM(INVOICE_RECEIVED) as INVOICE_RECEIVED,TRUNC(DOCUMENT_DATE) as DOCUMENT_DATE,
+                      PENAL_INTEREST_RATE,0,INVOICE_NO,INVOICE_AMOUNT ,INVOICE_DATE 
+                      from TMP_INVOICE_DTLS_PNLSTG3 
+                      --where INVOICE_NO='48415' 
+                      group by TRUNC(DOCUMENT_DATE),FACTORING_INV_LOAD_DETAILS_ID,PA_SA_REF_ID,FACTORING_INV_LOAD_ID,PENAL_INTEREST_RATE,INVOICE_NO,INVOICE_AMOUNT ,INVOICE_DATE )T;
+                    END;--INVOICE GROUPING SAME DATE END
+
+                 
+                 
+               begin
+                for L1 in(select PA_SA_REF_ID,FACTORING_INV_LOAD_ID,FACTORING_INV_LOAD_DETAILS_ID from TMP_INVOICE_DTLS_PNLSTG5 
+                --WHERE FACTORING_INV_LOAD_DETAILS_ID=230043
+                group by PA_SA_REF_ID,FACTORING_INV_LOAD_ID,FACTORING_INV_LOAD_DETAILS_ID
+                
+                )
+                  LOOP--L1
+                    BEGIN
+                          for L2 in(select ROW_ID,FACTORING_INV_LOAD_DETAILS_ID,DOCUMENT_DATE,INVOICE_OS,PA_SA_REF_ID,FACTORING_INV_LOAD_ID 
+                          from TMP_INVOICE_DTLS_PNLSTG5 
+                                    where  
+                                    PA_SA_REF_ID=L1.PA_SA_REF_ID 
+                                    and FACTORING_INV_LOAD_ID=L1.FACTORING_INV_LOAD_ID 
+                                    and FACTORING_INV_LOAD_DETAILS_ID=L1.FACTORING_INV_LOAD_DETAILS_ID 
+                                    --and FACTORING_INV_LOAD_DETAILS_ID=444927
+                                    ORDER BY DOCUMENT_DATE,ROW_ID
+                          )
+                          LOOP
+                            begin--L2
+                             
+                              SELECT COUNT(1) INTO D_COUNT  FROM TMP_INVOICE_DTLS_PNLSTG5 
+                              WHERE FACTORING_INV_LOAD_DETAILS_ID=L2.FACTORING_INV_LOAD_DETAILS_ID 
+                              AND  ROW_ID=L2.ROW_ID-1 AND PA_SA_REF_ID=L2.PA_SA_REF_ID
+                              ; 
+                              D_PREV_DOCUMENT_DATE:=null;
+                               if(D_COUNT>0)then
+                                   begin
+                                   --d('Iteration2');
+                                   --D('L2.FACTORING_INV_LOAD_DETAILS_ID==>'||L2.FACTORING_INV_LOAD_DETAILS_ID);
+                                      select sum(INOVICE_PAID)-sum(INVOICE_RECEIVED) into d_INVOICE_OS  from TMP_INVOICE_DTLS_PNLSTG5 
+                                      where FACTORING_INV_LOAD_DETAILS_ID=L2.FACTORING_INV_LOAD_DETAILS_ID
+                                      AND  ROW_ID<L2.ROW_ID AND PA_SA_REF_ID=L2.PA_SA_REF_ID
+                                      ; 
+                                      select 
+                                      --case when TXTN_TYPE=1 then D_INVOICE_OS+INVOICE_RECEIVED else D_INVOICE_OS-INVOICE_RECEIVED end into D_CUR_INVOICE_OS  
+                                      --abs(d_INVOICE_OS+INVOICE_RECEIVED) into d_CUR_INVOICE_OS  
+                                      INOVICE_PAID-INVOICE_RECEIVED+d_INVOICE_OS into d_CUR_INVOICE_OS 
+                                      from TMP_INVOICE_DTLS_PNLSTG5 
+                                      WHERE FACTORING_INV_LOAD_DETAILS_ID=L2.FACTORING_INV_LOAD_DETAILS_ID
+                                      AND  ROW_ID=L2.ROW_ID AND PA_SA_REF_ID=L2.PA_SA_REF_ID
+                                      ; 
+                                      
+                                      select max(DOCUMENT_DATE) into D_PREV_DOCUMENT_DATE from TMP_INVOICE_DTLS_PNLSTG5 
+                                      WHERE FACTORING_INV_LOAD_DETAILS_ID=L2.FACTORING_INV_LOAD_DETAILS_ID
+                                      AND  ROW_ID=L2.ROW_ID-1 AND PA_SA_REF_ID=L2.PA_SA_REF_ID
+                                      ; 
+                                      
+                                      
+                                      SELECT DOCUMENT_DATE,PENAL_INTEREST_RATE INTO D_CUR_DOCUMENT_DATE,D_PENAL_INTEREST_RATE FROM  TMP_INVOICE_DTLS_PNLSTG5
+                                      WHERE FACTORING_INV_LOAD_DETAILS_ID=L2.FACTORING_INV_LOAD_DETAILS_ID AND  ROW_ID=L2.ROW_ID AND PA_SA_REF_ID=L2.PA_SA_REF_ID
+                                       ; 
+                                      
+                                     
+                                       D_NO_DAYS:=TRUNC(D_CUR_DOCUMENT_DATE)-TRUNC(D_PREV_DOCUMENT_DATE);
+                                       --D_NO_DAYS2:=(TRUNC(D_CUR_DOCUMENT_DATE)-TRUNC(D_PREV_DOCUMENT_DATE))-1;
+                                       
+                                       
+                                       D_NO_DAYS2:=CASE WHEN D_NO_DAYS=-1 or D_NO_DAYS=0  THEN 1 ELSE D_NO_DAYS END;
+                                    
+                                     
+
+                                     D_PENAL_INTEREST_PREV:=0;
+                                     D_PENAL_INTEREST_CUR:=0;
+                                     
+                                     D_PENAL_INTEREST_PREV:=ROUND(D_INVOICE_OS*(1 / (100 * D_REGULAR_DENOMINATOR ) ) * D_PENAL_INTEREST_RATE*D_NO_DAYS,3);
+                                     --D_PENAL_INTEREST_CUR:=ROUND(NVL(D_PENAL_INTEREST_CUR,0)+D_CUR_INVOICE_OS*(1 / (100 * D_REGULAR_DENOMINATOR ) ) * D_PENAL_INTEREST_RATE*1,3);
+                                     
+                                     
+                                     D_PENAL_INTEREST:=NVL(D_PENAL_INTEREST_PREV,0)+NVL(D_PENAL_INTEREST_CUR,0);
+                                     
+--                                     
+--                                     D('---------');
+--                                     D('L2.PA_SA_REF_ID==>'|| L2.PA_SA_REF_ID);
+--                                     D(' L2.FACTORING_INV_LOAD_DETAILS_ID==>'|| L2.FACTORING_INV_LOAD_DETAILS_ID);
+--                                     d('L2.ROW_ID==>'||L2.ROW_ID);
+--                                     D('d_INVOICE_OS==>'||D_INVOICE_OS);
+--                                     D('d_CUR_INVOICE_OS==>'||D_CUR_INVOICE_OS);
+--                                     D('D_PREV_DOCUMENT_DATE==>'||D_PREV_DOCUMENT_DATE);
+--                                     D('D_CUR_DOCUMENT_DATE==>'||D_CUR_DOCUMENT_DATE);
+--                                     D('D_NO_DAYS==>'||D_NO_DAYS);
+--                                     D('D_PENAL_INTEREST_PREV_V==>'||D_PENAL_INTEREST_PREV);
+--                                     D('D_PENAL_INTEREST_CUR_V==>'||D_PENAL_INTEREST_CUR);
+--                                     D('D_PENAL_INTEREST==>'||D_PENAL_INTEREST);
+--                                     D('D_REGULAR_DENOMINATOR==>'||D_REGULAR_DENOMINATOR);
+--                                     D('D_PENAL_INTEREST_RATE==>'||D_PENAL_INTEREST_RATE);
+--                                     d('D_NO_DAYS2==>'||D_NO_DAYS2);
+                                    
+                                     
+                                      
+                                      
+                                      UPDATE   TMP_INVOICE_DTLS_PNLSTG5 SET NO_DAYS=case when D_NO_DAYS2=0 then 1 else D_NO_DAYS2 end  ,INVOICE_OS=d_CUR_INVOICE_OS,
+                                      PENAL_INTEREST=NVL(PENAL_INTEREST,0)+ROUND(D_PENAL_INTEREST,3)
+                                      WHERE FACTORING_INV_LOAD_DETAILS_ID=L2.FACTORING_INV_LOAD_DETAILS_ID AND  ROW_ID=L2.ROW_ID AND PA_SA_REF_ID=L2.PA_SA_REF_ID;
+                                      
+                                      
+                                      D_PA_SA_REF_ID:=L2.PA_SA_REF_ID;
+                                      D_FACTORING_INV_LOAD_DET_ID:=L2.FACTORING_INV_LOAD_DETAILS_ID;
+                                      D_ROW_ID:=L2.ROW_ID;
+                                     
+                                       
+                                   end;
+                                 else
+                                   begin
+                                  -- d('hi');
+                                      SELECT DOCUMENT_DATE,PENAL_INTEREST_RATE INTO D_CUR_DOCUMENT_DATE,D_PENAL_INTEREST_RATE FROM  TMP_INVOICE_DTLS_PNLSTG5
+                                      where FACTORING_INV_LOAD_DETAILS_ID=L2.FACTORING_INV_LOAD_DETAILS_ID and  ROW_ID=L2.ROW_ID and PA_SA_REF_ID=L2.PA_SA_REF_ID;
+                                   
+                                    
+                                      select 
+                                      INVOICE_OS  into D_CUR_INVOICE_OS  
+                                      from TMP_INVOICE_DTLS_PNLSTG1 
+                                      WHERE FACTORING_INV_LOAD_DETAILS_ID=L2.FACTORING_INV_LOAD_DETAILS_ID
+                                      --and  ROW_ID=L2.ROW_ID 
+                                      and PA_SA_REF_ID=L2.PA_SA_REF_ID;
+                                   
+                                    
+                                       
+                                       SELECT COUNT(1) INTO D_COUNT FROM TMP_INVOICE_DTLS_PNLSTG5 WHERE FACTORING_INV_LOAD_DETAILS_ID=L2.FACTORING_INV_LOAD_DETAILS_ID 
+                                        AND PA_SA_REF_ID=l2.PA_SA_REF_ID and ROW_ID=L2.ROW_ID;   
+                                        
+                                        
+                                      D_PA_SA_REF_ID:=L2.PA_SA_REF_ID;
+                                      D_FACTORING_INV_LOAD_DET_ID:=L2.FACTORING_INV_LOAD_DETAILS_ID;
+                                      D_ROW_ID:=L2.ROW_ID;
+                                        
+--                                        D('L2.FACTORING_INV_LOAD_DETAILS_ID=>'||L2.FACTORING_INV_LOAD_DETAILS_ID);
+--                                        D('L2.PA_SA_REF_ID=>'||L2.PA_SA_REF_ID);
+--                                        D('D_ROW_ID:=L2.ROW_ID==>'||L2.ROW_ID);
+                                    
+                                       --d('d_CUR_INVOICE_OS==>'||d_CUR_INVOICE_OS); 
+                                       UPDATE   TMP_INVOICE_DTLS_PNLSTG5 SET NO_DAYS=0  ,INVOICE_OS=nvl(INVOICE_OS,0)+d_CUR_INVOICE_OS
+                                           where FACTORING_INV_LOAD_DETAILS_ID=L2.FACTORING_INV_LOAD_DETAILS_ID 
+                                           AND  ROW_ID=L2.ROW_ID AND PA_SA_REF_ID=L2.PA_SA_REF_ID; 
+                                   
+                                    
+                                   END;
+                               end if;
+                            end;
+                          end LOOP;--L2
+                          begin
+                            --D('D_CUR_DOCUMENT_DATE==>'||D_CUR_DOCUMENT_DATE);
+--                            D('D_CUT_OFF_DATE==>'||D_CUT_OFF_DATE);
+--                            D('D_CUR_INVOICE_OS==>'||D_CUR_INVOICE_OS);
+--                            D('D_PENAL_INTEREST_RATE==>'||D_PENAL_INTEREST_RATE);
+--                          
+--                            if(D_FACTORING_INV_LOAD_DET_ID=444927)then
+--                            begin
+--                            D('D_PA_SA_REF_ID==>'||D_PA_SA_REF_ID);
+--                            D('D_FACTORING_INV_LOAD_DET_ID==>'||D_FACTORING_INV_LOAD_DET_ID);
+--                            D('D_ROW_ID==>'||D_ROW_ID);
+--                            end;
+--                            end if;
+                            
+                            select sum(NVL(PENAL_INTEREST,0))  into D_PREV_PNL_INT from TMP_INVOICE_DTLS_PNLSTG5  where FACTORING_INV_LOAD_DETAILS_ID=D_FACTORING_INV_LOAD_DET_ID and  ROW_ID<=D_ROW_ID and PA_SA_REF_ID=D_PA_SA_REF_ID;
+                            D_PENAL_INTEREST_CUR:=0;
+                            D_NO_DAYS:=TRUNC(D_CUT_OFF_DATE)-TRUNC(D_CUR_DOCUMENT_DATE)+1;
+                            D_PENAL_INTEREST_CUR:=ROUND(NVL(D_PENAL_INTEREST_CUR,0)+GREATEST ( D_CUR_INVOICE_OS*(1 / (100 * D_REGULAR_DENOMINATOR ) ) * D_PENAL_INTEREST_RATE*D_NO_DAYS , 0),3);
+                            
+--                             if(D_FACTORING_INV_LOAD_DET_ID=444927)then
+--                             begin
+--                            
+--                             
+--                             D('D_FACTORING_INV_LOAD_DET_ID==>'||D_FACTORING_INV_LOAD_DET_ID);
+--                             D('D_ROW_ID==>'||D_ROW_ID);
+--                             D('D_PA_SA_REF_ID==>'||D_PA_SA_REF_ID);
+--                             
+--                             D('D_CUT_OFF_DATE==>'||D_CUT_OFF_DATE);
+--                             D('D_CUR_INVOICE_OS==>'||D_CUR_INVOICE_OS);
+--                             D('D_NO_DAYS==>'||D_NO_DAYS);
+--                             D('D_PENAL_INTEREST_CUR==>'||D_PENAL_INTEREST_CUR);
+--                             D('D_PENAL_INTEREST_RATE==>'||D_PENAL_INTEREST_RATE);
+--                             
+--                             
+--                               end;
+--                            end if;
+                            
+                            --D('HI');
+                             begin
+                               insert into TMP_INVOICE_DTLS_PNLSTG5
+                               (
+                              DOCUMENT_DATE,FACTORING_INV_LOAD_DETAILS_ID,FACTORING_INV_LOAD_ID,INOVICE_PAID,INVOICE_OS,
+                              INVOICE_RECEIVED,NO_DAYS,PA_SA_REF_ID,PENAL_INTEREST,PENAL_INTEREST_RATE,
+                              ROW_ID,INVOICE_NO,LAS_OS_BAL
+                               )
+                               select 
+                              D_CUT_OFF_DATE,
+                              FACTORING_INV_LOAD_DETAILS_ID,
+                              FACTORING_INV_LOAD_ID,
+                              0,--INOVICE_PAID,
+                              D_CUR_INVOICE_OS,--INVOICE_OS,
+                              0,--INVOICE_RECEIVED,
+                              --LAST_ODI_DATE,
+                              D_NO_DAYS,-- NO_DAYS,
+                              PA_SA_REF_ID,
+                              D_PENAL_INTEREST_CUR,
+                              D_PENAL_INTEREST_RATE,
+                              D_ROW_ID+1,INVOICE_NO||'-Closing' ,
+                              D_CUR_INVOICE_OS
+                              FROM TMP_INVOICE_DTLS_PNLSTG5 
+                              where FACTORING_INV_LOAD_DETAILS_ID=D_FACTORING_INV_LOAD_DET_ID and  ROW_ID=D_ROW_ID and PA_SA_REF_ID=D_PA_SA_REF_ID;
+                            END;
+                            
+                             begin--Cheque Retur Start
+                               insert into TMP_INVOICE_DTLS_PNLSTG5
+                               (
+                              DOCUMENT_DATE,FACTORING_INV_LOAD_DETAILS_ID,FACTORING_INV_LOAD_ID,INOVICE_PAID,INVOICE_OS,
+                              INVOICE_RECEIVED,NO_DAYS,PA_SA_REF_ID,PENAL_INTEREST,PENAL_INTEREST_RATE,
+                              ROW_ID,INVOICE_NO,LAS_OS_BAL
+                               )
+                               select 
+                              D_CUT_OFF_DATE,
+                              FACTORING_INV_LOAD_DETAILS_ID,
+                              FACTORING_INV_LOAD_ID,
+                              0,--INOVICE_PAID,
+                              D_CUR_INVOICE_OS,--INVOICE_OS,
+                              0,--INVOICE_RECEIVED,
+                              --LAST_ODI_DATE,
+                              CHQ_GAP_DAYS,-- NO_DAYS,
+                              PA_SA_REF_ID,
+                              ROUND(GREATEST ( INOVICE_PAID*(1 / (100 * D_REGULAR_DENOMINATOR ) ) * PENAL_INTEREST_RATE*CHQ_GAP_DAYS , 0),3),
+                              D_PENAL_INTEREST_RATE,
+                              D_ROW_ID+1,INVOICE_NO||'-ChkReturn' ,
+                              null
+                              FROM TMP_INVOICE_DTLS_PNLSTG3 where TXTN_TYPE=4;
+                            END;--Cheque Retur End
+                            
+                            
+                            
+                          END;
+                         
+                     
+                    end;
+                  END LOOP;--L1
+               
+               end;
+         
+        update TMP_INVOICE_DTLS_PNLSTG5 set IS_CHEQUE_RETURN=0 where IS_CHEQUE_RETURN is null;
+        
+        merge into TMP_INVOICE_DTLS_PNLSTG5 TARET
+        USING(
+        SELECT PA_SA_REF_ID,FACTORING_INV_LOAD_DETAILS_ID FROM TMP_INVOICE_DTLS_PNLSTG3 WHERE TXTN_TYPE=4--CHQ
+        GROUP BY PA_SA_REF_ID,FACTORING_INV_LOAD_DETAILS_ID
+        )TBL ON(TBL.PA_SA_REF_ID=TARET.PA_SA_REF_ID and TBL.FACTORING_INV_LOAD_DETAILS_ID=TARET.PA_SA_REF_ID)
+        WHEN MATCHED THEN 
+        UPDATE SET IS_CHEQUE_RETURN=1;
+        
+        update  TMP_INVOICE_DTLS_PNLSTG1 set PENAL_INTEREST=0 where PENAL_INTEREST is null;
+        
+        BEGIN  --Stage1 Start 
+          insert into S3G_TMP_INVOICE_DTLS_ODI
+          (
+          
+          FACTORING_INV_LOAD_DETAILS_ID,
+          FACTORING_INV_LOAD_ID,
+          NO_DAYS,
+          PA_SA_REF_ID,
+          PENAL_INTEREST,
+          PENAL_INTEREST_RATE,
+          ROW_ID,
+          SCHEDULEJOB_STATUS_ID,
+          INVOICE_NO,
+          INVOICE_AMOUNT,
+          INVOICE_DATE,
+          INOVICE_PAID,
+          INVOICE_RECEIVED,
+          INVOICE_OS,
+          DOCUMENT_DATE,
+          OS_FLAG,
+          LOCATION_ID,
+          CUT_OFF_DATE
+          )
+          SELECT 
+          FACTORING_INV_LOAD_DETAILS_ID,
+          FACTORING_INV_LOAD_ID,
+          NO_DAYS,
+          PA_SA_REF_ID,
+          PENAL_INTEREST,
+          PENAL_INTEREST_RATE,
+          rownum,
+          P_SCHEDULEJOB_STATUS_ID,
+          INVOICE_NO,
+          INVOICE_AMOUNT,
+          INVOICE_DATE,
+          INOVICE_PAID,
+          INVOICE_RECEIVED,
+          INVOICE_OS,
+          DOCUMENT_DATE,
+          1,
+          LOCATION_ID,
+          D_CUT_OFF_DATE
+          from TMP_INVOICE_DTLS_PNLSTG1 A
+          where not exists (
+          select 1 from TMP_INVOICE_DTLS_PNLSTG5 b
+          where A.FACTORING_INV_LOAD_DETAILS_ID=b.FACTORING_INV_LOAD_DETAILS_ID and A.FACTORING_INV_LOAD_ID=b.FACTORING_INV_LOAD_ID and  A.PA_SA_REF_ID=b.PA_SA_REF_ID
+          )
+          ;
+        END; --Stage1 End 
+      
+      
+      
+       BEGIN  --Stage1 Start 
+          insert into S3G_TMP_INVOICE_DTLS_ODI
+          (
+          
+          FACTORING_INV_LOAD_DETAILS_ID,
+          FACTORING_INV_LOAD_ID,
+          NO_DAYS,
+          PA_SA_REF_ID,
+          PENAL_INTEREST,
+          PENAL_INTEREST_RATE,
+          ROW_ID,
+          SCHEDULEJOB_STATUS_ID,
+          INVOICE_NO,
+          INVOICE_AMOUNT,
+          INVOICE_DATE,
+          INOVICE_PAID,
+          INVOICE_RECEIVED,
+          INVOICE_OS,
+          DOCUMENT_DATE,
+          OS_FLAG,
+          CUT_OFF_DATE--,
+          --LOCATION_ID
+          )
+          SELECT 
+          FACTORING_INV_LOAD_DETAILS_ID,
+          FACTORING_INV_LOAD_ID,
+          NO_DAYS,
+          PA_SA_REF_ID,
+          PENAL_INTEREST,
+          PENAL_INTEREST_RATE,
+          rownum,
+          P_SCHEDULEJOB_STATUS_ID,
+          INVOICE_NO,
+          INVOICE_AMOUNT,
+          INVOICE_DATE,
+          INOVICE_PAID,
+          INVOICE_RECEIVED,
+          nvl(LAS_OS_BAL,0),
+          DOCUMENT_DATE,
+          1,
+          D_CUT_OFF_DATE
+          --LOCATION_ID
+          from TMP_INVOICE_DTLS_PNLSTG5 
+          ;
+        END; --Stage1 End
+      
+        
+        MERGE INTO  S3G_TMP_INVOICE_DTLS_ODI TARGET
+        USING
+        (
+        SELECT PA_SA_REF_ID,LOCATION_ID FROM TMP_INVOICE_DTLS_PNLSTG1
+        GROUP BY PA_SA_REF_ID,LOCATION_ID
+        )TBL ON(TBL.PA_SA_REF_ID=TARGET.PA_SA_REF_ID)
+        WHEN MATCHED THEN 
+        update set LOCATION_ID=tbl.LOCATION_ID;
+        
+        
+        if(P_SCHEDULEJOB_STATUS_ID is not null)then     
+          begin
+                   
+            OPEN P_OUT_PENAL_INT FOR        
+            SELECT TXTN_TYPE,FACTORING_INV_LOAD_ID,FACTORING_INV_LOAD_DETAILS_ID,INVOICE_NO,INVOICE_DATE,INOVICE_PAID,INVOICE_RECEIVED,INVOICE_OS,
+            OS_FLAG,PENAL_INTEREST,PENAL_INTEREST_RATE ,NO_DAYS,DOCUMENT_DATE,ROW_ID,
+            PA_SA_REF_ID,SCHEDULEJOB_STATUS_ID,INVOICE_CHARGE_AMNT
+            
+            from S3G_TMP_INVOICE_DTLS_ODI
+            where  SCHEDULEJOB_STATUS_ID=P_SCHEDULEJOB_STATUS_ID
+            order by FACTORING_INV_LOAD_DETAILS_ID,DOCUMENT_DATE;
+          end;
+          
+          else
+            begin
+              open P_OUT_PENAL_INT for 
+              select * from TMP_INVOICE_DTLS_PNLSTG1;
+              end;
+        end if;  
+         
+End S3G_FACT_PENAL_INTEREST;

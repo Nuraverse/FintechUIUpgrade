@@ -1,0 +1,275 @@
+
+//Added on 7th November start 
+alter table FA_TRANSACTION_DET add Tran_Ref_NO number;
+
+alter table TMP_FA_DCNOTE_TRAN_DTL add LOCATION_ID number;
+alter table TMP_FA_DCNote_TRAN_DTL add Expense_booking_ID number;
+
+CREATE GLOBAL TEMPORARY TABLE TMP_FA_TRAN_INVOICE ( ID NUMBER, INVOICE_NUMBER VARCHAR2(60 BYTE), INVOICE_DATE DATE, INVOICE_AMOUNT NUMBER ) ON COMMIT PRESERVE ROWS ;
+
+alter table FA_BILLDUES add Tran_Flag varchar2(10);
+
+
+alter table TMP_FA_PAYMENTOTHERSDETAILS add DUE_DATE date;													
+alter table TMP_FA_PAYMENTOTHERSDETAILS add TAX_CODE number;													
+alter table TMP_FA_PaymentOthersDetails add TAX_AMOUNT number(25,4);													
+													
+CREATE TABLE FA_SYS_TDS_DTL													
+  (													
+    TDS_MST_ID      NUMBER NOT NULL ENABLE,													
+    TAX_SECTION     VARCHAR2(50 BYTE),													
+    TAX_DESCRIPTION VARCHAR2(50 BYTE),													
+    COMPANY_ID      NUMBER,													
+    GL_CODE         VARCHAR2(100 BYTE),													
+    SL_CODE         VARCHAR2(100 BYTE),													
+    START_DATE DATE,													
+    END_DATE DATE,													
+    TAX        NUMBER(25,4),													
+    SURCHARGE  NUMBER(25,4),													
+    CESS       NUMBER(25,4),													
+    EFF_RATE   NUMBER(25,4),													
+    GROSSUP    NUMBER,													
+    CREATED_BY NUMBER,													
+    CREATED_DATE DATE,													
+    MODIFIED_BY NUMBER,													
+    MODIFIED_DATE DATE,													
+    IS_ACTIVE       NUMBER,													
+    CONSTITUTION_ID NUMBER,													
+    THRESHOLD_LIMIT number(25,4)													
+   )													
+													
+alter table TMP_FA_PaymentDetails add Location_ID varchar2(10);													
+													
+alter table TMP_FA_PaymentDetails add Location varchar2(50);													
+													
+													
+alter table Fa_Bd_Payrect add status number;													
+													
+													
+alter table FA_transaction_Others add Ref_ID  number;													
+													
+alter table TMP_FA_PaymentOthersDetails add Ref_ID number;													
+													
+													
+													
+alter table FA_BD_PAYRECT add Invoice_Date date;													
+													
+alter table FA_BD_PAYRECT add ref_id number;													
+													
+alter table FA_TRANSACTION_HEADER add Ref_ID number;													
+													
+alter table Tmp_Fa_Transaction_Det add Activity_ID Number;													
+													
+alter table Tmp_Fa_Transaction_Det add Activity_ID Number;													
+													
+alter table Fa_Transaction_Det add activity_id number;													
+													
+ALTER TABLE TMP_LA_TBLDIASSET ADD ACTIVITY_ID NUMBER;													
+													
+alter table S3G_LAD_DelivryInstruDet add Activity_ID number;													
+													
+alter table S3g_Lad_Delivryinstru add activity_id number;													
+													
+													
+alter table FA_TRANSACTION_BANK_DET add Hold_Chq_Used number;													
+													
+alter table FA_TRANSACTION_BANK_DET add Chq_Replaced number;													
+													
+alter table FA_TRANSACTION_BANK_DET add Chq_Print_Status number;													
+													
+alter table FA_TRANSACTION_BANK_DET add Is_Current number;													
+													
+													
+CREATE TABLE FA_COMMON_TRAN_TEMPLATE													
+  (													
+    TRAN_TEMPLATE_ID NUMBER(22,0) NOT NULL ENABLE,													
+    PROGRAM_ID       NUMBER(22,0),													
+    LANGUAGE_ID      NUMBER(22,0),													
+    TEMPLATE_VERSION NUMBER(22,0),													
+    TRANSACTION_ID   NUMBER(22,0)													
+    													
+  );													
+													
+													
+CREATE SEQUENCE SEQ_FA_COMMON_TRAN_TEMPLATE MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 1 START WITH 1 NOCACHE NOORDER NOCYCLE ;													
+alter table TMP_FA_PaymentAdjDetails add activity_id number;													
+alter table FA_TRANSACTION_PAYRECPT add activity_id number;													
+													
+alter table FA_TRANSACTION_ADDLESS_DET add activity_id number;													
+alter table FA_TRANSACTION_BANK_DET add Favouring_Name varchar2(200);													
+													
+alter table FA_TRANSACTION_HEADER add towards varchar2(100);													
+													
+alter table FA_ACCOUNT_CHEQUE_LEAF  add Flag varchar2(5);													
+													
+alter table TMP_FA_PaymentBankDetails add Favouring_Name varchar2(100);	
+
+alter table FA_ACCOUNT_DETAIL modify sl_desc varchar2(100);	
+
+
+CREATE GLOBAL TEMPORARY TABLE TMP_FA_SUB_AC_MASTER1 ( ACCOUNT_ID NUMBER, GL_CODE VARCHAR2(8 BYTE), GL_DESC VARCHAR2(100 BYTE), SL_CODE VARCHAR2(14 BYTE), SL_DESC VARCHAR2(100 BYTE), ACCOUNTTYPE VARCHAR2(50 BYTE), CREATED_DATE DATE, COMPANY_ID NUMBER, IS_ACTIVE NUMBER, ROWNUMBER NUMBER ) ON COMMIT PRESERVE ROWS ;											
+
+
+
+
+insert into FA_LOOKUP_MASTER
+(
+COMPANY_ID,
+LOOKUPTYPE_CODE,
+LOOKUPTYPE_DESC
+)
+select -1,
+129,
+'Asset Transaction Type'
+from dual;
+
+
+
+
+insert into FA_LOOKUP_DETAILS
+(
+LOOKUP_ID,
+COMPANY_ID,
+LOOKUPTYPE_CODE,
+LOOKUP_CODE,
+LOOKUP_DESC,
+IS_ACTIVE
+)
+select max(LOOKUP_ID+1),
+-1,
+129,
+1,
+'Purchase',
+1
+from FA_LOOKUP_DETAILS;
+
+
+insert into FA_LOOKUP_DETAILS
+(
+LOOKUP_ID,
+COMPANY_ID,
+LOOKUPTYPE_CODE,
+LOOKUP_CODE,
+LOOKUP_DESC,
+IS_ACTIVE
+)
+select max(LOOKUP_ID+1),
+-1,
+129,
+2,
+'Sale',
+1
+from FA_LOOKUP_DETAILS;
+
+
+insert into FA_LOOKUP_DETAILS
+(
+LOOKUP_ID,
+COMPANY_ID,
+LOOKUPTYPE_CODE,
+LOOKUP_CODE,
+LOOKUP_DESC,
+IS_ACTIVE
+)
+select max(LOOKUP_ID+1),
+-1,
+129,
+3,
+'Write Off',
+1
+from FA_LOOKUP_DETAILS;
+
+
+
+insert into FA_LOOKUP_DETAILS
+(
+LOOKUP_ID,
+COMPANY_ID,
+LOOKUPTYPE_CODE,
+LOOKUP_CODE,
+LOOKUP_DESC,
+IS_ACTIVE
+)
+select max(LOOKUP_ID+1),
+-1,
+129,
+4,
+'transfer',
+1
+from FA_LOOKUP_DETAILS;
+
+
+alter table Tmp_Tbl_Tblfa_Asset_Tran_Dtl add location_id number;
+
+alter table TMP_TBL_TBLFA_ASSET_TRAN_DTL add location varchar2(100);
+
+alter table Tmp_Tbl_Tblfa_Asset_Tran_Dtl add Activity_ID number;
+
+alter table Tmp_Tbl_Tblfa_Asset_Tran_Dtl add Activity varchar2(100);
+
+
+alter table FA_Asset_Tran_Dtl add location_id number;
+
+
+
+alter table FA_Asset_Tran_Dtl add Activity_ID number;
+
+alter table Tmp_Tbl_Tblfa_Asset_Tran_Dtl add oper_Location_ID number;
+
+
+
+alter table Tmp_Tbl_Tblfa_Asset_Tran_Dtl add oper_User_ID number;
+
+alter table FA_Asset_Tran_Dtl add oper_Location_ID number;
+
+
+
+alter table FA_ASSET_TRAN_DTL add oper_User_ID number;
+
+alter table Tmp_Tbl_Tmpassetdtl add asset_group_dtl_id number;
+
+alter table Fa_Asset_Tran_Dtl_Chd add writeoff_flag number;
+alter table FA_ASSET_TRAN_HDR add Debit_Amount number(25,4);
+alter table FA_TRANSACTION_HEADER add debit_amount number(25,4);
+alter table FA_TRANSACTION_DET add Tran_Ref_Type number;
+
+CREATE TABLE FA_SYS_COMPANYADDRESS
+  (
+    COMPANYADDRESS_ID NUMBER(38,0) NOT NULL ENABLE,
+    COMPANY_ID        NUMBER(38,0) NOT NULL ENABLE,
+    ADDRESS_TYPE      NUMBER(10,0) NOT NULL ENABLE,
+    ADDRESS_VALUES ADDRESS_OBJECT ,
+    PRIMARY KEY (COMPANYADDRESS_ID) ENABLE
+  ) ;
+//Added on 7th November end
+
+CREATE TABLE FA_CONST_MST
+  (
+    CONST_ID   NUMBER NOT NULL ENABLE,
+    CONST_CODE VARCHAR2(50 BYTE),
+    CONST_DESC VARCHAR2(100 BYTE),
+    IS_ACTIVE  NUMBER,
+    COMPANY_ID NUMBER,
+    CONSTRAINT FA_CONST_MST_PK PRIMARY KEY (CONST_ID) ENABLE
+  ) ;
+//Added on 12th March 2019
+
+ALTER TABLE FA_TRANSACTION_DET ADD HRMS_PROCESSED NUMBER(22,0);
+ALTER TABLE FA_TRANSACTION_HEADER ADD HRMS_TRAN_HDR_ID NUMBER(22,0);
+// Added on 15th March 2019
+
+ALTER TABLE FA_GLOBALPARAMETER_SETUP ADD CASH_CASHIER_GLCODE VARCHAR2(50);
+Alter table FA_GLOBALPARAMETER_SETUP add CASH_CASHIER_SLCODE varchar2(50);
+//Added on 25th March 2019
+
+Alter table TMP_CLT_LIEN_COLTRL add RELE_STATUS varchar2(50);
+
+Alter table S3G_DC_INCENTIVE_VALUE add Target_From number;
+Alter table S3G_DC_INCENTIVE_VALUE add Target_To number;
+
+
+Alter table FA_ASSET_MST add Asset_Serial_Number Number;
+
+Alter table TMP_TBL_Asset_Number add Asset_Serial_Number Number;
+Alter table TMP_TBL_Asset_Number add Asset_Last_Number Number;
+Alter table TMP_TBL_Asset_Number add Prefix_Code Varchar2(10);

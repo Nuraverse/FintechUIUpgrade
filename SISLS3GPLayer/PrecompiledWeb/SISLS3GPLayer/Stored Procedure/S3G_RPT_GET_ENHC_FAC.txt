@@ -1,0 +1,1967 @@
+﻿create or replace
+PROCEDURE "S3G_RPT_GET_ENHC_FAC" (
+    P_COMPANY_ID IN NUMBER DEFAULT NULL,
+    P_USER_ID    IN NUMBER DEFAULT NULL ,
+    P_LOB_ID     IN NUMBER DEFAULT NULL,
+    P_LOCATION   IN NUMBER:=NULL,
+    P_FROMDATE    VARCHAR2 DEFAULT NULL,
+    P_TODATE      VARCHAR2 DEFAULT NULL,
+    P_REPORT_CODE VARCHAR2 DEFAULT NULL,
+    P_REPORT_DATE VARCHAR2 DEFAULT NULL,
+    P_PANUM      VARCHAR2 DEFAULT NULL,
+    P_ENTITY_CODE VARCHAR2 DEFAULT NULL,
+    P_IS_EXCEL_EXPRT IN NUMBER DEFAULT NULL,
+    P_CURRENTPAGE NUMBER DEFAULT NULL,
+    P_PAGESIZE    NUMBER DEFAULT NULL,
+    P_SEARCHVALUE VARCHAR2 DEFAULT NULL,
+    P_ORDERBY     VARCHAR2 DEFAULT NULL,
+    P_Customer_Code VARCHAR2 DEFAULT NULL,
+    P_TOTALRECORDS OUT NUMBER,
+    P_OUTTBL OUT SYS_REFCURSOR )
+AS
+  D_LOB_ID        VARCHAR(223);
+  D_LOCATION_CODE VARCHAR(223);
+  D_RESULTSET SYS_REFCURSOR;
+  D_ENDDATE DATE;
+  D_STARTDATE DATE;
+  D_ARREAR_PRINCIPAL NUMBER(25,4);
+  D_ARREAR_INTEREST  NUMBER(25,4);
+  D_FUTURE_PRINCIPAL NUMBER(25,4);
+  D_FUTURE_INTEREST  NUMBER(25,4);
+  D_DEPTORS_BAL      NUMBER(24,4);
+  D_SUBSIDY_BAL      NUMBER(24,4);
+  --D_Customer_ID Varchar(223);
+  D_ROWCOUNT   NUMBER;
+  D_ODAGE NUMBER;
+  D_Panum Varchar(50);
+  D_Opening number(25,4);
+  D_LOB_CODE varchar(10);
+  D_LOCATION_ID NUMBER;
+  D_CURRENCY_CODE VARCHAR(100);
+BEGIN
+  
+   -------------------------------------------------------------
+   --CREATED BY:SATHISH R
+   --CREATED ON:05-APR-2019
+   -------------------------------------------------------------
+  
+  select CURRENCY_CODE into D_CURRENCY_CODE from S3G_SYSAD_CURRENCYMASTER where IS_ACTIVE=1;
+  
+  D_Location_ID:=CASE WHEN P_LOCATION='0' THEN NULL ELSE  P_LOCATION END;
+  
+  If(P_Panum ='0' Or P_Panum Is Null )Then
+  D_Panum:=Null;
+  Else
+  D_Panum:=P_Panum;
+  end if;
+  
+  --Select case when P_Customer_ID = Null then 'Null' Else P_Customer_ID end as Cust_Code Into D_Customer_ID from dual;
+  
+  IF(P_LOB_ID = '0' OR P_LOB_ID IS NULL) THEN
+    BEGIN
+      D_LOB_ID := NULL;
+    END;
+  ELSE
+    BEGIN
+      D_LOB_ID := P_LOB_ID;
+    END;
+  END IF;
+  
+  
+  select lob_code into D_lob_code from s3g_sysad_lobmaster where lob_id=D_lob_id;
+  
+  
+  
+   IF(P_FROMDATE IS NOT NULL) THEN
+    D_STARTDATE :=TRUNC(FN_TODATE(P_FROMDATE));
+  ELSE
+    D_STARTDATE :=NULL;
+  END IF;
+  
+  IF(P_TODATE IS NOT NULL) THEN
+    D_ENDDATE :=TRUNC(FN_TODATE(P_TODATE));
+  ELSE
+    D_ENDDATE :=NULL;
+  END IF;
+
+
+/* STATEMENT OF PREPAYMENT ACCOUNT*/ 
+
+  IF(P_REPORT_CODE='FACSOPC') THEN
+  BEGIN
+    DELETE FROM TMP_FAC_1;
+    INSERT
+    INTO TMP_FAC_1
+      (
+        RN,--1
+        VOUCHER_DATE,--2
+        VOUCHER_TYPE,--3
+        CHEQUE_NUMBER,--4
+        CHEQUE_DATE,--5
+        NARRATION,--6
+        DEBIT_AMOUNT,--7
+        CREDIT_AMOUNT,--8
+        RUNNING_BAL,--9
+        CUSTOMER_NAME,--10
+        PANUM,--11
+        DOCUMENT_NO
+      )
+    SELECT ROW_NUMBER() over (order by TBL.VOUCHER_DATE) AS ROW_NUM,--1
+      TO_CHAR(TBL.VOUCHER_DATE,'DD-MON-YYYY')            AS VOUCHER_DATE,--2
+      TBL.VOUCHER_TYPE,--3
+--       CASE
+--        WHEN TBL.VOUCHER_TYPE='REC'
+--        THEN TO_CHAR(RP.INSTRUMENT_NO)
+--        WHEN TBL.VOUCHER_TYPE='PaRe'
+--        THEN PAYINST.INSTRUMENT_NO
+--      END AS  CHEQUE_NUMBER,--4
+--       
+--      TO_CHAR(CASE
+--        WHEN TBL.VOUCHER_TYPE='REC'
+--        THEN RP.INSTRUMENT_DATE
+--        WHEN TBL.VOUCHER_TYPE='PaRe'
+--        THEN PAYINST.INSTRUMENT_DATE
+--      END,'DD-MON-YYYY') AS CHEQUE_DATE,--5
+      null,
+      null,
+      TBL.NARRATION,--6
+      TBL.DEBIT,--7
+      TBL.CREDIT,--8
+      0,--Running Balanc--9
+      (CUS.CUSTOMER_CODE
+      ||'-'
+      ||CUS.CUSTOMER_NAME) AS CUSTOMER_NAME,--10
+      TBL.PANUM,--11
+      TBL.DOCUMENT_NO--12
+    FROM
+      (SELECT JH.JV_DATE    AS VOUCHER_DATE,
+        JV_SEQUENCE_TYPE AS VOUCHER_TYPE,
+        JH.JV_CHAR_SET
+        ||'/'
+        ||JV_SEQUENCE_NUMBER AS DOCUMENT_NO,
+        0                    AS DEBIT,
+        JD.TXN_AMOUNT        AS CREDIT,
+        JD.REFERENCE_NUMBER  AS PANUM,
+        JH.NARRATION
+      FROM S3G_JV_HDR JH
+      INNER JOIN S3G_JV_DET JD
+      ON JH.ACCOUNT_LINK_KEY     = JD.ACCOUNT_LINK_KEY
+      WHERE JH.JV_STATUSTYPE_CODE=24
+      AND JH.JV_STATUS_CODE      =1
+      AND JH.JV_DATE BETWEEN FN_TODATE(P_FROMDATE) AND FN_TODATE(P_TODATE)
+      AND JD.REFERENCE_NUMBER=p_PANUM
+      AND JH.JV_SEQUENCE_TYPE='REC'
+      AND JD.TXN_AMOUNT      >0
+      and JH.LOB_ID=4
+      UNION ALL
+      SELECT JH.JV_DATE     AS VOUCHER_DATE,
+        JV_SEQUENCE_TYPE AS VOUCHER_TYPE,
+        JH.JV_CHAR_SET
+        ||'/'
+        ||JV_SEQUENCE_NUMBER AS DOCUMENT_NO,
+        0                    AS Debit,
+        JD.TXN_AMOUNT        AS CREDIT,
+        JD.REFERENCE_NUMBER  AS PANUM,
+        JH.NARRATION
+      FROM S3G_JV_HDR JH
+      INNER JOIN S3G_JV_DET JD
+      ON JH.ACCOUNT_LINK_KEY     = JD.ACCOUNT_LINK_KEY
+      WHERE JH.JV_STATUSTYPE_CODE=24
+      AND JH.JV_STATUS_CODE      =1
+      AND JH.JV_DATE BETWEEN FN_TODATE(P_FROMDATE) AND FN_TODATE(P_TODATE)
+      AND JD.REFERENCE_NUMBER=p_PANUM
+      AND JH.JV_SEQUENCE_TYPE='MJV'
+      AND JD.TXN_AMOUNT      >0
+      and JH.LOB_ID=4
+      UNION ALL
+      SELECT JH.JV_DATE     AS VOUCHER_DATE,
+        JV_SEQUENCE_TYPE AS VOUCHER_TYPE,
+        JH.JV_CHAR_SET
+        ||'/'
+        ||JV_SEQUENCE_NUMBER AS DOCUMENT_NO,
+        ABS(JD.TXN_AMOUNT)   AS Debit,
+        0                    AS CREDIT,
+        JD.REFERENCE_NUMBER  AS PANUM,
+        JH.NARRATION
+      FROM S3G_JV_HDR JH
+      INNER JOIN S3G_JV_DET JD
+      ON JH.ACCOUNT_LINK_KEY     = JD.ACCOUNT_LINK_KEY
+      WHERE JH.JV_STATUSTYPE_CODE=24
+      AND JH.JV_STATUS_CODE      =1
+      AND JH.JV_DATE BETWEEN FN_TODATE(P_FROMDATE) AND FN_TODATE(P_TODATE)
+      AND JD.REFERENCE_NUMBER=p_PANUM
+      AND JH.JV_SEQUENCE_TYPE='PaRe'
+      AND JD.TXN_AMOUNT      <0
+      and JH.LOB_ID=4
+      UNION ALL
+      SELECT JH.JV_DATE     AS VOUCHER_DATE,
+        JV_SEQUENCE_TYPE AS VOUCHER_TYPE,
+        JH.JV_CHAR_SET
+        ||'/'
+        ||JV_SEQUENCE_NUMBER AS DOCUMENT_NO,
+        ABS(JD.TXN_AMOUNT)   AS Debit,
+        0                    AS CREDIT,
+        JD.REFERENCE_NUMBER  AS PANUM,
+        JH.NARRATION
+      FROM S3G_JV_HDR JH
+      INNER JOIN S3G_JV_DET JD
+      ON JH.ACCOUNT_LINK_KEY     = JD.ACCOUNT_LINK_KEY
+      WHERE JH.JV_STATUSTYPE_CODE=24
+      AND JH.JV_STATUS_CODE      =1
+      AND JH.JV_DATE  BETWEEN FN_TODATE(P_FROMDATE) AND FN_TODATE(P_TODATE)
+      AND JD.REFERENCE_NUMBER=p_PANUM
+      AND JH.JV_SEQUENCE_TYPE='MJV'
+      AND JD.TXN_AMOUNT      <0
+      and JH.LOB_ID=4
+      )TBL
+    INNER JOIN S3G_LAD_ACCCREATION AC
+    ON AC.PANUM=TBL.PANUM
+    INNER JOIN S3G_SYSAD_LOBMASTER LOBM
+    ON LOBM.LOB_ID=AC.LOB_ID
+    INNER JOIN S3G_ORG_CUSTMASTER CUS
+    ON AC.CUSTOMER_ID =CUS.CUSTOMER_ID
+--    LEFT JOIN S3G_CLN_RCPTPROC RP
+--    ON RP.RECEIPT_NO=TBL.DOCUMENT_NO
+--    LEFT JOIN S3G_LAD_PYMNTREQST PRQ
+--    ON PRQ.PAYMENT_REQUEST_NO=TBL.DOCUMENT_NO 
+--    LEFT JOIN S3G_LAD_PAYMENTREQSTDET PAYDET
+--    ON PRQ.REQUEST_NO=PAYDET.REQUEST_NO 
+--    LEFT JOIN S3G_LAD_PAYMENTREQSTINSTRUMENT PAYINST
+--    ON PAYINST.REQUEST_NO=PAYDET.REQUEST_NO
+    Where Lobm.Lob_Code='FT'
+    and ac.panum=p_PANUM
+    ;
+     
+   END;  
+   
+   
+        BEGIN --Update Receript Checq Number and Chq Date Start
+          Merge Into Tmp_Fac_1 Target Using
+          ( SELECT DISTINCT Receipt_No,Instrument_No,Instrument_Date FROM S3g_Cln_Rcptproc
+          )Tbl ON (Tbl.Receipt_No=Target.Document_No)
+        When Matched Then
+          UPDATE SET Cheque_Number=Tbl.Instrument_No,Cheque_Date=to_char(Instrument_Date,'DD-MON-YYYY');
+        END;
+           --Update Receript Checq Number and Chq Date End
+         
+        BEGIN
+          Merge INTO Tmp_Fac_1 Target USING
+          ( SELECT DISTINCT Prq.Payment_Request_No,
+            PAYINST.INSTRUMENT_NO,
+            PAYINST.INSTRUMENT_DATE
+          FROM S3g_Lad_Pymntreqst Prq
+          INNER JOIN S3g_Lad_Paymentreqstdet Paydet
+          ON Prq.Request_No=Paydet.Request_No
+          INNER JOIN S3g_Lad_Paymentreqstinstrument Payinst
+          On Payinst.Request_No          =Paydet.Request_No
+          WHERE Payinst.INSTRUMENT_STATUS=1
+          )Tbl ON (Tbl.Payment_Request_No=Target.Document_No)
+        When Matched Then
+          UPDATE SET Cheque_Number=Tbl.Instrument_No,Cheque_Date=TO_CHAR(Instrument_Date,'DD-MON-YYYY');
+        END;
+   
+   
+   SELECT COUNT(*) INTO D_ROWCOUNT FROM TMP_FAC_1 ;
+   d(D_ROWCOUNT);
+   
+   
+   IF(P_IS_EXCEL_EXPRT='1') THEN
+      
+      BEGIN
+   
+          OPEN P_OUTTBL FOR 
+          
+          With RT(RN,VOUCHER_DATE,VOUCHER_TYPE,CHEQUE_NUMBER,CHEQUE_DATE,NARRATION,DEBIT_AMOUNT,CREDIT_AMOUNT,RUNNING_BAL,CUSTOMER_NAME,PANUM,DOCUMENT_NO)
+          AS
+          (
+            SELECT RN,VOUCHER_DATE,VOUCHER_TYPE,CHEQUE_NUMBER,CHEQUE_DATE,NARRATION,NVL(DEBIT_AMOUNT,0.00),
+            NVL(CREDIT_AMOUNT,0.00),NVL(DEBIT_AMOUNT,0)-NVL(CREDIT_AMOUNT,0),
+            CUSTOMER_NAME,PANUM,DOCUMENT_NO
+            FROM TMP_FAC_1 WHERE RN=1
+            
+            UNION ALL
+            
+            SELECT T.RN,T.VOUCHER_DATE,T.VOUCHER_TYPE,T.CHEQUE_NUMBER,T.CHEQUE_DATE,T.NARRATION,NVL(T.DEBIT_AMOUNT,0.00),
+            NVL(T.CREDIT_AMOUNT,0.00),
+            ((NVL(T.DEBIT_AMOUNT,0)-T.CREDIT_AMOUNT)+RT.RUNNING_BAL),T.CUSTOMER_NAME,T.PANUM,T.DOCUMENT_NO
+            FROM TMP_FAC_1 T JOIN RT ON T.RN=RT.RN+1
+          )
+          
+          select RN as "S.NO",CUSTOMER_NAME as "Client Name",PANUM as "Accounts",
+          GETUSERDATEFORMAT(VOUCHER_DATE,P_COMPANY_ID) as "Voucher Date",
+          Voucher_Type As "Voucher Type",Document_No As "Document No",
+           CHEQUE_NUMBER AS "Cheque Number",GETUSERDATEFORMAT(CHEQUE_DATE,P_COMPANY_ID) AS "Cheque Date" ,NARRATION AS "Narration",
+           DEBIT_AMOUNT AS "Debit Amount",CREDIT_AMOUNT AS "Credit Amount",RUNNING_BAL as "Balance"
+           FROM RT;
+          
+          END;
+   
+     
+         
+     ELSE
+     
+           BEGIN
+   
+          OPEN P_OUTTBL FOR 
+          
+          With RT(RN,VOUCHER_DATE,VOUCHER_TYPE,CHEQUE_NUMBER,CHEQUE_DATE,NARRATION,DEBIT_AMOUNT,CREDIT_AMOUNT,RUNNING_BAL,CUSTOMER_NAME,PANUM,DOCUMENT_NO)
+          AS
+          (
+            SELECT RN,VOUCHER_DATE,VOUCHER_TYPE,CHEQUE_NUMBER,CHEQUE_DATE,NARRATION,NVL(DEBIT_AMOUNT,0.00),
+            NVL(CREDIT_AMOUNT,0.00),NVL(DEBIT_AMOUNT,0)-NVL(CREDIT_AMOUNT,0),
+            CUSTOMER_NAME,PANUM,DOCUMENT_NO
+            FROM TMP_FAC_1 WHERE RN=1
+            
+            UNION ALL
+            
+            SELECT T.RN,T.VOUCHER_DATE,T.VOUCHER_TYPE,T.CHEQUE_NUMBER,T.CHEQUE_DATE,T.NARRATION,NVL(T.DEBIT_AMOUNT,0.00),
+            NVL(T.CREDIT_AMOUNT,0.00),
+            ((NVL(T.DEBIT_AMOUNT,0)-T.CREDIT_AMOUNT)+RT.RUNNING_BAL),T.CUSTOMER_NAME,T.PANUM,T.DOCUMENT_NO
+            FROM TMP_FAC_1 T JOIN RT ON T.RN=RT.RN+1
+          )
+          
+           SELECT RN AS "S.No",CUSTOMER_NAME AS "Client Name",PANUM AS "Accounts",GETUSERDATEFORMAT(VOUCHER_DATE,P_COMPANY_ID) AS "Voucher Date",VOUCHER_TYPE AS "Voucher Type",
+           Document_No As "Document No" ,
+           CHEQUE_NUMBER AS "Cheque Number",CHEQUE_DATE AS "Cheque Date" ,NARRATION AS "Narration",
+           S3G_FN_GETGPSDECIMALFORMAT(DEBIT_AMOUNT,P_COMPANY_ID) AS "Debit Amount",
+           S3G_FN_GETGPSDECIMALFORMAT(CREDIT_AMOUNT,P_COMPANY_ID) AS "Credit Amount",
+           S3G_FN_GETGPSDECIMALFORMAT(RUNNING_BAL,P_COMPANY_ID) as "Balance"
+           FROM RT WHERE RN BETWEEN (P_CURRENTPAGE-1)* P_PAGESIZE + 1  AND (P_CURRENTPAGE)*P_PAGESIZE;
+       /*   
+           UNION ALL         
+           SELECT 2999 AS RN,'CLIENT TOTAL' AS CUSTOMER,NULL AS ACCOUNTS,NULL AS VOUCHER_DATE,NULL AS VOUCHER_TYPE,NULL AS VOUCHER_NUMBER
+           ,NULL  AS CHEQUE_NUMBER ,NULL AS CHEQUE_DATE,NULL  AS DEBIT,NULL  AS CREDIT,NULL  AS NARRATION
+           ,NULL AS RUNNING_BAL
+           FROM DUAL
+           UNION ALL
+           SELECT 3000 AS RN,CUSTOMER AS CUSTOMER,NULL AS ACCOUNTS,NULL AS VOUCHER_DATE,NULL AS VOUCHER_TYPE,NULL AS VOUCHER_NUMBER
+           ,NULL  AS CHEQUE_NUMBER ,NULL AS CHEQUE_DATE,SUM(DEBIT_AMOUNT) AS DEBIT,SUM(CREDIT_AMOUNT) AS CREDIT,NULL  AS NARRATION,
+           SUM(RUNNING_BAL) AS RUNNING_BAL FROM RT 
+           GROUP BY CUSTOMER
+           UNION ALL
+           SELECT 4000 AS RN,NULL AS CUSTOMER,'ACCOUNT TOTAL' AS ACCOUNTS,NULL AS VOUCHER_DATE,NULL AS VOUCHER_TYPE,NULL AS VOUCHER_NUMBER
+           ,NULL  AS CHEQUE_NUMBER ,NULL AS CHEQUE_DATE,NULL  AS DEBIT,NULL  AS CREDIT,NULL  AS NARRATION
+           ,NULL AS RUNNING_BAL
+           FROM DUAL
+           UNION ALL
+           SELECT 5000 AS RN,NULL AS CUSTOMER,ACCOUNTS AS ACCOUNTS,NULL AS VOUCHER_DATE,NULL AS VOUCHER_TYPE,NULL AS VOUCHER_NUMBER
+           ,NULL  AS CHEQUE_NUMBER ,NULL AS CHEQUE_DATE,SUM(DEBIT_AMOUNT) AS DEBIT,SUM(CREDIT_AMOUNT) AS CREDIT,NULL  AS NARRATION,
+           SUM(RUNNING_BAL) AS RUNNING_BAL FROM RT 
+           GROUP BY ACCOUNTS
+           ORDER BY RN;
+           */
+        /*    WITH mytotalcte AS
+            ( SELECT COUNT(*) AS ORDERIDCOUNT 
+              FROM TMP_FAC
+            )
+          SELECT COUNT(*) INTO P_TOTALRECORDS
+          FROM mytotalcte;*/
+          
+            
+             SELECT COUNT(*) INTO P_TOTALRECORDS
+             FROM TMP_FAC_1;
+            
+           END;
+         END IF;
+       END IF;  
+ 
+ 
+ 
+/* STATEMENT OF TRANSGRESSIONS*/ 
+
+  IF(P_REPORT_CODE='FACSOT') THEN
+  BEGIN
+        DELETE FROM TMP_FAC_STMT_TRAN_2;
+        Insert Into TMP_FAC_STMT_TRAN_2
+        (
+        Rownumber,
+        CUSTOMER,
+        Disbursement_Date,
+        Account_Number,
+        AMOUNT,
+        Payment_Request_No,
+        CREDIT_AVAILABLE,
+        Trangression,
+        Total_Invoice_Amount,
+        TOTAL_OS ,
+        Request_No,
+        FIN_AMOUNT
+        )
+        
+        SELECT Rownum as Rownumber,TRAN.* FROM
+            (
+              SELECT FIN.CUSTOMER
+              ,FIN.DISBURSEMENT_DATE,FIN.ACCOUNT_NUMBER
+              ,SUM(FIN.AMOUNT) AS DISBURSEMENT  
+              ,FIN.PRN
+              ,FIN.CREDIT_AVAILABLE AS AVAILABLE_FUNDS
+              ,0 As Trangression 
+              ,Sum(Total_Invoice)
+              ,Sum(Os)
+              ,Request_No
+              ,sum(Finamount)
+              FROM
+                  (
+                    SELECT   CUST.CUSTOMER_CODE||' - ' ||CUST.CUSTOMER_NAME AS Customer
+                             ,PR.PAYMENT_REQUEST_DATE AS Disbursement_Date,DT.PANUM AS Account_Number
+                             ,DT.AMOUNT 
+                             ,Pr.Payment_Request_No As Prn
+                             --,S3G_FN_GETGPSDECIMALFORMAT
+                             
+--                             ( NVL(AD.FINANCE_AMOUNT,0) -  NVL((SELECT             
+--                                SUM(FID.INVOICE_AMOUNT)            
+--                    FROM            
+--                             S3G_LAD_FactrngInvLoading FILT,            
+--                             S3G_LAD_FactrngInvLoadingDet FID            
+--                    WHERE            
+--                             FILT.Factoring_Inv_Load_ID = FID.Factoring_Inv_Load_ID            
+--                             AND FILT.Company_ID = FIL.Company_ID            
+--                             AND FILT.LOB_ID = FIL.LOB_ID            
+--                             and filt.location_code = fil.location_code --FILT.Branch_ID = FIL.Branch_ID            
+--                             and FILT.PANUM = FIL.PANUM ),0)
+--                            +
+--                            (
+--                              CASE WHEN CUST.CREDITTYPE=0
+--                                   THEN 0 ELSE
+--                                      ( SELECT NVL(SUM(NVL(factdet.invoice_amount,0)),0) 
+--                                        FROM s3g_lad_fact_retire RETHDR
+--                                        INNER JOIN s3g_lad_factrnginvloading FACTHDR
+--                                        ON rethdr.fact_inv_id=facthdr.factoring_inv_load_id
+--                                        INNER JOIN s3g_lad_factrnginvloadingdet FACTDET
+--                                        on FACTHDR.FACTORING_INV_LOAD_ID=FACTDET.FACTORING_INV_LOAD_ID
+--                                        WHERE FACTHDR.CUSTOMER_ID=AC.CUSTOMER_ID
+--                                      )  end
+--                            )
+--      , 1) As Credit_Available
+
+
+       ,S3G_FN_GETGPSDECIMALFORMAT(NVL(AD.FINANCE_AMOUNT,0)-DT.AMOUNT,P_COMPANY_ID) AS Credit_Available
+       ,0 As Trangression,Totinv.Total_Invoice As Total_Invoice,Tblos.Transaction_Amount As Os
+       ,Pr.Request_No
+       --,S3g_Fn_Getgpsdecimalformat(Nvl(Ad.Finance_Amount,0)-nvl(Fil.MARGIN_PERCENTAGE*100,0),P_Company_Id) As Finamount
+       
+       ,S3g_Fn_Getgpsdecimalformat(Nvl(Ad.Finance_Amount,0) -(Nvl(Ad.Finance_Amount,0)*Fil.Margin_Percentage)/100,P_Company_Id) As Finamount 
+       
+
+                   FROM               
+                    S3G_ORG_CUSTMASTER CUST              
+                    INNER join S3G_LAD_FactrngInvLoading FIL on FIL.Customer_ID=CUST.Customer_ID
+                    INNER JOIN S3G_LAD_FACTRNGINVLOADINGDET FDT ON FDT.FACTORING_INV_LOAD_ID = FIL.FACTORING_INV_LOAD_ID
+                    INNER JOIN S3G_LAD_ACCPASADET AD ON FIL.PANUM=AD.PANUM              
+                    INNER JOIN S3G_LAD_ACCCREATION AC ON AC.PANUM=FIL.PANUM 
+                    LEFT JOIN S3G_LAD_PAYMENTREQSTDET DT ON FDT.FACTORING_INV_LOAD_DETAILS_ID = DT.ASSET_ID
+                    LEFT JOIN S3G_LAD_PYMNTREQST PR ON PR.REQUEST_NO=DT.REQUEST_NO
+                    
+                    left join (Select sum(Det.ELIGIBLE_AMOUNT) as TOTAL_INVOICE,Lod.PANUM From S3g_Lad_Factrnginvloadingdet Det
+                        Inner Join S3g_Lad_Factrnginvloading Lod
+                        On Lod.Factoring_Inv_Load_Id=Det.Factoring_Inv_Load_Id
+                        --Where Lod.Panum='AACT/9'
+                        Group By Lod.Panum
+                        )TOTINV on TOTINV.panum=AD.PANUM
+                        
+                    Left Join (
+                    Select Abs(Sum(Case When  Transaction_Code=0 Then -1*Transaction_Amount Else
+                    Transaction_Amount End)) As  Transaction_Amount,Panum
+                     From S3g_Cln_Dmdds4 --Where Panum='AACT/9'
+                     group by PANUM
+                    ) tblos on    tblos.Panum=AD.PANUM
+                    
+                    Where  --DT.PANUM='AACT/10'
+                    --AND 
+                    PR.PAYMENT_REQUEST_DATE BETWEEN FN_TODATE(P_FROMDATE) AND FN_TODATE(P_TODATE)
+                    AND 
+                    PR.PMT_VOUCHER_STATUS NOT IN(0,4,5) AND PAY_ADJUST_TYPE = -1
+                    AND AD.SA_STATUS_CODE<>0
+                    
+                    
+                    
+                    
+                    --AND PR.PMT_VOUCHER_STATUS NOT IN(0) AND PAY_ADJUST_TYPE = -1
+                )Fin
+      Group By Fin.Credit_Available,Fin.Customer,Fin.Disbursement_Date,Fin.Account_Number,Fin.Prn,REQUEST_NO
+      
+   )TRAN;
+
+
+      Merge Into TMP_FAC_STMT_TRAN_2 Target
+        Using(
+        Select Max(Total_Os)-max(FIN_AMOUNT) as OS,Max(Request_No) as Request_No,ACCOUNT_NUMBER  From TMP_FAC_STMT_TRAN_2
+        Group By Account_Number
+        )tbl on (tbl.ACCOUNT_NUMBER=Target.ACCOUNT_NUMBER and tbl.Request_No=Target.REQUEST_NO)
+        
+        When Matched Then Update
+        set TRANGRESSION=case when tbl.OS>0 then  tbl.OS else 0 end;
+
+
+
+
+
+
+END;
+
+IF(P_IS_EXCEL_EXPRT='1') THEN
+      BEGIN
+        OPEN P_OUTTBL FOR 
+       
+        SELECT  ROWNUMBER AS "S.No",CUSTOMER AS "Client",GETUSERDATEFORMAT(DISBURSEMENT_DATE,P_COMPANY_ID) AS "Disbursement Date"
+                ,ACCOUNT_NUMBER AS "Account Number",S3G_FN_GETGPSDECIMALFORMAT(NVL(AMOUNT,0),P_COMPANY_ID)AS "Disbursement"
+                ,PAYMENT_REQUEST_NO as "Payment Request Number"
+                ,S3G_FN_GETGPSDECIMALFORMAT(NVL(CREDIT_AVAILABLE,0),P_COMPANY_ID) AS "Available Funds"
+                ,S3G_FN_GETGPSDECIMALFORMAT(NVL(TRANGRESSION,0),P_COMPANY_ID) AS "Trangression" 
+           FROM TMP_FAC_STMT_TRAN_2 
+           ORDER BY Rownumber; 
+      END;
+    ELSE
+    BEGIN
+        
+           OPEN P_OUTTBL FOR 
+   
+            SELECT  ROWNUMBER AS "S.No",CUSTOMER AS "Client",GETUSERDATEFORMAT(DISBURSEMENT_DATE,P_COMPANY_ID) AS "Disbursement Date"
+                ,ACCOUNT_NUMBER AS "Account Number",S3G_FN_GETGPSDECIMALFORMAT(NVL(AMOUNT,0),P_COMPANY_ID)AS "Disbursement"
+                ,PAYMENT_REQUEST_NO as "Payment Request Number"
+                ,S3G_FN_GETGPSDECIMALFORMAT(NVL(CREDIT_AVAILABLE,0),P_COMPANY_ID) AS "Available Funds"
+                ,S3G_FN_GETGPSDECIMALFORMAT(NVL(TRANGRESSION,0),P_COMPANY_ID) AS "Trangression" 
+           FROM TMP_FAC_STMT_TRAN_2 
+           WHERE Rownumber BETWEEN (P_CURRENTPAGE-1)* P_PAGESIZE + 1  AND (P_CURRENTPAGE)*P_PAGESIZE
+          ORDER BY ROWNUMBER; 
+          
+              SELECT COUNT(*) INTO P_TOTALRECORDS FROM TMP_FAC_STMT_TRAN_2;
+        END;
+  END IF;
+END IF;
+
+IF(P_REPORT_CODE='FACDCS') THEN
+            Begin
+            Delete From Tmp_Rpt_Dlt_Clt_Sts_Os_1;
+            INSERT INTO TMP_RPT_DLT_CLT_STS_OS_1(PANUM,VALUE_DATE,PRINCIPAL_DUE,INTEREST_DUE,PRINCIPAL_RECEIVED,INTEREST_RECEIVED,
+            DOCUMENT_TYPE)
+            SELECT d4.Panum ,
+              D4.Value_date,
+              SUM(
+              CASE
+                WHEN D4.Transaction_Code = 0
+                AND D4.Due_Flag          = 91
+                THEN D4.Transaction_Amount
+                ELSE 0
+              END) AS Principal_Due ,
+              SUM(
+              CASE
+                WHEN D4.Transaction_Code = 0
+                AND D4.Due_Flag          = 35
+                THEN D4.Transaction_Amount
+                ELSE 0
+              END) AS Interest_Due ,
+              SUM(
+              CASE
+                WHEN D4.Transaction_Code = 1
+                AND D4.Due_Flag          = 91
+                THEN d4.Transaction_Amount
+                ELSE 0
+              END) AS Principal_Received ,
+              SUM(
+              CASE
+                WHEN D4.Transaction_Code = 1
+                AND D4.Due_Flag          = 35
+                THEN d4.Transaction_Amount
+                ELSE 0
+              End) As Interest_Received,
+              D4.DOCUMENT_TYPE
+            From S3g_Cln_Dmdds4 D4
+            Where Lob_Id=4 --Factoring
+            and (D4.Due_Flag = 91
+            Or D4.Due_Flag     = 35)
+            Group By D4.Panum,
+              D4.Value_date,D4.DOCUMENT_TYPE;
+
+            DELETE FROM TMP_RPT_DLT_CLT_STS_1;
+            
+            Insert Into Tmp_Rpt_Dlt_Clt_Sts_1
+            (
+            PANUM,
+            Sanum,
+            PARTY_ID,
+            Credit_Days,
+            Date_Fifeee,
+            Invoice_Amount,
+            MATURITY_DATE
+            )
+            Select 
+              FIL.Panum,
+              FIL.SANUM,
+              fild.party_id AS Party_ID,
+              fil.credit_days,
+              TRUNC(fn_todate(P_TODATE))- TRUNC(FILD.MATURITY_DATE) AS Date_Diffee,
+              Fild.ELIGIBLE_AMOUNT                                   As Invoiceamount,
+              trunc(FILD.MATURITY_DATE)
+            FROM S3G_LAD_FactrngInvLoadingDet FILD
+            INNER JOIN S3G_LAD_FACTRNGINVLOADING FIL
+            ON FIL.FACTORING_INV_LOAD_ID=FILD.FACTORING_INV_LOAD_ID
+            LEFT JOIN S3G_LAD_PAYMENTREQSTDET DT
+            ON FILD.FACTORING_INV_LOAD_DETAILS_ID = DT.ASSET_ID
+            LEFT JOIN S3G_LAD_PYMNTREQST PR
+            ON PR.Request_No  =DT.Request_No
+            AND FIL.Company_ID=P_COMPANY_ID
+            INNER JOIN s3g_org_custmaster cm
+            ON cm.customer_id=fild.party_id;
+           
+            DELETE FROM TMP_RPT_FCT_DCS;
+            INSERT INTO TMP_RPT_FCT_DCS(ROWNUMBER,PANUM,CLIENTNAME,CUSTOMER_ID,OUTSTANDING_DEBT,REGULAR_AMOUNT,OVERDUE_AMOUNT,
+            DEFAULT_AMOUNT,DEBTS_UN_APPROVED,DEBTS_APPROVED,DRAWING_POWER,FUNDS_IN_USE)
+            SELECT ROWNUM AS "SI No",
+              MT.*
+            FROM
+              (SELECT MT.Panum,
+                MT.ClientName,
+                MT.customer_id,
+                NVL(OD.Outstanding_Debt,0)   AS Outstanding_Debt ,
+                NVL(RA.Regular_Amount,0)     AS Regular_Amount ,
+                NVL(OA.Overdue_Amount,0)     AS Overdue_Amount ,
+                NVL(DA.Default_Amount,0)     AS Default_Amount ,
+                NVL(0,0) AS Debts_Un_Approved ,
+                NVL(0,0)    AS Debts_Approved ,
+                NVL(CL.Drawing_power,0)      AS Drawing_power ,
+                NVL(FIU.Funds_In_Use,0)      AS Funds_In_Use
+              FROM
+                (SELECT DISTINCT AC.Panum,
+                  cm.CUSTOMER_CODE
+                  || ' - '
+                  || cm.CUSTOMER_name AS ClientName,
+                  cm.customer_id
+                FROM S3G_ORG_CustMaster CM
+                INNER JOIN S3G_LAD_FactrngInvLoading FIL
+                ON FIL.Customer_ID=CM.Customer_ID
+                INNER JOIN S3G_LAD_FACTRNGINVLOADINGDET FDT
+                ON FDT.FACTORING_INV_LOAD_ID = FIL.FACTORING_INV_LOAD_ID
+                INNER JOIN S3G_SYSAD_LocationMaster lm
+                ON FIL.Location_Code= lm. Location_Code
+                INNER JOIN S3G_SYSAD_LocationCategory LCCAT
+                ON lccat.Location_Category_ID =lm.Location_ID
+                INNER JOIN S3g_Sysad_Lobmaster Lob
+                ON Lob.Lob_Id   = Fil.Lob_Id
+                AND Lob.Lob_Code='FT'
+                INNER JOIN S3G_LAD_ACCCREATION AC
+                ON AC.PANUM=FIL.PANUM
+                INNER JOIN S3G_LAD_AccPASADet AD
+                ON FIL.PANum=AD.PANum
+                INNER JOIN S3G_LAD_AccOfferROIDet AOT
+                ON FIL.PANum          = AOT.PANum
+                Where Cm.Customer_Code=Nvl(P_Customer_Code,Cm.Customer_Code)
+                 and FIL.PANum=nvl(D_Panum,FIL.PANum)
+                ) MT
+              LEFT OUTER JOIN
+                (SELECT Panum,
+                  Sum(Nvl(Principal_Due,0))-Sum(Nvl(Principal_Received,0)) As Outstanding_Debt
+                FROM TMP_RPT_DLT_CLT_STS_OS_1
+                WHERE Value_date <=Fn_Todate(P_TODATE)
+                GROUP BY Panum
+                )OD
+              ON MT.Panum=OD.PAnum
+              LEFT OUTER JOIN
+                (Select Panum,
+                  SUM(nvl(INVOICE_AMOUNT,0)) AS Regular_Amount
+                FROM Tmp_Rpt_Dlt_Clt_Sts_1
+                WHERE MATURITY_DATE > Fn_Todate(P_TODATE)
+                GROUP BY Panum
+                )RA
+              ON MT.Panum=RA.Panum
+              LEFT OUTER JOIN
+                (
+                Select Panum,
+                  SUM(nvl(INVOICE_AMOUNT,0)) AS Overdue_Amount
+                From Tmp_Rpt_Dlt_Clt_Sts_1
+                Where Maturity_Date <= Fn_Todate(P_Todate)
+                GROUP BY Panum  
+                )OA
+              ON MT.PANUM=OA.PANUM
+              LEFT OUTER JOIN
+                (SELECT Panum,
+                  SANUM,
+                  Sum(Invoice_Amount) As Default_Amount
+                FROM TMP_RPT_DLT_CLT_STS_1
+                WHERE Date_Fifeee > credit_Days
+                GROUP BY Panum,
+                  SANUM,
+                  Party_ID
+                )DA
+              ON MT.Panum=DA.Panum
+              LEFT OUTER JOIN
+                (SELECT Panum,
+                  Sum(Nvl(Principal_Due,0)) As Funds_In_Use
+                From Tmp_Rpt_Dlt_Clt_Sts_Os_1
+                 
+                where DOCUMENT_TYPE='PaRe' and  Value_date <=Fn_Todate(P_TODATE)
+                GROUP BY Panum
+                )FIU
+              ON MT.Panum=FIU.Panum
+              Left Outer Join
+                (
+           SELECT (NVL(Ac.Finance_Amount,0) -(NVL(Ac.Finance_Amount,0)*Ac.Offer_Margin)/100) AS Drawing_Power,
+            Ac.Panum,
+            ac.CUSTOMER_ID
+          FROM S3g_Lad_Acccreation Ac
+          INNER JOIN S3g_Org_Custmaster Cm
+          ON Cm.Customer_Id=Ac.Customer_Id
+          INNER JOIN S3g_Sysad_Lobmaster Lobm
+          On Lobm.Lob_Id=Ac.Lob_Id
+          where Lobm.LOB_CODE='FT'
+            --Where Ac.Panum='AACT/14'
+                )CL ON MT.PAnum=CL.Panum
+      
+          
+                 
+              ORDER BY MT.Panum
+              ) MT;
+              
+              --Update Debts Un Approved Start
+              Update  Tmp_Rpt_Fct_Dcs Set Debts_Un_Approved=Default_Amount+Outstanding_Debt-Drawing_Power;
+              --Update Debts Un Approved End
+              
+              
+              --Update Debts  Approved Start
+              Update  Tmp_Rpt_Fct_Dcs Set DEBTS_APPROVED=Outstanding_Debt-Debts_Un_Approved;
+              --Update Debts  Approved End
+
+              
+            IF(P_IS_EXCEL_EXPRT='1') THEN
+              BEGIN
+                OPEN P_OUTTBL FOR SELECT Rownumber
+              As
+                "S.No",
+                Panum
+              AS
+                "Account Number",
+                Clientname
+              AS
+                "Client Name",
+                S3G_FN_GETGPSDECIMALFORMAT(Outstanding_Debt,P_COMPANY_ID)
+              AS
+                "Outstanding Debt" ,
+                S3G_FN_GETGPSDECIMALFORMAT(Regular_Amount,P_COMPANY_ID)
+              AS
+                "Regular Amount",
+                S3G_FN_GETGPSDECIMALFORMAT(Overdue_Amount,P_COMPANY_ID)
+              AS
+                "Overdue Amount",
+                S3G_FN_GETGPSDECIMALFORMAT(Default_Amount,P_COMPANY_ID)
+              AS
+                "Default Amount" ,
+                S3G_FN_GETGPSDECIMALFORMAT(Debts_Un_Approved,P_COMPANY_ID)
+              AS
+                "Debts Un Approved",
+                S3G_FN_GETGPSDECIMALFORMAT(Debts_Approved,P_COMPANY_ID)
+              AS
+                "Debts Approved" ,
+                S3G_FN_GETGPSDECIMALFORMAT(Drawing_Power,P_COMPANY_ID)
+              AS
+                "Drawing Power" ,
+                S3G_FN_GETGPSDECIMALFORMAT(Funds_In_use,P_COMPANY_ID)
+              AS
+                "Funds In Use" FROM TMP_RPT_FCT_DCS;
+              END;
+            ELSE
+            Begin
+              OPEN P_OUTTBL FOR SELECT Rownumber
+            As
+              "S.No",
+              Panum
+            AS
+              "Account Number",
+              Clientname
+            AS
+              "Client Name",
+              S3G_FN_GETGPSDECIMALFORMAT(Outstanding_Debt,P_COMPANY_ID)
+            AS
+              "Outstanding Debt" ,
+              S3G_FN_GETGPSDECIMALFORMAT(Regular_Amount,P_COMPANY_ID)
+            AS
+              "Regular Amount",
+              S3G_FN_GETGPSDECIMALFORMAT(Overdue_Amount,P_COMPANY_ID)
+            AS
+              "Overdue Amount",
+              S3G_FN_GETGPSDECIMALFORMAT(Default_Amount,P_COMPANY_ID)
+            AS
+              "Default Amount" ,
+              S3G_FN_GETGPSDECIMALFORMAT(Debts_Un_Approved,P_COMPANY_ID)
+            AS
+              "Debts Un Approved",
+              S3G_FN_GETGPSDECIMALFORMAT(Debts_Approved,P_COMPANY_ID)
+            AS
+              "Debts Approved" ,
+              S3G_FN_GETGPSDECIMALFORMAT(Drawing_Power,P_COMPANY_ID)
+            AS
+              "Drawing Power" ,
+              S3G_FN_GETGPSDECIMALFORMAT(Funds_In_use,P_COMPANY_ID)
+            AS
+              "Funds In Use" FROM TMP_RPT_FCT_DCS WHERE ROWNUMBER BETWEEN (P_CURRENTPAGE-1)* P_PAGESIZE + 1 AND (P_CURRENTPAGE)*P_PAGESIZE;
+              SELECT COUNT(1) INTO P_TOTALRECORDS FROM TMP_RPT_FCT_DCS;
+            END;
+          END IF;
+          END;
+  END IF;
+  -- Invoice Register Report
+  IF(P_REPORT_CODE='FACINV') THEN
+   BEGIN
+    Delete From Tmp_Or_Dfoll;
+    INSERT INTO TMP_OR_DFOLL(RNUM,PANUM,CUSTOMER_NAME,DEBTCOLLECTOR_NAME,DEBTCOLLECTOR_TYPE,PTP_DATE,ARREAR_INSTALLMENT_DUE,CURRENT_INSTALLMENT_DUE,OTHER_DUE,Auth_On,PREPAYMENT_ALOOWED,CLIENT_NAME,FIL_NO)
+    SELECT 
+      ROW_NUMBER() OVER (ORDER BY AC.PANUM,FDT.INVOICE_NO DESC)  as SINO,  
+      Ac.Panum As Account_Number,
+      Cmcust.Customer_Code||' - ' ||Cmcust.Customer_Name As, 
+      FDT.PARTY_NAME,
+      FDT.INVOICE_NO,
+      FDT.INVOICE_DATE,
+      FDT.INVOICE_AMOUNT,
+      Fdt.Eligible_Amount,
+      0,--NVL(DT.AMOUNT,0)
+      Fil.Auth_On,
+      Case When Fdt.Is_Prepayment_Allowed=1 Then 'Yes' Else 'No' End ,
+      Cust.Customer_Code||' - ' ||Cust.Customer_Name As Client,
+      FIL.FIL_NO
+    from                
+    S3G_ORG_CUSTMASTER CUST              
+    INNER join S3G_LAD_FactrngInvLoading FIL on FIL.Customer_ID=CUST.Customer_ID
+    Inner Join S3g_Lad_Factrnginvloadingdet Fdt On Fdt.Factoring_Inv_Load_Id = Fil.Factoring_Inv_Load_Id
+    INNER JOIN S3G_LAD_ACCPASADET AD ON AD.PA_SA_REF_ID =FIL.PA_SA_REF_ID             
+    Inner Join S3g_Lad_Acccreation Ac On Ac.Account_Creation_Id=Ad.Account_Creation_Id 
+    Inner Join S3g_Org_Custmaster Cmcust
+    on Cmcust.Customer_Id=Fdt.PARTY_ID
+--    LEFT JOIN S3G_LAD_PAYMENTREQSTDET DT ON FDT.FACTORING_INV_LOAD_DETAILS_ID = DT.ASSET_ID
+--    LEFT JOIN S3G_LAD_PYMNTREQST PR ON PR.REQUEST_NO=DT.REQUEST_NO
+    WHERE CUST.Customer_Code=Nvl(P_Customer_Code,CUST.Customer_Code)
+    And Fil.Panum=Nvl(D_Panum,Fil.Panum)
+    AND trunc(FIL.FIL_DATE) BETWEEN D_STARTDATE AND D_ENDDATE
+    And (D_Lob_Id Is Null Or Fil.Lob_Id=D_Lob_Id)
+    And (D_Location_ID Is Null Or Fil.Location_id=D_Location_ID)
+    --and Fil.Panum='F0001397'
+      ;
+    IF(P_IS_EXCEL_EXPRT='1') THEN
+      BEGIN
+        OPEN P_OUTTBL FOR 
+        SELECT
+           RNUM AS "S.No",
+           Panum As "Account No",
+           Client_Name As "Client Name",
+           Customer_Name As "Customer Name",
+           FIL_NO as "File No",
+           DEBTCOLLECTOR_TYPE as "Invoice Number",
+           Getuserdateformat(Ptp_Date,P_Company_Id) As "Invoice Date",
+           S3g_Fn_Getgpsdecimalformat(Arrear_Installment_Due,P_Company_Id)  "Invoice Value",
+           Getuserdateformat(Auth_On,1) As "Approval Date",
+           PREPAYMENT_ALOOWED as "Prepayment Approval"
+        FROM TMP_OR_DFOLL                 
+        ORDER BY RNUM; 
+      END;
+    ELSE
+      BEGIN
+        OPEN P_OUTTBL FOR 
+          SELECT
+           RNUM AS "S.No",
+           Panum As "Account No",
+           Client_Name As "Client Name",
+           Customer_Name As "Customer Name",
+           FIL_NO as "File No",
+           DEBTCOLLECTOR_TYPE as "Invoice Number",
+           Getuserdateformat(Ptp_Date,P_Company_Id) As "Invoice Date",
+           S3g_Fn_Getgpsdecimalformat(Arrear_Installment_Due,P_Company_Id)  "Invoice Value",
+           Getuserdateformat(Auth_On,1) As "Approval Date",
+           PREPAYMENT_ALOOWED as "Prepayment Approval"
+        FROM TMP_OR_DFOLL ODI                
+        WHERE RNUM BETWEEN                                                 
+          (P_CURRENTPAGE-1)* P_PAGESIZE + 1  AND (P_CURRENTPAGE)*P_PAGESIZE
+        ORDER BY RNUM; 
+           SELECT COUNT(*) INTO P_TOTALRECORDS FROM TMP_OR_DFOLL;
+      END;
+    END IF;
+   END;
+  END IF;
+  
+  
+     IF(P_REPORT_CODE='FACSR') THEN--FACTORING CLIENT SALES REGISTOR
+      BEGIN
+      BEGIN
+    DELETE FROM TMP_FAC_1;
+
+
+   SELECT  SUM(TBL.CREDIT) INTO D_OPENING  FROM (
+      Select 
+        sum(abs(JD.TXN_AMOUNT))   AS CREDIT
+      FROM S3G_JV_HDR JH
+      INNER JOIN S3G_JV_DET JD
+      ON JH.ACCOUNT_LINK_KEY     = JD.ACCOUNT_LINK_KEY
+      WHERE JH.JV_STATUSTYPE_CODE=24
+      AND JH.JV_STATUS_CODE      =1
+      And jh.Jv_Date < Fn_Todate(p_FROMDATE) 
+     -- AND JD.REFERENCE_NUMBER=NVL(p_PANUM,JD.REFERENCE_NUMBER)
+      AND JH.JV_SEQUENCE_TYPE='PaRe'
+      AND JD.TXN_AMOUNT      <0
+      And Jh.Lob_Id=4
+      
+      
+      union all
+      
+      Select
+        sum(JD.TXN_AMOUNT)*-1        AS CREDIT
+      FROM S3G_JV_HDR JH
+      INNER JOIN S3G_JV_DET JD
+      ON JH.ACCOUNT_LINK_KEY     = JD.ACCOUNT_LINK_KEY
+      WHERE JH.JV_STATUSTYPE_CODE=24
+      AND JH.JV_STATUS_CODE      =1
+      And jh.Jv_Date < Fn_Todate(p_FROMDATE) 
+      --AND JD.REFERENCE_NUMBER=NVL(p_PANUM,JD.REFERENCE_NUMBER)
+      AND JH.JV_SEQUENCE_TYPE='REC'
+      And Jd.Txn_Amount      >0
+      And Jh.Lob_Id=4
+      )TBL;
+
+     --d('D_Opening==>'||D_Opening);
+
+            insert INTO TMP_FAC_1 ( RN,--1
+            VOUCHER_DATE,       --2
+            Voucher_Type,       --3
+            Document_No,
+            DEBIT_AMOUNT,       --7
+            Credit_Amount,      --8
+            NARRATION          --6
+           )
+            SELECT 1,to_date('01-JAN-1900') AS VOUCHER_DATE,
+              ''                          AS Voucher_Type,
+              'Opening Balance'           AS Document_No,
+              CASE
+                WHEN D_Opening<0
+                THEN D_Opening
+                ELSE 0
+              END AS Debit,
+              CASE
+                WHEN D_OPENING>0
+                THEN D_Opening
+                ELSE 0
+              END AS CREDIT,
+              ''  AS NARRATION
+            FROM DUAL;
+
+
+
+
+
+
+
+
+
+    INSERT
+    INTO TMP_FAC_1
+      (
+        RN,--1
+        VOUCHER_DATE,--2
+        VOUCHER_TYPE,--3
+        CHEQUE_NUMBER,--4
+        CHEQUE_DATE,--5
+        NARRATION,--6
+        DEBIT_AMOUNT,--7
+        CREDIT_AMOUNT,--8
+        RUNNING_BAL,--9
+        CUSTOMER_NAME,--10
+        PANUM,--11
+        DOCUMENT_NO
+      )
+    SELECT ROW_NUMBER() over (order by TBL.VOUCHER_DATE)+1 AS ROW_NUM,--1
+      TO_CHAR(TBL.VOUCHER_DATE,'DD-MON-YYYY')            AS VOUCHER_DATE,--2
+      TBL.VOUCHER_TYPE,--3
+      null,
+      null,
+      TBL.NARRATION,--6
+      TBL.DEBIT,--7
+      TBL.CREDIT,--8
+      0,--Running Balanc--9
+      (CUS.CUSTOMER_CODE
+      ||'-'
+      ||CUS.CUSTOMER_NAME) AS CUSTOMER_NAME,--10
+      TBL.PANUM,--11
+      TBL.DOCUMENT_NO--12
+    FROM
+      (
+      SELECT jh.JV_DATE    AS VOUCHER_DATE,
+        JV_SEQUENCE_TYPE AS VOUCHER_TYPE,
+        JH.JV_CHAR_SET
+        ||'/'
+        ||JV_SEQUENCE_NUMBER AS DOCUMENT_NO,
+        0                    AS DEBIT,
+        JD.TXN_AMOUNT        AS CREDIT,
+        JD.REFERENCE_NUMBER  AS PANUM,
+        JH.NARRATION
+      FROM S3G_JV_HDR JH
+      INNER JOIN S3G_JV_DET JD
+      On Jh.Account_Link_Key     = Jd.Account_Link_Key
+      Inner Join S3g_Cln_Rcptproc Rcpt
+      on Rcpt.RECEIPT_NO=JH.JV_CHAR_SET||'/'||JH.JV_SEQUENCE_NUMBER
+      WHERE JH.JV_STATUSTYPE_CODE=24
+      AND JH.JV_STATUS_CODE      =1
+      And jh.Jv_Date Between Fn_Todate(P_Fromdate) And Fn_Todate(P_Todate)
+      AND JD.REFERENCE_NUMBER=NVL(p_PANUM,JD.REFERENCE_NUMBER)
+      AND JH.JV_SEQUENCE_TYPE='REC'
+      AND JD.TXN_AMOUNT      >0
+      And Jh.Lob_Id=4
+      and Rcpt.CHEQUE_RETURN_STATUS=0
+     
+      UNION ALL
+      SELECT jh.JV_DATE     AS VOUCHER_DATE,
+        JV_SEQUENCE_TYPE AS VOUCHER_TYPE,
+        JH.JV_CHAR_SET
+        ||'/'
+        ||JV_SEQUENCE_NUMBER AS DOCUMENT_NO,
+        ABS(JD.TXN_AMOUNT)   AS Debit,
+        0                    AS CREDIT,
+        JD.REFERENCE_NUMBER  AS PANUM,
+        JH.NARRATION
+      FROM S3G_JV_HDR JH
+      INNER JOIN S3G_JV_DET JD
+      ON JH.ACCOUNT_LINK_KEY     = JD.ACCOUNT_LINK_KEY
+      WHERE JH.JV_STATUSTYPE_CODE=24
+      AND JH.JV_STATUS_CODE      =1
+      AND jh.JV_DATE BETWEEN FN_TODATE(P_FROMDATE) AND FN_TODATE(P_TODATE)
+      AND JD.REFERENCE_NUMBER=NVL(p_PANUM,JD.REFERENCE_NUMBER)
+      AND JH.JV_SEQUENCE_TYPE='PaRe'
+      AND JD.TXN_AMOUNT      <0
+      and JH.LOB_ID=4
+      )TBL
+    INNER JOIN S3G_LAD_ACCCREATION AC
+    ON AC.PANUM=TBL.PANUM
+    INNER JOIN S3G_SYSAD_LOBMASTER LOBM
+    ON LOBM.LOB_ID=AC.LOB_ID
+    INNER JOIN S3G_ORG_CUSTMASTER CUS
+    ON AC.CUSTOMER_ID =CUS.CUSTOMER_ID
+    Where Lobm.Lob_Code='FT'
+    And Ac.Panum=Nvl(P_Panum,Ac.Panum)
+    ORDER BY TBL.VOUCHER_DATE
+    ;
+     
+   END;  
+   
+   
+        BEGIN --Update Receript Checq Number and Chq Date Start
+          Merge Into Tmp_Fac_1 Target Using
+          ( SELECT DISTINCT Receipt_No,Instrument_No,Instrument_Date FROM S3g_Cln_Rcptproc
+          )Tbl ON (Tbl.Receipt_No=Target.Document_No)
+        When Matched Then
+          UPDATE SET Cheque_Number=Tbl.Instrument_No,Cheque_Date=to_char(Instrument_Date,'DD-MON-YYYY');
+        END;
+           --Update Receript Checq Number and Chq Date End
+         
+        BEGIN
+          Merge INTO Tmp_Fac_1 Target USING
+          ( SELECT DISTINCT Prq.Payment_Request_No,
+            PAYINST.INSTRUMENT_NO,
+            PAYINST.INSTRUMENT_DATE
+          FROM S3g_Lad_Pymntreqst Prq
+          INNER JOIN S3g_Lad_Paymentreqstdet Paydet
+          ON Prq.Request_No=Paydet.Request_No
+          INNER JOIN S3g_Lad_Paymentreqstinstrument Payinst
+          On Payinst.Request_No          =Paydet.Request_No
+          WHERE Payinst.INSTRUMENT_STATUS=1
+          )Tbl ON (Tbl.Payment_Request_No=Target.Document_No)
+        When Matched Then
+          UPDATE SET Cheque_Number=Tbl.Instrument_No,Cheque_Date=TO_CHAR(Instrument_Date,'DD-MON-YYYY');
+        END;
+   
+   
+   SELECT COUNT(*) INTO D_ROWCOUNT FROM TMP_FAC_1 ;
+   d(D_ROWCOUNT);
+   
+   
+   IF(P_IS_EXCEL_EXPRT='1') THEN
+      
+      BEGIN
+   
+          OPEN P_OUTTBL FOR 
+          
+          With RT(RN,VOUCHER_DATE,VOUCHER_TYPE,CHEQUE_NUMBER,CHEQUE_DATE,NARRATION,DEBIT_AMOUNT,CREDIT_AMOUNT,RUNNING_BAL,CUSTOMER_NAME,PANUM,DOCUMENT_NO)
+          AS
+          (
+            SELECT RN,VOUCHER_DATE,VOUCHER_TYPE,CHEQUE_NUMBER,CHEQUE_DATE,NARRATION,NVL(DEBIT_AMOUNT,0.00),
+            NVL(CREDIT_AMOUNT,0.00),NVL(DEBIT_AMOUNT,0)-NVL(CREDIT_AMOUNT,0),
+            CUSTOMER_NAME,PANUM,DOCUMENT_NO
+            FROM TMP_FAC_1 WHERE RN=1
+            
+            UNION ALL
+            
+            SELECT T.RN,T.VOUCHER_DATE,T.VOUCHER_TYPE,T.CHEQUE_NUMBER,T.CHEQUE_DATE,T.NARRATION,NVL(T.DEBIT_AMOUNT,0.00),
+            NVL(T.CREDIT_AMOUNT,0.00),
+            ((NVL(T.DEBIT_AMOUNT,0)-T.CREDIT_AMOUNT)+RT.RUNNING_BAL),T.CUSTOMER_NAME,T.PANUM,T.DOCUMENT_NO
+            FROM TMP_FAC_1 T JOIN RT ON T.RN=RT.RN+1
+          )
+          
+          Select Rn As "S.NO",Customer_Name As "Client Name",Panum As "Accounts",
+          case when VOUCHER_DATE='01-01-00' then '' else  GETUSERDATEFORMAT(VOUCHER_DATE,P_COMPANY_ID) end as "Voucher Date",
+          Voucher_Type As "Voucher Type",Document_No As "Document No",
+           CHEQUE_NUMBER AS "Cheque Number",GETUSERDATEFORMAT(CHEQUE_DATE,P_COMPANY_ID) AS "Cheque Date" ,NARRATION AS "Narration",
+           Debit_Amount As "Debit Amount",Credit_Amount As "Credit Amount",Running_Bal As "Balance"
+           FROM RT order by Rn;
+          
+          END;
+   
+     
+         
+     ELSE
+     
+           BEGIN
+   
+          OPEN P_OUTTBL FOR 
+          
+          With RT(RN,VOUCHER_DATE,VOUCHER_TYPE,CHEQUE_NUMBER,CHEQUE_DATE,NARRATION,DEBIT_AMOUNT,CREDIT_AMOUNT,RUNNING_BAL,CUSTOMER_NAME,PANUM,DOCUMENT_NO)
+          AS
+          (
+            SELECT RN,VOUCHER_DATE,VOUCHER_TYPE,CHEQUE_NUMBER,CHEQUE_DATE,NARRATION,NVL(DEBIT_AMOUNT,0.00),
+            NVL(CREDIT_AMOUNT,0.00),NVL(DEBIT_AMOUNT,0)-NVL(CREDIT_AMOUNT,0),
+            CUSTOMER_NAME,PANUM,DOCUMENT_NO
+            FROM TMP_FAC_1 WHERE RN=1
+            
+            UNION ALL
+            
+            Select T.Rn,
+            T.VOUCHER_DATE,T.VOUCHER_TYPE,T.CHEQUE_NUMBER,T.CHEQUE_DATE,T.NARRATION,NVL(T.DEBIT_AMOUNT,0.00),
+            NVL(T.CREDIT_AMOUNT,0.00),
+            ((NVL(T.DEBIT_AMOUNT,0)-T.CREDIT_AMOUNT)+RT.RUNNING_BAL),T.CUSTOMER_NAME,T.PANUM,T.DOCUMENT_NO
+            FROM TMP_FAC_1 T JOIN RT ON T.RN=RT.RN+1
+          )
+          
+           Select Rn As "S.No",Customer_Name As "Client Name",Panum As "Accounts",
+           Case When Voucher_Date='01-01-00' Then '' Else  Getuserdateformat(Voucher_Date,P_Company_Id) 
+           end AS "Voucher Date",VOUCHER_TYPE AS "Voucher Type",
+           Document_No As "Document No" ,
+           CHEQUE_NUMBER AS "Cheque Number",CHEQUE_DATE AS "Cheque Date" ,NARRATION AS "Narration",
+           S3G_FN_GETGPSDECIMALFORMAT(DEBIT_AMOUNT,P_COMPANY_ID) AS "Debit Amount",
+           S3G_FN_GETGPSDECIMALFORMAT(CREDIT_AMOUNT,P_COMPANY_ID) AS "Credit Amount",
+           S3G_FN_GETGPSDECIMALFORMAT(RUNNING_BAL,P_COMPANY_ID) as "Balance"
+           FROM RT WHERE RN BETWEEN (P_CURRENTPAGE-1)* P_PAGESIZE + 1  AND (P_CURRENTPAGE)*P_PAGESIZE;
+
+             SELECT COUNT(*) INTO P_TOTALRECORDS
+             FROM TMP_FAC_1;
+            
+           End;
+         END IF;
+      END;
+    End If;
+IF(P_REPORT_CODE='FIAA' OR P_REPORT_CODE='FICA') THEN--Invoice Age Analysis Client wise,Invoice Age Analysis Customer wise
+  BEGIN
+    DELETE FROM TMP_RPT_INVOICE_2;
+    IF(P_REPORT_CODE='FIAA') THEN
+     BEGIN
+      INSERT INTO TMP_RPT_INVOICE_2(RN,ENTITY_CODE,ENTITY_NAME,CUSTOMER_CODE,CUSTOMER_NAME,PANUM,INVOICE_NO,INVOICE_DATE,MATURITY_DATE,INVOICE_AMOUNT,TOT_DAYS,FACTORING_INV_LOAD_DETAILS_ID)
+      SELECT 
+        ROW_NUMBER() OVER (ORDER BY Cust.Customer_Name,FDT.INVOICE_NO) SINO,
+        Ent.Entity_Code,
+        Ent.Entity_Name,
+        Cust.Customer_Code,
+        Cust.Customer_Name,
+        Fil.Panum,
+        FDT.INVOICE_NO,
+        FDT.INVOICE_DATE,
+        FDT.MATURITY_DATE,
+        FDT.INVOICE_AMOUNT,
+        D_ENDDATE - TRUNC(FDT.MATURITY_DATE) as "Total DAYS", -- To Find Aging Days,TRUNC(FDT.MATURITY_DATE) - D_ENDDATE
+        FDT.FACTORING_INV_LOAD_DETAILS_ID
+      from 
+      S3G_LAD_FactrngInvLoading FIL --on FIL.Customer_ID=CUST.Customer_ID
+      INNER JOIN S3G_LAD_FACTRNGINVLOADINGDET FDT ON FDT.FACTORING_INV_LOAD_ID = FIL.FACTORING_INV_LOAD_ID AND FIL.Bill_Type=1-- Invoice BILL -- Client
+      INNER JOIN S3G_ORG_ENTITYMASTER ENT ON ENT.ENTITY_ID=FDT.PARTY_ID
+      INNER JOIN S3G_ORG_CUSTMASTER CUST ON Cust.Customer_Id=Fil.Customer_Id
+      WHERE (D_Lob_Id IS NULL OR Fil.Lob_Id=D_Lob_Id)
+      AND (D_Location_Code IS NULL OR Fil.Location_Code=D_Location_Code)
+      AND TRUNC(FIL.FIL_DATE) BETWEEN D_STARTDATE AND D_ENDDATE
+      AND (D_ENDDATE - TRUNC(FDT.MATURITY_DATE)) >= 0
+      ;
+     END;
+    else
+       begin--FICA Invoice Age Analysis Customer Wise Start
+          INSERT INTO TMP_RPT_INVOICE_2(RN,ENTITY_CODE,ENTITY_NAME,CUSTOMER_CODE,CUSTOMER_NAME,PANUM,
+          INVOICE_NO,INVOICE_DATE,MATURITY_DATE,INVOICE_AMOUNT,TOT_DAYS,FACTORING_INV_LOAD_DETAILS_ID,
+          INVOICE_OUTSTANDING,INVOICE_PAID,INVOICE_RECEIVED,PAID_RCVD)
+          
+           select rownum,
+            T.*
+            from(select 
+            ENT.CUSTOMER_CODE CUSTCODE,
+            ENT.CUSTOMER_NAME as CUSTNAME,
+            CUST.CUSTOMER_CODE as CLIENTCODE,
+            Cust.Customer_Name AS CLIENTNAME,
+            Fil.Panum,
+            FDT.INVOICE_NO,
+            FDT.INVOICE_DATE,
+            FDT.MATURITY_DATE,
+            FDT.INVOICE_AMOUNT,
+            trunc(sysdate) - TRUNC(FIL.FIL_DATE) as "Total DAYS", -- To Find Aging Days
+            FDT.FACTORING_INV_LOAD_DETAILS_ID,
+            0,--os
+            0 AS PAID,
+            0 AS RECEIVED,
+            0 AS PAID_RECEIVED
+            
+          from 
+          S3G_LAD_FACTRNGINVLOADING FIL --on FIL.Customer_ID=CUST.Customer_ID
+          INNER JOIN S3G_LAD_FACTRNGINVLOADINGDET FDT ON FDT.FACTORING_INV_LOAD_ID = FIL.FACTORING_INV_LOAD_ID --AND FIL.Bill_Type=1-- Invoice BILL -- Client
+          INNER JOIN S3G_ORG_CUSTMASTER ENT ON ENT.Customer_Id=FDT.PARTY_ID
+          inner join S3G_ORG_CUSTMASTER CUST on CUST.CUSTOMER_ID=FIL.CUSTOMER_ID
+          where (D_LOB_ID is null or FIL.LOB_ID=D_LOB_ID)
+          AND (D_Location_ID IS NULL OR Fil.Location_ID=D_Location_ID)
+          and TRUNC(FIL.FIL_DATE) between D_STARTDATE and D_ENDDATE
+          AND FIL.STATUS_ID=2
+          AND NVL(FDT.STATUS_ID,0)=2
+          --AND FIL.PA_SA_REF_ID=229697
+          order by  Ent.Customer_name,Cust.Customer_Name)T
+          --AND (D_ENDDATE - TRUNC(FDT.MATURITY_DATE)) >= 0--TRUNC(FDT.MATURITY_DATE) - D_ENDDATE
+          ;
+          
+--          D('D_STARTDATE==>'||D_STARTDATE);
+--          D('D_ENDDATE==>'||D_ENDDATE);
+          begin--Update Payment Amount Start
+            MERGE INTO TMP_RPT_INVOICE_2 TARGET
+            USING
+            (
+              SELECT SUM(PYRQDET.AMOUNT) AS INVOICE_PAID,PYRQDET.ASSET_NUMBER AS FACTORING_INV_LOAD_DETAILS_ID FROM   S3G_LAD_PAYMENTREQSTDET PYRQDET
+              INNER join S3G_LAD_PYMNTREQST PYRQST
+              ON (PYRQST.REQUEST_NO=PYRQDET.REQUEST_NO 
+              and PYRQST.PMT_VOUCHER_STATUS=3 
+              AND TRUNC(PYRQST.PAYMENT_REQUEST_DATE)>=D_STARTDATE AND TRUNC(PYRQST.PAYMENT_REQUEST_DATE)<=D_ENDDATE )
+              INNER JOIN S3G_ORG_CASHFLOWMASTER CFM
+              on (CFM.CASHFLOW_ID=PYRQDET.PAY_CODE and CFM.CASHFLOW_FLAG_ID=91 AND CFM.IS_ACTIVE=1)--FACTORED
+              GROUP BY  PYRQDET.ASSET_NUMBER
+            )TBL ON(TBL.FACTORING_INV_LOAD_DETAILS_ID=TARGET.FACTORING_INV_LOAD_DETAILS_ID)
+            WHEN MATCHED THEN 
+            UPDATE SET INVOICE_PAID=TBL.INVOICE_PAID;
+            end;--Update Payment Amount End
+         
+         
+          begin--Update Receipt Amount Start
+              MERGE INTO TMP_RPT_INVOICE_2 TARGET
+              USING
+              (
+                SELECT SUM(AMOUNT) AS  INVOICE_RECEIVED,RCPTINV.INV_DTL_ID  AS FACTORING_INV_LOAD_DETAILS_ID FROM S3G_CLN_RCPT_INV RCPTINV
+                inner join S3G_CLN_RCPTPROC RCPT
+                on (RCPT.RECEIPT_ID=RCPTINV.RECEIPT_ID and RCPT.RECEIPT_STATUS=5 
+                AND TRUNC(RCPT.RECEIPT_DATE)>=D_STARTDATE AND TRUNC(RCPT.RECEIPT_DATE)<=D_ENDDATE)
+                INNER JOIN S3G_CLN_RCPTPROCDTL RCDTL
+                on (RCDTL.RECEIPT_PROC_DETAILS_ID=RCPTINV.RECEIPT_DTL_ID)
+                where RCDTL.DUE_FLAG=91
+                GROUP BY RCPTINV.INV_DTL_ID
+              )TBL ON(TBL.FACTORING_INV_LOAD_DETAILS_ID=TARGET.FACTORING_INV_LOAD_DETAILS_ID)
+              WHEN MATCHED THEN 
+              UPDATE SET INVOICE_RECEIVED=TBL.INVOICE_RECEIVED;
+            END;--Update Receipt Amount End
+ 
+          BEGIN--INVOICE_OUTSTANDING START
+            UPDATE TMP_RPT_INVOICE_2 SET INVOICE_OUTSTANDING=INVOICE_PAID-INVOICE_RECEIVED;
+          end;--INVOICE_OUTSTANDING END
+ 
+          BEGIN--PAID_RCVD
+            UPDATE TMP_RPT_INVOICE_2 SET PAID_RCVD=INVOICE_PAID-INVOICE_RECEIVED;
+          end;
+          
+          
+          begin--Update Buckets Start
+             update TMP_RPT_INVOICE_2 set THIIRY=case when (TOT_DAYS>=0 and TOT_DAYS<=30) then INVOICE_OUTSTANDING else 0 end ;
+             update TMP_RPT_INVOICE_2 set SIXTY=case when (TOT_DAYS>=31 and TOT_DAYS<=60) then INVOICE_OUTSTANDING else 0 end ;
+             update TMP_RPT_INVOICE_2 set NIGH=case when (TOT_DAYS>=61 and TOT_DAYS<=90) then INVOICE_OUTSTANDING else 0 end ;
+             update TMP_RPT_INVOICE_2 set ONE_T=case when (TOT_DAYS>=91 and TOT_DAYS<=120) then INVOICE_OUTSTANDING else 0 end ;
+             update TMP_RPT_INVOICE_2 set ONE_F=case when (TOT_DAYS>=121 and TOT_DAYS<=150) then INVOICE_OUTSTANDING else 0 end ;
+             UPDATE TMP_RPT_INVOICE_2 SET ONE_N=CASE WHEN (TOT_DAYS>=151) THEN INVOICE_OUTSTANDING ELSE 0 END ;
+           --update TMP_RPT_INVOICE_2 set INVOICE_OUTSTANDING=0 WHERE PAID_RCVD=0 ;
+         end;--Update Buckets End
+          
+          
+          
+       END;--FICA Invoice Age Analysis Customer Wise End
+    END IF;
+    
+   
+    
+    IF(P_IS_EXCEL_EXPRT='1') THEN      
+      BEGIN
+        IF(P_REPORT_CODE='FIAA') THEN
+         BEGIN
+          OPEN P_OUTTBL FOR
+          select 
+            RN as "S.No",
+            CUSTOMER_CODE || ' - ' || CUSTOMER_NAME "Client Code/Name",
+            ENTITY_CODE || ' - ' || ENTITY_NAME as "Customer Code /Name",                                     
+            PANUM as "Account Number",
+            INVOICE_NO "Invoice Number",
+            GETUSERDATEFORMAT(INVOICE_DATE,P_Company_Id) "Invoice Date",
+            GETUSERDATEFORMAT(MATURITY_DATE,P_Company_Id) "Invoice Due Date",
+            S3G_FN_GETGPSDECIMALFORMAT(INVOICE_AMOUNT,P_Company_Id) "Invoice Amount",
+            S3G_FN_GETGPSDECIMALFORMAT(NVL(INVOICE_OUTSTANDING,0),P_COMPANY_ID) "Invoice Outstanding",
+            S3G_FN_GETGPSDECIMALFORMAT(THIIRY,P_Company_Id) "0 - 30[days]" ,
+            S3G_FN_GETGPSDECIMALFORMAT(SIXTY,P_Company_Id) "31 - 60",
+            S3G_FN_GETGPSDECIMALFORMAT(NIGH,P_Company_Id) "61 - 90",
+            S3G_FN_GETGPSDECIMALFORMAT(ONE_T,P_Company_Id) "91 - 120",
+            S3G_FN_GETGPSDECIMALFORMAT(ONE_F,P_Company_Id) "121 - 150",
+            S3G_FN_GETGPSDECIMALFORMAT(ONE_N,P_Company_Id)  " > 150"
+          FROM TMP_RPT_INVOICE_2
+          ORDER BY RN;
+         END;
+        ELSE
+         BEGIN
+          OPEN P_OUTTBL FOR
+          select 
+            RN as "S.No",
+            ENTITY_CODE || ' - ' || ENTITY_NAME as "Customer Code /Name", 
+            CUSTOMER_CODE || ' - ' || CUSTOMER_NAME "Client Code/Name",                                                
+            PANUM as "Account Number",
+            INVOICE_NO "Invoice Number",
+             GETUSERDATEFORMAT(INVOICE_DATE,P_Company_Id) "Invoice Date",
+            GETUSERDATEFORMAT(MATURITY_DATE,P_COMPANY_ID) "Invoice Due Date",
+            S3G_FN_GETGPSDECIMALFORMAT(INVOICE_AMOUNT,P_Company_Id) AS "Invoice Amount",
+            
+            S3G_FN_GETGPSDECIMALFORMAT(INVOICE_PAID,P_COMPANY_ID) "Invoice Paid",
+            S3G_FN_GETGPSDECIMALFORMAT(INVOICE_RECEIVED,P_COMPANY_ID) "Invoice Received",
+
+            
+            S3G_FN_GETGPSDECIMALFORMAT(NVL(INVOICE_OUTSTANDING,0),P_COMPANY_ID) "Invoice Outstanding",
+            S3G_FN_GETGPSDECIMALFORMAT(THIIRY,P_COMPANY_ID) "0 - 30 [Days]" ,
+            S3G_FN_GETGPSDECIMALFORMAT(SIXTY,P_COMPANY_ID) "31 - 60 [Days]",
+            S3G_FN_GETGPSDECIMALFORMAT(NIGH,P_COMPANY_ID) "61 - 90 [Days]",
+            S3G_FN_GETGPSDECIMALFORMAT(ONE_T,P_COMPANY_ID) "91 - 120 [Days]",
+            S3G_FN_GETGPSDECIMALFORMAT(ONE_F,P_COMPANY_ID) "121 - 150 [Days]",
+            S3G_FN_GETGPSDECIMALFORMAT(ONE_N,P_COMPANY_ID)  " > 150 [Days]"--,
+           -- D_CURRENCY_CODE AS "Currency"
+          FROM TMP_RPT_INVOICE_2
+          ORDER BY RN;
+         END;
+        END IF;        
+      END;
+    ELSE
+      BEGIN
+        SELECT COUNT(1) INTO P_TOTALRECORDS
+        FROM TMP_RPT_INVOICE_2;
+        IF(P_REPORT_CODE='FIAA') THEN
+         BEGIN
+          OPEN P_OUTTBL FOR
+          SELECT 
+            CUSTOMER_CODE || ' - ' || CUSTOMER_NAME "Client Code/Name",
+            ENTITY_CODE || ' - ' || ENTITY_NAME as "Customer Code /Name",                                     
+            PANUM as "Account Number",
+            INVOICE_NO "Invoice Number",
+            GETUSERDATEFORMAT(INVOICE_DATE,P_Company_Id) "Invoice Date",
+            GETUSERDATEFORMAT(MATURITY_DATE,P_COMPANY_ID) "Invoice Due Date",
+            S3G_FN_GETGPSDECIMALFORMAT(INVOICE_AMOUNT,P_Company_Id) AS "Invoice Amount",
+            S3G_FN_GETGPSDECIMALFORMAT(NVL(INVOICE_OUTSTANDING,0),P_Company_Id) "Invoice Outstanding",
+            S3G_FN_GETGPSDECIMALFORMAT(THIIRY,P_Company_Id) "0 - 30" ,
+            S3G_FN_GETGPSDECIMALFORMAT(SIXTY,P_Company_Id) "31 - 60",
+            S3G_FN_GETGPSDECIMALFORMAT(NIGH,P_Company_Id) "61 - 90",
+            S3G_FN_GETGPSDECIMALFORMAT(ONE_T,P_Company_Id) "91 - 120",
+            S3G_FN_GETGPSDECIMALFORMAT(ONE_F,P_Company_Id) "121 - 150",
+            S3G_FN_GETGPSDECIMALFORMAT(ONE_N,P_Company_Id)  " > 150"
+          FROM TMP_RPT_INVOICE_2
+          WHERE RN BETWEEN                                                 
+          (P_CURRENTPAGE-1)* P_PAGESIZE + 1  AND (P_CURRENTPAGE)*P_PAGESIZE;    
+         END;
+        ELSE
+         BEGIN
+          OPEN P_OUTTBL FOR
+          select 
+            RN as "S.No",
+            ENTITY_CODE || ' - ' || ENTITY_NAME as "Customer Code /Name",         
+            CUSTOMER_CODE || ' - ' || CUSTOMER_NAME "Client Code/Name",
+            PANUM as "Account Number",
+            INVOICE_NO "Invoice Number",
+             GETUSERDATEFORMAT(INVOICE_DATE,P_Company_Id) "Invoice Date",
+            GETUSERDATEFORMAT(MATURITY_DATE,P_COMPANY_ID) "Invoice Due Date",
+            S3G_FN_GETGPSDECIMALFORMAT(INVOICE_AMOUNT,P_COMPANY_ID) "Invoice Amount",
+
+            S3G_FN_GETGPSDECIMALFORMAT(INVOICE_PAID,P_COMPANY_ID) "Invoice Paid",
+            S3G_FN_GETGPSDECIMALFORMAT(INVOICE_RECEIVED,P_COMPANY_ID) "Invoice Received",
+            
+            S3G_FN_GETGPSDECIMALFORMAT(NVL(INVOICE_OUTSTANDING,0),P_COMPANY_ID) "Invoice Outstanding",
+            S3G_FN_GETGPSDECIMALFORMAT(THIIRY,P_COMPANY_ID) "0 - 30 [Days]" ,
+            S3G_FN_GETGPSDECIMALFORMAT(SIXTY,P_COMPANY_ID) "31 - 60 [Days]",
+            S3G_FN_GETGPSDECIMALFORMAT(NIGH,P_COMPANY_ID) "61 - 90 [Days]",
+            S3G_FN_GETGPSDECIMALFORMAT(ONE_T,P_COMPANY_ID) "91 - 120 [Days]",
+            S3G_FN_GETGPSDECIMALFORMAT(ONE_F,P_COMPANY_ID) "121 - 150 [Days]",
+            S3G_FN_GETGPSDECIMALFORMAT(ONE_N,P_COMPANY_ID)  " > 150 [Days]"--,
+           -- D_CURRENCY_CODE AS "Currency"
+          FROM TMP_RPT_INVOICE_2
+          WHERE RN BETWEEN                                                 
+          (P_CURRENTPAGE-1)* P_PAGESIZE + 1  AND (P_CURRENTPAGE)*P_PAGESIZE;    
+         END;
+        END IF;              
+      END;
+    END IF;
+  END;
+END IF;
+
+IF(P_REPORT_CODE='FCCP') THEN--Client Customer Position
+  BEGIN
+            DELETE FROM TMP_RPT_FCT_DCS;
+            
+            
+            
+            BEGIN--BASE DATA START
+                  insert into TMP_RPT_FCT_DCS(
+                  ROWNUMBER,
+                  PANUM,
+                  CLIENTNAME,
+                  CLIENT_ID,
+                  OUTSTANDING_DEBT,
+                  INVOICE_AMOUNT,
+                  REGULAR_AMOUNT,
+                  OVERDUE_AMOUNT,
+                  DEFAULT_AMOUNT,
+                  ENT_NAME,
+                  DEBTS_APPROVED,
+                  DEBTS_UN_APPROVED,
+                  PA_SA_REF_ID,
+                  CUSTOMER_ID
+                  )
+                  
+                  select rownum,T2.* from ( select 
+                   T.PANUM,
+                   T.CLIENT_NAME,
+                   T.CLIENT_ID,
+                   0 AS OUTSTANDING_DEBT,
+                   SUM(T.INVOICE_AMOUNT) as INVOICE_AMOUNT,
+                   SUM(T.REGULAR_INVOICE) as REGULAR_INVOICE,
+                   SUM(T.OVER_DUE_INVOICE) as OVER_DUE_INVOICE,
+                   SUM(T.DEFAULT_INVOICE) as DEFAULT_INVOICE,
+                   T.ENTITY_ANME,
+                   SUM(T.DEBTS_APPROVED),
+                   sum(T.DEBTS_UN_APPROVED),
+                   T.PA_SA_REF_ID,
+                   T.CUSTOMER_ID
+                 
+                   
+                   
+                   from (select 
+                    PASA.PANUM,
+                    AC.CUSTOMER_ID as CLIENT_ID,
+                    CM.CUSTOMER_CODE||'-'||CM.CUSTOMER_NAME as CLIENT_NAME,
+                    LOADET.INVOICE_AMOUNT as INVOICE_AMOUNT,
+                    case when (TRUNC(LOAD.FIL_DATE)+NVL(PASA.CREDIT_PERIOD_DAYS,0) + 
+                    NVL(PASA.GRACE_PERIOD_DAYS,0)) > TRUNC(sysdate) 
+                    then LOADET.INVOICE_AMOUNT else 0 end  as REGULAR_INVOICE,
+                    case when  TRUNC(LOAD.FIL_DATE)+NVL(PASA.CREDIT_PERIOD_DAYS,0)+
+                    NVL(PASA.GRACE_PERIOD_DAYS,0)<TRUNC(sysdate) then LOADET.INVOICE_AMOUNT else 0 end  as OVER_DUE_INVOICE,
+                    case when  TRUNC(LOAD.FIL_DATE)+NVL(PASA.CREDIT_PERIOD_DAYS,0)+
+                    NVL(PASA.GRACE_PERIOD_DAYS,0)+1<TRUNC(sysdate) then LOADET.INVOICE_AMOUNT else 0 end  as DEFAULT_INVOICE,
+                    CUST.CUSTOMER_CODE||'-'||CUST.CUSTOMER_NAME AS ENTITY_ANME,
+                    case when  NVL(LOADET.IS_PREPAYMENT_ALLOWED,0)=1  then LOADET.INVOICE_AMOUNT else 0 end as DEBTS_APPROVED,
+                    case when  NVL(LOADET.IS_PREPAYMENT_ALLOWED,0)=0  then LOADET.INVOICE_AMOUNT else 0 end as DEBTS_UN_APPROVED,
+                    PASA.PA_SA_REF_ID,
+                    CUST.CUSTOMER_ID AS CUSTOMER_ID
+                    from S3G_LAD_FACTRNGINVLOADING LOAD
+                    inner join S3G_LAD_FACTRNGINVLOADINGDET LOADET
+                    on LOADET.FACTORING_INV_LOAD_ID=LOAD.FACTORING_INV_LOAD_ID
+                    inner join S3G_LAD_ACCPASADET PASA
+                    on PASA.PA_SA_REF_ID=LOAD.PA_SA_REF_ID
+                    inner join S3G_LAD_ACCCREATION AC
+                    on AC.ACCOUNT_CREATION_ID=PASA.ACCOUNT_CREATION_ID
+                    INNER JOIN S3G_ORG_CUSTMASTER CM
+                    on CM.CUSTOMER_ID=AC.CUSTOMER_ID
+                    inner join S3G_LAD_ACC_SUBLIMIT SUBLIMIT
+                    ON (SUBLIMIT.PA_SA_REF_ID=PASA.PA_SA_REF_ID and SUBLIMIT.ENTITY_ID=LOADET.PARTY_ID)
+                    inner join S3G_ORG_CUSTMASTER CUST
+                    on CUST.CUSTOMER_ID=SUBLIMIT.ENTITY_ID
+                    where 
+                    AC.LOB_ID=4 
+                    and LOAD.STATUS_ID=2
+                    --and AC.CUSTOMER_ID=46412
+                    --and PASA.PANUM=nvl('F0001422',PASA.PANUM)
+                    and PASA.SA_STATUS_CODE not in(6,7,0)
+                    AND LOAD.FIL_DATE BETWEEN D_STARTDATE AND D_ENDDATE
+                    )T 
+                    group by                       
+                    T.PANUM,
+                    T.CLIENT_NAME,
+                    T.CLIENT_ID,
+                    T.ENTITY_ANME,
+                    T.PA_SA_REF_ID,
+                    T.CUSTOMER_ID)T2
+                    ;
+                     
+                END;
+                
+                
+                
+                begin--Update Sublimit Start
+                  merge into TMP_RPT_FCT_DCS TARGET
+                  using
+                  (
+                  select PA_SA_REF_ID,SUM(LIMIT_VAL) as LIMIT_VAL,ENTITY_ID as ENTITY_ID from S3G_LAD_ACC_SUBLIMIT SUBMILTT
+                  group by PA_SA_REF_ID,ENTITY_ID
+                  )TBL ON (TBL.PA_SA_REF_ID=TARGET.PA_SA_REF_ID and tbl.ENTITY_ID=TARGET.CUSTOMER_ID)
+                  when matched then update
+                  set SUB_LIMIT_AMOUNT=TBL.LIMIT_VAL;
+                end;--Update Sublimit
+                
+                  begin--Update Sublimi Less then the Reular Invoice Start
+                   update TMP_RPT_FCT_DCS set SUB_LIMIT_LESS=case when REGULAR_AMOUNT<SUB_LIMIT_AMOUNT then REGULAR_AMOUNT else 0 end ;
+                  end;----Update Sublimi Less then the Reular Invoice End
+                  
+                  begin--Update Sublimi Greater  then the Reular Invoice Start
+                   update TMP_RPT_FCT_DCS set SUB_LIMIT_GREATER=case when REGULAR_AMOUNT>SUB_LIMIT_AMOUNT then REGULAR_AMOUNT else 0 end ;
+                  end;----Update Sublimi Greater then the Reular Invoice End
+
+
+                  begin--OS DEBT START
+                   update TMP_RPT_FCT_DCS set OUTSTANDING_DEBT=REGULAR_AMOUNT+Overdue_Amount+DEFAULT_AMOUNT;
+                  end;---OS DEBT END
+
+
+                  update TMP_RPT_FCT_DCS set REGULAR_AMOUNT=0 where OVERDUE_AMOUNT>0;
+                  update TMP_RPT_FCT_DCS set OVERDUE_AMOUNT=0, REGULAR_AMOUNT=0 WHERE DEFAULT_AMOUNT>0;
+                 
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+    
+      IF(P_IS_EXCEL_EXPRT='1') THEN
+        BEGIN
+         OPEN P_OUTTBL FOR 
+          SELECT 
+            Rownumber As "S.No", 
+            Clientname AS "Client Code & Name",
+            Panum AS "Account Number",
+--            ENT_CODE as "Customer Code",
+            ENT_CODE || '-' || ENT_NAME as "Customer Code & Name",
+            S3G_FN_GETGPSDECIMALFORMAT(SUB_LIMIT_AMOUNT,P_COMPANY_ID) as "Sub Limit Amount",
+            S3G_FN_GETGPSDECIMALFORMAT(OUTSTANDING_DEBT,P_COMPANY_ID) as "Debts Outstanding",
+            S3G_FN_GETGPSDECIMALFORMAT(Regular_Amount,P_COMPANY_ID) AS "Regular Invoice",
+            S3G_FN_GETGPSDECIMALFORMAT(Overdue_Amount,P_COMPANY_ID) AS "Overdue Invoice",
+            S3G_FN_GETGPSDECIMALFORMAT(Default_Amount,P_COMPANY_ID) AS "Default Invoice" ,
+            S3G_FN_GETGPSDECIMALFORMAT(SUB_LIMIT_LESS,P_COMPANY_ID) as "Reg.Inv.<= SubLimit",
+            S3G_FN_GETGPSDECIMALFORMAT(SUB_LIMIT_GREATER,P_COMPANY_ID) as "Reg.Inv.> SubLimit",
+            S3G_FN_GETGPSDECIMALFORMAT(Debts_Approved,P_COMPANY_ID)  AS "Debts Approved",
+            S3g_Fn_Getgpsdecimalformat(Debts_Un_Approved,P_Company_Id) As "Debts Un Approved"
+          FROM TMP_RPT_FCT_DCS order by Rownumber;
+              END;
+            ELSE
+            Begin
+              OPEN P_OUTTBL FOR 
+                SELECT 
+                  Rownumber As "S.No", 
+                  Clientname AS "Client Code & Name",
+                  Panum AS "Account Number",
+--                  ENT_CODE as "Customer Code",
+                   ENT_CODE || '-' || ENT_NAME as "Customer Code & Name",
+                  S3G_FN_GETGPSDECIMALFORMAT(SUB_LIMIT_AMOUNT,P_COMPANY_ID) as "Sub Limit Amount",
+                  S3G_FN_GETGPSDECIMALFORMAT(Outstanding_Debt,P_COMPANY_ID) AS "Debts Outstanding",
+                  S3G_FN_GETGPSDECIMALFORMAT(Regular_Amount,P_COMPANY_ID) AS "Regular Invoice",
+                  S3G_FN_GETGPSDECIMALFORMAT(Overdue_Amount,P_COMPANY_ID) AS "Overdue Invoice",
+                  S3G_FN_GETGPSDECIMALFORMAT(Default_Amount,P_COMPANY_ID) AS "Default Invoice" ,
+                  S3G_FN_GETGPSDECIMALFORMAT(SUB_LIMIT_LESS,P_COMPANY_ID) as "Reg.Inv.<= SubLimit",
+                  S3G_FN_GETGPSDECIMALFORMAT(SUB_LIMIT_GREATER,P_COMPANY_ID) as "Reg.Inv.> SubLimit",
+                  S3G_FN_GETGPSDECIMALFORMAT(Debts_Approved,P_COMPANY_ID)  AS "Debts Approved",
+                  S3G_FN_GETGPSDECIMALFORMAT(Debts_Un_Approved,P_COMPANY_ID) AS "Debts Un Approved"
+            FROM TMP_RPT_FCT_DCS 
+              WHERE ROWNUMBER BETWEEN (P_CURRENTPAGE-1)* P_PAGESIZE + 1 AND (P_CURRENTPAGE)*P_PAGESIZE;
+              SELECT COUNT(1) INTO P_TOTALRECORDS FROM TMP_RPT_FCT_DCS;
+            END;
+          END IF;
+  END;
+END IF;
+-- AGEING MIS
+IF(P_REPORT_CODE='FAMI') THEN
+ BEGIN
+  DELETE FROM TMP_RPT_INVOICE_2;
+  DELETE FROM TMP_RPT_INVOICE_FIN;
+  INSERT INTO TMP_RPT_INVOICE_2(RN,ENTITY_CODE,ENTITY_NAME,CUSTOMER_CODE,CUSTOMER_NAME,PANUM,INVOICE_NO,INVOICE_DATE,MATURITY_DATE,
+    INVOICE_AMOUNT,TOT_DAYS,FACTORING_INV_LOAD_DETAILS_ID,CREDIT_DAYS)
+      SELECT 
+        ROW_NUMBER() OVER (ORDER BY Cust.Customer_Name,FDT.INVOICE_NO) SINO,
+        Ent.Entity_Code,
+        Ent.Entity_Name,
+        Cust.Customer_Code,
+        Cust.Customer_Name,
+        Fil.Panum,
+        FDT.INVOICE_NO,
+        FDT.INVOICE_DATE,
+        FDT.MATURITY_DATE,
+        FDT.INVOICE_AMOUNT,
+        D_ENDDATE - TRUNC(FDT.MATURITY_DATE) as "Total DAYS", -- To Find Aging Days,TRUNC(FDT.MATURITY_DATE) - D_ENDDATE
+        FDT.FACTORING_INV_LOAD_DETAILS_ID,
+        Fil.Credit_Days
+      from 
+      S3G_LAD_FactrngInvLoading FIL --on FIL.Customer_ID=CUST.Customer_ID
+      INNER JOIN S3G_LAD_FACTRNGINVLOADINGDET FDT ON FDT.FACTORING_INV_LOAD_ID = FIL.FACTORING_INV_LOAD_ID AND FIL.Bill_Type=1-- Invoice BILL -- Client
+      INNER JOIN S3G_ORG_ENTITYMASTER ENT ON ENT.ENTITY_ID=FDT.PARTY_ID
+      INNER JOIN S3G_ORG_CUSTMASTER CUST ON Cust.Customer_Id=Fil.Customer_Id
+      WHERE (D_Lob_Id IS NULL OR Fil.Lob_Id=D_Lob_Id)
+      AND (D_Location_Code IS NULL OR Fil.Location_Code=D_Location_Code)
+      AND TRUNC(FIL.FIL_DATE) BETWEEN D_STARTDATE AND D_ENDDATE
+      AND (D_ENDDATE - TRUNC(FDT.MATURITY_DATE)) >= 0;
+     
+
+      merge into TMP_RPT_INVOICE_2  NS 
+            Using (SELECT Panum,ENTITY_CODE,                  
+                  Sum(NVL(Invoice_Amount,0)) As Default_Amount
+                FROM TMP_RPT_INVOICE_2
+                WHERE TOT_DAYS > CREDIT_DAYS
+                GROUP BY PANUM,                  
+                  ENTITY_CODE) TMP
+            ON (TMP.PANUM=NS.PANUM AND TMP.ENTITY_CODE=NS.ENTITY_CODE)
+            when matched then 
+              update set NS.DEFAULT_AMOUNT =  NVL(TMP.Default_Amount,0);
+--           OPEN P_OUTTBL FOR 
+--      SELECT RN,ENTITY_CODE,ENTITY_NAME,CUSTOMER_CODE,CUSTOMER_NAME,PANUM,INVOICE_NO,INVOICE_DATE,MATURITY_DATE,
+--    INVOICE_AMOUNT,TOT_DAYS,FACTORING_INV_LOAD_DETAILS_ID,CREDIT_DAYS,DEFAULT_AMOUNT from TMP_RPT_INVOICE_2 where Panum='ACC/462';return;         
+--               OPEN P_OUTTBL FOR 
+--      SELECT Panum,                  
+--                  DEFAULT_AMOUNT As Default_Amount
+--                FROM TMP_RPT_INVOICE_2 
+--                WHERE Panum='ACC/462';
+--                return;
+--                WHERE TOT_DAYS > CREDIT_DAYS AND PANUM='ACC/462'
+--                GROUP BY PANUM,                  
+--                  CUSTOMER_CODE
+               
+--     OPEN P_OUTTBL FOR 
+--      SELECT TOT_DAYS,CREDIT_DAYS,Invoice_Amount,CUSTOMER_CODE,DEFAULT_AMOUNT from TMP_RPT_INVOICE_2 WHERE PANUM='ACC/462';return;
+       for I in (SELECT SINO,FROM_DAYS,TO_DAYS from S3G_LAD_FAC_INV_DAYS) LOOP
+      BEGIN
+        IF(I.SINO=1)THEN
+          BEGIN
+            UPDATE TMP_RPT_INVOICE_2 SET THIIRY=(CASE WHEN TOT_DAYS BETWEEN  I.FROM_DAYS AND  I.TO_DAYS THEN INVOICE_AMOUNT ELSE 0 END);
+          END;
+        ELSIF(I.SINO=2)THEN
+          BEGIN
+            UPDATE TMP_RPT_INVOICE_2 SET SIXTY=(CASE WHEN TOT_DAYS BETWEEN  I.FROM_DAYS AND  I.TO_DAYS THEN INVOICE_AMOUNT ELSE 0 END);
+          END;
+         ELSIF(I.SINO=3)THEN
+          BEGIN
+            UPDATE TMP_RPT_INVOICE_2 SET NIGH=(CASE WHEN TOT_DAYS BETWEEN  I.FROM_DAYS AND  I.TO_DAYS THEN INVOICE_AMOUNT ELSE 0 END);
+          END;
+         ELSIF(I.SINO=4)THEN
+          BEGIN
+            UPDATE TMP_RPT_INVOICE_2 SET ONE_T=(CASE WHEN TOT_DAYS BETWEEN  I.FROM_DAYS AND  I.TO_DAYS THEN INVOICE_AMOUNT ELSE 0 END);
+          END;
+         ELSIF(I.SINO=5)THEN
+          BEGIN
+            UPDATE TMP_RPT_INVOICE_2 SET ONE_F=(CASE WHEN TOT_DAYS BETWEEN  I.FROM_DAYS AND  I.TO_DAYS THEN INVOICE_AMOUNT ELSE 0 END);
+          END;
+         ELSIF(I.SINO=6)THEN
+          BEGIN
+            UPDATE TMP_RPT_INVOICE_2 SET ONE_N=(CASE WHEN TOT_DAYS BETWEEN  I.FROM_DAYS AND  I.TO_DAYS THEN INVOICE_AMOUNT ELSE 0 END);
+          END;
+        END IF;        
+      END;
+    END LOOP;  
+    
+    INSERT INTO TMP_RPT_INVOICE_FIN(RN,ENTITY_CODE,ENTITY_NAME,CUSTOMER_CODE,CUSTOMER_NAME,PANUM,THIIRY,
+    SIXTY,NIGH,ONE_T,ONE_F,ONE_N,DEFAULT_AMOUNT)
+    select 
+      row_number() over (order by PANUM asc) AS sino,
+      ENTITY_CODE,
+      ENTITY_NAME,
+      CUSTOMER_CODE,
+      CUSTOMER_NAME,
+      PANUM,
+      sum(THIIRY) THIIRY,
+      sum(SIXTY) SIXTY,
+      sum(NIGH) NIGH,
+      sum(ONE_T) ONE_T,
+      sum(ONE_F) ONE_F,
+      sum(ONE_N) ONE_N,
+      sum(DISTINCT NVL(DEFAULT_AMOUNT,0)) DEFAULT_AMOUNT
+    from TMP_RPT_INVOICE_2
+    group by ENTITY_CODE,
+    ENTITY_NAME,CUSTOMER_CODE,
+    CUSTOMER_NAME,PANUM;
+    
+--      LEFT OUTER JOIN
+--                (SELECT Panum,
+--                  SANUM,
+--                  Sum(Invoice_Amount) As Default_Amount
+--                FROM TMP_RPT_DLT_CLT_STS_1
+--                WHERE Date_Fifeee > credit_Days
+--                GROUP BY Panum,
+--                  SANUM,
+--                  Party_ID
+--                )DA
+--              ON MT.Panum=DA.Panum
+  
+    
+      IF(P_IS_EXCEL_EXPRT='1') THEN
+        BEGIN
+         OPEN P_OUTTBL FOR 
+          SELECT 
+            RN As "S.No",                   
+                  Panum AS "Account Number",
+                  CUSTOMER_CODE as "Client Code",
+                  CUSTOMER_NAME as "Client Name",
+                  S3G_FN_GETGPSDECIMALFORMAT(THIIRY,P_COMPANY_ID) "0-30",
+                  S3G_FN_GETGPSDECIMALFORMAT(SIXTY,P_COMPANY_ID) "31-60",
+                  S3G_FN_GETGPSDECIMALFORMAT(NIGH,P_COMPANY_ID) "61-90",
+                  S3G_FN_GETGPSDECIMALFORMAT(ONE_T,P_COMPANY_ID) "91-120",
+                  S3G_FN_GETGPSDECIMALFORMAT(ONE_F,P_COMPANY_ID) "121-150",
+                  S3G_FN_GETGPSDECIMALFORMAT(ONE_N,P_COMPANY_ID) ">150",
+                  S3G_FN_GETGPSDECIMALFORMAT((THIIRY + SIXTY + NIGH+ONE_T+ONE_F+ ONE_N),P_COMPANY_ID) "Total",
+                  ENTITY_CODE as "Customer Code" ,
+                  ENTITY_NAME as "Customer Name",
+                  S3G_FN_GETGPSDECIMALFORMAT(DEFAULT_AMOUNT,P_COMPANY_ID)  as "Default Amount"            
+                FROM TMP_RPT_INVOICE_FIN;
+              END;
+            ELSE
+            Begin
+              OPEN P_OUTTBL FOR 
+                SELECT 
+                  RN As "S.No",                   
+                  Panum AS "Account Number",
+                  CUSTOMER_CODE as "Client Code",
+                  CUSTOMER_NAME as "Client Name",
+                  S3G_FN_GETGPSDECIMALFORMAT(THIIRY,P_COMPANY_ID) "0-30",
+                  S3G_FN_GETGPSDECIMALFORMAT(SIXTY,P_COMPANY_ID) "31-60",
+                  S3G_FN_GETGPSDECIMALFORMAT(NIGH,P_COMPANY_ID) "61-90",
+                  S3G_FN_GETGPSDECIMALFORMAT(ONE_T,P_COMPANY_ID) "91-120",
+                  S3G_FN_GETGPSDECIMALFORMAT(ONE_F,P_COMPANY_ID) "121-150",
+                  S3G_FN_GETGPSDECIMALFORMAT(ONE_N,P_COMPANY_ID) ">150",
+                  S3G_FN_GETGPSDECIMALFORMAT((THIIRY + SIXTY + NIGH+ONE_T+ONE_F+ ONE_N),P_COMPANY_ID) "Total",
+                  ENTITY_CODE as "Customer Code" ,
+                  ENTITY_NAME as "Customer Name",
+                  S3G_FN_GETGPSDECIMALFORMAT(DEFAULT_AMOUNT,P_COMPANY_ID)  as "Default Amount"
+            FROM TMP_RPT_INVOICE_FIN 
+              WHERE RN BETWEEN (P_CURRENTPAGE-1)* P_PAGESIZE + 1 AND (P_CURRENTPAGE)*P_PAGESIZE;
+              SELECT COUNT(1) INTO P_TOTALRECORDS FROM TMP_RPT_INVOICE_FIN;
+            END;
+          END IF;
+ END;
+END IF;
+
+IF (P_REPORT_CODE='FCLR') THEN
+BEGIN 
+
+Delete from TMP_RPT_AC_CLSR ;
+Insert Into TMP_RPT_AC_CLSR 
+
+select Distinct lc.locationcat_description AS Branch
+        ,pdt.Product_Name as Product
+        ,'' as scheme
+        ,ACd.panum
+        ,ACD.sanum
+        ,c.customer_code
+        ,c.customer_name 
+       , ACD.Closure_Date   
+       From S3g_Lad_Accclosr Acl 
+      INNER JOIN S3G_SYSAD_LOBMASTER LOB ON LOB.LOB_ID =  ACL.LOB_ID 
+      INNER JOIN S3G_SYSAD_LOCATIONMASTER LOCM ON LOCM.LOCATION_CODE=ACL.LOCATION_CODE  
+      INNER JOIN S3G_SYSAD_LocationCategory LC  ON LC.Location_Category_ID = LOCM.Location_Category_ID             
+      Inner Join S3g_Lad_Accclosrdet Acd 
+      On Acd.Closure_Number = Acl.Closure_No 
+      Join S3g_Lad_Acccreation AC ON ACD.Panum=AC.Panum
+      Join S3G_LAD_ACCPASADET AD On ac.panum=ad.panum
+      left join s3g_sysad_productmaster pdt on pdt.product_id=ac.product_id
+      Inner Join S3g_Org_Custmaster C On C.Customer_Id = Acl.Customer_Id  
+      Inner Join S3g_Sysad_Usermaster U 
+      ON U.USER_ID = NVL(ACL.MODIFIED_BY,ACL.CREATED_BY) 
+      Inner Join S3g_Status_Lookup Sl On Sl.Id = C.Title_Id 
+      LEFT JOIN S3G_CLN_RCPTPROC RP ON RP.RECEIPT_ID = ACD.RECEIPT_ID
+      Where Trunc(Acd.closure_Date) Between Trunc(fn_todate(P_FROMDATE)) ANd Trunc(fn_todate(P_TODATE))
+      and acd.is_active=1 and acd.closure_status_code=3 and acd.closure_Type=1 and D_lob_code='FT'
+      AND (D_LOCATION_CODE IS NULL OR ACL.LOCATION_CODE=D_LOCATION_CODE);
+
+IF(P_IS_EXCEL_EXPRT='1') THEN
+BEGIN
+
+OPEN P_OUTTBL FOR 
+
+
+Select Rownum as "SI.No",
+      
+       BRANCH as "Branch",
+      PRODUCT as "Product",
+--      SCHEME as "Scheme",
+      PANUM as "Account No.",
+      --SANUM
+      CUSTOMER_CODE as "Customer Code",
+      CUSTOMER_NAME as "Customer Name",
+     
+       GETUSERDATEFORMAT(Closure_Date,P_COMPANY_ID) as "Closure Date"
+       
+from TMP_RPT_AC_CLSR
+order by "SI.No"; 
+
+
+
+END;
+ELSE 
+BEGIN
+        OPEN P_OUTTBL FOR
+        
+      Select * from
+(Select  
+rownum as "S.No",
+BRANCH as "Branch",
+      PRODUCT as "Product",
+--      SCHEME as "Scheme",
+      PANUM as "Account No.",
+      --SANUM
+      CUSTOMER_CODE as "Customer Code",
+      CUSTOMER_NAME as "Customer Name",
+     
+       GETUSERDATEFORMAT(Closure_Date,P_COMPANY_ID) as "Closure Date"
+from TMP_RPT_AC_CLSR AC 
+
+)MT
+WHere "S.No" BETWEEN                                                 
+          (P_CURRENTPAGE-1)* P_PAGESIZE + 1  AND (P_CURRENTPAGE)*P_PAGESIZE
+          order by "S.No";      
+          
+ Select Count(*) into P_TotalRecords from  TMP_RPT_AC_CLSR;
+ END;
+ 
+
+ END IF;
+ 
+ 
+
+END;
+End If;
+IF (P_REPORT_CODE='NFART') THEN
+BEGIN 
+
+        Delete from TMP_CLN_NONFUNGTEE_DTL1 ;
+        Insert Into TMP_CLN_NONFUNGTEE_DTL1 
+        (
+        Nonfungtee_Dtl_Id,
+        Product_Id,
+        Bank_Id,
+        Guarantee_No,
+        Customer_Id,
+        Customer_Code,
+        Guarantee_Id,
+        Guarantee_Code,
+        Guarantee_Type,
+        Application_Date,
+        Issue_Date,
+        Expiry_Month,
+        Amount,
+        Auto_Renewal,
+        Status_Id,
+        Bank_Issue_Date,
+        Document_No,
+        Trans_Date,
+        Lc_Type,
+        Credit_Period,
+        Cr_Number,
+        Product_Name,
+        Bank_Name,
+        GUAR_TYPE
+        )
+
+           Select mst.NONFUNGTEE_DTL_ID,
+            mst.PRODUCT_ID,
+            mst.BANK_ID,
+            mst.GUARANTEE_NO,
+            mst.CUSTOMER_ID,
+            CM1.CUSTOMER_CODE || ' - ' || CM1.CUSTOMER_NAME  AS CUSTOMER_CODE,
+            mst.GUARANTEE_ID,
+            CM2.DESCRIPTION  AS GUARANTEE_CODE,
+            mst.GUARANTEE_TYPE,
+            GETUSERDATEFORMAT(mst.APPLICATION_DATE,P_COMPANY_ID) AS APPLICATION_DATE,
+            GETUSERDATEFORMAT(mst.ISSUE_DATE,P_COMPANY_ID) AS ISSUE_DATE,
+            GETUSERDATEFORMAT(mst.EXPIRY_MONTH,P_COMPANY_ID) AS EXPIRY_MONTH,
+            S3G_FN_GETGPSDECIMALFORMAT(AMOUNT,p_Company_ID) as AMOUNT,
+            mst.AUTO_RENEWAL,
+            mst.STATUS_ID,
+            GETUSERDATEFORMAT(mst.BANK_ISSUE_DATE,P_COMPANY_ID) AS BANK_ISSUE_DATE,
+            mst.DOCUMENT_NO,
+            GETUSERDATEFORMAT(mst.CREATED_ON,P_COMPANY_ID) AS TRANS_DATE,
+            mst.LC_TYPE,
+            Mst.Credit_Period,
+            Mst.Cr_Number,
+            Product.Name,
+            Bm.Bank_Name||'-'||Branch.BANKBRANCH_NAME,
+            Gtype.NAME
+            
+           From  S3G_CLN_NONFUNGTEE_DTL mst
+           INNER JOIN S3G_ORG_CUSTMASTER CM1
+           ON CM1.CUSTOMER_ID = MST.CUSTOMER_ID
+           Inner Join S3g_Org_Group_Industry_Type Cm2
+           On (Cm2.Type_Id=Mst.Guarantee_Id And Cm2.Type='NFB_ISSUE_TO')
+           LEFT Join S3g_Org_Lookup Product
+           On (Product.Value=Mst.Product_Id And Product.Type='NFB_PRODUCT')
+           LEFT Join S3g_Cln_Draweebankmaster Bm
+           On Bm.Draweebankmaster_Id=Mst.Bank_Id
+           Left Join S3g_Cln_Draweebankbranch Branch
+           on Branch.DRAWEEBANKMASTER_ID=Bm.DRAWEEBANKMASTER_ID
+           LEFT Join S3g_Org_Lookup Gtype
+           On (Gtype.Value=Mst.Guarantee_Type And Gtype.Type='GUARANTEE_TYPE')
+           where TRUNC(Expiry_Month) <=D_ENDDATE
+           ;
+
+IF(P_IS_EXCEL_EXPRT='1') THEN
+BEGIN
+
+OPEN P_OUTTBL FOR 
+
+
+Select Rownum As "SI.No",
+        Product_Name AS "Product Name",
+        Bank_Name As "Bank Name",
+        Guarantee_No as "Guarantee No",
+        Customer_Code As "Customer Code/Name",
+        Guarantee_Code as "Guarantee Code/Name",
+        Guar_Type As "Guar Type",
+        Application_Date as "Application Date",
+        --ISSUE_DATE,
+        Expiry_Month As "Expiry Month",
+        Amount As Amount,
+        Bank_Issue_Date As "Bank Issue Date",
+        Document_No As "Document No",
+        Trans_Date As "Trans Date",
+        Case When Lc_Type=1 Then 'Sight LC' 
+        when Lc_Type=2 then 'Usance LC'
+        else '' end As  "LC Type",
+        Credit_Period As "Credit Period" ,
+        Cr_Number as "CR Number"
+       FROM  TMP_CLN_NONFUNGTEE_DTL1;
+
+
+
+END;
+ELSE 
+BEGIN
+        
+      OPEN P_OUTTBL FOR
+      Select * From
+        (  
+          
+        Select 
+        Rownum As "SNO",
+        Product_Name AS "Product Name",
+        Bank_Name As "Bank Name",
+        Guarantee_No As "Guarantee No",
+        Customer_Code as "Customer Code/Name",
+        Guarantee_Code as "Guarantee Code/Name",
+        Guar_Type As "Guar Type",
+        Application_Date as "Application Date",
+        Expiry_Month As "Expiry Month",
+        Amount As Amount,
+        Bank_Issue_Date As "Bank Issue Date",
+        Document_No As "Document No",
+        Trans_Date As "Trans Date",
+        case when Lc_Type=1 then 'Sight LC' else 'Usance LC' end As  "LC Type",
+        Credit_Period As "Credit Period" ,
+        Cr_Number As "CR Number"
+           From  TMP_CLN_NONFUNGTEE_DTL1
+        )Mt
+        Where "SNO" Between                                                 
+        (P_Currentpage-1)* P_Pagesize + 1  And (P_Currentpage)*P_Pagesize ;     
+        Select Count(*) into P_TotalRecords from  TMP_CLN_NONFUNGTEE_DTL1;
+
+
+
+ END;
+ 
+
+ END IF;
+ 
+ 
+
+End;
+End If;
+END S3G_RPT_GET_ENHC_FAC;

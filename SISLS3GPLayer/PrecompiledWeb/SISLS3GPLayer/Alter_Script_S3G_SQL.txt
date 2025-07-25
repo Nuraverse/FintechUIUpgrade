@@ -1,0 +1,3821 @@
+--
+alter column CASHFLOW_AMOUNT Numeric(16,4)
+
+ALTER table S3G_LoanAd_AccountRepaymentDetails
+alter column Amount Numeric(16,2)
+
+ALTER table S3G_LoanAd_AccountRepaymentDetails
+alter column Per_Instalment_Amount Numeric(16,2)
+
+ALTER table S3G_LoanAd_AccountRepayStructure
+alter column InstallmentAmount Numeric(16,4)
+
+ALTER table S3G_ORG_ApplicationProcessRepayDetails
+alter column Amount Numeric(16,2) 
+
+ALTER table S3G_ORG_ApplicationProcessRepayDetails
+alter column Per_Instalment_Amount Numeric(16,2) 
+
+6-Aug-2012
+-----------------
+
+Alter table S3G_ORG_PRDDCMASTER ALTER COLUMN DOCUMENT_PATH varchar(500) null
+GO
+Alter table S3G_LOANAD_PDDCMaster ALTER COLUMN DOCUMENT_PATH varchar(500) null
+GO
+Alter table S3G_ORG_FIRMASTER  ALTER COLUMN DOCUMENT_PATH varchar(500) null
+
+
+----------11-Sep-2012
+--------------------------------
+Alter table S3G_SYSAD_WorkflowStatus add Document_Type int
+Alter table S3G_SYSAD_WorkflowStatus add Out_User_Id int
+Alter table S3G_ORG_FieldInformationReport add Agency_Type INT
+Alter table S3G_LOANAD_AssetVerficiationDetails add Inspection_Date_To DateTime
+Alter table S3G_LOANAD_AssetVerficiationDetails add Inspection_Date_Resp DateTime
+Alter table S3G_LOANAD_AssetVerficiationDetails add Location_Resp varchar(150)
+Alter table S3G_LOANAD_AssetVerficiationDetails add Verification_Image varchar(150)
+Alter table S3G_LOANAD_AssetVerficiationDetails add User_Type varchar(50)
+Alter table S3G_CLN_RECEIPTPROCESSING add Account_Based INT
+Alter table S3G_SYSAD_GlobalParameterSetup add [Force_Pwd_Change] [bit] NULL
+Alter table S3G_SYSAD_GlobalParameterSetup add 	[Days] [int] NULL
+Alter table S3G_SYSAD_GlobalParameterSetup add	[Enforce_inital_pwd] [bit] NULL
+Alter table S3G_SYSAD_GlobalParameterSetup add [Disable_Access_Wrong_pwd] [int] NULL
+Alter table S3G_SYSAD_GlobalParameterSetup add [Min_pwd_length] [int] NULL
+Alter table S3G_SYSAD_GlobalParameterSetup add [Pwd_Recycle_Itr] [int] NULL
+Alter table S3G_SYSAD_GlobalParameterSetup add [UpperCase_Char] [bit] NULL
+Alter table S3G_SYSAD_GlobalParameterSetup add [Number] [bit] NULL
+Alter table S3G_SYSAD_GlobalParameterSetup add 	[Spec_Char] [bit] NULL
+Alter table S3G_ORG_GlobalParameterLOB add Cashier_GL_Code INT
+Alter table S3G_SYSAD_TaxGuideMaster add Posting_GL_Code INT
+
+--------13-Sep-2012
+---------------------
+Alter table S3G_LoanAd_AccountRepaymentDetails add Bill_Status BIT NULL
+Alter table S3G_ORG_CashFlowFlag add Service_Tax bit NULL
+Alter table S3G_ORG_CustomerMaster add Family_Name Varchar(50)
+Alter table S3G_ORG_CustomerMaster add Notes Varchar(250)
+Alter table S3G_ORG_ApplicationProcess add is_goldloan BIT 
+
+IF(	IDENT_INCR( 'S3G_SYSAD_ProgramMaster' ) IS NOT NULL OR IDENT_SEED('S3G_SYSAD_ProgramMaster') IS NOT NULL ) SET IDENTITY_INSERT S3G_SYSAD_ProgramMaster ON
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) VALUES('208','TRG','Target Master','O','178',1,'1','4/10/2012',NULL,NULL,'S3GORGTransLander.aspx?Code=TRG','S3GORGTargetMaster_Add.aspx',NULL,NULL,NULL,NULL,NULL)
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) VALUES('209','GDC','Demand Vs Collection Location','M','209',1,'1','1/20/2011',NULL,NULL,'ComparingDC.aspx','ComparingDC.aspx','1',NULL,NULL,NULL,NULL)
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) VALUES('210','GTD','Demand Vs Collection Comparative','M','210',1,'1','1/20/2011',NULL,NULL,'ComparingDC_2Years.aspx','ComparingDC_2Years.aspx','4',NULL,NULL,NULL,NULL)
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) VALUES('211','GTS','Demand Vs Collection','M','211',1,'1','1/20/2011',NULL,NULL,'DemandVsCollection_SingleYear.aspx','DemandVsCollection_SingleYear.aspx','2',NULL,NULL,NULL,NULL)
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) VALUES('212','GTP','Portfolio Performance','M','212',1,'1','1/20/2011',NULL,NULL,'PorfolioPerformance1.aspx','PorfolioPerformance1.aspx','3',NULL,NULL,NULL,NULL)
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) VALUES('213','LCC','Compensation Calculation','L','213',1,'1','1/20/2011',NULL,NULL,'S3gLoanAdTransLander.aspx?Code=LCC','S3GLoanAdCompensation.aspx','1',NULL,NULL,NULL,NULL)
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) VALUES('214','OGLM','Gold Loan Matrix','O','214',1,'1','1/20/2011',NULL,NULL,'S3GORGGoldLoanMatrix_View.aspx','S3GORGGoldLoanMatrix_Add.aspx','1',NULL,NULL,NULL,NULL)
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) VALUES('215','TMPL','Template Master','S','215',1,'1','7/28/2012',NULL,NULL,'S3GTemplate_View.aspx','S3GTemplate_Add.aspx','1',NULL,NULL,NULL,NULL)
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) VALUES('216','APG','Application Processing - Gold','O','216',1,'1','6/29/2010','1','6/29/2010','S3GORGTransLander.aspx?Code=APG&Create=1&Modify=1','S3G_ORG_ApplicationProcessingGL.aspx','1',0,'S3G_ORG_ApplicationProcessingGL.aspx?qsWorkFlow=',NULL,NULL)
+IF(	IDENT_INCR( 'S3G_SYSAD_ProgramMaster' ) IS NOT NULL OR IDENT_SEED('S3G_SYSAD_ProgramMaster') IS NOT NULL ) SET IDENTITY_INSERT S3G_SYSAD_ProgramMaster OFF
+
+IF(	IDENT_INCR( 'S3G_ORG_Lookup' ) IS NOT NULL OR IDENT_SEED('S3G_ORG_Lookup') IS NOT NULL ) SET IDENTITY_INSERT S3G_ORG_Lookup ON
+INSERT INTO S3G_ORG_Lookup (LookUp_ID,Value,Name,Type,Is_Active,Created_On) VALUES('124','6','Customer','ORG_RefDoc',1,'1/13/2011')
+INSERT INTO S3G_ORG_Lookup (LookUp_ID,Value,Name,Type,Is_Active,Created_On) VALUES('125','6','None','ORG_NumericOperator',1,'4/7/2012 5:19:08 PM')
+INSERT INTO S3G_ORG_Lookup (LookUp_ID,Value,Name,Type,Is_Active,Created_On) VALUES('126','3','Year wise IRR','ORG_ROI_RULES_IRR_REST',1,'6/23/2010 2:49:48 PM')
+INSERT INTO S3G_ORG_Lookup (LookUp_ID,Value,Name,Type,Is_Active,Created_On) VALUES('127','6','Principal','ORG_ROI_RULES_RETURN_PATTERN',1,'6/21/2010 2:10:37 PM')
+INSERT INTO S3G_ORG_Lookup (LookUp_ID,Value,Name,Type,Is_Active,Created_On) VALUES('128','9','Bullet','ORG_ROI_RULES_FREQUENCY',1,'6/21/2010 2:10:37 PM')
+INSERT INTO S3G_ORG_Lookup (LookUp_ID,Value,Name,Type,Is_Active,Created_On) VALUES('129','1','10K','Gold_Purity',1,'7/27/2012 4:33:59 PM')
+INSERT INTO S3G_ORG_Lookup (LookUp_ID,Value,Name,Type,Is_Active,Created_On) VALUES('130','2','14K','Gold_Purity',1,'7/27/2012 4:33:59 PM')
+INSERT INTO S3G_ORG_Lookup (LookUp_ID,Value,Name,Type,Is_Active,Created_On) VALUES('131','3','18K','Gold_Purity',1,'7/27/2012 4:33:59 PM')
+INSERT INTO S3G_ORG_Lookup (LookUp_ID,Value,Name,Type,Is_Active,Created_On) VALUES('132','4','22K','Gold_Purity',1,'7/27/2012 4:33:59 PM')
+INSERT INTO S3G_ORG_Lookup (LookUp_ID,Value,Name,Type,Is_Active,Created_On) VALUES('133','5','24K','Gold_Purity',1,'7/27/2012 4:33:59 PM')
+INSERT INTO S3G_ORG_Lookup (LookUp_ID,Value,Name,Type,Is_Active,Created_On) VALUES('134','1','Gram','Gold_Measurement',1,'7/27/2012 4:33:59 PM')
+INSERT INTO S3G_ORG_Lookup (LookUp_ID,Value,Name,Type,Is_Active,Created_On) VALUES('135','2','Tola','Gold_Measurement',1,'7/27/2012 4:33:59 PM')
+INSERT INTO S3G_ORG_Lookup (LookUp_ID,Value,Name,Type,Is_Active,Created_On) VALUES('136','3','Ounce','Gold_Measurement',1,'7/27/2012 4:33:59 PM')
+INSERT INTO S3G_ORG_Lookup (LookUp_ID,Value,Name,Type,Is_Active,Created_On) VALUES('137','4','Sovereigns','Gold_Measurement',1,'7/27/2012 4:33:59 PM')
+IF(	IDENT_INCR( 'S3G_ORG_Lookup' ) IS NOT NULL OR IDENT_SEED('S3G_ORG_Lookup') IS NOT NULL ) SET IDENTITY_INSERT S3G_ORG_Lookup OFF
+
+
+IF(	IDENT_INCR( 'S3G_LOANAD_LookupTypeMaster' ) IS NOT NULL OR IDENT_SEED('S3G_LOANAD_LookupTypeMaster') IS NOT NULL ) SET IDENTITY_INSERT S3G_LOANAD_LookupTypeMaster ON
+INSERT INTO S3G_LOANAD_LookupTypeMaster (Company_ID,LookupType_Code,LookupType_Description) VALUES('1','90','Relation_Type')
+INSERT INTO S3G_LOANAD_LookupTypeMaster (Company_ID,LookupType_Code,LookupType_Description) VALUES('1','100','Schedule Frequency')
+INSERT INTO S3G_LOANAD_LookupTypeMaster (Company_ID,LookupType_Code,LookupType_Description) VALUES('1','101','Job Nature')
+INSERT INTO S3G_LOANAD_LookupTypeMaster (Company_ID,LookupType_Code,LookupType_Description) VALUES('1','103','Template_Type')
+INSERT INTO S3G_LOANAD_LookupTypeMaster (Company_ID,LookupType_Code,LookupType_Description) VALUES('1','104','Mode_of_Mail')
+INSERT INTO S3G_LOANAD_LookupTypeMaster (Company_ID,LookupType_Code,LookupType_Description) VALUES('1','105','Exclusion_Category')
+IF(	IDENT_INCR( 'S3G_LOANAD_LookupTypeMaster' ) IS NOT NULL OR IDENT_SEED('S3G_LOANAD_LookupTypeMaster') IS NOT NULL ) SET IDENTITY_INSERT S3G_LOANAD_LookupTypeMaster OFF
+GO
+
+IF(	IDENT_INCR( 'S3G_LOANAD_LookupTypeDetails' ) IS NOT NULL OR IDENT_SEED('S3G_LOANAD_LookupTypeDetails') IS NOT NULL ) SET IDENTITY_INSERT S3G_LOANAD_LookupTypeDetails ON
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('360','1','100','2','Daily')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('361','1','100','3','Weekly')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('362','1','100','4','Monthly')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('363','1','100','5','Quarterly')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('364','1','100','6','Half-Yearly')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('365','1','100','7','Annually')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('366','1','102','1','ODI Generation')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('367','1','102','2','Bill Generation')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('368','1','102','3','Demand Spool')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('369','1','101','1','Regular')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('370','1','101','2','One Time')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('371','1','102','4','Delinquent Demark')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('372','1','90','1','Customer')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('373','1','90','2','Guarantor1')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('374','1','90','3','Guarantor2')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('375','1','90','4','Co-Applicant')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('377','1','25','14','Assignment')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('378','1','103','1','Pricing Letter')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('380','1','103','2','Application Approval Letter')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('381','1','103','3','Assignment Letter')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('382','1','103','4','Debt Collector Incentive Letter')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('383','1','103','5','Dunning Letter')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('384','1','103','6','Re-possession Letter')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('385','1','104','1','PDF')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('386','1','104','2','E-Mail')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('387','1','105','1','Location')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('389','1','105','2','Customer')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('390','1','105','3','Account')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('391','1','105','4','Asset')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('392','1','105','5','Employee')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('393','1','105','6','Product')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('394','1','103','7','Todays Disbursement')
+INSERT INTO S3G_LOANAD_LookupTypeDetails (LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description) VALUES('395','1','100','1','Time in Minutes')
+IF(	IDENT_INCR( 'S3G_LOANAD_LookupTypeDetails' ) IS NOT NULL OR IDENT_SEED('S3G_LOANAD_LookupTypeDetails') IS NOT NULL ) SET IDENTITY_INSERT S3G_LOANAD_LookupTypeDetails OFF
+GO
+
+
+IF(	IDENT_INCR( 'S3G_Status_LookUP' ) IS NOT NULL OR IDENT_SEED('S3G_Status_LookUP') IS NOT NULL ) SET IDENTITY_INSERT S3G_Status_LookUP ON
+INSERT INTO S3G_Status_LookUP (ID,Name,Type,IsActive,Created_By,Created_On,Modified_By,Modified_On) VALUES('216','Enquiry','ALERT_TYPE',1,'1','3/8/2012 12:13:22 PM','1','3/8/2012 12:13:22 PM')
+INSERT INTO S3G_Status_LookUP (ID,Name,Type,IsActive,Created_By,Created_On,Modified_By,Modified_On) VALUES('217','Pricing Approval','ALERT_TYPE',1,'1','3/8/2012 12:14:07 PM','1','3/8/2012 12:14:07 PM')
+INSERT INTO S3G_Status_LookUP (ID,Name,Type,IsActive,Created_By,Created_On,Modified_By,Modified_On) VALUES('218','Application Approval','ALERT_TYPE',1,'1','3/8/2012 12:14:45 PM','1','3/8/2012 12:14:45 PM')
+INSERT INTO S3G_Status_LookUP (ID,Name,Type,IsActive,Created_By,Created_On,Modified_By,Modified_On) VALUES('219','Payment Request','ALERT_TYPE',1,'1','3/8/2012 12:15:14 PM','1','3/8/2012 12:15:14 PM')
+INSERT INTO S3G_Status_LookUP (ID,Name,Type,IsActive,Created_By,Created_On,Modified_By,Modified_On) VALUES('220','Payment Approval','ALERT_TYPE',1,'1','3/8/2012 12:15:56 PM','1','3/8/2012 12:15:56 PM')
+INSERT INTO S3G_Status_LookUP (ID,Name,Type,IsActive,Created_By,Created_On,Modified_By,Modified_On) VALUES('221','Account Creation','ALERT_TYPE',1,'1','3/8/2012 12:16:26 PM','1','3/8/2012 12:16:26 PM')
+INSERT INTO S3G_Status_LookUP (ID,Name,Type,IsActive,Created_By,Created_On,Modified_By,Modified_On) VALUES('222','Account Activation','ALERT_TYPE',1,'1','3/8/2012 12:16:57 PM','1','3/8/2012 12:16:57 PM')
+INSERT INTO S3G_Status_LookUP (ID,Name,Type,IsActive,Created_By,Created_On,Modified_By,Modified_On) VALUES('223','Account Closure','ALERT_TYPE',1,'1','3/8/2012 12:17:39 PM','1','3/8/2012 12:17:39 PM')
+INSERT INTO S3G_Status_LookUP (ID,Name,Type,IsActive,Created_By,Created_On,Modified_By,Modified_On) VALUES('224','PreMature Closure','ALERT_TYPE',1,'1','3/8/2012 12:19:51 PM','1','3/8/2012 12:19:51 PM')
+INSERT INTO S3G_Status_LookUP (ID,Name,Type,IsActive,Created_By,Created_On,Modified_By,Modified_On) VALUES('225','Account Specific Revision','ALERT_TYPE',1,'1','3/8/2012 12:20:21 PM','1','3/8/2012 12:20:21 PM')
+IF(	IDENT_INCR( 'S3G_Status_LookUP' ) IS NOT NULL OR IDENT_SEED('S3G_Status_LookUP') IS NOT NULL ) SET IDENTITY_INSERT S3G_Status_LookUP OFF
+GO
+
+-------17-Sep-2012
+-------------------
+
+Alter table S3G_SYSAD_CustomerAlert Alter Column Event_Type_ID INT NULL
+---Old Proc S3G_Update_GlobalParam_Details updated in UAT , due to pwd changes in GPS.
+
+Alter table S3G_SYSAD_UserMaster  Alter Column Password Varchar(100)
+
+
+05-OCT-2012  --- BDO Changes
+----------------------------------------------
+
+Alter table S3g_Sysad_Usermaster add Designation_Id INT
+
+Alter table S3g_Sysad_Usermaster alter column Designation varchar(40) 
+
+Alter table S3G_SYSAD_UTPAMaster add Previous_PWDs varchar(600)
+
+--Alter table S3G_SYSAD_UTPAMaster add Pwd_Recycle_Itr 
+
+Alter table S3G_SYSAD_UTPAMaster add PWD_Modified_On datetime
+
+Alter table S3G_SYSAD_UTPAMaster add PWD_Access_Count INT
+
+Alter table S3G_CLN_BucketParameterValues add Credit_Weightage INT
+
+Alter table S3G_SYSAD_CompanyMaster ADD Marquee_Text  varchar(1000)
+
+Alter table S3G_ORG_CustomerMaster ADD CreditType Bit
+
+Alter table S3G_ORG_CustomerMaster ADD IS_BlocListed Bit
+
+Alter table S3G_ORG_GlobalCreditParameterApproval add Range_From INT
+
+Alter table S3G_ORG_GlobalCreditParameterApproval add Range_To INT
+
+Alter table S3G_ORG_GlobalCreditParameterMaster add Entity_Type_Id INT
+
+Alter table S3G_ORG_AuthorizationRuleCard add Entity_Type_Id INT
+
+Alter table S3G_CLT_HIGHLiquidSecurities add Ownership INT
+
+Alter table S3G_SYSAD_ScheduledJobs add LastRunDate DateTime
+
+Alter table S3G_CLT_CollateralCapture add Total INT
+
+Alter table S3G_ORG_AuthorizationRuleCardDetail alter column Total_Approvals INT NULL
+
+Alter table S3G_ORG_GlobalCreditParameterApproval alter column Number_Of_Approvals Numeric(5,0)
+
+Alter table S3G_ORG_GlobalCreditParameterApproval alter column Hygiene_Percentage Numeric(5,2)
+
+Alter table S3G_ORG_GlobalCreditParameterApproval alter column Minimal_Approval_Required Numeric(5,0)
+
+
+Alter table S3G_SYSAD_UserMaster add Previous_PWDs varchar(600)
+
+Alter table S3G_SYSAD_UserMaster add PWD_Access_Count INT
+
+Alter table S3G_SYSAD_UserMaster add PWD_Is_Reset BIT
+
+Alter table S3G_CLT_LOWLiquidSecurities add Ownership INT
+
+Alter table S3G_CLT_Commodities add Ownership INT
+
+Alter table S3G_CLT_FinancialSecurities add Ownership INT
+
+Alter table S3G_CLT_MediumLiquidSecurities add Ownership INT
+
+Alter table S3G_SYSAD_USERMaster add PWD_Modified_On datetime
+
+Alter table S3G_CLT_HighLiquidSecurities alter column DP_Name varchar(50)
+
+Alter table S3G_CLT_HighLiquidSecurities alter column DP_No varchar(50)
+
+Alter table S3G_CLT_HighLiquidSecurities alter column Client_ID varchar(50)
+
+Alter table S3G_CLT_HighLiquidSecurities alter column Certificate_No varchar(25)
+
+Alter table S3G_CLT_HighLiquidSecurities alter column Folio_No varchar(25)
+
+Alter table S3G_CLT_HighLiquidSecurities alter column Unit_Face_Value UDTValueNumeric(25,4)
+
+Alter table S3G_CLT_HighLiquidSecurities alter column No_Of_Units UDTValueNumeric(20,4)
+
+Alter table S3G_CLT_HighLiquidSecurities alter column Interest_Percentage decimal(5,2)
+
+Update S3G_SYSAD_CompanyMaster
+SET marquee_Text='Sundaram Finance offers easy Installment Loans'
+
+Update S3G_SYSAD_ProgramMaster set Program_Name='Business Target Master'
+Where Program_ID=208
+
+Update S3G_SYSAD_ProgramMaster set Program_Name='Stock and Receivable'
+Where Program_ID=187
+
+----Scheduled Job Mgt Services Reference to be added in Both web.config-------------------
+
+
+CREATE TABLE [dbo].[S3G_ORG_GCPApprovaldtls](
+	[GCPApprovaldtls_ID] [int] IDENTITY(1,1) NOT NULL,
+	[GCP_Approval_ID] [int] NULL,
+	[Seq_No] [int] NULL,
+	[Entity_ID] [int] NULL,
+	[Location_Code] [varchar](50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+
+/****** Object:  Table [dbo].[S3G_SYSAD_USERDESIGNATION]    Script Date: 10/06/2012 14:42:53 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_SYSAD_USERDESIGNATION](
+	[DESIGNATION_ID] [int] IDENTITY(1,1) NOT NULL,
+	[DESIGNATION_NAME] [varchar](100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[Hierarchy_Id] [int] NULL,
+ CONSTRAINT [PK_S3G_SYSAD_USERDESIGNATION] PRIMARY KEY CLUSTERED 
+(
+	[DESIGNATION_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+
+/****** Object:  Table [dbo].[S3G_ORG_AuthorizationRuleCardApprovals]    Script Date: 10/06/2012 14:43:18 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_ORG_AuthorizationRuleCardApprovals](
+	[Authorization_Rule_Card_Approval_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Authorization_Rule_card_Detail_ID] [int] NULL,
+	[Seq_No] [int] NULL,
+	[Entity_ID] [int] NULL,
+	[Location_Code] [varchar](50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+ CONSTRAINT [PK__S3G_ORG_Authoriz__5D8D5A47] PRIMARY KEY CLUSTERED 
+(
+	[Authorization_Rule_Card_Approval_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+
+
+
+IF(	IDENT_INCR( 'S3G_SYSAD_USERDESIGNATION' ) IS NOT NULL OR IDENT_SEED('S3G_SYSAD_USERDESIGNATION') IS NOT NULL ) SET IDENTITY_INSERT S3G_SYSAD_USERDESIGNATION ON
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('45','Vice Chairman cum Managing Directors',42)
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('46','Senior President (Operations and Management Services)','41')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('47','President','40')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('48','Vice President (Office of Risk Management)','39')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('49','Senior General Manager','38')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('50','General Manager (Operations)','37')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('51','Deputy General Manager (Operations)','36')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('52','Assistant General Manager (Operations)','35')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('53','Deputy Circle Manager','34')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('54','Division Manager','33')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('55','Marketing Officer','32')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('56','Manager','31')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('57','Branch Manager','30')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('58','Deputy Manager','29')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('59','Executive','28')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('60','Senior Manager','27')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('61','Marketing Officer Trainee','26')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('62','Officer','25')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('63','Back Office - Officer','24')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('64','Collection Officer','23')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('65','Sub staff','22')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('66','Company Secretary','21')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('67','Assistant','20')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('68','Senior Executive','19')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('69','Senior Deputy General Manager','18')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('70','Field Investigator','17')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('71','Back Office - Assistant','16')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('72','Collection Assistant','15')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('73','Support Assistant','14')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('74','Graduate Trainee','13')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('75','Retainer','12')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('76','Officer Insurance','11')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('77','Management Trainee','10')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('78','Trainee Back office','9')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('79','Trainee','8')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('80','Field Officer','7')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('81','Super Admin','6')
+INSERT INTO S3G_SYSAD_USERDESIGNATION (DESIGNATION_ID,DESIGNATION_NAME,Hierarchy_Id) VALUES('82','SysAdmin','5')
+IF(	IDENT_INCR( 'S3G_SYSAD_USERDESIGNATION' ) IS NOT NULL OR IDENT_SEED('S3G_SYSAD_USERDESIGNATION') IS NOT NULL ) SET IDENTITY_INSERT S3G_SYSAD_USERDESIGNATION OFF
+GO
+
+CREATE TABLE [dbo].[S3G_CLT_CollateralCaptureDetails](
+	[Collateral_Capture_Details_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Collateral_Capture_ID] [int] NOT NULL,
+	[Ref_Point_Type_Code] [int] NOT NULL,
+	[Ref_Point_Code] [int] NOT NULL,
+	[Ref_Point_ID] [int] NOT NULL,
+ CONSTRAINT [PK_S3G_CLT_CollateralCaptureDetails] PRIMARY KEY CLUSTERED 
+(
+	[Collateral_Capture_Details_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+
+
+Drop Table [S3G_SYSAD_ScheduledJobs]
+Drop Table [S3G_SYSAD_ScheduleJobStatus]
+
+CREATE TABLE [dbo].[S3G_SYSAD_ScheduledJobs](
+	[Schedule_Job_ID] [int] IDENTITY(1,1) NOT NULL,
+	[JobDescription] [varchar](60) NOT NULL,
+	[JobNature] [int] NOT NULL,
+	[Frequency] [int] NULL,
+	[StartDateTime] [datetime] NOT NULL,
+	[IsHolidayInclude] [bit] NULL,
+	[Remarks] [varchar](200) NULL,
+	[Created_By] [int] NULL,
+	[Created_On] [datetime] NULL,
+	[Modified_By] [int] NULL,
+	[Modified_On] [datetime] NULL,
+	[Is_Active] [bit] NULL,
+	[Company_ID] [int] NOT NULL,
+	[Location_Code] [varchar](30) NULL,
+	[Time_In_Mins] [int] NULL,
+	[Schedule_Job] [int] NOT NULL,
+	[OneTimeJobStatus] [varchar](5) NULL,
+	[LastRunDate] [datetime] NULL,
+ CONSTRAINT [PK_S3G_SYSAD_ScheduledJobs] PRIMARY KEY CLUSTERED 
+(
+	[Schedule_Job_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+CREATE TABLE [dbo].[S3G_SYSAD_ScheduleJobStatus](
+	[ScheduleJob_Status_Id] [int] IDENTITY(1,1) NOT NULL,
+	[Schedule_Job_ID] [int] NOT NULL,
+	[Company_ID] [int] NOT NULL,
+	[Location_Code] [varchar](30) NOT NULL,
+	[Schedule_Job] [int] NOT NULL,
+	[StartDateTime] [datetime] NOT NULL,
+	[EndDateTime] [datetime] NULL,
+	[Status] [varchar](5) NOT NULL,
+ CONSTRAINT [PK_S3G_SYSAD_ScheduleJobStatus] PRIMARY KEY CLUSTERED 
+(
+	[ScheduleJob_Status_Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+ALTER TABLE dbo.[S3G_ORG_GlobalCreditParameterApproval]
+ADD CONSTRAINT DF_S3G_ORG_GlobalCreditParameterApproval_Hygiene_Percentage
+DEFAULT 0 FOR Hygiene_Percentage
+
+Alter table S3G_ORG_GlobalCreditParameterApproval alter column Range_From Numeric(5,2)
+
+Alter table S3G_ORG_GlobalCreditParameterApproval alter column Range_To Numeric(5,2)
+
+15-OCT-2012
+---------------------------
+Alter table S3G_SYSAD_UserMaster alter column User_Code varchar(15)
+
+24-Oct-2012
+-------------
+update S3G_SYSAD_ProgramMaster 
+set Module_Code='S'
+, Page_Url='S3GSysAdminScheduledJobsView.aspx' 
+ , Detail_Url='S3GSysAdminScheduledJobsView.aspx' where Program_ID='205'
+
+
+GO
+/****** Object:  Table [dbo].[S3G_SYSAD_TemplateMaster]    Script Date: 10/25/2012 10:33:03 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_SYSAD_TemplateMaster](
+	[Tmp_Doc_Id] [int] IDENTITY(1,1) NOT NULL,
+	[Company_Id] [int] NOT NULL,
+	[Tmp_Doc_No] [varchar](50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	[LOB_Id] [int] NULL,
+	[Location_Code] [varchar](50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[Template_Type] [int] NULL,
+	[Template_Type_Code] [int] NULL,
+	[Template_Field_Id] [int] NULL,
+	[Mode_of_Mail_Type] [int] NULL,
+	[Mode_of_Mail_Type_Code] [int] NULL,
+	[Doc_Path] [varchar](200) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[Template_Content] [varchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[Is_Active] [bit] NOT NULL,
+	[Created_By] [int] NULL,
+	[Created_On] [datetime] NULL,
+	[Modified_By] [int] NULL,
+	[Modified_On] [datetime] NULL,
+ CONSTRAINT [PK_S3G_SYSAD_TemplateMaster] PRIMARY KEY CLUSTERED 
+(
+	[Tmp_Doc_Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+
+25-OCT-2012
+---------------
+
+----Scheduled Job service to be added in service and PLayer web.config
+---The below key to be added in PLayer web.config
+<add key="ServiceStatus" value="false"/> 
+
+
+--26/Oct/2012 Thangam M
+--______________________
+
+CREATE TABLE [dbo].[S3G_LoanAd_BillingAccounts](
+	[Billing_Account_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Billing_Control_Id] [int] NOT NULL,
+	[CashFlow_Flag_ID] [int] NOT NULL,
+	[PANum] [varchar](50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	[SANum] [varchar](50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	[Debit_Amount] [numeric](24, 4) NOT NULL,
+ CONSTRAINT [PK_S3G_LoanAd_BillingAccounts] PRIMARY KEY CLUSTERED 
+(
+	[Billing_Account_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+--Web.config changes 
+--___________________
+
+<add key="ServiceStatus" value="false"/>
+
+--08-Nov-2012
+---------------
+ALter table S3G_LOANAD_AccountRepaymentArchive add Bill_Status BIT
+
+Alter table S3G_SYSAD_GlobalParameterSetup add Numeral_Char BIT
+
+Alter table S3G_LOANAD_LeaseAssetDepreciation add Financial_Year_End datetime
+
+-- 15-Nov-2012
+--------------
+ALTER TABLE [dbo].[S3G_ORG_BusinTargetMast] ADD  CONSTRAINT [PK_S3G_ORG_BusinTargetMast] PRIMARY KEY CLUSTERED 
+(
+	[Business_Target_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+
+ALTER TABLE [dbo].[S3G_ORG_BusinTargetDet] ADD  CONSTRAINT [PK_S3G_ORG_BusinTargetDet] PRIMARY KEY CLUSTERED 
+(
+	[Business_Target_Det_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[S3G_ORG_BusinTargetDet]  WITH CHECK ADD  CONSTRAINT [FK_S3G_ORG_BusinTargetMast_S3G_ORG_BusinTargetDet] FOREIGN KEY([Business_Target_ID])
+REFERENCES [dbo].[S3G_ORG_BusinTargetMast] ([Business_Target_ID])
+GO
+
+ALTER TABLE [dbo].[S3G_ORG_BusinTargetDet] CHECK CONSTRAINT [FK_S3G_ORG_BusinTargetMast_S3G_ORG_BusinTargetDet]
+GO
+
+
+USE [S3G_USR_Ver_1.1]
+GO
+/****** Object:  StoredProcedure [dbo].[S3G_ORG_InsertTargetMaster]    Script Date: 11/15/2012 11:36:21 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+
+
+
+    
+    
+            
+ALTER PROC [dbo].[S3G_ORG_InsertTargetMaster]                  
+(  
+   @Company_ID      INT                      
+ , @LOB_ID      INT = NULL                                    
+ , @Location_ID INT = NULL
+ , @Marketing_Type   INT                      
+ , @Marketing_Code   INT
+ , @Product_ID   INT
+ , @Business_Target_No VARCHAR(25)=NULL
+ , @Portfolio_IRR  NUMERIC              
+ , @Is_Active     BIT   
+ , @Frequency_Type INT 
+ , @Asset_Category INT = NULL
+ , @Marketing_Typecpy  INT = NULL  
+ , @Created_By INT 
+ , @Created_On DATETIME = NULL 
+ , @XMLParamTargetmasterDet NTEXT
+ , @XMLParamCpyTargetmasterDet NTEXT=NULL                      
+ , @ErrorCode  BIGINT OUTPUT )                  
+AS                  
+-- =============================================                                  
+-- Author       : Ponnurajesh.C                     
+-- Create Date  : 18/April/2012                                
+-- Description  : To Insert Target Master AND Target Details                      
+              
+-- =============================================                      
+BEGIN                  
+ SET NOCOUNT ON 
+declare @location_Code varchar(30)    
+Set @location_Code = dbo.FN_Get_LocationCode(@Location_ID)                      
+        
+ SET @ErrorCode = 0;                       
+ DECLARE @RecordCount INT                      
+        
+DECLARE @DebtCode VARCHAR(100)                
+DECLARE @Document_Type_Code VARCHAR(10)    
+DECLARE @DCV VARCHAR(50)                
+ Declare @DebitCollectorID int             
+--DECLARE @varRecordCount INT                
+SET @Document_Type_Code ='TRG'                
+--DECLARE @varRecordIndex INT                              
+     
+
+  IF(@Business_Target_No='0' or @Business_Target_No=NULL)  
+ Begin  
+ EXEC S3G_ORG_GetDocumentControlNo @Company_ID,@Document_Type_Code,1,@LOB_ID,@Location_ID,@DebtCode OUTPUT                  
+set @dcv=@DebtCode     
+End  
+    else  
+set @dcv=@Business_Target_No  
+          
+ IF(@DebtCode='-1')          
+ BEGIN          
+  SET @ErrorCode=36;          
+  RETURN;          
+ END          
+ IF(@DebtCode='-2')          
+ BEGIN          
+  SET @ErrorCode=37;          
+  RETURN;          
+ END  
+Print @Errorcode          
+ 
+DECLARE @XMLPrepareDoc INT 
+DECLARE @Privalidcount INT
+DECLARE @Validateperiod int
+DECLARE @Validcount int
+Declare @tmpvalid Table(RowID INT IDENTITY,Period int)                   
+    EXEC SP_XML_PrepareDocument @XMLPrepareDoc OUTPUT, @XMLParamTargetmasterDet
+insert into @tmpvalid (Period) (SELECT CAST(Period as numeric(6,0)) AS [Period] FROM                      
+OPENXML(@XMLPrepareDoc, 'Root/Details', 1)                      
+      WITH(Period INT) )
+ EXEC SP_XML_RemoveDocument @XMLPrepareDoc 
+--set @Validcount=(select count(*) from @tmpvalid)
+--while(@Validcount>=1)
+--Begin
+--set @Validateperiod=(select Period from @tmpvalid where RowID=@validcount)
+--
+--set @Privalidcount=(select count(*) from S3G_ORG_BusinTargetMast a inner join S3G_ORG_BusinTargetdet b on a.business_target_id=b.business_target_id where  a.lob_id=@LOB_ID and b.period=@Validateperiod and a.marketing_code=@Marketing_Code)
+--
+--if (@Privalidcount)>=1
+--BEGIN
+--SET @ErrorCode=38;
+--Return;          
+--END
+--set @Validcount=@Validcount-1
+--END
+
+
+BEGIN TRANSACTION    
+BEGIN TRY 
+if (@Marketing_Typecpy<> 1) or (@Marketing_Typecpy<>2)
+begin
+  INSERT INTO  S3G_ORG_BusinTargetMast          
+ (Business_Target_No,Company_ID,LOB_ID,Location_Code,Marketing_Type,Marketing_Code,Is_Active,Frequency_Type,Asset_Category,Portfolio_IRR,Product_ID,Created_On,Created_By) 
+VALUES(@dcv,@Company_ID, @LOB_ID,@Location_Code,@Marketing_Type,@Marketing_Code,@Is_Active,@Frequency_Type,@Asset_Category,@Portfolio_IRR,@Product_ID,@Created_On,@Created_By)          
+
+set @DebitCollectorID =(select @@identity)                  
+                     
+    EXEC SP_XML_PrepareDocument @XMLPrepareDoc OUTPUT, @XMLParamTargetmasterDet                      
+                         
+DECLARE @Period NUMERIC(6,0)
+
+Declare @bustrgid int
+
+set @bustrgid=(select top 1 business_target_id from  S3G_ORG_BusinTargetMast  order by  business_target_id desc)
+                         
+    INSERT INTO S3G_ORG_BusinTargetDet                      
+     (   
+        Business_Target_ID                                                       
+      , Period                       
+      , Target_Amount
+      , Units
+      , Asset_Class
+      , Asset_Make                     
+      , Commission_Percen                      
+      , SplCommision_Percen                      
+     )  
+	SELECT
+      @bustrgid                                         
+     ,CAST(Period as numeric(6,0)) AS [Period]                      
+      , CAST(Target_Amount AS numeric(14,4)) AS [Target_Amount]
+      , CAST(Units AS numeric(14,4)) AS [Units]
+      , CAST(Asset_Class AS numeric(14,4)) AS [Asset_Class]   
+      , CAST(Asset_Make AS numeric(14,4)) AS [Asset_Make]                   
+      , CAST(Commission AS numeric (14,4)) AS [Commission]                      
+      , CAST(Special_Commission AS numeric (14,4)) AS [Special_Commission]                     
+     FROM                      
+		OPENXML(@XMLPrepareDoc, 'Root/Details', 1)                      
+      WITH(Period INT,Target_Amount numeric(14,4),Units INT,Asset_Class INT,Asset_Make INT, Commission numeric(14,4), Special_Commission numeric(14,4))                 
+                   
+	EXEC SP_XML_RemoveDocument @XMLPrepareDoc 
+             
+	EXEC SP_XML_PrepareDocument @XMLPrepareDoc OUTPUT, @XMLParamCpyTargetmasterDet
+
+End
+
+if (@Marketing_Typecpy= 1) or (@Marketing_Typecpy=2)
+ Begin
+
+Declare @tmpTRG Table(RowID INT IDENTITY,MARKETING_CODE int) 
+Declare @markcde int 
+Declare @subcount1 INT
+
+
+Insert into @tmpTRG (MARKETING_CODE)  (select CAST(MARKETING_CODE as int) AS [MARKETING_CODE]                      
+                      
+      FROM                      
+      OPENXML(@XMLPrepareDoc, 'Root/Details', 1)                      
+      WITH(MARKETING_CODE int))
+ EXEC SP_XML_RemoveDocument @XMLPrepareDoc 
+
+set @subcount1=(select count(*) as tmpcount from @tmpTRG)
+while @subcount1>=1
+begin
+set @markcde=(select MARKETING_CODE from @tmpTRG where RowID=@subcount1)
+--set @Validcount=(select count(*) from @tmpvalid)
+--while(@Validcount>=1)
+--Begin
+--set @Validateperiod=(select Period from @tmpvalid where RowID=@validcount)
+--
+--set @Privalidcount=(select count(*) from S3G_ORG_BusinTargetMast a inner join S3G_ORG_BusinTargetdet b on a.business_target_id=b.business_target_id where  a.lob_id=@LOB_ID and b.period=@Validateperiod and a.marketing_code=@Markcde)
+--
+--if (@Privalidcount)>=1
+--BEGIN
+--SET @ErrorCode=38;
+--Return;          
+--END
+--set @Validcount=@Validcount-1
+--END
+
+
+IF(@Business_Target_No='0' or @Business_Target_No=NULL)  
+ Begin
+Declare @DebtCode1 varchar(100)
+Declare @dcv1 VARCHAR(50)  
+ EXEC S3G_ORG_GetDocumentControlNo @Company_ID,@Document_Type_Code,1,@LOB_ID,@Location_ID,@DebtCode1 OUTPUT                  
+set @dcv1=@DebtCode1     
+End
+
+ INSERT INTO S3G_ORG_BusinTargetMast          
+ (Business_Target_No,Company_ID,LOB_ID,Location_Code,Marketing_Type,Is_Active,Frequency_Type,Asset_Category,Portfolio_IRR,Product_ID,Created_On,Created_By,Marketing_Code)
+values(@dcv1,@Company_ID,@LOB_ID,@Location_Code,@Marketing_Typecpy,@Is_Active,
+       @Frequency_Type,@Asset_Category,@Portfolio_IRR,@Product_ID,@Created_On,@Created_By,@markcde)                      
+ 
+set @subcount1=@subcount1-1 
+END                    
+
+set @bustrgid=(select top 1 business_target_id from  S3G_ORG_BusinTargetMast  order by  business_target_id desc)              
+                   
+
+Declare @Details_Record_Count INT
+
+Declare @mkttmp  varchar(50) 
+Declare @subcount int
+
+set @subcount=(select count(*) as tmpcount from @tmpTRG)
+
+While(@subcount>=1)
+begin
+
+set @mkttmp=(select MARKETING_CODE from @tmpTRG where rowid=@subcount)
+
+EXEC SP_XML_PrepareDocument @XMLPrepareDoc OUTPUT, @XMLParamTargetmasterDet                         
+    INSERT INTO S3G_ORG_BusinTargetDet                      
+     (   
+        Business_Target_ID                                                       
+      , Period                       
+      , Target_Amount
+      , Units
+      , Asset_Class
+      , Asset_Make                     
+      , Commission_Percen                      
+      , SplCommision_Percen                      
+     )  
+       
+     
+SELECT    
+     
+      @bustrgid                                        
+      ,CAST(Period as numeric(6,0)) AS [Period]                      
+      , CAST(Target_Amount AS numeric(14,4)) AS [Target_Amount]
+      , CAST(Units AS numeric(14,4)) AS [Units]
+      , CAST(Asset_Class AS numeric(14,4)) AS [Asset_Class]   
+      , CAST(Asset_Make AS numeric(14,4)) AS [Asset_Make]                   
+      , CAST(Commission AS numeric (14,4)) AS [Commission]                      
+      , CAST(Special_Commission AS numeric (14,4)) AS [Special_Commission]                     
+     FROM                      
+OPENXML(@XMLPrepareDoc, 'Root/Details', 1)                      
+      WITH(Period INT,Target_Amount numeric(14,4),Units INT,Asset_Class INT,Asset_Make INT, Commission numeric(14,4), Special_Commission numeric(14,4))                 
+                   
+  EXEC SP_XML_RemoveDocument @XMLPrepareDoc 
+
+set @bustrgid=@bustrgid-1 
+set @subcount=@subcount-1
+
+END                   
+  
+END 
+END TRY  
+BEGIN CATCH  
+ IF @@TRANCOUNT < 0  
+  ROLLBACK TRANSACTION;  
+END CATCH                   
+IF @@TRANCOUNT > 0        
+    COMMIT TRANSACTION;     
+  
+ IF (@@ERROR != 0)                      
+  BEGIN                      
+    RAISERROR  20000 'Error in Target Master Insert';                      
+    SET @ErrorCode = 50;                        
+  END      
+                                     
+ SET NOCOUNT OFF;                      
+  
+END
+
+
+--15/11/2012 Ganapathy
+--____________________
+
+update S3G_SYSAD_GlobalParameterSetup 
+set Disable_Access_Wrong_pwd=5,Min_pwd_length=5,Pwd_Recycle_Itr=4
+
+--____________________
+
+
+
+-- 15/11/2012 Thangam M
+--_____________________
+
+UPDATE S3G_SYSAD_ProgramMaster
+   SET Page_Url = 'S3GClnTransLander.aspx?Code=CDS'
+ WHERE Program_ID = 101
+
+--______________________
+
+--07 - DEC - 2012 Manikandan
+-- INSERTING TERM LOAN and Interest Query Report in Program Master
+--____________________________________________________________
+--  TERM LOAN - GOLD LOAN
+INSERT INTO S3G_SYSAD_ProgramMaster 
+ (
+   Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,
+   Is_Active,Created_By, Created_On,Modified_By,Modified_On,Page_Url,
+   Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag
+  )
+  VALUES 
+  (
+   220, 'RIQ', 'Term Loan Top up - Gold Loan', 'L', 220,
+   1,2,GETDATE(), NULL,NULL,'S3gLoanAdTransLander.aspx?Code=TLGL ',
+   'S3GLoanAdTLEWCTopup_Add_GL.aspx', NULL, NULL,NULL, NULL,NULL
+  )
+  -- INTEREST QUERY REPORT
+  INSERT INTO S3G_SYSAD_ProgramMaster 
+ (
+   Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,
+   Is_Active,Created_By, Created_On,Modified_By,Modified_On,Page_Url,
+   Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag
+  )
+  VALUES 
+  (
+   228, 'RIQ', 'Interest Query Report', 'R', 228,
+   1,2,GETDATE(), NULL,NULL,'S3GRptInterestQuery.aspx',
+   'S3GRptInterestQuery.aspx', NULL, NULL,NULL, NULL,NULL
+  )
+
+---- CREATING NEW TABLE FOR OPERATING LEASE DEPR
+
+/****** Object:  Table [dbo].[S3G_LOANAD_LeaseDepErrorLog]    Script Date: 12/07/2012 11:15:50 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[S3G_LOANAD_LeaseDepErrorLog](
+	[Sno] [int] IDENTITY(1,1) NOT NULL,
+	[Location_Code] [varchar](50) NULL,
+	[ERRORCODE] [int] NULL,
+	[ERRORDESCRIPTION] [varchar](200) NULL,
+	[Depreciation_ID] [varchar](50) NULL,
+ CONSTRAINT [PK_S3G_LOANAD_LeaseDepErrorLog] PRIMARY KEY CLUSTERED 
+(
+	[Sno] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
+/****** Object:  Table [dbo].[S3g_LOAND_LocLeaseDepreciation]    Script Date: 12/07/2012 11:17:04 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[S3g_LOAND_LocLeaseDepreciation](
+	[Loc_Dep_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Depreciation_ID] [varchar](50) NULL,
+	[Company_ID] [int] NULL,
+	[Location_Code] [varchar](50) NULL,
+	[Depreciation_Date] [datetime] NULL,
+	[Account_Link_Key] [int] NULL,
+ CONSTRAINT [PK_S3g_LOAND_LocLeaseDepreciation] PRIMARY KEY CLUSTERED 
+(
+	[Loc_Dep_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Manikandan Changes End. 07 - DEC - 2012
+
+
+
+--- Thangam M for Trade Finance on 07/Dec/2012  ---
+
+
+ALTER TABLE S3G_ORG_EntityMaster ADD Is_TradeAdvance BIT NULL
+
+CREATE TABLE [dbo].[S3G_TA_CollateralCapture](
+	[Collateral_Capture_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Company_ID] [int] NOT NULL,
+	[Type] [int] NULL,
+	[Type_ID] [int] NULL,
+	[LOB_ID] [int] NULL,
+	[Location_Code] [varchar](30) NULL,
+	[Product_ID] [int] NULL,
+	[Constitution_ID] [int] NULL,
+	[Collateral_Collected_By] [tinyint] NOT NULL,
+	[Entity_ID] [int] NULL,
+	[Collection_Agent_ID] [int] NULL,
+	[Currency_Code] [int] NOT NULL,
+	[Collateral_Tran_No] [varchar](25) NOT NULL,
+	[Collateral_Tran_Date] [datetime] NOT NULL,
+	[Ref_Point_Type_Code] [int] NULL,
+	[Ref_Point_Code] [int] NULL,
+	[Ref_Point_ID] [int] NULL,
+	[Collateral_Valuation_No] [varchar](25) NULL,
+	[Collateral_Valuation_Date] [datetime] NULL,
+	[Is_Active] [bit] NOT NULL,
+	[Created_By] [int] NOT NULL,
+	[Created_On] [datetime] NOT NULL,
+	[Modified_By] [int] NULL,
+	[Modified_On] [datetime] NULL,
+	[Total] [int] NULL,
+ CONSTRAINT [PK_S3G_TA_CollateralCapture] PRIMARY KEY CLUSTERED 
+(
+	[Collateral_Capture_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_AppProcess]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_TA_AppProcess](
+	[Company_ID] [int] NOT NULL,
+	[Entity_ID] [int] NOT NULL,
+	[Application_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Application_Number] [varchar](12) NOT NULL,
+	[Application_Date] [datetime] NOT NULL,
+	[Finance_Amount] [numeric](10, 0) NOT NULL,
+	[Status_Type_Code] [int] NOT NULL,
+	[Status_Code] [int] NOT NULL,
+	[Created_By] [int] NOT NULL,
+	[Created_On] [datetime] NOT NULL,
+ CONSTRAINT [PK_S3G_TA_AppProcess] PRIMARY KEY CLUSTERED 
+(
+	[Application_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_CreditScoreGuideParameter]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_TA_CreditScoreGuideParameter](
+	[CreditScore_Guide_Parameter_ID] [int] IDENTITY(1,1) NOT NULL,
+	[CreditScore_Guide_ID] [int] NOT NULL,
+	[Description] [varchar](50) NULL,
+	[Field_Attribute] [int] NOT NULL,
+	[Numeric_Operator] [int] NULL,
+	[Difference_Percentage] [numeric](7, 2) NULL,
+	[Difference_Mark] [numeric](14, 4) NULL,
+	[Created_By] [int] NOT NULL,
+	[Created_On] [datetime] NOT NULL,
+	[Modified_By] [int] NULL,
+	[Modified_On] [datetime] NULL,
+ CONSTRAINT [PK_S3G_TA_CreditScoreGuideParameter] PRIMARY KEY CLUSTERED 
+(
+	[CreditScore_Guide_Parameter_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_CollateralMaster]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_TA_CollateralMaster](
+	[Collateral_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Company_ID] [int] NOT NULL,
+	[LOB_ID] [int] NULL,
+	[Product_Id] [int] NULL,
+	[Constitution_ID] [int] NULL,
+	[Collateral_Level_Type_Code] [int] NOT NULL,
+	[Collateral_Level_Code] [int] NOT NULL,
+	[Collateral_Ref_No] [varchar](25) NOT NULL,
+	[Transaction_Date] [datetime] NOT NULL,
+	[Is_Active] [bit] NOT NULL,
+	[Created_By] [int] NOT NULL,
+	[Created_On] [datetime] NOT NULL,
+	[Modified_By] [int] NULL,
+	[Modified_On] [datetime] NULL,
+ CONSTRAINT [PK_TA_CLT_CollateralMaster] PRIMARY KEY CLUSTERED 
+(
+	[Collateral_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_PRDDCDocumentCategory]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_TA_PRDDCDocumentCategory](
+	[PRDDC_Doc_Cat_ID] [int] IDENTITY(1,1) NOT NULL,
+	[PRDDC_Doc_Type] [varchar](25) NOT NULL,
+	[PRDDC_Doc_Description] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_S3G_TA_PRDDCDocumentCategory] PRIMARY KEY CLUSTERED 
+(
+	[PRDDC_Doc_Cat_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_PaymentRequestInstruments]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_TA_PaymentRequestInstruments](
+	[Company_ID] [int] NOT NULL,
+	[Payment_Instrument_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Request_No] [int] NOT NULL,
+	[Instrument_No] [varchar](12) NULL,
+	[Instrument_Date] [datetime] NULL,
+	[Instrument_Status] [bit] NOT NULL,
+	[Instrument_Amount] [decimal](20, 4) NOT NULL,
+	[Bank_ID] [int] NULL,
+	[Remarks] [varchar](100) NULL,
+	[Instrument_Type] [varchar](1) NOT NULL,
+	[Created_On] [datetime] NOT NULL,
+	[Created_By] [int] NOT NULL,
+ CONSTRAINT [PK_S3G_TA_PaymentRequestInstruments] PRIMARY KEY CLUSTERED 
+(
+	[Payment_Instrument_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_PaymentRequestDetails]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_TA_PaymentRequestDetails](
+	[Payment_Request_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Company_ID] [int] NOT NULL,
+	[Request_No] [int] NOT NULL,
+	[Application_ID] [int] NOT NULL,
+	[Tranche_ID] [int] NULL,
+	[Asset_ID] [int] NULL,
+	[Pay_Code] [int] NOT NULL,
+	[Pay_Adjust_Type] [int] NOT NULL,
+	[GL_Code] [varchar](50) NOT NULL,
+	[SL_Code] [varchar](50) NULL,
+	[Amount] [decimal](20, 4) NOT NULL,
+	[Pay_To_Name] [varchar](50) NULL,
+	[Pay_To_Address] [varchar](200) NULL,
+	[Description] [varchar](100) NULL,
+	[Ref_DocNo] [varchar](50) NULL,
+ CONSTRAINT [PK_S3G_TA_PaymentRequestDetails] PRIMARY KEY CLUSTERED 
+(
+	[Payment_Request_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_PaymentRequestAddLess]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_TA_PaymentRequestAddLess](
+	[Company_ID] [int] NOT NULL,
+	[Payment_Request_No] [varchar](50) NOT NULL,
+	[Addless] [nvarchar](50) NOT NULL,
+	[GL_Account] [varchar](50) NOT NULL,
+	[SL_Account] [varchar](50) NOT NULL,
+	[Amount] [numeric](10, 4) NOT NULL,
+	[Pay_Type_Code] [int] NOT NULL,
+	[Pay_Code] [nvarchar](50) NOT NULL,
+	[Remarks] [varchar](100) NOT NULL
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_Log]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_TA_Log](
+	[TA_Log_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Company_ID] [int] NOT NULL,
+	[Entity_ID] [int] NOT NULL,
+	[Tranche_ID] [int] NOT NULL,
+	[PANum] [varchar](25) NULL,
+	[SANUm] [varchar](25) NULL,
+	[Location_Code] [varchar](25) NULL,
+	[Doc_No] [int] NOT NULL,
+	[Doc_Date] [datetime] NOT NULL,
+	[Value_Date] [datetime] NOT NULL,
+	[Doc_Type] [varchar](12) NOT NULL,
+	[Txn_Amount] [numeric](25, 4) NOT NULL,
+	[Txn_Leg] [bit] NOT NULL,
+ CONSTRAINT [PK_S3G_TA_Log] PRIMARY KEY CLUSTERED 
+(
+	[TA_Log_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_IncomeProcessDetails]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[S3G_TA_IncomeProcessDetails](
+	[Income_Calc_ID] [int] NOT NULL,
+	[Income_Dtl_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Tranche_ID] [int] NOT NULL,
+	[Income_Amount] [numeric](20, 4) NOT NULL,
+	[Closing_Balance] [numeric](20, 4) NOT NULL,
+ CONSTRAINT [PK_S3G_TA_IncomeProcessDetails] PRIMARY KEY CLUSTERED 
+(
+	[Income_Dtl_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[S3G_TA_IncomeProcess]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_TA_IncomeProcess](
+	[Company_ID] [int] NOT NULL,
+	[Income_Calc_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Income_Calc_No] [varchar](50) NOT NULL,
+	[Entity_ID] [int] NOT NULL,
+	[Year_Month] [int] NOT NULL,
+	[Income_Amount] [numeric](20, 4) NOT NULL,
+	[Account_Link_Key] [int] NULL,
+	[Created_By] [int] NOT NULL,
+	[Created_On] [datetime] NOT NULL,
+	[Remarks] [varchar](100) NULL,
+ CONSTRAINT [PK_S3G_TA_IncomeProcess] PRIMARY KEY CLUSTERED 
+(
+	[Income_Calc_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_DeliveryInstructionDetails]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_TA_DeliveryInstructionDetails](
+	[DeliveryIns_Details_ID] [int] IDENTITY(1,1) NOT NULL,
+	[DeliveryInstruction_ID] [int] NOT NULL,
+	[Asset_ID] [int] NOT NULL,
+	[Model_description] [varchar](100) NOT NULL,
+	[Asset_quantity] [int] NULL,
+	[Asset_Value] [numeric](18, 2) NOT NULL,
+	[Remarks] [varchar](100) NOT NULL,
+	[Invoice_quantity] [int] NULL,
+	[Tranche_ID] [int] NULL,
+ CONSTRAINT [PK_S3G_TA_DeliveryInstructionDetails] PRIMARY KEY CLUSTERED 
+(
+	[DeliveryIns_Details_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_ProductMaster]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_TA_ProductMaster](
+	[Product_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Company_ID] [int] NOT NULL,
+	[Product_Code] [varchar](12) NOT NULL,
+	[Product_Desc] [varchar](50) NOT NULL,
+	[Product_Type] [int] NOT NULL,
+	[Is_Active] [bit] NOT NULL,
+ CONSTRAINT [PK_S3G_TA_ProductMasterr] PRIMARY KEY CLUSTERED 
+(
+	[Product_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_ProductLOBMapping]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[S3G_TA_ProductLOBMapping](
+	[Product_ID] [int] NOT NULL,
+	[LOB_ID] [int] NOT NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[S3G_TA_ProductDetails]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[S3G_TA_ProductDetails](
+	[Product_ID] [int] NOT NULL,
+	[From_Value] [numeric](20, 4) NOT NULL,
+	[To_Value] [numeric](20, 4) NOT NULL,
+	[Rate] [numeric](4, 2) NOT NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[S3G_TA_CreditScoreGuideYearValues]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_TA_CreditScoreGuideYearValues](
+	[CreditScore_Guide_YearValues_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Required_Parameter] [varchar](50) NULL,
+	[CreditScore_Guide_Parameter_ID] [int] NOT NULL,
+	[CreditScore_Guide_ID] [int] NOT NULL,
+	[Score] [numeric](20, 4) NULL,
+	[Year] [int] NULL,
+	[Created_By] [int] NOT NULL,
+	[Created_On] [datetime] NOT NULL,
+	[Modified_By] [int] NULL,
+	[Modified_On] [datetime] NULL,
+ CONSTRAINT [PK_S3G_TA_CreditScoreGuideYearValues] PRIMARY KEY CLUSTERED 
+(
+	[CreditScore_Guide_YearValues_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_HighLiquidSecurities]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_TA_HighLiquidSecurities](
+	[Collateral_Type_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Collateral_Capture_ID] [int] NOT NULL,
+	[Collateral_ID] [int] NULL,
+	[Collateral_Detail_ID] [int] NULL,
+	[Collateral_Ref_No] [varchar](25) NULL,
+	[Company_ID] [int] NOT NULL,
+	[Collateral_Tran_No] [varchar](25) NOT NULL,
+	[Collateral_Item_Ref_No] [varchar](25) NOT NULL,
+	[Collateral_Securities_ID] [int] NULL,
+	[SLNo] [int] NOT NULL,
+	[Issue_By] [varchar](50) NOT NULL,
+	[Demat] [bit] NOT NULL,
+	[DP_Name] [varchar](50) NULL,
+	[DP_No] [varchar](50) NULL,
+	[Client_ID] [varchar](50) NULL,
+	[Certificate_No] [varchar](25) NULL,
+	[Folio_No] [varchar](25) NULL,
+	[Unit_Face_Value] [dbo].[UDTValueNumeric] NULL,
+	[No_Of_Units] [dbo].[UDTAmtNumeric] NULL,
+	[Interest_Percentage] [decimal](4, 2) NULL,
+	[Maturity_Date] [datetime] NOT NULL,
+	[Maturity_Value] [decimal](19, 4) NOT NULL,
+	[Market_Rate] [decimal](19, 4) NOT NULL,
+	[Market_Value] [decimal](19, 4) NOT NULL,
+	[Scan_Ref_No] [varchar](25) NULL,
+	[Valuation_Date] [datetime] NULL,
+	[Valuation_Current_Market_Value] [dbo].[UDTAmtNumeric] NULL,
+	[Valuation_Remarks] [varchar](100) NULL,
+	[Is_Active] [bit] NOT NULL,
+	[Is_Sold] [bit] NOT NULL,
+	[Is_Release] [bit] NOT NULL,
+	[Created_By] [int] NULL,
+	[Created_On] [datetime] NOT NULL,
+	[Modified_By] [int] NULL,
+	[Modified_On] [datetime] NULL,
+	[Ownership] [int] NULL,
+	[Balance_unit] [int] NULL,
+ CONSTRAINT [PK_S3G_TA_HighLiquidSecurities] PRIMARY KEY CLUSTERED 
+(
+	[Collateral_Type_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_CollateralDetails]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING OFF
+GO
+CREATE TABLE [dbo].[S3G_TA_CollateralDetails](
+	[Collateral_Detail_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Collateral_ID] [int] NOT NULL,
+	[Collateral_Securities_ID] [int] NULL,
+	[Collateral_Type_Code] [int] NOT NULL,
+	[Collateral_Code] [int] NOT NULL,
+	[Description] [varchar](100) NOT NULL,
+	[Liquidity_Type_Code] [int] NULL,
+	[Liquidity_Type] [int] NULL,
+	[Owership_Percentage_From] [decimal](8, 2) NOT NULL,
+	[Owership_Percentage_To] [decimal](8, 2) NOT NULL,
+	[Loanworth_Percentage_From] [decimal](8, 2) NOT NULL,
+	[Loanworth_Percentage_To] [decimal](8, 2) NOT NULL,
+	[Weightage_Percentage] [decimal](8, 2) NOT NULL,
+	[Is_Active] [bit] NULL,
+	[Created_By] [int] NOT NULL,
+	[Created_On] [datetime] NOT NULL,
+	[Modified_By] [int] NULL,
+	[Modified_On] [datetime] NULL,
+ CONSTRAINT [PK_TA_CLT_CollateralDetails] PRIMARY KEY CLUSTERED 
+(
+	[Collateral_Detail_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_AppFundRequest]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_TA_AppFundRequest](
+	[Tranche_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Tranche_Ref_No] [varchar](30) NOT NULL,
+	[Application_ID] [int] NOT NULL,
+	[LOB_ID] [int] NULL,
+	[Product_ID] [int] NOT NULL,
+	[Facility_Type] [int] NOT NULL,
+	[Validity_Period] [datetime] NOT NULL,
+	[Asset_Class_ID] [int] NULL,
+	[Asset_Make_ID] [int] NULL,
+	[Request_Amount] [numeric](10, 0) NOT NULL,
+	[Approved_Amount] [numeric](10, 0) NULL,
+	[Disbursed_Amount] [numeric](10, 0) NULL,
+	[Reset_Amount] [numeric](10, 0) NULL,
+	[Utilized_Amount] [numeric](10, 0) NULL,
+ CONSTRAINT [PK_S3G_TA_AppFundRequest] PRIMARY KEY CLUSTERED 
+(
+	[Tranche_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_PaymentRequest]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_TA_PaymentRequest](
+	[Company_ID] [int] NOT NULL,
+	[LOB_ID] [int] NOT NULL,
+	[Location_Code] [varchar](30) NOT NULL,
+	[Payment_Request_No] [varchar](50) NOT NULL,
+	[Request_No] [int] IDENTITY(1,1) NOT NULL,
+	[Payment_Request_Date] [datetime] NOT NULL,
+	[Value_Date] [datetime] NOT NULL,
+	[Pay_Type_Code] [int] NULL,
+	[Pay_Mode_Code] [int] NULL,
+	[Currency_ID] [int] NULL,
+	[Exchange_Rate_ID] [int] NULL,
+	[Account_Based] [varchar](1) NULL,
+	[Pay_Amount] [decimal](20, 4) NOT NULL,
+	[Pay_To_Type_Code] [int] NOT NULL,
+	[Pay_To_Code] [int] NULL,
+	[Vendor_Code] [int] NULL,
+	[Entity_Type_Code] [int] NULL,
+	[Entity_ID] [int] NULL,
+	[Pmt_Voucher_StatusCode] [int] NULL,
+	[Pmt_Voucher_status] [int] NOT NULL,
+	[Cancelled_Date] [datetime] NULL,
+	[Account_Link_Key] [int] NULL,
+	[IsVoucher_Print] [char](1) NOT NULL,
+	[IsCheque_Print] [char](1) NOT NULL,
+	[IsRejected] [bit] NULL,
+	[Created_On] [datetime] NOT NULL,
+	[Created_By] [int] NOT NULL,
+	[Modified_By] [int] NULL,
+	[Modified_Date] [datetime] NULL,
+	[TXN_ID] [int] NULL,
+	[Remarks] [varchar](60) NULL,
+	[Auth_ID] [int] NULL,
+ CONSTRAINT [PK_S3G_TA_PaymentRequestHeader] PRIMARY KEY CLUSTERED 
+(
+	[Request_No] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_MediumLiquidSecurities]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_TA_MediumLiquidSecurities](
+	[Collateral_Type_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Collateral_Capture_ID] [int] NOT NULL,
+	[Collateral_ID] [int] NULL,
+	[Collateral_Detail_ID] [int] NULL,
+	[Collateral_Ref_No] [varchar](25) NULL,
+	[Company_ID] [int] NOT NULL,
+	[Collateral_Tran_No] [varchar](25) NOT NULL,
+	[Collateral_Item_Ref_No] [varchar](25) NOT NULL,
+	[Collateral_Securities_ID] [int] NULL,
+	[SLNo] [int] NOT NULL,
+	[Description] [varchar](200) NULL,
+	[Model] [varchar](25) NULL,
+	[Year] [int] NULL,
+	[Registration_No] [varchar](25) NULL,
+	[Serial_No] [varchar](25) NULL,
+	[Value] [dbo].[UDTValueNumeric] NULL,
+	[Market_Value] [dbo].[UDTValueNumeric] NULL,
+	[Scan_Ref_No] [varchar](100) NULL,
+	[Valuation_Date] [datetime] NULL,
+	[Valuation_Current_Market_Value] [dbo].[UDTAmtNumeric] NULL,
+	[Valuation_Remarks] [varchar](100) NULL,
+	[Is_Active] [bit] NOT NULL,
+	[Is_Sold] [bit] NOT NULL,
+	[Is_Release] [bit] NOT NULL,
+	[Created_By] [int] NOT NULL,
+	[Created_On] [datetime] NOT NULL,
+	[Modified_By] [int] NULL,
+	[Modified_On] [datetime] NULL,
+	[Ownership] [int] NULL,
+	[Balance_unit] [int] NULL,
+ CONSTRAINT [PK_S3G_TA_MediumLiquidSecurities] PRIMARY KEY CLUSTERED 
+(
+	[Collateral_Type_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_LowLiquidSecurities]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_TA_LowLiquidSecurities](
+	[Collateral_Type_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Collateral_Capture_ID] [int] NOT NULL,
+	[Collateral_ID] [int] NULL,
+	[Collateral_Detail_ID] [int] NULL,
+	[Collateral_Ref_No] [varchar](25) NULL,
+	[Company_ID] [int] NOT NULL,
+	[Collateral_Tran_No] [varchar](25) NOT NULL,
+	[Collateral_Item_Ref_No] [varchar](25) NOT NULL,
+	[Collateral_Securities_ID] [int] NULL,
+	[SLNo] [int] NOT NULL,
+	[Location_Details] [varchar](60) NOT NULL,
+	[Measurement] [dbo].[UDTAmtNumeric] NOT NULL,
+	[Unit_Rate] [dbo].[UDTAmtNumeric] NOT NULL,
+	[Value] [dbo].[UDTValueNumeric] NOT NULL,
+	[Market_Value] [dbo].[UDTAmtNumeric] NOT NULL,
+	[Legal_Opinion] [bit] NOT NULL,
+	[Legal_Scan_Ref_No] [varchar](100) NULL,
+	[Encumbrance] [bit] NOT NULL,
+	[Encumbrance_Scan_Ref_No] [varchar](100) NULL,
+	[Is_Asset_Document] [bit] NOT NULL,
+	[AssetDoc_Scan_Ref_No] [varchar](100) NULL,
+	[Is_Valuation_Certification] [bit] NOT NULL,
+	[ValCertification_Scan_Ref_No] [varchar](100) NULL,
+	[Scan_Ref_No] [varchar](100) NULL,
+	[Valuation_Date] [datetime] NULL,
+	[Valuation_Current_Market_Value] [dbo].[UDTAmtNumeric] NULL,
+	[Valuation_Remarks] [varchar](100) NULL,
+	[Is_Active] [bit] NOT NULL,
+	[Is_Sold] [bit] NOT NULL,
+	[Is_Release] [bit] NOT NULL,
+	[Created_By] [int] NOT NULL,
+	[Created_On] [datetime] NOT NULL,
+	[Modified_By] [int] NULL,
+	[Modified_On] [datetime] NULL,
+	[Ownership] [int] NULL,
+	[Balance_unit] [int] NULL,
+ CONSTRAINT [PK_S3G_TA_LowLiquidSecurities] PRIMARY KEY CLUSTERED 
+(
+	[Collateral_Type_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_FinancialSecurities]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_TA_FinancialSecurities](
+	[Collateral_Type_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Collateral_Capture_ID] [int] NOT NULL,
+	[Collateral_ID] [int] NULL,
+	[Collateral_Detail_ID] [int] NULL,
+	[Collateral_Ref_No] [varchar](25) NULL,
+	[Company_ID] [int] NOT NULL,
+	[Collateral_Tran_No] [varchar](25) NOT NULL,
+	[Collateral_Item_Ref_No] [varchar](25) NOT NULL,
+	[Collateral_Securities_ID] [int] NULL,
+	[SLNo] [int] NOT NULL,
+	[Insurance_Issued_By] [varchar](60) NOT NULL,
+	[Policy_No] [varchar](25) NOT NULL,
+	[Policy_Value] [dbo].[UDTAmtNumeric] NOT NULL,
+	[Current_Value] [dbo].[UDTValueNumeric] NOT NULL,
+	[Maturity_Date] [datetime] NOT NULL,
+	[Scan_Ref_No] [varchar](100) NULL,
+	[Valuation_Date] [datetime] NULL,
+	[Valuation_Current_Market_Value] [dbo].[UDTAmtNumeric] NULL,
+	[Valuation_Remarks] [varchar](100) NULL,
+	[Is_Active] [bit] NOT NULL,
+	[Is_Sold] [bit] NOT NULL,
+	[Is_Release] [bit] NOT NULL,
+	[Created_By] [int] NOT NULL,
+	[Created_On] [datetime] NOT NULL,
+	[Modified_By] [int] NULL,
+	[Modified_On] [datetime] NULL,
+	[Ownership] [int] NULL,
+	[Balance_unit] [int] NULL,
+ CONSTRAINT [PK_S3G_TA_FinancialSecurities] PRIMARY KEY CLUSTERED 
+(
+	[Collateral_Type_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_Commodities]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING OFF
+GO
+CREATE TABLE [dbo].[S3G_TA_Commodities](
+	[Collateral_Type_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Collateral_Capture_ID] [int] NOT NULL,
+	[Collateral_ID] [int] NULL,
+	[Collateral_Detail_ID] [int] NULL,
+	[Collateral_Ref_No] [varchar](25) NULL,
+	[Company_ID] [int] NOT NULL,
+	[Collateral_Tran_No] [varchar](25) NOT NULL,
+	[Collateral_Item_Ref_No] [varchar](25) NOT NULL,
+	[Collateral_Securities_ID] [int] NULL,
+	[SLNo] [int] NOT NULL,
+	[Description] [varchar](200) NOT NULL,
+	[Unit_Of_Measure] [varchar](50) NOT NULL,
+	[Unit_Quantity] [int] NOT NULL,
+	[Unit_Price] [dbo].[UDTAmtNumeric] NOT NULL,
+	[Unit_Market_Price] [dbo].[UDTValueNumeric] NULL,
+	[Date] [datetime] NULL,
+	[Valuation_Date] [datetime] NULL,
+	[Valuation_Current_Market_Value] [dbo].[UDTAmtNumeric] NULL,
+	[Valuation_Remarks] [varchar](100) NULL,
+	[Is_Active] [bit] NOT NULL,
+	[Is_Sold] [bit] NOT NULL,
+	[Is_Release] [bit] NOT NULL,
+	[Created_By] [int] NOT NULL,
+	[Created_On] [datetime] NOT NULL,
+	[Modified_By] [int] NULL,
+	[Modified_On] [datetime] NULL,
+	[Ownership] [int] NULL,
+	[Balance_unit] [int] NULL,
+ CONSTRAINT [PK_S3G_TA_Commodities] PRIMARY KEY CLUSTERED 
+(
+	[Collateral_Type_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_PRDDCMaster]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_TA_PRDDCMaster](
+	[PRDDC_ID] [int] IDENTITY(1,1) NOT NULL,
+	[PRDDC_Code] [varchar](15) NOT NULL,
+	[Company_ID] [int] NOT NULL,
+	[LOB_ID] [int] NOT NULL,
+	[Product_ID] [int] NULL,
+	[Document_Path] [varchar](500) NULL,
+	[Created_By] [int] NOT NULL,
+	[Created_On] [datetime] NOT NULL,
+	[Modified_By] [int] NULL,
+	[Modified_On] [datetime] NULL,
+	[Constitution_ID] [int] NULL,
+ CONSTRAINT [PK_S3G_TA_PRDDCMaster] PRIMARY KEY CLUSTERED 
+(
+	[PRDDC_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_CreditScoreGuide]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING OFF
+GO
+CREATE TABLE [dbo].[S3G_TA_CreditScoreGuide](
+	[CreditScore_Guide_ID] [int] IDENTITY(1,1) NOT NULL,
+	[LOB_ID] [int] NOT NULL,
+	[Company_ID] [int] NOT NULL,
+	[Constitution_ID] [int] NOT NULL,
+	[Product_ID] [int] NULL,
+	[No_Of_Years] [numeric](3, 0) NULL,
+	[Past_Year] [numeric](3, 0) NULL,
+	[Future_Year] [numeric](30, 0) NULL,
+	[Past_Year_Start_From] [varchar](50) NULL,
+	[Is_Active] [bit] NULL,
+	[Created_By] [int] NOT NULL,
+	[Created_On] [datetime] NOT NULL,
+	[Modified_By] [int] NULL,
+	[Modifed_On] [datetime] NULL,
+ CONSTRAINT [PK_S3G_TA_CreditScoreGuide] PRIMARY KEY CLUSTERED 
+(
+	[CreditScore_Guide_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_CreditGuideTransaction]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[S3G_TA_CreditGuideTransaction](
+	[CreditGuideTransaction_ID] [int] IDENTITY(1,1) NOT NULL,
+	[CreditScore_Guide_ID] [int] NOT NULL,
+	[LOB_ID] [int] NOT NULL,
+	[Constitution] [int] NOT NULL,
+	[Product_ID] [int] NULL,
+	[Past_Years] [numeric](1, 0) NULL,
+	[Future_Years] [numeric](1, 0) NULL,
+	[PastYear_StartingFrom] [int] NULL,
+	[Is_CustomerID_EnquiryNumber] [int] NOT NULL,
+	[Entity_ID] [int] NULL,
+	[Company_ID] [int] NOT NULL,
+	[Created_By] [int] NOT NULL,
+	[Created_On] [datetime] NOT NULL,
+	[Modified_By] [int] NULL,
+	[Modified_On] [datetime] NULL,
+ CONSTRAINT [PK_S3G_TA_CreditGuideTransaction] PRIMARY KEY CLUSTERED 
+(
+	[CreditGuideTransaction_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[S3G_TA_PRDDCDocuments]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_TA_PRDDCDocuments](
+	[PRDDC_Documents_ID] [int] IDENTITY(1,1) NOT NULL,
+	[PRDDC_Doc_Cat_ID] [int] NOT NULL,
+	[PRDDC_ID] [int] NOT NULL,
+	[Is_Mandatory] [bit] NOT NULL,
+	[Is_NeedScanCopy] [bit] NOT NULL,
+	[Program_ID] [int] NOT NULL,
+	[Remarks] [varchar](60) NULL,
+	[Is_Active] [bit] NOT NULL,
+	[Created_By] [int] NOT NULL,
+	[Created_On] [datetime] NOT NULL,
+	[Modified_By] [int] NULL,
+	[Modified_On] [datetime] NULL,
+ CONSTRAINT [PK_S3G_TA_PRDDCDocuments] PRIMARY KEY CLUSTERED 
+(
+	[PRDDC_Documents_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_DeliveryInstruction]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING OFF
+GO
+CREATE TABLE [dbo].[S3G_TA_DeliveryInstruction](
+	[DeliveryInstruction_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Company_ID] [int] NOT NULL,
+	[LOB_ID] [int] NOT NULL,
+	[Location_Code] [varchar](30) NOT NULL,
+	[PANum] [varchar](50) NULL,
+	[SANum] [varchar](50) NULL,
+	[DeliveryInstruction_No] [varchar](100) NOT NULL,
+	[IS_LPO] [bit] NOT NULL,
+	[Customer_ID] [int] NULL,
+	[Vendor_ID] [int] NOT NULL,
+	[DeliveryInstruction_Date] [datetime] NOT NULL,
+	[DeliveryInstruction_Statustype_Code] [int] NOT NULL,
+	[DeliveryInstruction_Status_Code] [int] NOT NULL,
+	[Is_DIPrint] [bit] NULL,
+	[Is_DIGeneration] [bit] NULL,
+	[Created_By] [int] NOT NULL,
+	[Created_On] [datetime] NOT NULL,
+	[Modified_By] [int] NULL,
+	[Modified_On] [datetime] NULL,
+	[TXN_Id] [int] NOT NULL,
+ CONSTRAINT [PK_S3G_TA_Delivery] PRIMARY KEY CLUSTERED 
+(
+	[DeliveryInstruction_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_PreDisbursementDocTransaction]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_TA_PreDisbursementDocTransaction](
+	[PreDisbursement_Doc_Tran_ID] [int] IDENTITY(1,1) NOT NULL,
+	[PRDDC_ID] [int] NULL,
+	[LOB_ID] [int] NOT NULL,
+	[Location_Code] [varchar](30) NULL,
+	[Company_ID] [int] NOT NULL,
+	[Entity_ID] [int] NOT NULL,
+	[PRDDC_Number] [varchar](50) NOT NULL,
+	[PRDDC_Date] [datetime] NOT NULL,
+	[Constitution_ID] [int] NOT NULL,
+	[Product_ID] [int] NULL,
+	[Status] [varchar](20) NOT NULL,
+	[Created_By] [int] NOT NULL,
+	[Created_On] [datetime] NOT NULL,
+	[Modified_By] [int] NULL,
+	[Modified_On] [datetime] NULL,
+ CONSTRAINT [PK__S3G_TA_Pre_Disb__3296789C] PRIMARY KEY CLUSTERED 
+(
+	[PreDisbursement_Doc_Tran_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_PreDisbursementDocTranDetails]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_TA_PreDisbursementDocTranDetails](
+	[PreDisbursement_Doc_Tran_Det_ID] [int] IDENTITY(1,1) NOT NULL,
+	[PreDisbursement_Doc_Tran_ID] [int] NOT NULL,
+	[PRDDC_Doc_Cat_ID] [int] NOT NULL,
+	[Collected_By] [int] NULL,
+	[Collected_Date] [datetime] NULL,
+	[Scanned_By] [int] NULL,
+	[Scanned_Date] [datetime] NULL,
+	[Scanned_Ref_No] [varchar](100) NOT NULL,
+	[Remarks] [varchar](100) NOT NULL,
+	[PRDDTrans] [bit] NOT NULL,
+	[Version_No] [int] NULL,
+ CONSTRAINT [PK_S3G_TA_PreDisbursementDocTranDetails] PRIMARY KEY CLUSTERED 
+(
+	[PreDisbursement_Doc_Tran_Det_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[S3G_TA_CreditGuideTransaction_Year_Values]    Script Date: 12/07/2012 16:02:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[S3G_TA_CreditGuideTransaction_Year_Values](
+	[CreditGuideTrans_Year_Values_ID] [int] IDENTITY(1,1) NOT NULL,
+	[CreditScore_Guide_Parameter_ID] [int] NOT NULL,
+	[CreditGuideTransaction_ID] [int] NOT NULL,
+	[Actual_Value] [varchar](30) NULL,
+	[Actual_Score] [numeric](38, 4) NULL,
+	[YearValue] [int] NULL,
+	[Created_By] [int] NULL,
+	[Created_On] [datetime] NOT NULL,
+	[Modified_By] [int] NULL,
+	[Modified_On] [datetime] NULL,
+	[CreditScore_Guide_ID] [int] NULL,
+ CONSTRAINT [PK_S3G_TA_CreditGuideTransaction_Year_Values] PRIMARY KEY CLUSTERED 
+(
+	[CreditGuideTrans_Year_Values_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Default [DF_S3G_TA_Commodities_Is_Sold]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_Commodities] ADD  CONSTRAINT [DF_S3G_TA_Commodities_Is_Sold]  DEFAULT ((0)) FOR [Is_Sold]
+GO
+/****** Object:  Default [DF_S3G_TA_Commodities_Is_Release]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_Commodities] ADD  CONSTRAINT [DF_S3G_TA_Commodities_Is_Release]  DEFAULT ((0)) FOR [Is_Release]
+GO
+/****** Object:  Default [DF__S3G_TA_C__Creat__71E958AF]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_CreditScoreGuide] ADD  CONSTRAINT [DF__S3G_TA_C__Creat__71E958AF]  DEFAULT (getdate()) FOR [Created_On]
+GO
+/****** Object:  Default [DF__S3G_TA_C__Modif__72DD7CE8]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_CreditScoreGuide] ADD  CONSTRAINT [DF__S3G_TA_C__Modif__72DD7CE8]  DEFAULT (getdate()) FOR [Modifed_On]
+GO
+/****** Object:  Default [DF_S3G_TA_FinancialSecurities_Is_Sold]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_FinancialSecurities] ADD  CONSTRAINT [DF_S3G_TA_FinancialSecurities_Is_Sold]  DEFAULT ((0)) FOR [Is_Sold]
+GO
+/****** Object:  Default [DF_S3G_TA_FinancialSecurities_Is_Release]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_FinancialSecurities] ADD  CONSTRAINT [DF_S3G_TA_FinancialSecurities_Is_Release]  DEFAULT ((0)) FOR [Is_Release]
+GO
+/****** Object:  Default [DF_S3G_TA_HighLiquidSecurities_Is_Sold]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_HighLiquidSecurities] ADD  CONSTRAINT [DF_S3G_TA_HighLiquidSecurities_Is_Sold]  DEFAULT ((0)) FOR [Is_Sold]
+GO
+/****** Object:  Default [DF_S3G_TA_HighLiquidSecurities_Is_Release]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_HighLiquidSecurities] ADD  CONSTRAINT [DF_S3G_TA_HighLiquidSecurities_Is_Release]  DEFAULT ((0)) FOR [Is_Release]
+GO
+/****** Object:  Default [DF_S3G_TA_LowLiquidSecurities_Is_Sold]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_LowLiquidSecurities] ADD  CONSTRAINT [DF_S3G_TA_LowLiquidSecurities_Is_Sold]  DEFAULT ((0)) FOR [Is_Sold]
+GO
+/****** Object:  Default [DF_S3G_TA_LowLiquidSecurities_Is_Release]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_LowLiquidSecurities] ADD  CONSTRAINT [DF_S3G_TA_LowLiquidSecurities_Is_Release]  DEFAULT ((0)) FOR [Is_Release]
+GO
+/****** Object:  Default [DF_S3G_TA_MediumLiquidSecurities_Is_Sold]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_MediumLiquidSecurities] ADD  CONSTRAINT [DF_S3G_TA_MediumLiquidSecurities_Is_Sold]  DEFAULT ((0)) FOR [Is_Sold]
+GO
+/****** Object:  Default [DF_S3G_TA_MediumLiquidSecurities_Is_Release]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_MediumLiquidSecurities] ADD  CONSTRAINT [DF_S3G_TA_MediumLiquidSecurities_Is_Release]  DEFAULT ((0)) FOR [Is_Release]
+GO
+/****** Object:  Default [DF__S3G_TA_P__Creat__3E1D39E1]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_PreDisbursementDocTransaction] ADD  CONSTRAINT [DF__S3G_TA_P__Creat__3E1D39E1]  DEFAULT (getdate()) FOR [Created_On]
+GO
+/****** Object:  Default [DF__S3G_TA_P__Modif__3F115E1A]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_PreDisbursementDocTransaction] ADD  CONSTRAINT [DF__S3G_TA_P__Modif__3F115E1A]  DEFAULT (getdate()) FOR [Modified_On]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_AppFundRequest_S3G_TA_AppFundRequest]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_AppFundRequest]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_AppFundRequest_S3G_TA_AppFundRequest] FOREIGN KEY([Application_ID])
+REFERENCES [dbo].[S3G_TA_AppProcess] ([Application_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_AppFundRequest] CHECK CONSTRAINT [FK_S3G_TA_AppFundRequest_S3G_TA_AppFundRequest]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_CollateralDetails_S3G_TA_CollateralMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_CollateralDetails]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_CollateralDetails_S3G_TA_CollateralMaster] FOREIGN KEY([Collateral_ID])
+REFERENCES [dbo].[S3G_TA_CollateralMaster] ([Collateral_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_CollateralDetails] CHECK CONSTRAINT [FK_S3G_TA_CollateralDetails_S3G_TA_CollateralMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_CollateralDetails_S3G_TA_CollateralSecuritiesMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_CollateralDetails]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_CollateralDetails_S3G_TA_CollateralSecuritiesMaster] FOREIGN KEY([Collateral_Securities_ID])
+REFERENCES [dbo].[S3G_CLT_CollateralSecuritiesMaster] ([Collateral_Securities_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_CollateralDetails] CHECK CONSTRAINT [FK_S3G_TA_CollateralDetails_S3G_TA_CollateralSecuritiesMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_Commodities_S3G_CLT_CollateralCapture]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_Commodities]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_Commodities_S3G_CLT_CollateralCapture] FOREIGN KEY([Collateral_Capture_ID])
+REFERENCES [dbo].[S3G_TA_CollateralCapture] ([Collateral_Capture_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_Commodities] CHECK CONSTRAINT [FK_S3G_TA_Commodities_S3G_CLT_CollateralCapture]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_Commodities_S3G_CLT_CollateralSecuritiesMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_Commodities]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_Commodities_S3G_CLT_CollateralSecuritiesMaster] FOREIGN KEY([Collateral_Securities_ID])
+REFERENCES [dbo].[S3G_CLT_CollateralSecuritiesMaster] ([Collateral_Securities_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_Commodities] CHECK CONSTRAINT [FK_S3G_TA_Commodities_S3G_CLT_CollateralSecuritiesMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_Commodities_S3G_SYSAD_CompanyMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_Commodities]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_Commodities_S3G_SYSAD_CompanyMaster] FOREIGN KEY([Company_ID])
+REFERENCES [dbo].[S3G_SYSAD_CompanyMaster] ([Company_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_Commodities] CHECK CONSTRAINT [FK_S3G_TA_Commodities_S3G_SYSAD_CompanyMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_Commodities_S3G_TA_CollateralMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_Commodities]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_Commodities_S3G_TA_CollateralMaster] FOREIGN KEY([Collateral_ID])
+REFERENCES [dbo].[S3G_TA_CollateralMaster] ([Collateral_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_Commodities] CHECK CONSTRAINT [FK_S3G_TA_Commodities_S3G_TA_CollateralMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_CreditGuideTransaction_S3G_ORG_ConstitutionMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_CreditGuideTransaction]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_CreditGuideTransaction_S3G_ORG_ConstitutionMaster] FOREIGN KEY([Constitution])
+REFERENCES [dbo].[S3G_ORG_ConstitutionMaster] ([Constitution_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_CreditGuideTransaction] CHECK CONSTRAINT [FK_S3G_TA_CreditGuideTransaction_S3G_ORG_ConstitutionMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_CreditGuideTransaction_S3G_ORG_EntityMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_CreditGuideTransaction]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_CreditGuideTransaction_S3G_ORG_EntityMaster] FOREIGN KEY([Entity_ID])
+REFERENCES [dbo].[S3G_ORG_EntityMaster] ([Entity_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_CreditGuideTransaction] CHECK CONSTRAINT [FK_S3G_TA_CreditGuideTransaction_S3G_ORG_EntityMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_CreditGuideTransaction_S3G_SYSAD_CompanyMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_CreditGuideTransaction]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_CreditGuideTransaction_S3G_SYSAD_CompanyMaster] FOREIGN KEY([Company_ID])
+REFERENCES [dbo].[S3G_SYSAD_CompanyMaster] ([Company_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_CreditGuideTransaction] CHECK CONSTRAINT [FK_S3G_TA_CreditGuideTransaction_S3G_SYSAD_CompanyMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_CreditGuideTransaction_S3G_SYSAD_LOBMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_CreditGuideTransaction]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_CreditGuideTransaction_S3G_SYSAD_LOBMaster] FOREIGN KEY([LOB_ID])
+REFERENCES [dbo].[S3G_SYSAD_LOBMaster] ([LOB_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_CreditGuideTransaction] CHECK CONSTRAINT [FK_S3G_TA_CreditGuideTransaction_S3G_SYSAD_LOBMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_CreditGuideTransaction_S3G_TA_CreditScoreGuide]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_CreditGuideTransaction]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_CreditGuideTransaction_S3G_TA_CreditScoreGuide] FOREIGN KEY([CreditScore_Guide_ID])
+REFERENCES [dbo].[S3G_TA_CreditScoreGuide] ([CreditScore_Guide_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_CreditGuideTransaction] CHECK CONSTRAINT [FK_S3G_TA_CreditGuideTransaction_S3G_TA_CreditScoreGuide]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_CreditGuideTransaction_S3G_TA_ProductMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_CreditGuideTransaction]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_CreditGuideTransaction_S3G_TA_ProductMaster] FOREIGN KEY([Product_ID])
+REFERENCES [dbo].[S3G_TA_ProductMaster] ([Product_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_CreditGuideTransaction] CHECK CONSTRAINT [FK_S3G_TA_CreditGuideTransaction_S3G_TA_ProductMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_CreditGuideTransaction_Year_Values_S3G_TA_CreditGuideTransaction]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_CreditGuideTransaction_Year_Values]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_CreditGuideTransaction_Year_Values_S3G_TA_CreditGuideTransaction] FOREIGN KEY([CreditGuideTransaction_ID])
+REFERENCES [dbo].[S3G_TA_CreditGuideTransaction] ([CreditGuideTransaction_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_CreditGuideTransaction_Year_Values] CHECK CONSTRAINT [FK_S3G_TA_CreditGuideTransaction_Year_Values_S3G_TA_CreditGuideTransaction]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_CreditGuideTransaction_Year_Values_S3G_TA_CreditGuideTransaction_Year_Values]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_CreditGuideTransaction_Year_Values]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_CreditGuideTransaction_Year_Values_S3G_TA_CreditGuideTransaction_Year_Values] FOREIGN KEY([CreditGuideTrans_Year_Values_ID])
+REFERENCES [dbo].[S3G_TA_CreditGuideTransaction_Year_Values] ([CreditGuideTrans_Year_Values_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_CreditGuideTransaction_Year_Values] CHECK CONSTRAINT [FK_S3G_TA_CreditGuideTransaction_Year_Values_S3G_TA_CreditGuideTransaction_Year_Values]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_CreditGuideTransaction_Year_Values_S3G_TA_CreditScoreGuideParameter]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_CreditGuideTransaction_Year_Values]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_CreditGuideTransaction_Year_Values_S3G_TA_CreditScoreGuideParameter] FOREIGN KEY([CreditScore_Guide_Parameter_ID])
+REFERENCES [dbo].[S3G_TA_CreditScoreGuideParameter] ([CreditScore_Guide_Parameter_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_CreditGuideTransaction_Year_Values] CHECK CONSTRAINT [FK_S3G_TA_CreditGuideTransaction_Year_Values_S3G_TA_CreditScoreGuideParameter]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_CreditScoreGuide_S3G_SYSAD_CompanyMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_CreditScoreGuide]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_CreditScoreGuide_S3G_SYSAD_CompanyMaster] FOREIGN KEY([Company_ID])
+REFERENCES [dbo].[S3G_SYSAD_CompanyMaster] ([Company_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_CreditScoreGuide] CHECK CONSTRAINT [FK_S3G_TA_CreditScoreGuide_S3G_SYSAD_CompanyMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_CreditScoreGuide_S3G_SYSAD_LOBMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_CreditScoreGuide]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_CreditScoreGuide_S3G_SYSAD_LOBMaster] FOREIGN KEY([LOB_ID])
+REFERENCES [dbo].[S3G_SYSAD_LOBMaster] ([LOB_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_CreditScoreGuide] CHECK CONSTRAINT [FK_S3G_TA_CreditScoreGuide_S3G_SYSAD_LOBMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_CreditScoreGuide_S3G_TA_ConstitutionMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_CreditScoreGuide]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_CreditScoreGuide_S3G_TA_ConstitutionMaster] FOREIGN KEY([Constitution_ID])
+REFERENCES [dbo].[S3G_ORG_ConstitutionMaster] ([Constitution_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_CreditScoreGuide] CHECK CONSTRAINT [FK_S3G_TA_CreditScoreGuide_S3G_TA_ConstitutionMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_CreditScoreGuide_S3G_TA_ProductMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_CreditScoreGuide]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_CreditScoreGuide_S3G_TA_ProductMaster] FOREIGN KEY([Product_ID])
+REFERENCES [dbo].[S3G_TA_ProductMaster] ([Product_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_CreditScoreGuide] CHECK CONSTRAINT [FK_S3G_TA_CreditScoreGuide_S3G_TA_ProductMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_CreditScoreGuideParameter_S3G_TA_CreditScoreGuideParameter]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_CreditScoreGuideParameter]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_CreditScoreGuideParameter_S3G_TA_CreditScoreGuideParameter] FOREIGN KEY([CreditScore_Guide_Parameter_ID])
+REFERENCES [dbo].[S3G_TA_CreditScoreGuideParameter] ([CreditScore_Guide_Parameter_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_CreditScoreGuideParameter] CHECK CONSTRAINT [FK_S3G_TA_CreditScoreGuideParameter_S3G_TA_CreditScoreGuideParameter]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_CreditScoreGuideYearValues_S3G_TA_CreditScoreGuideParameter]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_CreditScoreGuideYearValues]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_CreditScoreGuideYearValues_S3G_TA_CreditScoreGuideParameter] FOREIGN KEY([CreditScore_Guide_Parameter_ID])
+REFERENCES [dbo].[S3G_TA_CreditScoreGuideParameter] ([CreditScore_Guide_Parameter_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_CreditScoreGuideYearValues] CHECK CONSTRAINT [FK_S3G_TA_CreditScoreGuideYearValues_S3G_TA_CreditScoreGuideParameter]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_DeliveryInstruction_S3G_ORG_EntityMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_DeliveryInstruction]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_DeliveryInstruction_S3G_ORG_EntityMaster] FOREIGN KEY([Vendor_ID])
+REFERENCES [dbo].[S3G_ORG_EntityMaster] ([Entity_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_DeliveryInstruction] CHECK CONSTRAINT [FK_S3G_TA_DeliveryInstruction_S3G_ORG_EntityMaster]
+GO
+/****** Object:  ForeignKey [FK_TA_DeliveryInstruction_S3G_SYSAD_CompanyMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_DeliveryInstruction]  WITH CHECK ADD  CONSTRAINT [FK_TA_DeliveryInstruction_S3G_SYSAD_CompanyMaster] FOREIGN KEY([Company_ID])
+REFERENCES [dbo].[S3G_SYSAD_CompanyMaster] ([Company_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_DeliveryInstruction] CHECK CONSTRAINT [FK_TA_DeliveryInstruction_S3G_SYSAD_CompanyMaster]
+GO
+/****** Object:  ForeignKey [FK_TA_DeliveryInstruction_S3G_SYSAD_LOBMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_DeliveryInstruction]  WITH CHECK ADD  CONSTRAINT [FK_TA_DeliveryInstruction_S3G_SYSAD_LOBMaster] FOREIGN KEY([LOB_ID])
+REFERENCES [dbo].[S3G_SYSAD_LOBMaster] ([LOB_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_DeliveryInstruction] CHECK CONSTRAINT [FK_TA_DeliveryInstruction_S3G_SYSAD_LOBMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_FinancialSecurities_S3G_CLT_CollateralSecuritiesMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_FinancialSecurities]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_FinancialSecurities_S3G_CLT_CollateralSecuritiesMaster] FOREIGN KEY([Collateral_Securities_ID])
+REFERENCES [dbo].[S3G_CLT_CollateralSecuritiesMaster] ([Collateral_Securities_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_FinancialSecurities] CHECK CONSTRAINT [FK_S3G_TA_FinancialSecurities_S3G_CLT_CollateralSecuritiesMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_FinancialSecurities_S3G_SYSAD_CompanyMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_FinancialSecurities]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_FinancialSecurities_S3G_SYSAD_CompanyMaster] FOREIGN KEY([Company_ID])
+REFERENCES [dbo].[S3G_SYSAD_CompanyMaster] ([Company_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_FinancialSecurities] CHECK CONSTRAINT [FK_S3G_TA_FinancialSecurities_S3G_SYSAD_CompanyMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_FinancialSecurities_S3G_TA_CollateralCapture]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_FinancialSecurities]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_FinancialSecurities_S3G_TA_CollateralCapture] FOREIGN KEY([Collateral_Capture_ID])
+REFERENCES [dbo].[S3G_TA_CollateralCapture] ([Collateral_Capture_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_FinancialSecurities] CHECK CONSTRAINT [FK_S3G_TA_FinancialSecurities_S3G_TA_CollateralCapture]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_FinancialSecurities_S3G_TA_CollateralMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_FinancialSecurities]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_FinancialSecurities_S3G_TA_CollateralMaster] FOREIGN KEY([Collateral_ID])
+REFERENCES [dbo].[S3G_TA_CollateralMaster] ([Collateral_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_FinancialSecurities] CHECK CONSTRAINT [FK_S3G_TA_FinancialSecurities_S3G_TA_CollateralMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_LowLiquidSecurities_S3G_CLT_CollateralSecuritiesMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_LowLiquidSecurities]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_LowLiquidSecurities_S3G_CLT_CollateralSecuritiesMaster] FOREIGN KEY([Collateral_Securities_ID])
+REFERENCES [dbo].[S3G_CLT_CollateralSecuritiesMaster] ([Collateral_Securities_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_LowLiquidSecurities] CHECK CONSTRAINT [FK_S3G_TA_LowLiquidSecurities_S3G_CLT_CollateralSecuritiesMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_LowLiquidSecurities_S3G_SYSAD_CompanyMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_LowLiquidSecurities]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_LowLiquidSecurities_S3G_SYSAD_CompanyMaster] FOREIGN KEY([Company_ID])
+REFERENCES [dbo].[S3G_SYSAD_CompanyMaster] ([Company_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_LowLiquidSecurities] CHECK CONSTRAINT [FK_S3G_TA_LowLiquidSecurities_S3G_SYSAD_CompanyMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_LowLiquidSecurities_S3G_TA_CollateralCapture]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_LowLiquidSecurities]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_LowLiquidSecurities_S3G_TA_CollateralCapture] FOREIGN KEY([Collateral_Capture_ID])
+REFERENCES [dbo].[S3G_TA_CollateralCapture] ([Collateral_Capture_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_LowLiquidSecurities] CHECK CONSTRAINT [FK_S3G_TA_LowLiquidSecurities_S3G_TA_CollateralCapture]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_LowLiquidSecurities_S3G_TA_CollateralMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_LowLiquidSecurities]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_LowLiquidSecurities_S3G_TA_CollateralMaster] FOREIGN KEY([Collateral_ID])
+REFERENCES [dbo].[S3G_TA_CollateralMaster] ([Collateral_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_LowLiquidSecurities] CHECK CONSTRAINT [FK_S3G_TA_LowLiquidSecurities_S3G_TA_CollateralMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_MediumLiquidSecurities_S3G_CLT_CollateralSecuritiesMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_MediumLiquidSecurities]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_MediumLiquidSecurities_S3G_CLT_CollateralSecuritiesMaster] FOREIGN KEY([Collateral_Securities_ID])
+REFERENCES [dbo].[S3G_CLT_CollateralSecuritiesMaster] ([Collateral_Securities_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_MediumLiquidSecurities] CHECK CONSTRAINT [FK_S3G_TA_MediumLiquidSecurities_S3G_CLT_CollateralSecuritiesMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_MediumLiquidSecurities_S3G_SYSAD_CompanyMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_MediumLiquidSecurities]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_MediumLiquidSecurities_S3G_SYSAD_CompanyMaster] FOREIGN KEY([Company_ID])
+REFERENCES [dbo].[S3G_SYSAD_CompanyMaster] ([Company_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_MediumLiquidSecurities] CHECK CONSTRAINT [FK_S3G_TA_MediumLiquidSecurities_S3G_SYSAD_CompanyMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_MediumLiquidSecurities_S3G_TA_CollateralCapture]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_MediumLiquidSecurities]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_MediumLiquidSecurities_S3G_TA_CollateralCapture] FOREIGN KEY([Collateral_Capture_ID])
+REFERENCES [dbo].[S3G_TA_CollateralCapture] ([Collateral_Capture_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_MediumLiquidSecurities] CHECK CONSTRAINT [FK_S3G_TA_MediumLiquidSecurities_S3G_TA_CollateralCapture]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_MediumLiquidSecurities_S3G_TA_CollateralMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_MediumLiquidSecurities]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_MediumLiquidSecurities_S3G_TA_CollateralMaster] FOREIGN KEY([Collateral_ID])
+REFERENCES [dbo].[S3G_TA_CollateralMaster] ([Collateral_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_MediumLiquidSecurities] CHECK CONSTRAINT [FK_S3G_TA_MediumLiquidSecurities_S3G_TA_CollateralMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_PaymentRequest_S3G_SYSAD_CompanyMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_PaymentRequest]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_PaymentRequest_S3G_SYSAD_CompanyMaster] FOREIGN KEY([Company_ID])
+REFERENCES [dbo].[S3G_SYSAD_CompanyMaster] ([Company_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_PaymentRequest] CHECK CONSTRAINT [FK_S3G_TA_PaymentRequest_S3G_SYSAD_CompanyMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_PaymentRequestDetails_S3G_TA_PaymentRequestDetails]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_PaymentRequestDetails]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_PaymentRequestDetails_S3G_TA_PaymentRequestDetails] FOREIGN KEY([Payment_Request_ID])
+REFERENCES [dbo].[S3G_TA_PaymentRequestDetails] ([Payment_Request_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_PaymentRequestDetails] CHECK CONSTRAINT [FK_S3G_TA_PaymentRequestDetails_S3G_TA_PaymentRequestDetails]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_PRDDCDocuments_S3G_ORG_PRDDCMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_PRDDCDocuments]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_PRDDCDocuments_S3G_ORG_PRDDCMaster] FOREIGN KEY([PRDDC_ID])
+REFERENCES [dbo].[S3G_ORG_PRDDCMaster] ([PRDDC_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_PRDDCDocuments] CHECK CONSTRAINT [FK_S3G_TA_PRDDCDocuments_S3G_ORG_PRDDCMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_PRDDCDocuments_S3G_TA_PRDDCDocCatID]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_PRDDCDocuments]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_PRDDCDocuments_S3G_TA_PRDDCDocCatID] FOREIGN KEY([PRDDC_Doc_Cat_ID])
+REFERENCES [dbo].[S3G_TA_PRDDCDocumentCategory] ([PRDDC_Doc_Cat_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_PRDDCDocuments] CHECK CONSTRAINT [FK_S3G_TA_PRDDCDocuments_S3G_TA_PRDDCDocCatID]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_PRDDCMaster_S3G_ORG_CompanyMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_PRDDCMaster]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_PRDDCMaster_S3G_ORG_CompanyMaster] FOREIGN KEY([Company_ID])
+REFERENCES [dbo].[S3G_SYSAD_CompanyMaster] ([Company_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_PRDDCMaster] CHECK CONSTRAINT [FK_S3G_TA_PRDDCMaster_S3G_ORG_CompanyMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_PRDDCMaster_S3G_ORG_LOBMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_PRDDCMaster]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_PRDDCMaster_S3G_ORG_LOBMaster] FOREIGN KEY([LOB_ID])
+REFERENCES [dbo].[S3G_SYSAD_LOBMaster] ([LOB_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_PRDDCMaster] CHECK CONSTRAINT [FK_S3G_TA_PRDDCMaster_S3G_ORG_LOBMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_PRDDCMaster_S3G_ORG_ProductMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_PRDDCMaster]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_PRDDCMaster_S3G_ORG_ProductMaster] FOREIGN KEY([Product_ID])
+REFERENCES [dbo].[S3G_TA_ProductMaster] ([Product_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_PRDDCMaster] CHECK CONSTRAINT [FK_S3G_TA_PRDDCMaster_S3G_ORG_ProductMaster]
+GO
+/****** Object:  ForeignKey [PK_S3G_TA_PRDDCMaster_S3G_TA_PRDDCMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_PRDDCMaster]  WITH CHECK ADD  CONSTRAINT [PK_S3G_TA_PRDDCMaster_S3G_TA_PRDDCMaster] FOREIGN KEY([PRDDC_ID])
+REFERENCES [dbo].[S3G_TA_PRDDCMaster] ([PRDDC_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_PRDDCMaster] CHECK CONSTRAINT [PK_S3G_TA_PRDDCMaster_S3G_TA_PRDDCMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_PreDisbursementDocTranDetails_S3G_SYSAD_UserMaster1]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_PreDisbursementDocTranDetails]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_PreDisbursementDocTranDetails_S3G_SYSAD_UserMaster1] FOREIGN KEY([Scanned_By])
+REFERENCES [dbo].[S3G_SYSAD_UserMaster] ([User_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_PreDisbursementDocTranDetails] CHECK CONSTRAINT [FK_S3G_TA_PreDisbursementDocTranDetails_S3G_SYSAD_UserMaster1]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_PreDisbursementDocTranDetails_S3G_TA_PRDDCDocumentCategory]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_PreDisbursementDocTranDetails]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_PreDisbursementDocTranDetails_S3G_TA_PRDDCDocumentCategory] FOREIGN KEY([PRDDC_Doc_Cat_ID])
+REFERENCES [dbo].[S3G_TA_PRDDCDocumentCategory] ([PRDDC_Doc_Cat_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_PreDisbursementDocTranDetails] CHECK CONSTRAINT [FK_S3G_TA_PreDisbursementDocTranDetails_S3G_TA_PRDDCDocumentCategory]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_PreDisbursementDocTranDetails_S3G_TA_Pre_Disbursement_Doc_Tran]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_PreDisbursementDocTranDetails]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_PreDisbursementDocTranDetails_S3G_TA_Pre_Disbursement_Doc_Tran] FOREIGN KEY([PreDisbursement_Doc_Tran_ID])
+REFERENCES [dbo].[S3G_TA_PreDisbursementDocTransaction] ([PreDisbursement_Doc_Tran_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_PreDisbursementDocTranDetails] CHECK CONSTRAINT [FK_S3G_TA_PreDisbursementDocTranDetails_S3G_TA_Pre_Disbursement_Doc_Tran]
+GO
+/****** Object:  ForeignKey [FK_Entity_ID_PRDDC]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_PreDisbursementDocTransaction]  WITH CHECK ADD  CONSTRAINT [FK_Entity_ID_PRDDC] FOREIGN KEY([Entity_ID])
+REFERENCES [dbo].[S3G_ORG_EntityMaster] ([Entity_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_PreDisbursementDocTransaction] CHECK CONSTRAINT [FK_Entity_ID_PRDDC]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_Pre_Disbursement_Doc_Tran_S3G_SYSAD_CompanyMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_PreDisbursementDocTransaction]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_Pre_Disbursement_Doc_Tran_S3G_SYSAD_CompanyMaster] FOREIGN KEY([Company_ID])
+REFERENCES [dbo].[S3G_SYSAD_CompanyMaster] ([Company_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_PreDisbursementDocTransaction] CHECK CONSTRAINT [FK_S3G_TA_Pre_Disbursement_Doc_Tran_S3G_SYSAD_CompanyMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_Pre_Disbursement_Doc_Tran_S3G_SYSAD_LOBMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_PreDisbursementDocTransaction]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_Pre_Disbursement_Doc_Tran_S3G_SYSAD_LOBMaster] FOREIGN KEY([LOB_ID])
+REFERENCES [dbo].[S3G_SYSAD_LOBMaster] ([LOB_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_PreDisbursementDocTransaction] CHECK CONSTRAINT [FK_S3G_TA_Pre_Disbursement_Doc_Tran_S3G_SYSAD_LOBMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_ProductDetails_S3G_TA_ProductMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_ProductDetails]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_ProductDetails_S3G_TA_ProductMaster] FOREIGN KEY([Product_ID])
+REFERENCES [dbo].[S3G_TA_ProductMaster] ([Product_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_ProductDetails] CHECK CONSTRAINT [FK_S3G_TA_ProductDetails_S3G_TA_ProductMaster]
+GO
+/****** Object:  ForeignKey [FK_S3G_TA_ProductLOBMapping_S3G_TA_ProductMaster]    Script Date: 12/07/2012 16:02:42 ******/
+ALTER TABLE [dbo].[S3G_TA_ProductLOBMapping]  WITH CHECK ADD  CONSTRAINT [FK_S3G_TA_ProductLOBMapping_S3G_TA_ProductMaster] FOREIGN KEY([Product_ID])
+REFERENCES [dbo].[S3G_TA_ProductMaster] ([Product_ID])
+GO
+ALTER TABLE [dbo].[S3G_TA_ProductLOBMapping] CHECK CONSTRAINT [FK_S3G_TA_ProductLOBMapping_S3G_TA_ProductMaster]
+GO
+
+
+IF(	IDENT_INCR( 'S3G_ORG_Lookup' ) IS NOT NULL OR IDENT_SEED('S3G_ORG_Lookup') IS NOT NULL ) SET IDENTITY_INSERT S3G_ORG_Lookup ON
+INSERT INTO S3G_ORG_Lookup (LookUp_ID,Value,Name,Type,Is_Active,Created_On) VALUES('144','1','Disbursement Days','Scheme_Type',1,'11/3/2012 12:17:58 PM')
+INSERT INTO S3G_ORG_Lookup (LookUp_ID,Value,Name,Type,Is_Active,Created_On) VALUES('145','2','Units Sold','Scheme_Type',1,'11/3/2012 12:17:58 PM')
+INSERT INTO S3G_ORG_Lookup (LookUp_ID,Value,Name,Type,Is_Active,Created_On) VALUES('146','3','Amount Financed','Scheme_Type',1,'11/3/2012 12:17:58 PM')
+INSERT INTO S3G_ORG_Lookup (LookUp_ID,Value,Name,Type,Is_Active,Created_On) VALUES('147','1','Fixed','Facility_Type',1,'11/3/2012 12:17:58 PM')
+INSERT INTO S3G_ORG_Lookup (LookUp_ID,Value,Name,Type,Is_Active,Created_On) VALUES('148','2','Revolving','Facility_Type',1,'11/3/2012 12:17:58 PM')
+IF(	IDENT_INCR( 'S3G_ORG_Lookup' ) IS NOT NULL OR IDENT_SEED('S3G_ORG_Lookup') IS NOT NULL ) SET IDENTITY_INSERT S3G_ORG_Lookup OFF
+GO
+
+-----------------------------------------------------------
+--Insert data into S3G_SYSAD_DocumentationType
+-----------------------------------------------------------
+IF(	IDENT_INCR( 'S3G_SYSAD_DocumentationType' ) IS NOT NULL OR IDENT_SEED('S3G_SYSAD_DocumentationType') IS NOT NULL ) SET IDENTITY_INSERT S3G_SYSAD_DocumentationType ON
+INSERT INTO S3G_SYSAD_DocumentationType (Document_Type_ID,Document_Type_Code,Document_Type_Desc) VALUES('93','PRTT','TA - Pre Disb Doc Transaction')
+INSERT INTO S3G_SYSAD_DocumentationType (Document_Type_ID,Document_Type_Code,Document_Type_Desc) VALUES('95','CMT','Collatera Master [Trade]')
+INSERT INTO S3G_SYSAD_DocumentationType (Document_Type_ID,Document_Type_Code,Document_Type_Desc) VALUES('96','APPT','Application Processing [Trade]')
+INSERT INTO S3G_SYSAD_DocumentationType (Document_Type_ID,Document_Type_Code,Document_Type_Desc) VALUES('97','TRCH','Tranche Ref Number [Trade]')
+INSERT INTO S3G_SYSAD_DocumentationType (Document_Type_ID,Document_Type_Code,Document_Type_Desc) VALUES('98','PART','Payment Request Number [Trade]')
+INSERT INTO S3G_SYSAD_DocumentationType (Document_Type_ID,Document_Type_Code,Document_Type_Desc) VALUES('99','DEIT','Delivery Instruction [Trade]')
+INSERT INTO S3G_SYSAD_DocumentationType (Document_Type_ID,Document_Type_Code,Document_Type_Desc) VALUES('100','CPT','Collateral Capture [Trade]')
+INSERT INTO S3G_SYSAD_DocumentationType (Document_Type_ID,Document_Type_Code,Document_Type_Desc) VALUES('101','IRNT','Collateral Capture Details [Trade]')
+INSERT INTO S3G_SYSAD_DocumentationType (Document_Type_ID,Document_Type_Code,Document_Type_Desc) VALUES('102','IRT','Income calculation [Trade]')
+IF(	IDENT_INCR( 'S3G_SYSAD_DocumentationType' ) IS NOT NULL OR IDENT_SEED('S3G_SYSAD_DocumentationType') IS NOT NULL ) SET IDENTITY_INSERT S3G_SYSAD_DocumentationType OFF
+GO
+
+-----------------------------------------------------------
+--Insert data into S3G_SYSAD_ProgramMaster
+-----------------------------------------------------------
+IF(	IDENT_INCR( 'S3G_SYSAD_ProgramMaster' ) IS NOT NULL OR IDENT_SEED('S3G_SYSAD_ProgramMaster') IS NOT NULL ) SET IDENTITY_INSERT S3G_SYSAD_ProgramMaster ON
+
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) VALUES('219','TSM','Scheme Master','T','219',1,'1','10/4/2012',NULL,NULL,'S3G_TA_SchemeMaster_View.aspx','S3G_TA_SchemeMaster_Add.aspx','1',NULL,NULL,0,NULL)
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) VALUES('221','TCSG','Credit Score Guide','T','221',1,'1','5/5/2010',NULL,NULL,'S3G_TA_CreditScoreGuide_View.aspx','S3G_TA_CreditScoreGuide_Add.aspx','1',NULL,NULL,0,NULL)
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) VALUES('222','TCGT','Credit Guide Transaction','T','222',1,'1','7/14/2010',NULL,NULL,'S3G_TA_TransLander.aspx?Code=TCGT','S3G_TA_CreditGuideTransaction_Add.aspx','1',0,NULL,0,NULL)
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) VALUES('223','TPRD','Pre Disbursement Documents','T','223',1,'1','5/5/2010',NULL,NULL,'S3G_TA_PRDDCMaster_View.aspx','S3G_TA_PRDDCMaster_Add.aspx','1',0,NULL,1,'Trade_PRDocuments')
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) VALUES('224','PRTT','Pre Disb. Doc. Transaction','T','224',1,'1','7/6/2010 7:04:09 PM','1','7/6/2010 7:04:09 PM','S3G_TA_TransLander.aspx?Code=PRTT','S3G_TA_PDDTMaster_Add.aspx','1',0,NULL,NULL,NULL)
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) VALUES('225','APPT','Application Processing','T','225',1,'1','6/29/2010','1','6/29/2010','S3G_TA_TransLander.aspx?Code=APPT','S3G_TA_ApplicationProcessing.aspx',NULL,1,NULL,0,NULL)
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) VALUES('226','CMT','Collateral Master','T','226',1,'1','5/4/2011',NULL,NULL,'S3G_TA_CollateralMaster_View.aspx','S3G_TA_CollateralMaster_Add.aspx','1',NULL,NULL,0,NULL)
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) VALUES('227','CPT','Collateral Capture','T','227',1,'1','5/4/2011',NULL,NULL,'S3G_TA_TransLander.aspx?Code=CPT','S3G_TA_CollateralCapture_Add.aspx','1',NULL,NULL,0,NULL)
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) VALUES('229','PART','Payment Request','T','229',1,'1','8/18/2010',NULL,NULL,'S3G_TA_TransLander.aspx?Code=PART','','1',NULL,NULL,0,NULL)
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) VALUES('231','DEIT','Delivery Instruction','T','231',1,'1','8/18/2010',NULL,NULL,'S3G_TA_TransLander.aspx?Code=DEIT','S3G_TA_DeliveryInstructionLPO_Add.aspx','1',NULL,NULL,0,NULL)
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) VALUES('234','IRT','Income Calculation','T','234',1,'2','10/18/2010',NULL,NULL,'S3G_TA_Translander.aspx?Code=IRT','S3G_TA_IncomeCalculation.aspx',NULL,NULL,NULL,NULL,NULL)
+IF(	IDENT_INCR( 'S3G_SYSAD_ProgramMaster' ) IS NOT NULL OR IDENT_SEED('S3G_SYSAD_ProgramMaster') IS NOT NULL ) SET IDENTITY_INSERT S3G_SYSAD_ProgramMaster OFF
+GO
+
+
+/******************************************************
+  Insert data  End
+******************************************************/
+
+
+
+--- Thangam M for Trade Finance on 07/Dec/2012 End ---
+
+
+--- changed by bhuvana
+
+
+ALTER TABLE S3G_CLT_Commodities ADD Balance_unit INT NULL
+ALTER TABLE S3G_CLT_FinancialSecurities ADD Balance_unit INT NULL
+ALTER TABLE S3G_CLT_HighLiquidSecurities ADD Balance_unit INT NULL
+ALTER TABLE S3G_CLT_LowLiquidSecurities ADD Balance_unit INT NULL
+ALTER TABLE S3G_CLT_MediumLiquidSecurities ADD Balance_unit INT NULL
+
+
+
+----changed by bhuvana
+
+
+-- Thangam M for TA Journal Entries
+-----------------------------------------------------------
+--Insert data into S3G_JOURNAL_TaskMaster
+-----------------------------------------------------------
+INSERT INTO S3G_JOURNAL_TaskMaster (Company_ID,Task_ID,Task_Description,Narration_Desc,Document_Type_ID,Reference_Type_Desc,Is_Active) VALUES('1','229','TA Payment Request','TRADE ADVANCE PAYMENT REQUEST','98','ACCOUNT',1)
+INSERT INTO S3G_JOURNAL_TaskMaster (Company_ID,Task_ID,Task_Description,Narration_Desc,Document_Type_ID,Reference_Type_Desc,Is_Active) VALUES('1','231','TA Delivery Instruction','TRADE ADVANCE DELIVERY INSTRUCTION','99','ACCOUNT',1)
+INSERT INTO S3G_JOURNAL_TaskMaster (Company_ID,Task_ID,Task_Description,Narration_Desc,Document_Type_ID,Reference_Type_Desc,Is_Active) VALUES('1','234','TA Income Process','TRADE ADVANCE INCOME PROCESS','102','ACCOUNT',1)
+GO
+
+
+/******************************************************
+  Insert data  End
+******************************************************/
+/* 5 feb 2013
+/******************************************
+Added new Program Probable Delinquency in Program Master Table
+******************************************/
+INSERT INTO S3G_SYSAD_ProgramMaster 
+ (
+   Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,
+   Is_Active,Created_By, Created_On,Modified_By,Modified_On,Page_Url,
+   Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag
+  )
+  VALUES 
+  (
+   236, 'RPD', 'Probable Delinquency', 'R', 236,
+   1,1,GETDATE(), NULL,NULL,'S3GRptProbableDelinquency.aspx',
+   'S3GRptProbableDelinquency.aspx', NULL,NULL,NULL,NULL,NULL
+  )
+
+-- 5 feb 2013
+
+******************************************************/
+/* 04 Jun 2013
+/******************************************
+Added new look up name for Document Type
+******************************************/
+IF(	IDENT_INCR( 'S3G_ORG_Lookup' ) IS NOT NULL OR IDENT_SEED('S3G_ORG_Lookup') IS NOT NULL ) SET IDENTITY_INSERT S3G_ORG_Lookup ON
+INSERT INTO S3G_ORG_Lookup (LookUp_ID,Value,Name,Type,Is_Active,Created_On) VALUES('149','1','Customer Documents','Document Type',1,'6/4/2013 3:51:16 PM')
+INSERT INTO S3G_ORG_Lookup (LookUp_ID,Value,Name,Type,Is_Active,Created_On) VALUES('150','2','Pre-Disbursement Documents','Document Type',1,'6/4/2013 3:51:16 PM')
+INSERT INTO S3G_ORG_Lookup (LookUp_ID,Value,Name,Type,Is_Active,Created_On) VALUES('151','3','Post-Disbursement Documents','Document Type',1,'6/4/2013 3:51:44 PM')
+IF(	IDENT_INCR( 'S3G_ORG_Lookup' ) IS NOT NULL OR IDENT_SEED('S3G_ORG_Lookup') IS NOT NULL ) SET IDENTITY_INSERT S3G_ORG_Lookup OFF
+GO
+****
+END
+****
+
+******************************************************/
+/* 04 Jun 2013
+/******************************************
+Added new Status look up name for Document Type
+******************************************/
+IF(	IDENT_INCR( 'S3G_Status_LookUP' ) IS NOT NULL OR IDENT_SEED('S3G_Status_LookUP') IS NOT NULL ) SET IDENTITY_INSERT S3G_Status_LookUP ON
+INSERT INTO S3G_Status_LookUP (ID,Name,Type,IsActive,Created_By,Created_On,Modified_By,Modified_On) VALUES('226','Collected','DOCUMENT_STATUS',1,'6/4/2013 3:51:16 PM')
+INSERT INTO S3G_Status_LookUP (ID,Name,Type,IsActive,Created_By,Created_On,Modified_By,Modified_On) VALUES('227','Not Collected','DOCUMENT_STATUS',1,'6/4/2013 3:51:16 PM')
+INSERT INTO S3G_Status_LookUP (ID,Name,Type,IsActive,Created_By,Created_On,Modified_By,Modified_On) VALUES('228','Both','DOCUMENT_STATUS',1,'6/4/2013 3:51:16 PM')
+IF(	IDENT_INCR( 'S3G_Status_LookUP' ) IS NOT NULL OR IDENT_SEED('S3G_Status_LookUP') IS NOT NULL ) SET IDENTITY_INSERT S3G_Status_LookUP OFF
+GO
+****
+END
+****
+
+-- 07-Jun-2013 Added By Shibu
+
+Go
+ALTER TABLE S3G_ORG_PreDisbursementDocTranDetails Add Doc_CollectOrWaived VARCHAR(1)
+Go
+Go
+ALTER TABLE S3G_LOANAD_PostDisbursementDocTranDetails Add Doc_CollectOrWaived VARCHAR(1)
+Go 
+
+-- 14/Jun/2012 Thangam M for CRM
+ALTER TABLE S3G_CLN_CRM_Lead ADD Lead_Status INT null
+-- End 
+
+--Added on 26-Jun-2013 by Kali for user registration login
+SET IDENTITY_INSERT [dbo].[S3G_SYSAD_UserMaster] ON
+INSERT [dbo].[S3G_SYSAD_UserMaster] ([User_ID], [Company_ID], [User_Code], [User_Name], [Password], [Mobile_No], [Email_ID], [DOJ], [Designation], [Is_Active], [User_Level_ID], [Reporting_Next_level], [Reporting_Higher_level], [Created_By], [Created_On], [Modified_By], [Modified_On], [Last_LoginDate], [User_Theme], [Designation_Id], [Previous_PWDs], [PWD_Access_Count], [PWD_Is_Reset], [PWD_Modified_On]) VALUES (37, 1, N'Demo', N'Demo User', N'ZwbFOyyYgcO01jjJKF7TliNcS8iADsiu', N'9856325452', N'Demo@gmail.com', CAST(0x0000A1CE00000000 AS DateTime), N'', 1, 2, 0, 3, 2, CAST(0x0000A1CE00F62B5F AS DateTime), 3, CAST(0x0000A1E900BB6D46 AS DateTime), CAST(0x0000A1E900BB980A AS DateTime), NULL, 56, NULL, 4, NULL, NULL)
+SET IDENTITY_INSERT [dbo].[S3G_SYSAD_UserMaster] OFF
+
+
+--Added on 6-Jul-2013 by Santhosh.S for address lookup remarks
+alter table S3G_SYSAD_AddressLookup
+add Remarks	varchar(1000)
+
+
+
+
+-- 07-Jun-2013 Added By Saran
+
+
+alter table S3G_LOANAD_SpecificRevision add  Offer_Residual_Value	numeric(16, 4),
+Offer_Residual_Value_Amount	numeric(16, 4)
+
+
+
+alter table S3G_ORG_ApplicationProcessAssetDetails add  Discount_Amount	numeric(16, 4) null,
+Discount_Absorbed	int	null
+
+
+
+SET IDENTITY_INSERT [dbo].[S3G_ORG_CashFlowFlag] ON
+INSERT INTO dbo.S3G_ORG_CashFlowFlag
+ (CashFlow_Flag_ID,CashFlowFlag_Code ,CashFlowFlag_Desc,Receipt_Flag,Account_Identifier,AddLess_Flag,Service_Tax)
+     VALUES(94,NULL,'Discount',	0,	NULL,	NULL,0)
+SET IDENTITY_INSERT [dbo].[S3G_ORG_CashFlowFlag] OFF
+
+-- 06 july 2013 by bhuvana ---
+
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) VALUES('245','GDM','Garage Maintenance','G','245',1,'1','06/07/2013',NULL,NULL,'S3GLRTranslander.aspx?Code=GDM','S3GLRGarage_Maint_Add.aspx','1',NULL,NULL,0,NULL)
+
+
+CREATE TABLE [dbo].[S3G_LR_GARAGE_MAINTC](
+	[Garage_ID] [int] NOT NULL,
+	[Company_ID] [int] NULL,
+	[LOB_ID] [int] NOT NULL,
+	[Location_Code] [varchar](30) NOT NULL,
+	[Customer_ID] [int] NOT NULL,
+	[GARAGEMAINTNO] [varchar](25) NULL,
+	[Garage_Maint_ID] [int] NOT NULL,
+	[Created_By] [int] NOT NULL,
+	[Created_On] [datetime] NOT NULL,
+	[Modified_By] [int] NULL,
+	[Modified_On] [datetime] NULL,
+ CONSTRAINT [PK_S3G_LR_GARAGE_MAINTC] PRIMARY KEY CLUSTERED 
+(
+	[Garage_Maint_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+
+
+CREATE TABLE [dbo].[S3G_LR_GARAGE_MAINT_DTLC](
+	[Garage_Detail_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Company_ID] [int] NOT NULL,
+	[Asset_Number] [int] NULL,
+	[In_Date] [datetime] NULL,
+	[Out_Date] [datetime] NULL,
+	[Req_Area] [numeric](16, 4) NOT NULL,
+	[Cust_Debit] [numeric](16, 4) NOT NULL,
+	[PANum] [varchar](50) NULL,
+	[SANum] [varchar](25) NULL,
+	[Machine_No] [varchar](20) NULL,
+	[Garage_Maint_ID] [int] NOT NULL,
+	[Created_By] [int] NOT NULL,
+	[Created_On] [datetime] NOT NULL,
+	[Modified_By] [int] NULL,
+	[Modified_On] [datetime] NULL,
+ CONSTRAINT [PK_S3G_LR_GARAGE_MAINT_DTLC] PRIMARY KEY CLUSTERED 
+(
+	[Garage_Detail_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+
+
+//Added by Gomathi
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) VALUES('244','LEANR','Lead Analysis Report','R','244',1,'1','06/07/2013',NULL,NULL,'S3G_Rpt_LeadAnalysis.aspx','S3G_Rpt_LeadAnalysis.aspx',NULL,NULL,NULL,0,NULL)	
+
+// Thangam M for CRM from CLN to Org
+
+UPDATE S3G_SYSAD_ProgramMaster SET Page_Url='S3GOrgCRM.aspx', Detail_Url = 'S3GOrgCRM.aspx', Module_Code ='O' 
+WHERE Program_ID = 241;
+
+// End here
+
+
+--Added by Kali on 10-Jul-2013
+-----------------------------
+
+Update S3G_SYSAD_ProgramMaster
+set Program_Name='Credit Approval Score Master',Sequence=-4 where Program_ID=21
+
+Update S3G_SYSAD_ProgramMaster
+set Program_Name='CAM Financial Parameter Master',Sequence=-5 where Program_ID=26
+
+Update S3G_SYSAD_ProgramMaster
+set Program_Name='CAM Financial Parameter Transaction',Sequence=-3 where Program_ID=43
+
+Update S3G_SYSAD_ProgramMaster
+set Program_Name='Credit Approval Score Transaction',Sequence=-2 where Program_ID=35
+
+Update S3G_SYSAD_ProgramMaster
+set Program_Name='CAM Approval',Sequence=-1 where Program_ID=51
+
+
+--Added by Santhosh.S on 17-Jul-2013
+-----------------------------
+
+Update S3G_SYSAD_ProgramMaster set Document_Path_Setup = 1, Document_Flag = 'Compensation_Calculation'
+where Program_ID = 213
+
+
+------Added on 19-Jul-2013 by saran start--------------------------------
+
+INSERT INTO dbo.S3G_LOANAD_LookupTypeDetails						
+           (Company_ID ,LookupType_Code ,Lookup_Code ,Lookup_Description)						
+     VALUES						
+           (1 ,36 ,96 ,'Revision Fee')						
+GO						
+						
+						
+INSERT INTO dbo.S3G_SYSAD_AccountCodeDesc						
+           (Account_Tab_ID ,Account_Code_Desc ,Account_Flag ,Receipt_Flag)						
+     VALUES           (3 ,'Revision Fee','ARF',1)						
+GO						
+						
+						
+INSERT INTO dbo.S3G_ORG_CashFlowFlag						
+           (CashFlow_Flag_ID ,CashFlowFlag_Code ,CashFlowFlag_Desc ,Receipt_Flag ,Account_Identifier ,AddLess_Flag ,Service_Tax)						
+     VALUES						
+           (96,	NULL,	'Revision Fee',	1,	NULL,	NULL,	0)
+GO						
+
+
+alter table S3G_LOANAD_SpecificRevision add  Revision_Fee numeric(16,4) null
+
+------Added on 19-Jul-2013 by saran end--------------------------------
+
+-- Thangam M for CRM - Enquiry move on 19/July/2013 ---
+
+Alter Table S3G_CLN_CRM_Lead ADD Rate numeric(8, 4)
+Alter Table S3G_CLN_CRM_Lead ADD Tenure	int	
+Alter Table S3G_CLN_CRM_Lead ADD Constitution_ID int
+
+-- End here
+
+
+-- 19/Jul/2013 C.Aswinkrishna for Location Master 
+Alter table S3G_SYSAD_LocationMaster Add Loc_Address1 varchar(64)
+Alter table S3G_SYSAD_LocationMaster Add Loc_Address2 varchar(64)
+Alter table S3G_SYSAD_LocationMaster Add Loc_City varchar(50)
+Alter table S3G_SYSAD_LocationMaster Add Loc_State_ID varchar(2)
+Alter table S3G_SYSAD_LocationMaster Add Loc_Country varchar(60)
+Alter table S3G_SYSAD_LocationMaster Add Loc_Pincode varchar(20)
+Alter table S3G_SYSAD_LocationMaster Add Loc_Email varchar(60)
+Alter table S3G_SYSAD_LocationMaster Add Loc_Mobile varchar(12)
+Alter table S3G_SYSAD_LocationMaster Add Loc_Telephone varchar(20)
+Alter table S3G_SYSAD_LocationMaster Add Loc_Landmark varchar(100)
+Alter table S3G_SYSAD_LocationMaster Add Loc_Website varchar(60)
+
+--Ashwin - July-19-2013
+
+CREATE TABLE [dbo].[S3G_ORG_STATEMASTER](
+	[STATE_ID] [int] NULL,
+	[STATE_NAME] [varchar](100) NULL
+) ON [PRIMARY]
+
+GO
+
+--Ashwin - July-19-2013 - To insert values in State_Master Table
+
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (1,'Tamil Nadu');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (2,'Pondicherry');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (3,'Karnataka');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (4,'Kerala');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (5,'Andaman and Nicobar Islands');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (6,'Andhra Pradesh');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (7,'Arunachal Pradesh');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (8,'Assam');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (9,'Bihar');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (10,'Chandigarh');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (11,'Chhattisgarh');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (12,'Dadra and Nagar Haveli');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (13,'Daman and Diu');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (14,'Delhi');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (15,'Goa');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (16,'Gujarat');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (17,'Haryana');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (18,'Himachal Pradesh');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (19,'Jammu and Kashmir');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (20,'Jharkhand');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (21,'Lakshadweep');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (22,'Madhya Pradesh');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (23,'Maharashtra');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (24,'Manipur');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (25,'Meghalaya');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (26,'Mizoram');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (27,'Nagaland');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (28,'Odisha');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (29,'Punjab');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (30,'Rajasthan');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (31,'Sikkim');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (32,'Tripura');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (33,'Uttarakhand');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (34,'Uttar Pradesh');
+Insert into S3G_ORG_STATEMASTER (STATE_ID,STATE_NAME) values (35,'West Bengal');
+
+-----------------------
+
+-- Thangam M for CRM 22/Jul/2013
+Alter table S3G_CLN_CRM_Hdr ALTER COLUMN Location_Code varchar(30) null
+-- End --
+
+--Aswinkrishna 23/jul/2013--
+
+--sysadmin--
+
+update S3G_SYSAD_ProgramMaster set Sequence=1 where Program_ID=1
+update S3G_SYSAD_ProgramMaster set Sequence=2 where Program_ID=12
+update S3G_SYSAD_ProgramMaster set Sequence=3 where Program_ID=161
+update S3G_SYSAD_ProgramMaster set Sequence=4 where Program_ID=169
+update S3G_SYSAD_ProgramMaster set Sequence=5 where Program_ID=5
+update S3G_SYSAD_ProgramMaster set Sequence=6 where Program_ID=4
+update S3G_SYSAD_ProgramMaster set Sequence=7 where Program_ID=7 
+update S3G_SYSAD_ProgramMaster set Sequence=8 where Program_ID=2
+update S3G_SYSAD_ProgramMaster set Sequence=9 where Program_ID=6
+update S3G_SYSAD_ProgramMaster set Sequence=10 where Program_ID=14
+update S3G_SYSAD_ProgramMaster set Sequence=11 where Program_ID=10
+update S3G_SYSAD_ProgramMaster set Sequence=12 where Program_ID=9
+update S3G_SYSAD_ProgramMaster set Sequence=13 where Program_ID=15
+update S3G_SYSAD_ProgramMaster set Sequence=14 where Program_ID=16
+update S3G_SYSAD_ProgramMaster set Sequence=15 where Program_ID=11
+update S3G_SYSAD_ProgramMaster set Sequence=16 where Program_ID=17
+update S3G_SYSAD_ProgramMaster set Sequence=17 where Program_ID=184
+update S3G_SYSAD_ProgramMaster set Sequence=18 where Program_ID=215
+update S3G_SYSAD_ProgramMaster set Sequence=19 where Program_ID=205
+update S3G_SYSAD_ProgramMaster set Sequence=20 where Program_ID=8
+
+--origination--
+
+update S3G_SYSAD_ProgramMaster set Sequence=37 where Program_ID=241
+
+--LoanAdmin--
+
+update S3G_SYSAD_ProgramMaster set Sequence=1 where Program_ID=61
+update S3G_SYSAD_ProgramMaster set Sequence=2 where Program_ID=80
+update S3G_SYSAD_ProgramMaster set Sequence=3 where Program_ID=60
+update S3G_SYSAD_ProgramMaster set Sequence=4 where Program_ID=54
+update S3G_SYSAD_ProgramMaster set Sequence=5 where Program_ID=56
+update S3G_SYSAD_ProgramMaster set Sequence=6 where Program_ID=75
+update S3G_SYSAD_ProgramMaster set Sequence=7 where Program_ID=52
+update S3G_SYSAD_ProgramMaster set Sequence=8 where Program_ID=84
+update S3G_SYSAD_ProgramMaster set Sequence=9 where Program_ID=183
+update S3G_SYSAD_ProgramMaster set Sequence=10 where Program_ID=185
+update S3G_SYSAD_ProgramMaster set Sequence=11 where Program_ID=74
+update S3G_SYSAD_ProgramMaster set Sequence=12 where Program_ID=78
+update S3G_SYSAD_ProgramMaster set Sequence=13 where Program_ID=67
+update S3G_SYSAD_ProgramMaster set Sequence=14 where Program_ID=95
+update S3G_SYSAD_ProgramMaster set Sequence=15 where Program_ID=114
+update S3G_SYSAD_ProgramMaster set Sequence=16 where Program_ID=72
+update S3G_SYSAD_ProgramMaster set Sequence=17 where Program_ID=77
+update S3G_SYSAD_ProgramMaster set Sequence=18 where Program_ID=81
+update S3G_SYSAD_ProgramMaster set Sequence=19 where Program_ID=57
+update S3G_SYSAD_ProgramMaster set Sequence=20 where Program_ID=238
+update S3G_SYSAD_ProgramMaster set Sequence=21 where Program_ID=79
+update S3G_SYSAD_ProgramMaster set Sequence=22 where Program_ID=71
+update S3G_SYSAD_ProgramMaster set Sequence=23 where Program_ID=220
+update S3G_SYSAD_ProgramMaster set Sequence=24 where Program_ID=213
+update S3G_SYSAD_ProgramMaster set Sequence=25 where Program_ID=83
+update S3G_SYSAD_ProgramMaster set Sequence=26 where Program_ID=88
+update S3G_SYSAD_ProgramMaster set Sequence=27 where Program_ID=70
+update S3G_SYSAD_ProgramMaster set Sequence=28 where Program_ID=87
+update S3G_SYSAD_ProgramMaster set Sequence=29 where Program_ID=55
+update S3G_SYSAD_ProgramMaster set Sequence=30 where Program_ID=58
+update S3G_SYSAD_ProgramMaster set Sequence=31 where Program_ID=66
+update S3G_SYSAD_ProgramMaster set Sequence=32 where Program_ID=68
+update S3G_SYSAD_ProgramMaster set Sequence=34 where Program_ID=64
+update S3G_SYSAD_ProgramMaster set Sequence=35 where Program_ID=62
+update S3G_SYSAD_ProgramMaster set Sequence=36 where Program_ID=63
+update S3G_SYSAD_ProgramMaster set Sequence=37 where Program_ID=85
+update S3G_SYSAD_ProgramMaster set Sequence=38 where Program_ID=86
+update S3G_SYSAD_ProgramMaster set Sequence=39 where Program_ID=201
+update S3G_SYSAD_ProgramMaster set Sequence=40 where Program_ID=73
+update S3G_SYSAD_ProgramMaster set Sequence=41 where Program_ID=69
+update S3G_SYSAD_ProgramMaster set Sequence=42 where Program_ID=76
+
+--collection--
+
+update S3G_SYSAD_ProgramMaster set Sequence=1 where Program_ID=91
+update S3G_SYSAD_ProgramMaster set Sequence=2 where Program_ID=100
+update S3G_SYSAD_ProgramMaster set Sequence=3 where Program_ID=97
+update S3G_SYSAD_ProgramMaster set Sequence=4 where Program_ID=110
+update S3G_SYSAD_ProgramMaster set Sequence=5 where Program_ID=119
+update S3G_SYSAD_ProgramMaster set Sequence=7 where Program_ID=120
+update S3G_SYSAD_ProgramMaster set Sequence=8 where Program_ID=135
+update S3G_SYSAD_ProgramMaster set Sequence=9 where Program_ID=196
+update S3G_SYSAD_ProgramMaster set Sequence=10 where Program_ID=106
+update S3G_SYSAD_ProgramMaster set Sequence=11 where Program_ID=109
+update S3G_SYSAD_ProgramMaster set Sequence=12 where Program_ID=111
+update S3G_SYSAD_ProgramMaster set Sequence=13 where Program_ID=116
+update S3G_SYSAD_ProgramMaster set Sequence=14 where Program_ID=112
+update S3G_SYSAD_ProgramMaster set Sequence=15 where Program_ID=99
+update S3G_SYSAD_ProgramMaster set Sequence=16 where Program_ID=105
+update S3G_SYSAD_ProgramMaster set Sequence=17 where Program_ID=96
+update S3G_SYSAD_ProgramMaster set Sequence=18 where Program_ID=98
+update S3G_SYSAD_ProgramMaster set Sequence=19 where Program_ID=104
+update S3G_SYSAD_ProgramMaster set Sequence=20 where Program_ID=93
+update S3G_SYSAD_ProgramMaster set Sequence=21 where Program_ID=94
+update S3G_SYSAD_ProgramMaster set Sequence=22 where Program_ID=108
+update S3G_SYSAD_ProgramMaster set Sequence=23 where Program_ID=158
+update S3G_SYSAD_ProgramMaster set Sequence=24 where Program_ID=107
+update S3G_SYSAD_ProgramMaster set Sequence=52 where Program_ID=92
+update S3G_SYSAD_ProgramMaster set Sequence=26 where Program_ID=102
+update S3G_SYSAD_ProgramMaster set Sequence=27 where Program_ID=90
+update S3G_SYSAD_ProgramMaster set Sequence=28 where Program_ID=101
+update S3G_SYSAD_ProgramMaster set Sequence=29 where Program_ID=89
+update S3G_SYSAD_ProgramMaster set Sequence=30 where Program_ID=103
+update S3G_SYSAD_ProgramMaster set Sequence=31 where Program_ID=118
+
+--LR--
+
+update S3G_SYSAD_ProgramMaster set Sequence=1 where Program_ID=157
+update S3G_SYSAD_ProgramMaster set Sequence=2 where Program_ID=245
+update S3G_SYSAD_ProgramMaster set Sequence=3 where Program_ID=152
+update S3G_SYSAD_ProgramMaster set Sequence=4 where Program_ID=137
+update S3G_SYSAD_ProgramMaster set Sequence=5 where Program_ID=154
+update S3G_SYSAD_ProgramMaster set Sequence=6 where Program_ID=153
+update S3G_SYSAD_ProgramMaster set Sequence=7 where Program_ID=136
+update S3G_SYSAD_ProgramMaster set Sequence=8 where Program_ID=151
+update S3G_SYSAD_ProgramMaster set Sequence=9 where Program_ID=149
+update S3G_SYSAD_ProgramMaster set Sequence=10 where Program_ID=155
+update S3G_SYSAD_ProgramMaster set Sequence=11 where Program_ID=156
+
+--END--
+
+
+
+------Added on 23-Jul-2013 by saran start--------------------------------
+
+alter table S3G_ORG_CustomerMaster add  Stock_Stmt_Frequency	int null
+
+
+------Added on 23-Jul-2013 by saran end--------------------------------
+
+
+------Added on 23-Jul-2013 by saran start--------------------------------
+
+
+/****** Object:  Table [dbo].[S3G_ORG_Group_Industry_Type]    Script Date: 7/25/2013 2:43:52 PM ******/
+DROP TABLE [dbo].[S3G_ORG_Group_Industry_Type]
+GO
+
+/****** Object:  Table [dbo].[S3G_ORG_Group_Industry_Type]    Script Date: 7/25/2013 2:43:52 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[S3G_ORG_Group_Industry_Type](
+	[Type_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Value] [varchar](25) NOT NULL,
+	[Description] [varchar](50) NOT NULL,
+	[Type] [varchar](50) NOT NULL,
+	[Company_ID] [int] NULL,
+	[Industry_Id] [int] NULL,
+ CONSTRAINT [PK_S3G_ORG_Group_Industry_Type] PRIMARY KEY CLUSTERED 
+(
+	[Type_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY],
+ CONSTRAINT [IX_S3G_ORG_Group_Industry_Type] UNIQUE NONCLUSTERED 
+(
+	[Value] ASC,
+	[Type] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
+
+
+Insert into S3G_ORG_Group_Industry_Type (Value,Description,Type,Company_ID) values ('SME','SME Finance','INDUSTRY',1)
+Insert into S3G_ORG_Group_Industry_Type (Value,Description,Type,Company_ID) values  ('FA','Food & Agriculture','INDUSTRY',1)
+Insert into S3G_ORG_Group_Industry_Type (Value,Description,Type,Company_ID) values ('MF','Microfinance','INDUSTRY',1)
+Insert into S3G_ORG_Group_Industry_Type (Value,Description,Type,Company_ID) values ('AH','Affordable Housing','INDUSTRY',1)
+Insert into S3G_ORG_Group_Industry_Type (Value,Description,Type,Company_ID) values ('AHD','Affordable Housing Development','INDUSTRY',1)
+
+
+Insert into S3G_ORG_Group_Industry_Type (Value,Description,Type,Company_ID) values ('AP','Agriculture Poultry','GROUP',1)
+Insert into S3G_ORG_Group_Industry_Type (Value,Description,Type,Company_ID) values ('AM','Agriculture Machinery','GROUP',1)
+
+
+
+
+ALTER TABLE [dbo].[S3G_ORG_Constitution_Ind] DROP CONSTRAINT [DF_S3G_ORG_Constitution_Ind_Created_On]
+GO
+
+/****** Object:  Table [dbo].[S3G_ORG_Constitution_Ind]    Script Date: 7/25/2013 3:55:07 PM ******/
+DROP TABLE [dbo].[S3G_ORG_Constitution_Ind]
+GO
+
+/****** Object:  Table [dbo].[S3G_ORG_Constitution_Ind]    Script Date: 7/25/2013 3:55:07 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[S3G_ORG_Constitution_Ind](
+	[Constitution_ID] [int] NOT NULL,
+	[Industry_Id] [int] NOT NULL,
+	[Is_Active] [bit] NOT NULL,
+	[Created_By] [int] NOT NULL,
+	[Created_On] [datetime] NOT NULL,
+	[Modified_By] [int] NULL,
+	[Modified_On] [datetime] NULL
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[S3G_ORG_Constitution_Ind] ADD  CONSTRAINT [DF_S3G_ORG_Constitution_Ind_Created_On]  DEFAULT (getdate()) FOR [Created_On]
+GO
+
+
+declare @Idvalue int
+INSERT INTO dbo.S3G_ORG_ConstitutionMaster
+(Constitution_Code,Constitution_Name,Company_ID,Created_By,Created_On,Is_Active,Industry_Id)
+VALUES('NBFC','NBFC',1,2,getdate(),1,1)
+set @Idvalue=@@IDENTITY
+
+insert into S3G_ORG_Constitution_Ind
+(Constitution_ID,Industry_Id,Is_Active,Created_By,Created_On)
+values(@Idvalue,1,1,2,getdate())
+
+
+
+------Added on 23-Jul-2013 by saran end--------------------------------
+
+-- Thangam M 36/Jul/2013  CRM
+
+Alter table S3G_CLN_CRM_Hdr ALTER COLUMN Prospect_Title INT null
+Alter table S3G_CLN_CRM_Hdr ALTER COLUMN Prospect_Name varchar(100) null
+Alter table S3G_CLN_CRM_Hdr ALTER COLUMN Address1 varchar(61) null
+Alter table S3G_CLN_CRM_Hdr ALTER COLUMN City varchar(30) null
+Alter table S3G_CLN_CRM_Hdr ALTER COLUMN State varchar(60) null
+Alter table S3G_CLN_CRM_Hdr ALTER COLUMN Country varchar(60) null
+
+-- End 
+
+
+---bhuvana 26th july Error log-----
+
+
+CREATE TABLE S3G_ERROR_LOG(
+	ERROR_ID int IDENTITY(1,1) NOT NULL,
+	USER_ID varchar(50) NULL,
+	CREATED_ON datetime NULL,
+	FILE_NAME varchar(200) NULL,
+	METHOD_NAME varchar(60) NULL,
+	LINE_NUMBER numeric(5, 0) NULL,
+	SUB_METHOD varchar(60) NULL,
+	MACHINE varchar(20) NULL,
+	CATEGORY_NAME varchar(64) NULL,
+	PRIORITY varchar(50) NULL,
+	EVENT_ID varchar(50) NULL,
+	SEVERITY varchar(64) NULL,
+	TITLE varchar(100) NULL,
+	APP_DOMAIN varchar(64) NULL,
+	PROCESS_ID varchar(50) NULL,
+	PROCESS_NAME varchar(100) NULL,
+	THREAD_NAME varchar(64) NULL,
+	WIN32_THREADID varchar(50) NULL,
+	EXTENDED_PROPERTIES varchar(100) NULL,
+	ERROR_MESSAGE ntext NULL,
+	PARAM_VALUES ntext NULL,
+	PARAM_TYPE ntext NULL)
+
+CREATE TABLE S3G_ERROR_LOG_DB(
+	ERROR_ID int NULL,
+	USER_ID varchar(20) NULL,
+	PROCEDURE_NAME varchar(150) NULL,
+	ERROR_MESSAGE ntext NULL,
+	PARAM_VALUES ntext NULL,
+	PARAM_TYPE ntext NULL,
+	CREATED_ON datetime NULL
+)
+
+
+---end here----
+
+
+------Added on 27-Jul-2013 by saran start--------------------------------
+
+
+declare @Idvalue int
+--NBFC
+INSERT INTO dbo.S3G_ORG_ConstitutionMaster(Constitution_Code,Constitution_Name,Company_ID,Created_By,Created_On,Is_Active)
+VALUES('NBFC','NON BANKING FINANCE COMPANY',1,2,getdate(),1)
+set @Idvalue=@@IDENTITY
+
+insert into S3G_ORG_Constitution_Ind(Constitution_ID,Industry_Id,Is_Active,Created_By,Created_On)
+values(@Idvalue,1,1,2,getdate())--SME
+insert into S3G_ORG_Constitution_Ind(Constitution_ID,Industry_Id,Is_Active,Created_By,Created_On)
+values(@Idvalue,3,1,2,getdate())--MF
+--PRC
+INSERT INTO dbo.S3G_ORG_ConstitutionMaster(Constitution_Code,Constitution_Name,Company_ID,Created_By,Created_On,Is_Active)
+VALUES('PRC','PRODUCER COMPANY',1,2,getdate(),1)
+set @Idvalue=@@IDENTITY
+
+insert into S3G_ORG_Constitution_Ind(Constitution_ID,Industry_Id,Is_Active,Created_By,Created_On)
+values(@Idvalue,2,1,2,getdate())--FA
+
+--COP
+INSERT INTO dbo.S3G_ORG_ConstitutionMaster(Constitution_Code,Constitution_Name,Company_ID,Created_By,Created_On,Is_Active)
+VALUES('COP','CO-OPERATIVE',1,2,getdate(),1)
+set @Idvalue=@@IDENTITY
+
+insert into S3G_ORG_Constitution_Ind(Constitution_ID,Industry_Id,Is_Active,Created_By,Created_On)
+values(@Idvalue,2,1,2,getdate())--FA
+insert into S3G_ORG_Constitution_Ind(Constitution_ID,Industry_Id,Is_Active,Created_By,Created_On)
+values(@Idvalue,3,1,2,getdate())--MF
+
+--PRP 
+INSERT INTO dbo.S3G_ORG_ConstitutionMaster(Constitution_Code,Constitution_Name,Company_ID,Created_By,Created_On,Is_Active)
+VALUES('PRP','SOLE PROPRIETOR',1,2,getdate(),1)
+set @Idvalue=@@IDENTITY
+
+insert into S3G_ORG_Constitution_Ind(Constitution_ID,Industry_Id,Is_Active,Created_By,Created_On)
+values(@Idvalue,2,1,2,getdate())--FA
+
+--SCT
+INSERT INTO dbo.S3G_ORG_ConstitutionMaster(Constitution_Code,Constitution_Name,Company_ID,Created_By,Created_On,Is_Active)
+VALUES('SCT','SOCIETY',1,2,getdate(),1)
+set @Idvalue=@@IDENTITY
+
+insert into S3G_ORG_Constitution_Ind(Constitution_ID,Industry_Id,Is_Active,Created_By,Created_On)
+values(@Idvalue,2,1,2,getdate())--FA
+
+--NPC
+INSERT INTO dbo.S3G_ORG_ConstitutionMaster(Constitution_Code,Constitution_Name,Company_ID,Created_By,Created_On,Is_Active)
+VALUES('NPC','SEC 25 COMPANY',1,2,getdate(),1)
+set @Idvalue=@@IDENTITY
+
+insert into S3G_ORG_Constitution_Ind(Constitution_ID,Industry_Id,Is_Active,Created_By,Created_On)
+values(@Idvalue,3,1,2,getdate())--MF
+insert into S3G_ORG_Constitution_Ind(Constitution_ID,Industry_Id,Is_Active,Created_By,Created_On)
+values(@Idvalue,4,1,2,getdate())--AH
+insert into S3G_ORG_Constitution_Ind(Constitution_ID,Industry_Id,Is_Active,Created_By,Created_On)
+values(@Idvalue,5,1,2,getdate())--AHD
+
+--HFC
+INSERT INTO dbo.S3G_ORG_ConstitutionMaster(Constitution_Code,Constitution_Name,Company_ID,Created_By,Created_On,Is_Active)
+VALUES('HFC','HOUSING FINANCE COMPANY',1,2,getdate(),1)
+set @Idvalue=@@IDENTITY
+
+insert into S3G_ORG_Constitution_Ind(Constitution_ID,Industry_Id,Is_Active,Created_By,Created_On)
+values(@Idvalue,4,1,2,getdate())--AH
+
+--MFI
+INSERT INTO dbo.S3G_ORG_ConstitutionMaster(Constitution_Code,Constitution_Name,Company_ID,Created_By,Created_On,Is_Active)
+VALUES('MFI','MICRO FINANCE INSTITUTION',1,2,getdate(),1)
+set @Idvalue=@@IDENTITY
+
+insert into S3G_ORG_Constitution_Ind(Constitution_ID,Industry_Id,Is_Active,Created_By,Created_On)
+values(@Idvalue,3,1,2,getdate())--MF
+
+
+--LLC
+INSERT INTO dbo.S3G_ORG_ConstitutionMaster(Constitution_Code,Constitution_Name,Company_ID,Created_By,Created_On,Is_Active)
+VALUES('LLC','LIMITED LIAB COMPANY',1,2,getdate(),1)
+set @Idvalue=@@IDENTITY
+
+insert into S3G_ORG_Constitution_Ind(Constitution_ID,Industry_Id,Is_Active,Created_By,Created_On)
+values(@Idvalue,2,1,2,getdate())--FA
+insert into S3G_ORG_Constitution_Ind(Constitution_ID,Industry_Id,Is_Active,Created_By,Created_On)
+values(@Idvalue,5,1,2,getdate())--AHD
+
+
+/****** Object:  Table [dbo].[S3G_ORG_CreditGuideAdditional]    Script Date: 7/27/2013 2:22:46 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[S3G_ORG_CreditGuideAdditional](
+	[CGT_Add_Id] [int] IDENTITY(1,1) NOT NULL,
+	[CGT_ID] [int] NULL,
+	[CreditScore_Guide_Parameter_ID] [int] NULL,
+	[Actual_Value1] [varchar](200) NULL,
+	[Actual_Value2] [varchar](200) NULL,
+	[Actual_Value3] [varchar](200) NULL,
+	[Created_By] [int] NULL,
+	[Created_Date] [datetime] NULL,
+ CONSTRAINT [PK_S3G_ORG_CreditGuideAdditional] PRIMARY KEY CLUSTERED 
+(
+	[CGT_Add_Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[S3G_ORG_CreditGuideAdditional]  WITH CHECK ADD  CONSTRAINT [FK_S3G_ORG_CreditGuideAdditional_S3G_ORG_CreditGuideAdditional] FOREIGN KEY([CGT_Add_Id])
+REFERENCES [dbo].[S3G_ORG_CreditGuideAdditional] ([CGT_Add_Id])
+GO
+
+ALTER TABLE [dbo].[S3G_ORG_CreditGuideAdditional] CHECK CONSTRAINT [FK_S3G_ORG_CreditGuideAdditional_S3G_ORG_CreditGuideAdditional]
+GO
+
+
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) 
+VALUES('247','BWCUS','Customer Master BW','O','247',1,'1',getdate(),NULL,NULL,'S3GOrgCustomerMasterBW_View.aspx','S3GOrgCustomerMasterBW_Add.aspx',NULL,NULL,NULL,1,'Customer Master')	
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) 
+VALUES('250','BWODI','Over Due Interest BW','L','250',1,'1',getdate(),NULL,NULL,'S3gLoanAdTransLander.aspx?Code=BWODI','S3gLoanAdOverDueInterestBW.aspx',NULL,NULL,NULL,NULL,NULL)	
+
+------Added on 27-Jul-2013 by saran end--------------------------------
+
+
+--------Added on 30-Jul-2013 by saran start--------------------------------
+INSERT INTO S3G_SYSAD_DocumentationType (Document_Type_ID,Document_Type_Code,Document_Type_Desc) VALUES('106','ODI','Over Due Interest')
+
+
+INSERT INTO S3G_JOURNAL_TaskMaster (Company_ID,Task_ID,Task_Description,Narration_Desc,Document_Type_ID,Reference_Type_Desc,Is_Active) 
+VALUES('1','250','Over Due Interest','PENAL INTEREST DUE ON ','106','ACCOUNT',1)
+
+
+ alter table S3G_LOANAD_ODICalculations add  Account_Link_Key	int null
+
+
+ --------Added on 30-Jul-2013 by saran end--------------------------------
+
+ --------Added on 01-Aug-2013 by saran start--------------------------------
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) 
+VALUES('251','BWPRC','Pricing BW','O','251',1,'1',getdate(),NULL,NULL,'S3GORGTransLander.aspx?Code=BWPRC','S3gOrgPricingBW_Add.aspx',13,NULL,'S3gOrgPricingBW_Add.aspx?qsWorkFlow=',NULL,NULL)	
+
+
+
+IF(	IDENT_INCR( 'S3G_ORG_Lookup' ) IS NOT NULL OR IDENT_SEED('S3G_ORG_Lookup') IS NOT NULL ) SET IDENTITY_INSERT S3G_ORG_Lookup ON
+INSERT INTO S3G_ORG_Lookup (LookUp_ID,Value,Name,Type,Is_Active,Created_On) VALUES('153','1','Sub-ordinate loan','LOAN_TYPE',1,'8/2/2013 3:51:16 PM')
+INSERT INTO S3G_ORG_Lookup (LookUp_ID,Value,Name,Type,Is_Active,Created_On) VALUES('154','2','Senior loan','LOAN_TYPE',1,'8/2/2013 3:51:16 PM')
+
+IF(	IDENT_INCR( 'S3G_ORG_Lookup' ) IS NOT NULL OR IDENT_SEED('S3G_ORG_Lookup') IS NOT NULL ) SET IDENTITY_INSERT S3G_ORG_Lookup OFF
+GO
+
+
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) 
+VALUES('252','BWAPP','Application Processing BW','O','252',1,'1',getdate(),NULL,NULL,'S3GORGTransLander.aspx?Code=BWAPP&Create=1&Modify=1','S3G_ORG_ApplicationProcessingBW.aspx',26,NULL,'S3G_ORG_ApplicationProcessingBW.aspx?qsWorkFlow=',NULL,NULL)	
+
+
+ --------Added on 01-Aug-2013 by saran end--------------------------------
+
+ --------Added on 03-Aug-2013 by saran start--------------------------------
+
+
+Alter table S3G_ORG_Pricing add Loan_Type INT null
+Alter table S3G_ORG_ApplicationProcess add Loan_Type INT null
+
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) 
+VALUES('253','BWACR','Account Creation BW','L','253',1,'26',getdate(),NULL,NULL,'S3GLoanAdTransLander.aspx?Code=BWACR&Modify=0','S3GLoanAdAccountCreationBW.aspx',2,0,'S3GLoanAdAccountCreationBW.aspx?qsWorkFlow=',0,NULL)	
+
+ --------Added on 03-Aug-2013 by saran end--------------------------------
+
+
+-----------Added on 06-AUG-2013 by Aswinkrishna for NegativeListCustomers Start----------------
+
+CREATE TABLE [dbo].[S3G_Org_NegativeList](
+	[Customer_Name] [varchar](50) NULL,
+	[Passport_Number] [varchar](50) NULL,
+	[National_Identification_Number] [varchar](50) NULL
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
+---- Program Master by Aswin------
+
+
+INSERT INTO S3G_SYSAD_ProgramMaster (Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag) 
+VALUES('254','NLC','NegativeListCustomers','O','254',1,'1',2013-08-06,NULL,NULL,'NegativeListCustomers.aspx','NegativeListCustomers.aspx',NuLL,NULL,NULL,0,NULL)	
+
+-----------Added on 06-AUG-2013 by Aswinkrishna for NegativeListCustomers END----------------
+
+-- Thangam M for Compensation calculation
+
+INSERT INTO S3G_JOURNAL_TaskMaster
+ (Company_ID ,Task_ID ,Task_Description ,Narration_Desc ,Document_Type_ID ,Reference_Type_Desc ,Is_Active)
+VALUES
+ (1,213,'Compensation Calculation', 'COMPENSATION CALCULATION', 91, 'ACCOUNT', 1)
+
+INSERT INTO S3G_ORG_CashFlowFlag
+ (CashFlow_Flag_ID,CashFlowFlag_Code,CashFlowFlag_Desc
+   ,Receipt_Flag,Account_Identifier,AddLess_Flag,Service_Tax)
+VALUES
+  (97,NULL, 'Compensation Charge', 1, NULL,NULL,0)
+  
+-- End here  
+
+-- Chandru 07 Aug 2013
+
+CREATE TABLE [dbo].[S3G_LOANAD_PDDCDocType](
+	[PDDC_Doc_Type_ID] [int] NOT NULL,
+	[PDDC_Doc_Type_Name] [varchar](25) NOT NULL,
+	[Designation_ID] [varchar](100) NULL
+) 
+
+-- Santhosh.S 09 Aug 2013 for Manual Lookup Master
+
+CREATE TABLE [dbo].[S3G_SYSAD_ManualLookup](
+	[Lookup_Def_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Lookup_Desc] [varchar](100) NOT NULL,
+	[Lookup_Type] [varchar](50) NOT NULL,
+	[Table_Name] [varchar](50) NULL,
+	[Is_Active] [bit] NULL,
+	[Created_By] [int] NOT NULL,
+	[Created_On] [datetime] NOT NULL,
+	[Modified_By] [int] NULL,
+	[Modified_On] [datetime] NULL,
+ CONSTRAINT [PK__S3G_SYSA__DF206D66583473A4] PRIMARY KEY CLUSTERED 
+(
+	[Lookup_Def_ID] ASC
+)
+
+INSERT INTO S3G_SYSAD_ProgramMaster
+(Program_ID,Program_Code,Program_Name,Module_Code,Program_Ref_No,Is_Active,Created_By,Created_On,Modified_By,
+Modified_On,Page_Url,Detail_Url,Sequence,IsTransaction,WFUrl,Document_Path_Setup,Document_Flag)
+VALUES
+(248,'LKPM','Lookup Master','S','248',1,1,'2013-07-26 19:54:32.293',NULL,
+NULL,'S3GSysAdminLookupMaster.aspx','S3GSysAdminLookupMaster.aspx',NULL,NULL,NULL,1,NULL)
+
+-- Chandru 09 Aug 2013
+
+Alter Table S3G_LOANAD_PostDisbursementDocTranDetails Add Stock_Date DateTime, Total_StockAmount numeric
+
+
+-- Thangam M on 13/Aug/2013 for Gold Loan
+
+INSERT INTO dbo.S3G_SYSAD_ProgramMaster
+  (Program_ID ,Program_Code ,Program_Name ,Module_Code ,Program_Ref_No ,Is_Active ,Created_By
+  ,Created_On ,Modified_By ,Modified_On ,Page_Url ,Detail_Url ,Sequence ,IsTransaction ,WFUrl
+  ,Document_Path_Setup ,Document_Flag)
+VALUES
+   (256	,'CUSGL',	
+   'Customer Master - GL',	'O'	,256,	1,	26,	'2010-07-14 00:00:00.000',	NULL,	NULL,	
+   'S3GOrgCustomerMaster_View.aspx?qsType=GL',	'S3GOrgCustomerMaster_Add_GL.aspx',	8,	0,	
+   'S3GOrgCustomerMaster_Add.aspx?qsWorkFlow=',	1, 'Customer Master')
+
+
+INSERT INTO dbo.S3G_SYSAD_ProgramMaster
+  (Program_ID ,Program_Code ,Program_Name ,Module_Code ,Program_Ref_No ,Is_Active ,Created_By
+  ,Created_On ,Modified_By ,Modified_On ,Page_Url ,Detail_Url ,Sequence ,IsTransaction ,WFUrl
+  ,Document_Path_Setup ,Document_Flag)
+VALUES
+   (257	,'GLMV',	'Market Value Entry - GL',	'C'	,257,	1,	26,	'2010-10-10 00:00:00.000',	NULL,	NULL,	
+    'S3gClnTranslander.aspx?Code=CLNMVGL',	'S3GClnMarketValueEntry_GL.aspx',	29,	0,	'S3GClnMarketValueEntry.aspx?qsWorkFlow=',
+    0,	NULL)
+
+-- End here
+
+
+--Thangam M on 30/Aug/2013 for Credit score guide changed
+
+
+CREATE TABLE [dbo].[S3G_ORG_CreditGuideTran_Number](
+	[Credit_Guide_Tran_Num_ID] [int] IDENTITY(1,1) NOT NULL,
+	[CreditGuideTransaction_ID] [int] NOT NULL,
+	[CreditScore_Guide_Number_ID] [int] NOT NULL,
+	[Value] [varchar](50) NULL,
+	[YearValue] [varchar](20) NULL,
+ CONSTRAINT [PK_S3G_ORG_CreditGuideTran_Number] PRIMARY KEY CLUSTERED 
+(
+	[Credit_Guide_Tran_Num_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+
+CREATE TABLE [dbo].[S3G_ORG_CreditParamTrans_Others](
+	[CreditParamTrans_Others_ID] [int] IDENTITY(1,1) NOT NULL,
+	[CreditParamTrans_ID] [int] NOT NULL,
+	[Group_Ref_Number] [varchar](20) NOT NULL,
+	[Flag_ID] [int] NOT NULL,
+	[Value] [varchar](200) NULL,
+	[Remarks] [varchar](200) NULL,
+ CONSTRAINT [PK_S3G_ORG_CreditParamTrans_Others] PRIMARY KEY CLUSTERED 
+(
+	[CreditParamTrans_Others_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+CREATE TABLE [dbo].[S3G_ORG_CreditScoreFlags](
+	[Flag_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Company_ID] [int] NOT NULL,
+	[Flag_Code] [varchar](20) NOT NULL,
+	[Description] [varchar](100) NOT NULL,
+	[Is_Number] [bit] NULL,
+	[Is_Others] [bit] NOT NULL,
+ CONSTRAINT [PK_S3G_ORG_CreditScoreFlags] PRIMARY KEY CLUSTERED 
+(
+	[Flag_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+CREATE TABLE [dbo].[S3G_ORG_CreditScoreGuideNumber](
+	[CreditScore_Guide_Number_ID] [int] IDENTITY(1,1) NOT NULL,
+	[CreditScore_Guide_Parameter_ID] [int] NULL,
+	[CreditScore_Guide_ID] [int] NOT NULL,
+	[LineTypeID] [int] NOT NULL,
+	[Flag_ID] [int] NOT NULL,
+	[Value] [varchar](50) NULL,
+	[Formula] [varchar](200) NULL,
+	[IsLink] [bit] NULL,
+	[Year] [varchar](20) NULL,
+ CONSTRAINT [PK_S3G_ORG_CreditScoreGuideNumber] PRIMARY KEY CLUSTERED 
+(
+	[CreditScore_Guide_Number_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+CREATE TABLE [dbo].[S3G_ORG_GlobalCreditParam_Others](
+	[Global_Credit_Others_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Global_Credit_Parameter_ID] [int] NOT NULL,
+	[Flag_ID] [int] NOT NULL,
+	[Group_Ref_No] [varchar](4) NOT NULL,
+	[Remarks] [varchar](200) NULL,
+ CONSTRAINT [PK_S3G_ORG_GlobalCreditParam_Others] PRIMARY KEY CLUSTERED 
+(
+	[Global_Credit_Others_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+--------------
+
+ALTER table S3G_ORG_CreditGuideTransaction_Year_Values ALTER COLUMN YearValue VARCHAR(20) 
+ALTER table S3G_ORG_CreditScoreGuideYearValues  ALTER COLUMN [Year] VARCHAR(20) 
+
+
+INSERT INTO S3G_LOANAD_LookupTypeMaster
+ (Company_ID, LookupType_Code, LookupType_Description)
+VALUES
+ (1,111, 'Credit Guide Line Type')
+ 
+INSERT INTO S3G_LOANAD_LookupTypeDetails VALUES (430,1,111,1,'NI')
+INSERT INTO S3G_LOANAD_LookupTypeDetails VALUES (431,1,111,2,'GNI')
+INSERT INTO S3G_LOANAD_LookupTypeDetails VALUES (432,1,111,3,'FOR')
+
+INSERT INTO S3G_ORG_CreditScoreFlags VALUES(1,1,'OTH','Others',NULL,0)
+
+-- Thangam M End here
+
+-- Thangam M for CRM view page  on 03/Sep/2013
+UPDATE S3G_SYSAD_ProgramMaster SET Page_Url='S3GOrgCRM_View.aspx?Code=CRM', Detail_Url='S3GOrgCRM.aspx' WHERE Program_ID=241
+--End
+
+---added by saran 0n 04-Sep-2013 start
+
+ALTER TABLE S3G_SYSAD_USERMASTER 
+ADD USER_GROUP_ID INT ;
+
+GO
+
+CREATE TABLE [dbo].[S3G_SYSAD_GroupMaster](
+	[Group_Id] [int] NOT NULL,
+	[Group_Name] [varchar](150) NULL,
+	[Is_Active] [bit] NULL,
+ CONSTRAINT [PK_S3G_SYSAD_GroupMaster] PRIMARY KEY CLUSTERED 
+(
+	[Group_Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+---added by saran 0n 04-Sep-2013 end
+
+
+-- Thangam M for Credit Param change on 06/Sep/2013
+ALTER TABLE S3G_ORG_GlobalCreditParam_Others ALTER COLUMN Group_Ref_No VARCHAR(4) NULL
+--End
+C.Aswinkrishna for FIR Master and FIR Transaction
+
+update S3G_SYSAD_ProgramMaster set Program_Name='FIR Master' where Program_ID=206 and Program_Ref_No=176
+update S3G_SYSAD_ProgramMaster set Program_Name='FIR Transaction' where Program_ID=33 and Program_Ref_No=033
+
+-- Thangam M
+
+
+INSERT INTO S3G_ORG_CreditScoreFlags(Company_ID, Flag_Code, Description,Is_Number, Is_Others)
+VALUES(1, 'PADD', 'Permanent Address', 0, 0)
+INSERT INTO S3G_ORG_CreditScoreFlags(Company_ID, Flag_Code, Description,Is_Number, Is_Others)
+VALUES(1, 'CADD', 'Current Address', 0, 0)
+INSERT INTO S3G_ORG_CreditScoreFlags(Company_ID, Flag_Code, Description,Is_Number, Is_Others)
+VALUES(1, 'EMPN', 'Employer Name', 0, 0)
+INSERT INTO S3G_ORG_CreditScoreFlags(Company_ID, Flag_Code, Description,Is_Number, Is_Others)
+VALUES(1, 'SPN', 'Spouse Name', 0, 0)
+INSERT INTO S3G_ORG_CreditScoreFlags(Company_ID, Flag_Code, Description,Is_Number, Is_Others)
+VALUES(1, 'NDEP', 'No.Of Dependencies', 0, 0)
+INSERT INTO S3G_ORG_CreditScoreFlags(Company_ID, Flag_Code, Description,Is_Number, Is_Others)
+VALUES(1, 'NCHL', 'No.Of Children', 0, 0)
+INSERT INTO S3G_ORG_CreditScoreFlags(Company_ID, Flag_Code, Description,Is_Number, Is_Others)
+VALUES(1, 'CREG', 'Car Reg. No.', 0, 0)
+INSERT INTO S3G_ORG_CreditScoreFlags(Company_ID, Flag_Code, Description,Is_Number, Is_Others)
+VALUES(1, 'TREG', 'Two wheeler Reg. No.', 0, 0)
+INSERT INTO S3G_ORG_CreditScoreFlags(Company_ID, Flag_Code, Description,Is_Number, Is_Others)
+VALUES(1, 'LIP', 'Life Insurance Policy', 0, 0)
+INSERT INTO S3G_ORG_CreditScoreFlags(Company_ID, Flag_Code, Description,Is_Number, Is_Others)
+VALUES(1, 'MIP', 'Medical Insurance Policy', 0, 0)
+INSERT INTO S3G_ORG_CreditScoreFlags(Company_ID, Flag_Code, Description,Is_Number, Is_Others)
+VALUES(1, 'FADD', 'Father-In-Law Address', 0, 0)
+INSERT INTO S3G_ORG_CreditScoreFlags(Company_ID, Flag_Code, Description,Is_Number, Is_Others)
+VALUES(1, 'PEMP', 'Previous Employer Name', 0, 0)
+INSERT INTO S3G_ORG_CreditScoreFlags(Company_ID, Flag_Code, Description,Is_Number, Is_Others)
+VALUES(1, 'CEMP', 'Current Employment Since', 0, 0)
+INSERT INTO S3G_ORG_CreditScoreFlags(Company_ID, Flag_Code, Description,Is_Number, Is_Others)
+VALUES(1, 'TEMP', 'Total Employment Years', 0, 0)
+INSERT INTO S3G_ORG_CreditScoreFlags(Company_ID, Flag_Code, Description,Is_Number, Is_Others)
+VALUES(1, 'OAST', 'Other Asset Details', 0, 0)
+--End
+
+
+ INSERT INTO s3g_org_lookup
+  VALUES(155, 6,'Number','ORG_FieldAttribute' ,'True','2013-08-02 12:30:11.303')
+  
+  ALTER TABLE S3G_ORG_GlobalParameterSetup ADD CSG_Negative BIT NULL
+  
+  ____
+
+-- Chandru K for ISFC On 18/Sep/2013
+
+Insert Into S3G_Status_lookup(ID,Name,Type,IsActive,Created_By,Created_On,Modified_By,Modified_On)
+Values(229, 'Equitable Mortgage','Type_of_Mortgage',1,2,GetDate(),2,GetDate())
+
+Insert Into S3G_Status_lookup(ID,Name,Type,IsActive,Created_By,Created_On,Modified_By,Modified_On)
+Values(230, 'Mortgage by Title Deed','Type_of_Mortgage',1,2,GetDate(),2,GetDate())
+
+Insert Into S3G_Status_lookup(ID,Name,Type,IsActive,Created_By,Created_On,Modified_By,Modified_On)
+Values(231, 'Type 1', 'Step_Down_Revision', 1, 2, GetDate(), 2, GetDate())
+
+Insert Into S3G_Status_lookup(ID,Name,Type,IsActive,Created_By,Created_On,Modified_By,Modified_On)
+Values(232, 'Type 2', 'Step_Down_Revision', 1, 2, GetDate(), 2, GetDate())
+
+Alter Table S3G_ORG_ApplicationProcess Add Mortgage_Type Int, Mortgage_Fees Numeric(10,3), StepDown_RevisionType Int 
+
+Alter Table S3G_ORG_ApplicationProcessOfferROIDetails Add Collateral_Type_Rate Numeric(18,4)
+
+Alter Table S3G_CLT_CollateralDetails Add Rate_Increment Numeric(18,4)
+
+Create Table S3G_LoanAd_WriteoffReco_Header
+(
+Company_ID Int,
+Location_Code Varchar(30),
+Customer_ID Int,
+PANum Varchar(50),
+SANum Varchar(50),
+WriteOff_Amt Numeric(18,2),
+Recovery_Amt Numeric(18,2),
+Approved Bit,
+Link_WOR_Key Int Identity(1,1) Primary Key,
+Cust_Stat Varchar(1)
+)
+
+
+Create Table S3G_LoanAd_WriteoffReco_Details
+(
+WriteoffReco_DTL_ID Int Identity(1,1),
+Company_ID Int,
+Link_WOR_Key Int,
+Doc_type Varchar(10),
+Doc_ID Int,
+Doc_Date DateTime,
+Installment_No Int,
+Installment_Date DateTime,
+Installment_WOR_Amt Numeric(12,2),
+Wri_Reco Varchar(1),
+Interest_WOR_Amt  Numeric(12,2),
+Interest_Wri_Reco   Numeric(12,2),
+Remarks Varchar(60),
+Approval_User_ID Int,
+Approval_Date DateTime,
+Doc_Stat  Varchar(1))
+
+ALTER TABLE S3G_LoanAd_WriteoffReco_Details  WITH CHECK ADD  CONSTRAINT FK_S3G_LoanAd_WriteoffReco_Details FOREIGN KEY(Link_WOR_Key)
+REFERENCES S3G_LoanAd_WriteoffReco_Header (Link_WOR_Key)
+
+
+Insert Into S3G_ORG_CashFlowFlag(CashFlow_Flag_ID, CashFlowFlag_Code, CashFlowFlag_Desc, 
+			Receipt_Flag, Account_Identifier, AddLess_Flag, Service_Tax)
+Values (98, Null, 'Writeoff Exp', Null, 'Writeoff_Exp', Null, Null)
+
+Insert Into S3G_ORG_CashFlowFlag(CashFlow_Flag_ID, CashFlowFlag_Code, CashFlowFlag_Desc, 
+			Receipt_Flag, Account_Identifier, AddLess_Flag, Service_Tax)
+Values (99, Null, 'Writeoff Recovery', Null, 'Writeoff_Reco', Null, Null)
+
+Insert Into S3G_ORG_CashFlowFlag(CashFlow_Flag_ID, CashFlowFlag_Code, CashFlowFlag_Desc, 
+			Receipt_Flag, Account_Identifier, AddLess_Flag, Service_Tax)
+Values (100, Null, 'Writeoff Int Exp', Null, 'Writeoff_Int_Exp', Null, Null)
+
+Insert Into S3G_ORG_CashFlowFlag(CashFlow_Flag_ID, CashFlowFlag_Code, CashFlowFlag_Desc, 
+			Receipt_Flag, Account_Identifier, AddLess_Flag, Service_Tax)
+Values (101, Null, 'Writeoff Int Recovery', Null, 'Writeoff_Int_Reco', Null, Null)
+
+-- End
+
+--Table Creation for Product Master by Palani Kumar.A
+
+CREATE TABLE S3G_SYSAD_PROD_CASHFLOWDET ( PRODUCT_CASHFLOW_DET_ID INT IDENTITY(1,1) PRIMARY KEY,PROD_LOB_ID INT,CASHFLOW_FLAG_ID INT,
+IS_ACTIVE INT,CHARGE_TYPE INT,AMOUNT NUMERIC(15,2),CREATED_BY INT,CREATED_ON DATETIME);
+
+CREATE TABLE S3G_SYSAD_PROD_CASHFLOW_CHARGE (PRODUCT_CHARGE_ID INT IDENTITY(1,1) PRIMARY KEY,PRODUCT_CASHFLOW_DET_ID INT,
+FINANCEAMOUNT_FROM NUMERIC(15,2),FINANCEAMOUNT_TO NUMERIC(12,2),CHARGE_AMOUNT NUMERIC(12,2),IS_ACTIVE INT);
+
+ALTER TABLE S3G_SYSAD_PROD_CASHFLOW_CHARGE  WITH CHECK ADD  CONSTRAINT [FK_S3G_SYSAD_PROD_CASHFLOW_CHARGE_S3G_SYSAD_PROD_CASHFLOWDET] FOREIGN KEY(PRODUCT_CASHFLOW_Det_ID)
+REFERENCES S3G_SYSAD_PROD_CASHFLOWDET (PRODUCT_CASHFLOW_Det_ID)
+
+alter table S3G_ORG_FIRTransDocDetails alter column Remarks varchar(150) null 
+
+alter table S3G_ORG_FIRTransDocDetails add FIR_Doc_Cat_Value int 
+--PDC Bulk Replacement screen
+insert into S3G_SYSAD_ProgramMaster values(258,'CPBR','PDC Bulk Replacement','C',258,1,1,GETDATE(),NULL,NULL,'S3GClnPDCBulkReplacement.aspx',
+'S3GClnPDCBulkReplacement.aspx',12,0,'S3GClnPDCBulkReplacement.aspx?qsWorkFlow=',NULL,NULL)
+
+
+--Lookup value for Product master
+
+insert into s3g_org_lookup (LookUp_ID, Value,Name,Type,Is_Active) values (156,10,'Amount','Scheme_ChargeType',1)
+insert into s3g_org_lookup (LookUp_ID, Value,Name,Type,Is_Active) values (157,11,'Percentage','Scheme_ChargeType',1)
+
+----alter table S3G_SYSAD_PRODUCTMASTER add Min_Finance_Amount numeric(12,2),Max_Finance_Amount numeric(12,2)
+----,Min_Tenure int, Max_Tenure int
+
+-- ALTER SCRIPT
+
+CREATE TABLE [dbo].[S3G_ORG_FIRDocumentValues](
+      [FIR_Doc_Cat_ID] [int] IDENTITY(1,1) NOT NULL,
+      [FIR_Doc_Cat_Value] [int] NULL,
+      [FIR_Doc_Cat_Type_Desc] [varchar](50) NULL,
+      [Is_Active] [bit] NULL,
+PRIMARY KEY CLUSTERED 
+(
+      [FIR_Doc_Cat_ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+----End-----
+
+-- Thangam 30/Sep/2013 for performance related changes
+
+  CREATE TABLE S3G_SYSAD_USR_Session_Lock
+(
+  User_ID INT NOT NULL 
+, Program_ID INT
+, Prog_Ref_Num VARCHAR(100) 
+, Session_ID VARCHAR(100) 
+, Locking_date Datetime 
+) 
+
+
+INSERT INTO S3G_ORG_LOOKUP
+VALUES(158,	1,	'Concurrency Check','ConCur_Switch','True',	'2013-09-28 14:12:14.467')
+
+ALTER table S3G_LoanAd_AccountRepayStructure add PA_SA_REF_ID int null
+ALTER table S3G_LoanAd_AccountRepayStructureArchive  add PA_SA_REF_ID int null
+
+ALTER table S3G_LoanAd_AccAmortStructArchive add PA_SA_REF_ID int null
+ALTER table S3G_LoanAd_AccAmortStructure add PA_SA_REF_ID int null
+
+ALTER table S3G_CLN_DemandDataset3 add PA_SA_REF_ID int null
+ALTER table S3G_CLN_DemandDataset4 add PA_SA_REF_ID int null
+ALTER table S3G_CLN_DemandDataset3 add Location_ID int null
+ALTER table S3G_CLN_DemandDataset4 add Location_ID int null
+
+
+begin tran
+
+update S3G_LoanAd_AccountRepayStructure set PA_SA_REF_ID = [dbo].[FN_GetPASA_Ref_ID](1,PANUM,SANUM)
+update S3G_LoanAd_AccountRepayStructureArchive set PA_SA_REF_ID = [dbo].[FN_GetPASA_Ref_ID](1,PANUM,SANUM)
+update S3G_LoanAd_AccAmortStructArchive set PA_SA_REF_ID = [dbo].[FN_GetPASA_Ref_ID](1,PANUM,SANUM)
+update S3G_LoanAd_AccAmortStructure set PA_SA_REF_ID = [dbo].[FN_GetPASA_Ref_ID](1,PANUM,SANUM)
+
+update S3G_CLN_DemandDataset4 set PA_SA_REF_ID = [dbo].[FN_GetPASA_Ref_ID](1,PANUM,SANUM), Location_ID = dbo.FN_Get_LocationID(Location_Code)
+update S3G_CLN_DemandDataset3 set PA_SA_REF_ID = [dbo].[FN_GetPASA_Ref_ID](1,PANUM,SANUM), Location_ID = dbo.FN_Get_LocationID(Location_Code)
+
+rollback
+
+-- End here
+
+
+---For Product Master by Palani Kumar.A on 21.10.2013
+---ALTER TABLE S3G_SYSAD_PRODUCTMASTER DROP COLUMN Min_Finance_Amount,Max_Finance_Amount,Min_Tenure,Max_Tenure
+
+--End
+
+
+alter table S3G_LR_LookupTypeDetails add Lookup_ID int
+alter table S3G_ORG_CreditParamTrans_Others add Description varchar(100)
+
+--FOr User Login Details By BS Chandra Sekhar
+alter table S3G_SYSAD_UserMaster ADD LAST_LOGOUTDATE datetime
+alter table S3G_SYSAD_UserMaster add Session_ID nvarchar(40)
+alter table S3G_SYSAD_UserMaster add Last_Used_Time datetime
+alter table s3g_sysad_usermaster add Manual_Logged_Out int
+alter table s3g_sysad_usermaster alter column is_loggedin int
+
+
+INSERT INTO [dbo].[S3G_SYSAD_ProgramMaster]
+           ([Program_ID]
+           ,[Program_Code]
+           ,[Program_Name]
+           ,[Module_Code]
+           ,[Program_Ref_No]
+           ,[Is_Active]
+           ,[Created_By]
+           ,[Created_On]
+           ,[Modified_By]
+           ,[Modified_On]
+           ,[Page_Url]
+           ,[Detail_Url]
+           ,[Sequence]
+           ,[IsTransaction]
+           ,[WFUrl]
+           ,[Document_Path_Setup]
+           ,[Document_Flag])
+     VALUES
+           (259,
+           'SULO'
+           ,'Login User Details'
+           ,'S'
+           ,259
+           ,1
+           ,2
+           ,GETDATE()
+           ,null
+           ,null
+           ,'S3GSysAdminUserLoginDetails.aspx'
+           ,'S3GSysAdminUserLoginDetails.aspx'
+           ,1
+           ,null
+           ,null
+           ,null
+           ,null)
+GO
+
+
+Insert Into S3G_Org_Lookup Values((select max(lookUp_ID) + 1 from S3G_Org_Lookup),1,'Proper Log Out','LogOut_Status_Code',1,GetDate())
+Insert Into S3G_Org_Lookup Values((select max(lookUp_ID) + 1 from S3G_Org_Lookup),2,'Im-Proper Log Out','LogOut_Status_Code',1,GetDate())
+Insert Into S3G_Org_Lookup Values((select max(lookUp_ID) + 1 from S3G_Org_Lookup),3,'Session Expired','LogOut_Status_Code',1,GetDate())
+Insert Into S3G_Org_Lookup Values((select max(lookUp_ID) + 1 from S3G_Org_Lookup),4,'Force Log Out','LogOut_Status_Code',1,GetDate())
+--ENd=======
+
+
+--Added by aswin on 07-11-2013--
+
+alter table S3G_INS_AssetInsuranceEntryDetails add Nominee varchar(50)
+alter table S3G_INS_AssetInsuranceEntryDetails add Ins_Plan varchar(50)
+
+alter table S3G_INS_AssetInsuranceEntry add Insurance_Type nvarchar(1)
+
+alter table S3G_INS_AssetInsuranceEntryDetails alter column Asset_Code varchar(50)  null
+alter table S3G_INS_AssetInsuranceEntryDetails alter column Asset_Description varchar(50)  null
+
+--end--
+
+-- Chandru 
+Alter Table S3G_ORG_GlobalParameterSetup Add Product_Inflow_Adjust Bit
+Insert Into S3G_ORG_Lookup(LookUp_ID, Value, Name, Type, Is_Active) Values(164, 5, 'Less Than 6 EMI', 'PreMature Closure Rate', 'True')
+Insert Into S3G_ORG_Lookup(LookUp_ID, Value, Name, Type, Is_Active) Values(165, 25, 'More Than 6 EMI', 'PreMature Closure Rate', 'True')
+Update S3G_GLOBAL_PARAMETERMASTER Set Parameter_Name = 'Principal' Where Parameter_Code = 30
+-- End
+
+--Added by Kali as not available 
+
+ALTER TABLE [dbo].[S3G_ORG_CashFlowMaster]
+alter column [Flow_Type] [varchar] (50) NOT NULL;
+GO
+
+ALTER TABLE [dbo].[S3G_ORG_EnquiryCustomerAppraisal]
+ADD [Is_Further_Process] [bit] NULL;
+GO
+
+ALTER TABLE [dbo].[S3G_INS_AssetInsuranceEntryDetails]
+alter column [Asset_Code] [varchar] (50) NULL;
+GO
+
+ALTER TABLE [dbo].[S3G_INS_AssetInsuranceEntryDetails]
+alter column [Asset_Description] [varchar] (50) NULL;
+GO
+
+ALTER TABLE [dbo].[S3G_SYSAD_USERLOGINDETAILS]
+alter column [HOST_NAME] [varchar] (40) NULL;
+GO
+
+ALTER TABLE [dbo].[S3G_SYSAD_UserMaster]
+alter column [Is_LoggedIn] [int] NULL;
+GO
+
+
+--------------------------------------added by saran on 23-Nov-2013 start------------
+delete from S3G_LOANAD_LookupTypeDetails where LookupType_Code=44
+
+INSERT INTO S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)VALUES(437,1,44,1,'H-ECS Transaction Code');
+INSERT INTO S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)VALUES(438,1,44,2,'H-User Number');
+INSERT INTO S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)VALUES(439,1,44,3,'H-User Name');
+INSERT INTO S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)VALUES(440,1,44,4,'H-User Debit Reference');
+INSERT INTO S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)VALUES(441,1,44,5,'H-ECS Tape Input No');
+INSERT INTO S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)VALUES(442,1,44,6,'H-Sponsor Bank Branch Sort Code');
+INSERT INTO S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)VALUES(443,1,44,7,'H-Users Bank Account No');
+INSERT INTO S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)VALUES(444,1,44,8,'H-Ledger Folio Number');
+INSERT INTO S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)VALUES(445,1,44,9,'H-User-defined limit for individual debit items');
+INSERT INTO S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)VALUES(446,1,44,10,'H-Total Amount (Balancing Debit amount)');
+INSERT INTO S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)VALUES(447,1,44,11,'H-Settlement date ');
+INSERT INTO S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)VALUES(448,1,44,12,'H-Filler');
+INSERT INTO S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)VALUES(449,1,44,13,'D-ECS Transaction Code');
+INSERT INTO S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)VALUES(450,1,44,14,'D-Destination Sort Code');
+INSERT INTO S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)VALUES(451,1,44,15,'D-Destination Account ');
+INSERT INTO S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)VALUES(452,1,44,16,'D-Ledger Folio Number');
+INSERT INTO S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)VALUES(453,1,44,17,'D-Destination Account No');
+INSERT INTO S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)VALUES(454,1,44,18,'D-Destination Account Holders Name');
+INSERT INTO S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)VALUES(455,1,44,19,'D-Sponsor Bank-Branch Sort Code');
+INSERT INTO S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)VALUES(456,1,44,20,'D-User Number');
+INSERT INTO S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)VALUES(457,1,44,21,'D-User Name ');
+INSERT INTO S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)VALUES(458,1,44,22,'D-User Debit Reference No');
+INSERT INTO S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)VALUES(459,1,44,23,'D-Amount');
+INSERT INTO S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)VALUES(460,1,44,24,'D-Filler (To be kept blank by User)');
+
+alter table S3G_CLN_ECSSpoolDetail add Header_Detail varchar(10)
+
+alter table S3G_SYSAD_CompanyMaster add User_Number  varchar(50)
+
+Alter table S3G_CLN_ECSSpool ALTER COLUMN Location_Code varchar(50) null
+
+
+alter table S3G_ORG_BankMapping add PANum  varchar(50)
+alter table S3G_ORG_BankMapping add SANum  varchar(50)
+alter table S3G_ORG_BankMapping add IFSC_Code  varchar(50)
+
+
+--------------------------------------added by saran on 23-Nov-2013 end------------
+
+---------Added By Palani Kumar.A for Cheque Return Through Excel on 12/10/2013-------start-------------
+CREATE TABLE [dbo].[S3G_CLN_Cheq_Rtn_Excel_Hdr](
+	[Cheq_Rtn_Excel_Hdr_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Company_ID] [int] NULL,
+	[Cheq_Rtn_Excel_Doc_No] [varchar](30) NULL,
+	[File_Path] [varchar](300) NULL,
+	[Created_By] [int] NULL,
+	[Created_On] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Cheq_Rtn_Excel_Hdr_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+go
+
+CREATE TABLE [dbo].[S3G_CLN_Cheq_Rtn_Excel_Dtl](
+	[Cheq_Rtn_Excel_Dtl_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Cheq_Rtn_Excel_Hdr_ID] [int] NULL,
+	[Receipt_No] [varchar](30) NULL,
+	[Status_Code] [int] NULL,
+	[Status_Reason] [varchar](300) NULL,
+	[Customer_code] [varchar](10) NULL,
+	[Return_Date] [datetime] NULL,
+	[Return_Charges] [decimal](15, 2) NULL,
+	[Bank_Advice_No] [bigint] NULL,
+	[Invalid_reason] [varchar](2000) NULL,
+	[PANUM] [varchar](50) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Cheq_Rtn_Excel_Dtl_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+go
+
+ALTER TABLE S3G_CLN_Cheq_Rtn_Excel_Dtl  WITH CHECK ADD  CONSTRAINT FK_S3G_CLN_Cheq_Rtn_Excel_Dtl FOREIGN KEY(Cheq_Rtn_Excel_Hdr_ID)
+REFERENCES S3G_CLN_Cheq_Rtn_Excel_Hdr (Cheq_Rtn_Excel_Hdr_ID)
+go
+
+CREATE TABLE [dbo].[S3G_CLN_CHQRTN_XL_FORMAT](
+	[ID] [int] NULL,
+	[COMPANY_ID] INT,
+	[PROGRAM_ID] INT, 
+	[DATA_DESCRIPTION] [varchar](200) NULL,
+	[XL_COL_NAME] [varchar](200) NULL,
+	[XL_COL_HEADER] [varchar](20) NULL,	
+	[XL_SHEET_NAME] [varchar](50) NULL,
+	[COL_SIZE] [int] NULL,
+	[MANDATORY] [varchar](20) NULL,
+	[XL_COL_TYPE] [varchar](20) NULL,
+) ON [PRIMARY]
+
+go
+
+INSERT INTO [S3G_CLN_CHQRTN_XL_FORMAT] (ID,[COMPANY_ID],[PROGRAM_ID],[DATA_DESCRIPTION],XL_COL_NAME, XL_COL_TYPE, COL_SIZE, MANDATORY) VALUES (1,1,260,'CHEQUE RETURN THROUGH EXCEL','CUSTOMER CODE','VARCHAR2',50,'TRUE')
+INSERT INTO [S3G_CLN_CHQRTN_XL_FORMAT] (ID,[COMPANY_ID],[PROGRAM_ID],[DATA_DESCRIPTION],XL_COL_NAME, XL_COL_TYPE, COL_SIZE, MANDATORY) VALUES (2,1,260,'CHEQUE RETURN THROUGH EXCEL','PRIME ACCOUNT','VARCHAR2',50,'TRUE')
+INSERT INTO [S3G_CLN_CHQRTN_XL_FORMAT] (ID,[COMPANY_ID],[PROGRAM_ID],[DATA_DESCRIPTION],XL_COL_NAME, XL_COL_TYPE, COL_SIZE, MANDATORY) VALUES (3,1,260,'CHEQUE RETURN THROUGH EXCEL','RECEIPT NUMBER','VARCHAR2',50,'TRUE')
+INSERT INTO [S3G_CLN_CHQRTN_XL_FORMAT] (ID,[COMPANY_ID],[PROGRAM_ID],[DATA_DESCRIPTION],XL_COL_NAME, XL_COL_TYPE, COL_SIZE, MANDATORY) VALUES (4,1,260,'CHEQUE RETURN THROUGH EXCEL','RETURN DATE','DATETIME',100,'TRUE')
+INSERT INTO [S3G_CLN_CHQRTN_XL_FORMAT] (ID,[COMPANY_ID],[PROGRAM_ID],[DATA_DESCRIPTION],XL_COL_NAME, XL_COL_TYPE, COL_SIZE, MANDATORY) VALUES (5,1,260,'CHEQUE RETURN THROUGH EXCEL','REASON','VARCHAR2',200,'TRUE')
+INSERT INTO [S3G_CLN_CHQRTN_XL_FORMAT] (ID,[COMPANY_ID],[PROGRAM_ID],[DATA_DESCRIPTION],XL_COL_NAME, XL_COL_TYPE, COL_SIZE, MANDATORY) VALUES (6,1,260,'CHEQUE RETURN THROUGH EXCEL','RETURN CHARGES','NUMERIC',17,'TRUE')
+INSERT INTO [S3G_CLN_CHQRTN_XL_FORMAT] (ID,[COMPANY_ID],[PROGRAM_ID],[DATA_DESCRIPTION],XL_COL_NAME, XL_COL_TYPE, COL_SIZE, MANDATORY) VALUES (7,1,260,'CHEQUE RETURN THROUGH EXCEL','BANK ADVICE NO','NUMERIC',17,'TRUE')
+----------------------------Menu Insertion 
+go
+
+INSERT INTO [dbo].[S3G_SYSAD_ProgramMaster] VALUES 
+(260,'CHQE','Cheque Return Through Excel','C',260,1,2,getdate(),null,null,'S3gClnTranslander.aspx?Code=CHQE','S3GClnChequeReturnThroughExcel.aspx',18,0,
+'S3GClnChequeReturnThroughExcel.aspx?qsWorkFlow=',1,null)
+go
+--------------------
+insert into s3g_loanad_lookuptypedetails values (461,1,102,5,'Cheque Return Through Excel')
+go
+
+INSERT INTO S3G_SYSAD_DocumentationType VALUES(107,'CHQEL','Cheque Return Through Excel')
+go
+--------
+alter table S3G_CLN_ChequeReturnProcess alter column Modified_On datetime null
+alter table S3G_CLN_ChequeReturnProcess add PANUM varchar(50)
+alter table S3G_CLN_ChequeReturnProcess add File_Path varchar(500) null
+go
+---------------------------------------------------------
+CREATE TABLE [dbo].[S3G_CLN_PDCDetails_Archive](
+	[PDC_Details_Archive_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Company_ID] [int] NOT NULL,
+	[PDC_Details_ID] [int] NOT NULL,
+	[PDC_Entry_No] [varchar](25) NOT NULL,
+	[Instrument_No] [bigint] NOT NULL,
+	[Instrument_Date] [datetime] NOT NULL,
+	[Installment_Number] [int] NULL,
+	[Installment_Date] [datetime] NULL,
+	[Instrument_Amount] [decimal](16, 4) NOT NULL,
+	[Others_Amount] [decimal](16, 4) NULL,
+	[Insurance] [decimal](16, 4) NULL,
+	[Tax] [decimal](16, 4) NULL,
+	[Instrument_Type_Code] [int] NOT NULL,
+	[Instrument_Type] [int] NOT NULL,
+	[Drawee_Bank_Name] [varchar](50) NULL,
+	[PDC_Status_Type_Code] [int] NOT NULL,
+	[PDC_Status_Type] [int] NOT NULL,
+	[Receipt_No] [varchar](50) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[PDC_Details_Archive_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+----------------------------end------------------
+--Added by Sathiyanathan on 16/12/2013 Start Here
+
+Alter Table S3G_LOANAD_PaymentRequest add Payment_Gateway_Ref_No nvarchar(120)
+
+--Master
+insert into S3G_LOANAD_LookupTypeMaster(Company_ID,LookupType_Code,LookupType_Description)
+values(1,113,'Pay Mode')
+--Details
+insert into S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)
+values((Select Max(Lookup_id)+1 from S3G_LOANAD_LookupTypeDetails),1,113,1,'Cheque')
+
+
+
+insert into S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)
+values((Select Max(Lookup_id)+1 from S3G_LOANAD_LookupTypeDetails),1,113,2,'Demand Draft')
+
+insert into S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)
+values((Select Max(Lookup_id)+1 from S3G_LOANAD_LookupTypeDetails),1,113,3,'Cash')
+
+insert into S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)
+values((Select Max(Lookup_id)+1 from S3G_LOANAD_LookupTypeDetails),1,113,4,'ECS')
+
+insert into S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)
+values((Select Max(Lookup_id)+1 from S3G_LOANAD_LookupTypeDetails),1,113,5,'NEFT')
+
+insert into S3G_LOANAD_LookupTypeDetails(LookUp_ID,Company_ID,LookupType_Code,Lookup_Code,Lookup_Description)
+values((Select Max(Lookup_id)+1 from S3G_LOANAD_LookupTypeDetails),1,113,6,'RTGS')
+
+--Added by Sathiyanathan on 16/12/2013 End Here
+
+--Added by Vinodh on 06/01/2013
+
+INSERT INTO S3G_ORG_CashFlowFlag
+           ([CashFlow_Flag_ID],[CashFlowFlag_Code],[CashFlowFlag_Desc],[Receipt_Flag],[Account_Identifier],[AddLess_Flag]
+           ,[Service_Tax])
+     VALUES
+           (102,null,'Waiver',0,'Waiver',null,null);
+
+--Added by Vinodh on 06/01/2013 Ends
+--Added by Palani Kumar.A on 07/01/2014 Start
+Alter Table S3G_SYSAD_ManualLookup add Program_id int
+--Added by Palani Kumar.A on 07/01/2014 Ends
+
+--Added by Palani Kumar.A on 30/01/20114 Start ---------------------Repossession Report
+INSERT INTO [dbo].[S3G_SYSAD_ProgramMaster] VALUES 
+(261,'RRP','Repossession Report','R',261,1,2,getdate(),null,null,'S3G_RPT_Repossession.aspx','S3G_RPT_Repossession.aspx',1,0,
+'NULL',NULL,null)
+--Added by Palani Kumar.A on 30/01/2014 Ends
+
+
+--Added By Vinodh.N 05/02/2014
+
+Alter table S3G_CLN_AppropriationLogic add Is_FullDue bit
+
+--Added By Vinodh.N 05/02/2014
+
+--Added By Palani Kumar.A 02/04/2014
+update S3G_SYSAD_ProgramMaster set Page_Url='S3GCLNTranslander.aspx?Code=CEF' ,Detail_Url='S3GClnECSFlatFileGeneration.aspx' where program_id=112
+---END

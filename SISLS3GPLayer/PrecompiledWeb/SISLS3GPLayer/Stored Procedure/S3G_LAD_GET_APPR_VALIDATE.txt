@@ -1,0 +1,1049 @@
+create or replace
+PROCEDURE "S3G_LAD_GET_APPR_VALIDATE"
+(
+   P_DOCUMENT_ID NUMBER  :=NULL                        
+  ,P_Approval_ID NUMBER:=NULL                           
+  ,P_Approval_Serial_Number NUMBER  :=NULL  
+  ,P_Document_Type VARCHAR2:=NULL
+  ,P_ACTION_ID NUMBER:=NULL      
+  ,P_COMPANY_ID NUMBER:=NULL  
+  ,P_XMLValidate CLOB:=NULL
+  ,P_USER_ID NUMBER:=NULL
+  ,P_STATUS NUMBER:=NULL
+  ,p_Is_ForceApproval number
+--  ,P_OUTTBL OUT SYS_REFCURSOR
+)
+AS
+ D_STATUS_ID NUMBER;  
+  D_LOB_ID NUMBER;  
+  D_Location_Code VARCHAR2(30);  
+  D_Product_ID NUMBER;  
+  D_CONSTITUTION_ID NUMBER;  
+  D_STATUS VARCHAR2(15);
+  D_status_local VARCHAR2(15);
+  D_Auth_Rule_ID NUMBER;  
+  D_Entity_Type_ID NUMBER;  
+  D_Max_Approval_Seq NUMBER;  
+  D_Order_by NUMBER;  
+  D_Approved_Count NUMBER;  
+  D_Approver_Count NUMBER;  
+  D_CUSTOMER_ID NUMBER;  
+  D_PROGRAM_ID NUMBER;  
+  D_AMOUNT NUMBER;
+  D_APPROVAL_SERIAL_NUMBER NUMBER;
+  D_COUNT NUMBER;
+  D_COUNT1 NUMBER;
+  D_TOTAL_APPROVAL NUMBER;
+  D_RECCNT NUMBER;
+  D_ENQUIRY_RESPONSE_ID NUMBER;
+  D_Approval_No NUMBER;
+  D_PRICING_NUMBER VARCHAR2(100);   
+  D_VARASR VARCHAR2(8000);    
+  D_SYSDATE DATE;
+  D_Xml Varchar2(8000);    
+  D_Constdoc_Xml Sys.Xmltype;
+  D_Errorcode NUMBER;
+  D_CHKCOUNT NUMBER;
+  
+  D_APPLICATION_PROCESS_ID NUMBER;
+  D_APPROVED_ID NUMBER;
+  D_STATUS_ID NUMBER;
+  D_APP_SERIAL_ID NUMBER;
+  D_LOOP_COUNT NUMBER;
+  D_TOTALW_COUNT number;
+  
+  D_RECCOUNT number;
+  D_MLA_APPLICABLE number;
+  D_APPLICATION_NUMBER varchar2(50);
+  
+  D_PRDDC_ID Number;
+  P_NEW_LINE varchar2(500);
+Begin
+
+
+EXECUTE IMMEDIATE ('Alter session set NLS_COMP = LINGUISTIC');
+execute immediate ('Alter session set NLS_SORT = BINARY_CI');
+Delete from TMP_TBL_LAD_COMMON;
+
+If (P_XMLValidate Is Not Null) Then
+Begin
+    D_Constdoc_Xml := SYS.XMLTYPE.CREATEXML(P_XMLValidate);
+    
+    INSERT INTO TMP_TBL_LAD_COMMON(COL4_NUM,COL1_NUM,COL2_NUM,COL3_NUM,COL11_VARCHAR,COL12_VARCHAR)
+    select
+              EXTRACTVALUE(value(X),'/Details/@SINO'),
+              Extractvalue(Value(X),'/Details/@APPROVAL_SERIAL_NUMBER'),
+              EXTRACTVALUE(VALUE(X),'/Details/@APPROVAL_ID') ,
+              EXTRACTVALUE(VALUE(X),'/Details/@DOCUMENT_ID'),
+              Extractvalue(Value(X),'/Details/@UPLOADPATH'),
+              Extractvalue(Value(X),'/Details/@REMARKS')
+    FROM
+    TABLE (XMLSEQUENCE (D_Constdoc_Xml.EXTRACT ('//Root/Details'))) X;     
+END;
+end if;  
+
+UPDATE TMP_TBL_LAD_COMMON SET COL8_NUM=0;
+
+
+
+select COUNT(1) into D_TOTALW_COUNT from TMP_TBL_LAD_COMMON;  
+
+D_LOOP_COUNT:=1;
+
+if(D_TOTALW_COUNT>0) then
+begin   
+
+    WHILE D_LOOP_COUNT <= D_TOTALW_COUNT LOOP
+    BEGIN    
+    
+        SELECT COUNT(1) INTO D_CHKCOUNT FROM TMP_TBL_LAD_COMMON WHERE COL4_NUM=D_LOOP_COUNT;
+        
+--        d(D_CHKCOUNT);
+        
+        if(D_CHKCOUNT > 0) then
+        begin
+        
+            select COL1_NUM,COL2_NUM,COL3_NUM into D_APP_SERIAL_ID,D_APPROVED_ID,D_APPLICATION_PROCESS_ID 
+            FROM TMP_TBL_LAD_COMMON WHERE COL4_NUM=D_LOOP_COUNT;
+           
+           D('D_APPROVED_ID==>'||D_APPROVED_ID);
+            d('D_APP_SERIAL_ID==>'||D_APP_SERIAL_ID);
+            IF(P_Document_Type='APAP')THEN
+            begin
+           
+                UPDATE TMP_TBL_LAD_COMMON 
+                SET COL8_NUM=0-- Error Code update
+                WHERE COL3_NUM=D_APPLICATION_PROCESS_ID;               
+                --            D('D_COUNT-->PRAP');
+                D_APPROVAL_SERIAL_NUMBER:=D_APP_SERIAL_ID;
+                
+                SELECT (COUNT(APPROVAL_SERIAL_NUMBER) + 1) 
+                INTO D_APPROVAL_SERIAL_NUMBER
+                FROM S3G_ORG_APPAPPROVAL APP  
+                WHERE APP.APPLICATION_PROCESS_ID = D_APPLICATION_PROCESS_ID;  
+                
+             
+                d('D_APPROVAL_SERIAL_NUMBER==>'||D_APPROVAL_SERIAL_NUMBER);
+                
+                Select Lob_Id,Location_Code,Product_Id,Constitution_Id,Customer_Id,Finance_Amount,Mla_Applicable,Application_Number
+                INTO d_LOB_ID,d_Location_Code,d_Product_ID,d_Constitution_ID,d_Customer_ID,d_Amount,d_MLA_Applicable,D_Application_Number
+                FROM S3G_ORG_APPPROC
+                WHERE APPLICATION_PROCESS_ID=D_APPLICATION_PROCESS_ID;
+                
+                
+          
+                IF(NVL(D_APPROVED_ID,0) = 0)THEN -- Track.APPROVAL_ID START
+                BEGIN
+                
+                    IF(D_APPROVAL_SERIAL_NUMBER=1)THEN
+                    BEGIN
+                d('First Approval');
+                      IF(D_CONSTITUTION_ID=0 OR D_CONSTITUTION_ID IS NULL) THEN
+                      BEGIN
+                
+                          SELECT CONSTITUTION_ID   
+                          INTO   D_CONSTITUTION_ID
+                          from   S3G_ORG_CUSTMASTER 
+                          where  customer_id = D_CUSTOMER_ID;   
+                      
+                      END;
+                      END IF;
+                
+                      D_PROGRAM_ID:=37;
+                
+                      IF (D_PRODUCT_ID = 0) THEN   
+                      BEGIN
+                          D_PRODUCT_ID := NULL;               
+                      END;
+                      END IF;
+                
+                      IF (D_CONSTITUTION_ID = 0) THEN  
+                      BEGIN
+                          D_CONSTITUTION_ID := NULL;  
+                      END;
+                      end if;
+                      
+--                      D('D_CONSTITUTION_ID-'|| D_CONSTITUTION_ID);
+                
+                      SELECT COUNT(1) INTO D_COUNT 
+                      FROM S3G_ORG_AuthRuleCard  ARCMAIN  
+                      INNER JOIN S3G_ORG_AuthRuleCardDet ARCDTLS   
+                      ON ARCMAIN.AUTHORIZATION_RULE_CARD_ID = ARCDTLS.AUTHORIZATION_RULE_CARD_ID   
+                      Inner join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                      ON ARAP.AUTH_RULE_CARD_DET_ID = ARCDTLS.AUTH_RULE_CARD_DET_ID  
+                      WHERE ARCMAIN.LOB_ID = D_LOB_ID AND ARCMAIN.PRODUCT_ID = D_PRODUCT_ID  
+                      AND ARCMAIN.CONSTITUTION_ID = D_CONSTITUTION_ID  
+                      And Arcmain.Program_Id = D_PROGRAM_ID And  Arcmain.Is_Active = 1   
+                      And Arcmain.Company_Id = P_Company_Id And (D_Amount Between From_Amount And To_Amount);
+                  
+                      If(D_Count = 0) Then -- Rule card not defined for particular Product and Optional Const  
+                      begin
+                      
+                          SELECT 
+                          Count(1) Into D_Count 
+                          From  S3g_Org_Authrulecard  Arcmain  
+                          Inner Join S3g_Org_Authrulecarddet Arcdtls On Arcmain.Authorization_Rule_Card_Id = Arcdtls.Authorization_Rule_Card_Id   
+                          Inner join S3G_ORG_AUTHRULECARDAPPR ARAP ON ARAP.AUTH_RULE_CARD_DET_ID = ARCDTLS.AUTH_RULE_CARD_DET_ID  
+                          Where 
+                          ARCMAIN.LOB_ID = D_LOB_ID AND ARCMAIN.PRODUCT_ID IS NULL  
+                          AND ARCMAIN.CONSTITUTION_ID = D_CONSTITUTION_ID  
+                          And Arcmain.Program_Id = D_PROGRAM_ID And  Arcmain.Is_Active = 1   
+                          and ARCMAIN.COMPANY_ID = P_COMPANY_ID and (D_AMOUNT between FROM_AMOUNT and TO_AMOUNT);
+
+                          If(D_Count=0) Then -- Rule card not defined for particular Const and Optional Product  
+                          begin
+                          
+                              SELECT 
+                              COUNT(1) INTO D_COUNT 
+                              FROM 
+                              S3g_Org_Authrulecard  Arcmain 
+                              Inner Join S3g_Org_Authrulecarddet Arcdtls On Arcmain.Authorization_Rule_Card_Id = Arcdtls.Authorization_Rule_Card_Id   
+                              Inner join S3G_ORG_AUTHRULECARDAPPR ARAP ON ARAP.AUTH_RULE_CARD_DET_ID = ARCDTLS.AUTH_RULE_CARD_DET_ID  
+                              Where Arcmain.Lob_Id = D_Lob_Id And Arcmain.Product_Id = D_Product_Id  
+                              AND ARCMAIN.CONSTITUTION_ID IS NULL  
+                              And Arcmain.Program_Id = D_PROGRAM_ID And  Arcmain.Is_Active = 1   
+                              and ARCMAIN.COMPANY_ID = P_COMPANY_ID and (D_AMOUNT between FROM_AMOUNT and TO_AMOUNT);
+                              
+                              If(D_Count = 0) Then -- Rule card not defined for particular Product and Optional Const  
+                              begin
+                              
+                                  SELECT 
+                                  COUNT(1) into D_COUNT 
+                                  FROM 
+                                  S3g_Org_Authrulecard  Arcmain 
+                                  Inner Join S3g_Org_Authrulecarddet Arcdtls On Arcmain.Authorization_Rule_Card_Id = Arcdtls.Authorization_Rule_Card_Id   
+                                  Inner Join S3g_Org_Authrulecardappr Arap On Arap.Auth_Rule_Card_Det_Id = Arcdtls.Auth_Rule_Card_Det_Id  
+                                  Where Arcmain.Lob_Id = D_Lob_Id And Arcmain.Product_Id IS NULL
+                                  AND ARCMAIN.CONSTITUTION_ID IS NULL  
+                                  And Arcmain.Program_Id = D_PROGRAM_ID And  Arcmain.Is_Active = 1   
+                                  and arcmain.company_id = p_company_id and (d_amount between from_amount and to_amount);
+
+--                                  d('D_Amount==>'||D_Amount);
+
+                                  If(D_Count = 0) Then
+                                  Begin
+                                  
+                                      D_Errorcode:=2;
+--                                      D('Check1');
+                                      
+                                      UPDATE TMP_TBL_LAD_COMMON 
+                                      SET COL8_NUM=D_Errorcode-- Error Code update
+                                      WHERE COL3_NUM=D_APPLICATION_PROCESS_ID;
+                                      GOTO NILL;
+                                  
+                                  End;
+                                  Else
+                                  Begin
+                                  
+                                      Select  
+                                      AUTH_RULE_CARD_DET_ID,
+                                      Entity_Type_Id, 
+                                      Seq_No,
+                                      Product_Id 
+                                      INTO 
+                                      D_Auth_Rule_Id,
+                                      D_Entity_Type_Id,
+                                      D_Max_Approval_Seq,
+                                      D_Order_By
+                                      FROM (Select 
+                                      Arcdtls.AUTH_RULE_CARD_DET_ID,
+                                      Max(Arcmain.Entity_Type_Id) Entity_Type_Id,
+                                      Max(Arap.Seq_No) Seq_No,
+                                      MAX(NVL(Arcmain.Product_Id,0)) Product_Id
+                                      FROM 
+                                      S3g_Org_Authrulecard  Arcmain 
+                                      Inner Join S3g_Org_Authrulecarddet Arcdtls On Arcmain.Authorization_Rule_Card_Id = Arcdtls.Authorization_Rule_Card_Id   
+                                      Inner Join S3g_Org_Authrulecardappr Arap On Arap.Auth_Rule_Card_Det_Id = Arcdtls.Auth_Rule_Card_Det_Id  
+                                      Where Arcmain.Lob_Id = D_Lob_Id And Arcmain.Product_Id IS NULL
+                                      AND ARCMAIN.CONSTITUTION_ID IS NULL  
+                                      And Arcmain.Program_Id = D_Program_Id And  Arcmain.Is_Active = 1   
+                                      And Arcmain.Company_Id = P_Company_Id And (D_Amount Between From_Amount And To_Amount)
+                                      Group By 
+                                      ARCDTLS.AUTH_RULE_CARD_DET_ID
+                                      order by Product_ID desc) Tbl
+                                      Where Rownum < 2;
+                                  
+                                  
+                                  END;
+                                  End If;
+                              
+                              end;
+                              Else
+                              Begin
+
+                                  Select  
+                                  AUTH_RULE_CARD_DET_ID,
+                                  Entity_Type_Id, 
+                                  Seq_No,
+                                  Product_Id 
+                                  INTO 
+                                  D_Auth_Rule_Id,
+                                  D_Entity_Type_Id,
+                                  D_Max_Approval_Seq,
+                                  D_Order_By
+                                  FROM (Select 
+                                  Arcdtls.AUTH_RULE_CARD_DET_ID,
+                                  Max(Arcmain.Entity_Type_Id) Entity_Type_Id,
+                                  Max(Arap.Seq_No) Seq_No,
+                                  MAX(NVL(Arcmain.Product_Id,0)) Product_Id
+                                  FROM 
+                                  S3g_Org_Authrulecard  Arcmain 
+                                  Inner Join S3g_Org_Authrulecarddet Arcdtls On Arcmain.Authorization_Rule_Card_Id = Arcdtls.Authorization_Rule_Card_Id   
+                                  Inner Join S3g_Org_Authrulecardappr Arap On Arap.Auth_Rule_Card_Det_Id = Arcdtls.Auth_Rule_Card_Det_Id  
+                                  WHERE ARCMAIN.LOB_ID = D_LOB_ID AND ARCMAIN.PRODUCT_ID = D_PRODUCT_ID
+                                  AND ARCMAIN.CONSTITUTION_ID =D_CONSTITUTION_ID  
+                                  And Arcmain.Program_Id = D_Program_Id And  Arcmain.Is_Active = 1   
+                                  And Arcmain.Company_Id = P_Company_Id And (D_Amount Between From_Amount And To_Amount)
+                                  Group By 
+                                  ARCDTLS.AUTH_RULE_CARD_DET_ID
+                                  order by Product_ID desc) Tbl
+                                  Where Rownum < 2;
+
+                              END;
+                              END IF;                  
+                          END;
+                          Else
+                          begin
+                          
+                              Select  
+                              AUTH_RULE_CARD_DET_ID,
+                              Entity_Type_Id, 
+                              Seq_No,
+                              Product_Id 
+                              INTO 
+                              D_Auth_Rule_Id,
+                              D_Entity_Type_Id,
+                              D_Max_Approval_Seq,
+                              D_Order_By
+                              FROM (Select 
+                              Arcdtls.AUTH_RULE_CARD_DET_ID,
+                              Max(Arcmain.Entity_Type_Id) Entity_Type_Id,
+                              Max(Arap.Seq_No) Seq_No,
+                              MAX(NVL(Arcmain.Product_Id,0)) Product_Id
+                              FROM 
+                              S3g_Org_Authrulecard  Arcmain 
+                              Inner Join S3g_Org_Authrulecarddet Arcdtls On Arcmain.Authorization_Rule_Card_Id = Arcdtls.Authorization_Rule_Card_Id   
+                              Inner Join S3g_Org_Authrulecardappr Arap On Arap.Auth_Rule_Card_Det_Id = Arcdtls.Auth_Rule_Card_Det_Id  
+                              Where Arcmain.Lob_Id = D_Lob_Id And ARCMAIN.PRODUCT_ID IS NULL
+                              AND ARCMAIN.CONSTITUTION_ID = D_CONSTITUTION_ID  
+                              And Arcmain.Program_Id = D_Program_Id And  Arcmain.Is_Active = 1   
+                              And Arcmain.Company_Id = P_Company_Id And (D_Amount Between From_Amount And To_Amount)
+                              Group By 
+                              ARCDTLS.AUTH_RULE_CARD_DET_ID
+                              order by Product_ID desc) Tbl
+                              where rownum < 2;
+                              
+                          END;
+                          End If;
+                          
+                      End;
+                      Else
+                      Begin
+                          
+                          Select  
+                          AUTH_RULE_CARD_DET_ID,
+                          Entity_Type_Id, 
+                          Seq_No,
+                          Product_Id 
+                          INTO 
+                          D_Auth_Rule_Id,
+                          D_Entity_Type_Id,
+                          D_Max_Approval_Seq,
+                          D_Order_By
+                          FROM (Select 
+                          Arcdtls.AUTH_RULE_CARD_DET_ID,
+                          Max(Arcmain.Entity_Type_Id) Entity_Type_Id,
+                          Max(Arap.Seq_No) Seq_No,
+                          MAX(NVL(Arcmain.Product_Id,0)) Product_Id
+                          FROM 
+                          S3g_Org_Authrulecard  Arcmain 
+                          Inner Join S3g_Org_Authrulecarddet Arcdtls On Arcmain.Authorization_Rule_Card_Id = Arcdtls.Authorization_Rule_Card_Id   
+                          INNER JOIN S3G_ORG_AUTHRULECARDAPPR ARAP ON ARAP.AUTH_RULE_CARD_DET_ID = ARCDTLS.AUTH_RULE_CARD_DET_ID  
+                          WHERE ARCMAIN.LOB_ID = D_LOB_ID 
+                          AND ARCMAIN.PRODUCT_ID = NVL(D_PRODUCT_ID, ARCMAIN.PRODUCT_ID)
+                          AND ARCMAIN.CONSTITUTION_ID =NVL(D_Constitution_Id,ARCMAIN.CONSTITUTION_ID)
+                          And Arcmain.Program_Id = D_Program_Id And  Arcmain.Is_Active = 1   
+                          And Arcmain.Company_Id = P_Company_Id And (D_Amount Between From_Amount And To_Amount)
+                          Group By 
+                          ARCDTLS.AUTH_RULE_CARD_DET_ID
+                          order by Product_ID desc) Tbl
+                          Where Rownum < 2;
+                        
+                      End;
+                      End If;           
+--                D('ELSE Condition Check || D_Amount - ' || D_Amount || '-D_LOB_ID-' || D_LOB_ID || '-D_Auth_Rule_Id-' || D_Auth_Rule_Id);
+                      
+                      --Update Authorize Rule Card ID
+                      if(D_AUTH_RULE_ID is null or D_AUTH_RULE_ID = 0) then
+                      begin
+                      
+                          update TMP_TBL_LAD_COMMON 
+                          set COL8_NUM = 2    -- Error Code update
+                          where COL3_NUM = D_APPLICATION_PROCESS_ID;
+                          GOTO NILL;
+                          
+                      end;
+                      end if;
+                      
+                      
+                      update TMP_TBL_LAD_COMMON 
+                      set COL19_NUM = D_AUTH_RULE_ID    -- Error Code update
+                      where COL3_NUM = D_APPLICATION_PROCESS_ID;
+
+                      IF (D_APPROVAL_SERIAL_NUMBER > D_MAX_APPROVAL_SEQ) THEN  
+                      begin
+                      
+                          D_Errorcode := 4;  
+--                          D('Check2');
+                          UPDATE TMP_TBL_LAD_COMMON 
+                          SET COL8_NUM = D_ERRORCODE-- Error Code update
+                          where COL3_NUM = D_APPLICATION_PROCESS_ID;
+                          GOTO NILL;
+                      
+                      END;  
+                      END IF;
+
+                      IF(D_Entity_Type_ID = 1) THEN
+                      begin
+
+                          Select  Count(1) INTO D_APPROVED_COUNT
+                          From S3g_Sysad_Usermaster Um   
+                          Inner Join S3g_Sysad_Usermaster Ud   
+                          On Ud.Designation_Id = Um.Designation_Id   
+                          Inner Join S3G_ORG_APPAPPROVAL App   
+                          ON APP.APPROVER_ID = UD.USER_ID   
+                          WHERE UM.USER_ID = P_USER_ID   
+                          AND APP.APPLICATION_PROCESS_ID = D_APPLICATION_PROCESS_ID;  
+                          
+                          SELECT  COUNT(1) INTO D_APPROVER_COUNT
+                          FROM
+                          S3G_ORG_AuthRuleCardDet ARCDtls  
+                          Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                          ON ARAP.AUTH_RULE_CARD_DET_ID = ARCDTLS.AUTH_RULE_CARD_DET_ID   
+                          Inner Join S3g_Sysad_Usermaster Um   
+                          ON UM.DESIGNATION_ID = ARAP.ENTITY_ID  
+                          WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID   
+                          and um.User_Id = P_USER_ID; 
+                          
+                          Select Max(ARAP.Seq_No) INTO D_MAX_APPROVAL_SEQ   
+                          From S3G_ORG_AuthRuleCardDet ARCDtls  
+                          Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                          on ARAP.AUTH_RULE_CARD_DET_ID = ARCDtls.AUTH_RULE_CARD_DET_ID   
+                          Inner Join S3g_Sysad_Usermaster Um   
+                          On um.Designation_Id = ARAP.Entity_ID  
+                          WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID   
+                          AND UM.USER_ID = P_USER_ID;  
+                          
+                          Select Count(ARAP.Seq_No) INTO D_COUNT     
+                          FROM S3G_ORG_AuthRuleCardDet ARCDTLS  
+                          Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                          on ARAP.AUTH_RULE_CARD_DET_ID = ARCDtls.AUTH_RULE_CARD_DET_ID   
+                          Inner Join S3g_Sysad_Usermaster Um   
+                          ON UM.DESIGNATION_ID = ARAP.ENTITY_ID  
+                          WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID   
+                          and um.User_Id = P_USER_ID;
+
+                          IF(D_COUNT>1) THEN
+                            
+                              Select COUNT(1) INTO D_COUNT1
+                              From S3G_ORG_AuthRuleCardDet ARCDtls  
+                              Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                              on ARAP.AUTH_RULE_CARD_DET_ID = ARCDtls.AUTH_RULE_CARD_DET_ID   
+                              INNER JOIN S3G_SYSAD_USERMASTER UM   
+                              on um.Designation_Id = ARAP.Entity_ID  
+                              WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID   
+                              AND UM.USER_ID = P_USER_ID 
+                              AND ARAP.SEQ_NO = D_APPROVAL_SERIAL_NUMBER;
+
+                              IF(D_COUNT1=0) THEN
+                              BEGIN
+                              
+--                                D('Check3');
+                                D_ERRORCODE := 3;  
+                                
+                                UPDATE TMP_TBL_LAD_COMMON 
+                                SET COL8_NUM=D_Errorcode-- Error Code update
+                                where COL3_NUM=D_APPLICATION_PROCESS_ID;
+                                GOTO NILL;
+                              
+                              END;  
+                              END IF;
+
+                          ELSE
+                      
+                              IF (D_Approval_Serial_Number != D_Max_Approval_Seq) THEN 
+                              BEGIN  
+                              
+                              D_ErrorCode := 3;  
+--                              D('Check4');
+                              UPDATE TMP_TBL_LAD_COMMON 
+                              SET COL8_NUM=D_Errorcode-- Error Code update
+                              where COL3_NUM=D_APPLICATION_PROCESS_ID;
+                              GOTO NILL; 
+                              
+                              END;
+                              END IF;                        
+                          END IF;
+
+                      Select Count(1) INTO D_TOTAL_APPROVAL  
+                      From S3G_ORG_AuthRuleCardDet ARCDtls  
+                      Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                      ON ARAP.AUTH_RULE_CARD_DET_ID = ARCDTLS.AUTH_RULE_CARD_DET_ID   
+                      Where ARCDtls.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID; 
+                      END;  
+
+                      ELSIF(D_ENTITY_TYPE_ID=2) THEN
+                      begin
+                      
+                          Select Count(1) INTO D_APPROVED_COUNT  
+                          From S3g_Sysad_Usermaster Um   
+                          Inner Join S3g_Sysad_Usermaster Ud   
+                          On Ud.User_Level_ID = Um.User_Level_ID   
+                          Inner Join S3G_ORG_APPAPPROVAL App   
+                          ON APP.APPROVER_ID = UD.USER_ID   
+                          WHERE UM.USER_ID = P_USER_ID   
+                          And App.APPLICATION_PROCESS_ID = D_APPLICATION_PROCESS_ID; 
+                          
+                          Select Count(1) INTO D_Approver_Count from
+                          S3G_ORG_AuthRuleCardDet ARCDtls  
+                          Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                          ON ARAP.AUTH_RULE_CARD_DET_ID = ARCDTLS.AUTH_RULE_CARD_DET_ID   
+                          Inner Join S3g_Sysad_Usermaster Um   
+                          ON UM.USER_LEVEL_ID = ARAP.ENTITY_ID  
+                          WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID   
+                          and um.User_Id = P_USER_ID;  
+                          
+                          Select  Max(ARAP.Seq_No) INTO D_MAX_APPROVAL_SEQ  
+                          FROM S3G_ORG_AUTHRULECARDDET ARCDTLS  
+                          Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                          on ARAP.AUTH_RULE_CARD_DET_ID = ARCDtls.AUTH_RULE_CARD_DET_ID   
+                          Inner Join S3g_Sysad_Usermaster Um   
+                          On um.User_Level_ID = ARAP.Entity_ID  
+                          WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID   
+                          and um.User_Id = P_USER_ID;  
+                          
+                          Select Count(ARAP.Seq_No) INTO D_COUNT     
+                          FROM S3G_ORG_AuthRuleCardDet ARCDTLS  
+                          Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                          on ARAP.AUTH_RULE_CARD_DET_ID = ARCDtls.AUTH_RULE_CARD_DET_ID   
+                          Inner Join S3g_Sysad_Usermaster Um   
+                          ON UM.DESIGNATION_ID = ARAP.ENTITY_ID  
+                          WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID   
+                          and um.User_Id = P_USER_ID;
+
+                          IF(D_COUNT>1) THEN
+                          
+                              Select COUNT(1) INTO D_COUNT1
+                              From S3G_ORG_AuthRuleCardDet ARCDtls  
+                              Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                              on ARAP.AUTH_RULE_CARD_DET_ID = ARCDtls.AUTH_RULE_CARD_DET_ID   
+                              INNER JOIN S3G_SYSAD_USERMASTER UM   
+                              on um.Designation_Id = ARAP.Entity_ID  
+                              WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID   
+                              AND UM.USER_ID = P_USER_ID 
+                              AND ARAP.SEQ_NO = D_APPROVAL_SERIAL_NUMBER;
+
+                              IF(D_COUNT1=0) THEN
+                              BEGIN
+                              
+                                  D_ERRORCODE := 3;  
+--                                  D('Check5');
+                                  
+                                  UPDATE TMP_TBL_LAD_COMMON 
+                                  SET COL8_NUM=D_Errorcode-- Error Code update
+                                  WHERE COL3_NUM=D_APPLICATION_PROCESS_ID;
+                                  GOTO NILL;
+                              
+                              END;
+                              END IF;
+
+                          ELSE
+                          
+                              IF (D_Approval_Serial_Number != D_Max_Approval_Seq) THEN 
+                              begin        
+                              
+--                                  D('Check6');
+                                  D_ErrorCode := 3;  
+                                  UPDATE TMP_TBL_LAD_COMMON 
+                                  SET COL8_NUM=D_Errorcode-- Error Code update
+                                  WHERE COL3_NUM=D_APPLICATION_PROCESS_ID;
+                                  GOTO NILL;  
+                              
+                              END;
+                              END IF; 
+
+                          END IF;
+
+                          Select  Count(1) into D_Total_Approval   
+                          From S3G_ORG_AuthRuleCardDet ARCDtls  
+                          Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                          ON ARAP.AUTH_RULE_CARD_DET_ID = ARCDTLS.AUTH_RULE_CARD_DET_ID   
+                          Where ARCDtls.AUTH_RULE_CARD_DET_ID = D_Auth_Rule_ID;
+                          END;   
+
+                        ELSIF(D_ENTITY_TYPE_ID=3) THEN    
+                        
+                            select COUNT(1) INTO D_COUNT
+                            from 
+                            S3G_ORG_AuthRuleCardDet ARCDtls  
+                            Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                            ON ARAP.AUTH_RULE_CARD_DET_ID = ARCDTLS.AUTH_RULE_CARD_DET_ID   
+                            WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID   
+                            and ARAP.Location_Code = D_Location_Code;    
+                        
+                            IF(D_COUNT=0) THEN
+                            begin
+                            
+                                D_ERRORCODE:=2;
+--                                D('Check7');
+                                --                            D('D_Location_Code' || D_Location_Code);
+                                --                            D('D_Auth_Rule_ID - ' || D_Auth_Rule_ID);
+                                UPDATE TMP_TBL_LAD_COMMON 
+                                SET COL8_NUM=D_Errorcode-- Error Code update
+                                WHERE COL3_NUM=D_APPLICATION_PROCESS_ID;
+                                GOTO NILL;
+                            
+                            END; 
+                            END IF;
+
+                            Select Count(1) INTO D_APPROVED_COUNT 
+                            FROM S3G_ORG_APPAPPROVAL APP   
+                            WHERE APP.APPROVER_ID = P_USER_ID   
+                            and App.APPLICATION_PROCESS_ID = D_APPLICATION_PROCESS_ID; 
+
+                            Select Count(1) INTO D_Approver_Count from
+                            S3G_ORG_AuthRuleCardDet ARCDtls  
+                            Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                            ON ARAP.AUTH_RULE_CARD_DET_ID = ARCDTLS.AUTH_RULE_CARD_DET_ID              
+                            WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID   
+                            AND ARAP.ENTITY_ID = P_USER_ID   
+                            AND ARAP.LOCATION_CODE = D_LOCATION_CODE;
+                                                       --D('D_Approver_Count--> ' || D_LOCATION_CODE);
+                                                       --D('D_Approver_Count--> ' || P_USER_ID);
+                            SELECT MAX(ARAP.SEQ_NO) INTO D_MAX_APPROVAL_SEQ 
+                            From S3G_ORG_AuthRuleCardDet ARCDtls  
+                            Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                            ON ARAP.AUTH_RULE_CARD_DET_ID = ARCDTLS.AUTH_RULE_CARD_DET_ID   
+                            WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID   
+                            AND ARAP.ENTITY_ID = P_USER_ID  
+                            AND ARAP.LOCATION_CODE = D_LOCATION_CODE;
+                            
+                            SELECT COUNT(1) INTO D_TOTAL_APPROVAL
+                            From S3G_ORG_AuthRuleCardDet ARCDtls  
+                            Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                            ON ARAP.AUTH_RULE_CARD_DET_ID = ARCDTLS.AUTH_RULE_CARD_DET_ID   
+                            WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID  
+                            AND ARAP.LOCATION_CODE = D_LOCATION_CODE; 
+
+                            IF (D_Approval_Serial_Number != D_Max_Approval_Seq) THEN 
+                            BEGIN 
+                            
+                            D_ErrorCode := 3;  
+--                            D('Check8');
+                            UPDATE TMP_TBL_LAD_COMMON 
+                            SET COL8_NUM=D_Errorcode-- Error Code update
+                            WHERE COL3_NUM=D_APPLICATION_PROCESS_ID;
+                            GOTO NILL;             
+                            
+                            END;  
+                            END IF; 
+                        END IF;       
+
+                        IF (D_Approver_Count <= 0) THEN
+                        BEGIN     
+                        
+                            D_ERRORCODE := 5;  
+                            --D('Check9');
+--                            D('D_Approver_Count-' || D_Approver_Count);
+                            
+                            UPDATE TMP_TBL_LAD_COMMON 
+                            SET COL8_NUM=D_Errorcode-- Error Code update
+                            where COL3_NUM=D_APPLICATION_PROCESS_ID;
+                            GOTO NILL;
+                        
+                        END;
+                        END IF;  
+                        
+                        If ( D_Approved_Count >= D_Approver_Count) THEN
+                        begin
+                        
+                            D_ErrorCode := 4; 
+--                            D('Check10');
+--                            D('D_Approved_Count==>'||D_Approved_Count);
+--                            D('D_Approver_Count==>'||D_APPROVER_COUNT);
+                            
+                            UPDATE TMP_TBL_LAD_COMMON 
+                            SET COL8_NUM=D_Errorcode-- Error Code update
+                            WHERE COL3_NUM=D_APPLICATION_PROCESS_ID;
+                            GOTO NILL;
+                        
+                        END;
+                        END IF;                    
+                    END;                   
+                    ELSE                   
+                    BEGIN
+                        
+--                        D('Line Number==>'||714);
+--                        D('D_Approval_Serial_Number==>'||D_Approval_Serial_Number);
+--                        D('D_Total_Approval==>'||D_TOTAL_APPROVAL);
+--                        d('P_DOCUMENT_TYPE==>'||P_DOCUMENT_TYPE);
+                        
+                        Select Auth_ID INTO D_Auth_Rule_ID  
+                        FROM S3G_ORG_AppProc   
+                        WHERE APPLICATION_PROCESS_ID = D_APPLICATION_PROCESS_ID;
+                        
+                        --Added on 06-Dec-2018 Starts here
+                        
+                        update TMP_TBL_LAD_COMMON 
+                        SET COL19_NUM = D_Auth_Rule_ID    -- Error Code update
+                        where COL3_NUM = D_APPLICATION_PROCESS_ID;
+                        
+                        --Added on 06-Dec-2018 Ends here
+                        
+                        SELECT max(ARCMAIN.ENTITY_TYPE_ID) INTO D_ENTITY_TYPE_ID
+                        FROM   S3G_ORG_AUTHRULECARD ARCMAIN 
+                        INNER JOIN S3G_ORG_AUTHRULECARDDET ARCDTLS
+                        ON ARCMAIN.AUTHORIZATION_RULE_CARD_ID=ARCDTLS.AUTHORIZATION_RULE_CARD_ID
+                        INNER JOIN S3G_ORG_AUTHRULECARDAPPR ARAP           
+                        on ARAP.AUTH_RULE_CARD_DET_ID = ARCDtls.AUTH_RULE_CARD_DET_ID           
+                        WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID=D_AUTH_RULE_ID
+                        AND ROWNUM<2
+                        Group by ARCMain.AUTHORIZATION_RULE_CARD_ID;
+                        
+                        IF(D_ENTITY_TYPE_ID = 3) THEN
+                        begin
+                        
+                            Select Count(1),max(ARCMain.Entity_Type_ID),max(ARAP.Seq_No)     
+                            into d_Total_Approval,d_Entity_Type_ID,d_Max_Approval_Seq   
+                            From S3G_ORG_AuthRuleCard ARCMain    
+                            Inner join S3g_Org_Authrulecarddet ARCDtls     
+                            On ARCMain.Authorization_Rule_Card_ID = ARCDtls.Authorization_Rule_Card_ID     
+                            Inner join S3G_ORG_AUTHRULECARDAPPR ARAP     
+                            on ARAP.AUTH_RULE_CARD_DET_ID = ARCDtls.AUTH_RULE_CARD_DET_ID     
+                            WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID
+                            and ARAP.LOCATION_CODE=d_Location_Code
+                            GROUP BY ARCMAIN.AUTHORIZATION_RULE_CARD_ID;  
+                        
+                        END;
+                        ELSE
+                        BEGIN
+                        
+                            Select Count(1),max(ARCMain.Entity_Type_ID),max(ARAP.Seq_No)     
+                            into d_Total_Approval,d_Entity_Type_ID,d_Max_Approval_Seq   
+                            From S3G_ORG_AuthRuleCard ARCMain    
+                            Inner join S3g_Org_Authrulecarddet ARCDtls     
+                            On ARCMain.Authorization_Rule_Card_ID = ARCDtls.Authorization_Rule_Card_ID     
+                            Inner join S3G_ORG_AUTHRULECARDAPPR ARAP     
+                            on ARAP.AUTH_RULE_CARD_DET_ID = ARCDtls.AUTH_RULE_CARD_DET_ID     
+                            WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID           
+                            GROUP BY ARCMAIN.AUTHORIZATION_RULE_CARD_ID;  
+                        END;
+                        END IF;  
+                        
+                        If (D_Approval_Serial_Number > D_Total_Approval) THEN
+                        BEGIN        
+                        
+                            D_ErrorCode := 4;  
+--                            D('Check11');
+--                            D('D_Approval_Serial_Number==>'||D_Approval_Serial_Number);
+--                            D('D_Total_Approval==>'||D_TOTAL_APPROVAL);
+--                            d('P_DOCUMENT_TYPE==>'||P_DOCUMENT_TYPE);
+                            
+                            UPDATE TMP_TBL_LAD_COMMON 
+                            SET COL8_NUM=D_Errorcode-- Error Code update
+                            where COL3_NUM=D_APPLICATION_PROCESS_ID;
+                            GOTO NILL;
+                        
+                        END;
+                        End   IF;   
+                        
+                        IF(D_Entity_Type_ID = 1) THEN
+                        
+                            Select  Count(1) INTO D_APPROVED_COUNT
+                            From S3g_Sysad_Usermaster Um   
+                            Inner Join S3g_Sysad_Usermaster Ud   
+                            On Ud.Designation_Id = Um.Designation_Id   
+                            Inner Join S3G_ORG_APPAPPROVAL App   
+                            ON APP.APPROVER_ID = UD.USER_ID   
+                            WHERE UM.USER_ID = P_USER_ID   
+                            AND APP.APPLICATION_PROCESS_ID = D_APPLICATION_PROCESS_ID;  
+                            
+                            SELECT  COUNT(1) INTO D_APPROVER_COUNT
+                            FROM
+                            S3G_ORG_AuthRuleCardDet ARCDtls  
+                            Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                            ON ARAP.AUTH_RULE_CARD_DET_ID = ARCDTLS.AUTH_RULE_CARD_DET_ID   
+                            Inner Join S3g_Sysad_Usermaster Um   
+                            ON UM.DESIGNATION_ID = ARAP.ENTITY_ID  
+                            WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID   
+                            and um.User_Id = P_USER_ID; 
+                            
+                            Select Max(ARAP.Seq_No) INTO D_MAX_APPROVAL_SEQ   
+                            From S3G_ORG_AuthRuleCardDet ARCDtls  
+                            Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                            on ARAP.AUTH_RULE_CARD_DET_ID = ARCDtls.AUTH_RULE_CARD_DET_ID   
+                            Inner Join S3g_Sysad_Usermaster Um   
+                            On um.Designation_Id = ARAP.Entity_ID  
+                            WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID   
+                            AND UM.USER_ID = P_USER_ID;  
+                            
+                            Select Count(ARAP.Seq_No) INTO D_COUNT     
+                            FROM S3G_ORG_AuthRuleCardDet ARCDTLS  
+                            Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                            on ARAP.AUTH_RULE_CARD_DET_ID = ARCDtls.AUTH_RULE_CARD_DET_ID   
+                            Inner Join S3g_Sysad_Usermaster Um   
+                            ON UM.DESIGNATION_ID = ARAP.ENTITY_ID  
+                            WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID   
+                            and um.User_Id = P_USER_ID;
+                        
+                            IF(D_COUNT>1) THEN
+                            
+                                Select COUNT(1) INTO D_COUNT1
+                                From S3G_ORG_AuthRuleCardDet ARCDtls  
+                                Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                                on ARAP.AUTH_RULE_CARD_DET_ID = ARCDtls.AUTH_RULE_CARD_DET_ID   
+                                INNER JOIN S3G_SYSAD_USERMASTER UM   
+                                on um.Designation_Id = ARAP.Entity_ID  
+                                WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID   
+                                AND UM.USER_ID = P_USER_ID 
+                                AND ARAP.SEQ_NO = D_APPROVAL_SERIAL_NUMBER;
+                        
+                                IF(D_COUNT1=0) THEN
+                                BEGIN
+                                
+                                    D_ERRORCODE := 3;  
+--                                    D('Check12');
+                                    
+                                    UPDATE TMP_TBL_LAD_COMMON 
+                                    SET COL8_NUM=D_Errorcode-- Error Code update
+                                    WHERE COL3_NUM=D_APPLICATION_PROCESS_ID;
+                                    GOTO NILL;
+                                
+                                end; 
+                                END IF;                              
+                            ELSE    
+                            BEGIN
+                        
+                                IF (D_Approval_Serial_Number != D_Max_Approval_Seq) THEN 
+                                BEGIN
+                                
+                                    D_ErrorCode := 3;  
+--                                    D('Check13');
+                                    
+                                    UPDATE TMP_TBL_LAD_COMMON 
+                                    SET COL8_NUM=D_Errorcode-- Error Code update
+                                    where COL3_NUM=D_APPLICATION_PROCESS_ID;
+                                    GOTO NILL;  
+                                
+                                END;
+                                END IF;  
+                            END;
+                            END IF; 
+                        
+                        ELSIF(D_ENTITY_TYPE_ID=2) THEN
+                        
+                            Select Count(1) INTO D_APPROVED_COUNT  
+                            From S3g_Sysad_Usermaster Um   
+                            Inner Join S3g_Sysad_Usermaster Ud   
+                            On Ud.User_Level_ID = Um.User_Level_ID   
+                            Inner Join S3G_ORG_APPAPPROVAL App   
+                            ON APP.APPROVER_ID = UD.USER_ID   
+                            WHERE UM.USER_ID = P_USER_ID   
+                            And App.APPLICATION_PROCESS_ID = D_APPLICATION_PROCESS_ID; 
+                            
+                            Select Count(1) INTO D_Approver_Count from
+                            S3G_ORG_AuthRuleCardDet ARCDtls  
+                            Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                            ON ARAP.AUTH_RULE_CARD_DET_ID = ARCDTLS.AUTH_RULE_CARD_DET_ID   
+                            Inner Join S3g_Sysad_Usermaster Um   
+                            ON UM.USER_LEVEL_ID = ARAP.ENTITY_ID  
+                            WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID   
+                            and um.User_Id = P_USER_ID;  
+                            
+                            Select  Max(ARAP.Seq_No) INTO D_MAX_APPROVAL_SEQ  
+                            FROM S3G_ORG_AUTHRULECARDDET ARCDTLS  
+                            Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                            on ARAP.AUTH_RULE_CARD_DET_ID = ARCDtls.AUTH_RULE_CARD_DET_ID   
+                            Inner Join S3g_Sysad_Usermaster Um   
+                            On um.User_Level_ID = ARAP.Entity_ID  
+                            WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID   
+                            and um.User_Id = P_USER_ID;  
+                            
+                            Select Count(ARAP.Seq_No) INTO D_COUNT     
+                            FROM S3G_ORG_AuthRuleCardDet ARCDTLS  
+                            Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                            on ARAP.AUTH_RULE_CARD_DET_ID = ARCDtls.AUTH_RULE_CARD_DET_ID   
+                            Inner Join S3g_Sysad_Usermaster Um   
+                            ON UM.DESIGNATION_ID = ARAP.ENTITY_ID  
+                            WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID   
+                            and um.User_Id = P_USER_ID;
+                        
+                            IF(D_COUNT>1) THEN
+                            
+                                Select COUNT(1) INTO D_COUNT1
+                                From S3G_ORG_AuthRuleCardDet ARCDtls  
+                                Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                                on ARAP.AUTH_RULE_CARD_DET_ID = ARCDtls.AUTH_RULE_CARD_DET_ID   
+                                INNER JOIN S3G_SYSAD_USERMASTER UM   
+                                on um.Designation_Id = ARAP.Entity_ID  
+                                WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID   
+                                AND UM.USER_ID = P_USER_ID 
+                                AND ARAP.SEQ_NO = D_APPROVAL_SERIAL_NUMBER;
+                        
+                                IF(D_COUNT1=0) THEN
+                                BEGIN
+                        
+                                    D_ERRORCODE := 3;  
+--                                    D('Check14');
+                                    
+                                    UPDATE TMP_TBL_LAD_COMMON 
+                                    SET COL8_NUM=D_Errorcode-- Error Code update
+                                    where COL3_NUM=D_APPLICATION_PROCESS_ID;
+                                    GOTO NILL;
+                        
+                                END;
+                                END IF;                              
+                        
+                            ELSE
+                            
+                                IF (D_Approval_Serial_Number != D_Max_Approval_Seq) THEN 
+                                BEGIN
+                                
+                                    D_ERRORCODE := 3;  
+--                                    D('Check15');
+                                    UPDATE TMP_TBL_LAD_COMMON 
+                                    SET COL8_NUM=D_Errorcode-- Error Code update
+                                    WHERE COL3_NUM=D_APPLICATION_PROCESS_ID;
+                                    GOTO NILL; 
+                        
+                                END;
+                                END IF;    
+                                
+                            END IF;          
+                        
+                        
+                            ELSIF(D_ENTITY_TYPE_ID=3) THEN      
+                        
+                              select COUNT(1) INTO D_COUNT
+                              from 
+                              S3G_ORG_AuthRuleCardDet ARCDtls  
+                              Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                              ON ARAP.AUTH_RULE_CARD_DET_ID = ARCDTLS.AUTH_RULE_CARD_DET_ID   
+                              WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID   
+                              and ARAP.Location_Code = D_Location_Code;    
+                        
+                              IF(D_COUNT=0) THEN
+                              begin
+                              
+                                  D_ERRORCODE:=2;
+--                                  D('Check16');
+                                  UPDATE TMP_TBL_LAD_COMMON 
+                                  SET COL8_NUM=D_Errorcode-- Error Code update
+                                  where COL3_NUM=D_APPLICATION_PROCESS_ID;
+                                  GOTO NILL;
+                              
+                              END;
+                              END IF;
+                        
+                              Select Count(1) INTO D_APPROVED_COUNT 
+                              FROM S3G_ORG_APPAPPROVAL APP   
+                              WHERE APP.APPROVER_ID = P_USER_ID   
+                              and App.APPLICATION_PROCESS_ID = D_APPLICATION_PROCESS_ID; 
+                              
+                              Select Count(1) INTO D_Approver_Count from
+                              S3G_ORG_AuthRuleCardDet ARCDtls  
+                              Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                              ON ARAP.AUTH_RULE_CARD_DET_ID = ARCDTLS.AUTH_RULE_CARD_DET_ID              
+                              WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID   
+                              AND ARAP.ENTITY_ID = P_USER_ID   
+                              and ARAP.Location_Code = D_Location_Code;
+                        
+                              SELECT MAX(ARAP.SEQ_NO) INTO D_MAX_APPROVAL_SEQ 
+                              From S3G_ORG_AuthRuleCardDet ARCDtls  
+                              Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                              ON ARAP.AUTH_RULE_CARD_DET_ID = ARCDTLS.AUTH_RULE_CARD_DET_ID   
+                              WHERE ARCDTLS.AUTH_RULE_CARD_DET_ID = D_AUTH_RULE_ID   
+                              AND ARAP.ENTITY_ID = P_USER_ID  
+                              AND ARAP.LOCATION_CODE = D_LOCATION_CODE;   
+                        
+                              IF (D_Approval_Serial_Number != D_Max_Approval_Seq) THEN 
+                              BEGIN              
+                              
+                                  D_ERRORCODE := 3;  
+--                                  D('Check17');
+                        
+                                  UPDATE TMP_TBL_LAD_COMMON 
+                                  SET COL8_NUM=D_Errorcode-- Error Code update
+                                  WHERE COL3_NUM=D_APPLICATION_PROCESS_ID;
+                                  GOTO NILL;                 
+                                  
+                                  END;  
+                                  END IF;                         
+                            END IF;
+                        
+                            If (D_Approver_Count <= 0)THEN /* Approver not in the Rule card ie) Approver not having access to approve*/  
+                            BEGIN    
+                            
+                                D_ERRORCODE := 5;  
+--                                D('Check18');
+                                UPDATE TMP_TBL_LAD_COMMON 
+                                SET COL8_NUM=D_Errorcode-- Error Code update
+                                WHERE COL3_NUM=D_APPLICATION_PROCESS_ID;
+                                GOTO NILL;
+                            END;
+                            End IF; 
+                        
+                            If ( D_Approved_Count >= D_Approver_Count) THEN/* If Approved count greater than or equal to Approver count ie) All Apprroval has been done for the particular designation */  
+                            BEGIN  
+                        
+                                D_ERRORCODE := 4;
+--                                D('Check19');
+--                                D('D_Approved_Count==>'||D_APPROVED_COUNT);
+--                                d('D_Approver_Count==>'||D_Approver_Count);
+                                UPDATE TMP_TBL_LAD_COMMON 
+                                SET COL8_NUM=D_Errorcode-- Error Code update
+                                WHERE COL3_NUM=D_APPLICATION_PROCESS_ID;
+                                GOTO NILL;
+                            END;
+                            end if; 
+                            
+                        END;                   
+                        END IF;--Approval Serial Number End
+                        END;            
+                ELSE
+                BEGIN
+                    Select Auth_ID  INTO D_Auth_Rule_ID 
+                    FROM S3G_ORG_AppProc   
+                    Where APPLICATION_PROCESS_ID = D_APPLICATION_PROCESS_ID;  
+                    
+                    Select Count(1) INTO D_Total_Approval
+                    From S3G_ORG_AuthRuleCardDet ARCDtls  
+                    Inner Join S3G_ORG_AUTHRULECARDAPPR ARAP   
+                    ON ARAP.AUTH_RULE_CARD_DET_ID = ARCDTLS.AUTH_RULE_CARD_DET_ID   
+                    Where ARCDtls.AUTH_RULE_CARD_DET_ID = D_Auth_Rule_ID;
+                END;
+                END IF;-- Track.APPROVAL_ID END
+                
+              
+                
+            end;          
+            end if;
+        
+        end;
+        End IF;    
+        
+         <<NILL>>
+        UPDATE TMP_TBL_LAD_COMMON 
+         SET COL7_NUM=D_Total_Approval-- Error Code update
+        where COL3_NUM=D_APPLICATION_PROCESS_ID; 
+        D_LOOP_COUNT:=D_LOOP_COUNT+1;
+        
+    end;
+    END LOOP;
+    
+    D_APPROVAL_SERIAL_NUMBER := P_APPROVAL_SERIAL_NUMBER;
+
+END;
+END IF;
+
+END S3G_LAD_GET_APPR_VALIDATE;

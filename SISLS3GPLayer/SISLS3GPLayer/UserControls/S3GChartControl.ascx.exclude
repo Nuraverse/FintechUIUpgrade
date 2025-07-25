@@ -1,0 +1,159 @@
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="S3GChartControl.ascx.cs" Inherits="UserControls_S3GChartControl" %>
+<%@ Register Assembly="System.Web.DataVisualization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
+    Namespace="System.Web.UI.DataVisualization.Charting" TagPrefix="asp" %>
+
+
+<%--/* Chart Div Design Start */--%>
+<table style="padding:0px;">
+    <tr style="display:none;">
+        <td class="styleDisplayLabel" align="center">
+            <asp:Label ID="lblChartTitle" runat="server"></asp:Label>
+        </td>
+    </tr>
+    <tr id="trChart" runat="server">
+        <td>
+            <asp:Chart ID="Chart1" runat="server" Palette="BrightPastel" BackGradientStyle="None"
+                BorderWidth="0" BorderlineColor="White" BorderSkin-SkinStyle="None"  ImageType="Png">
+                <Titles>
+                    <asp:Title ForeColor="#003d9e" Font="Segoe UI" ></asp:Title>
+                    
+                </Titles>
+                <Legends>
+                    <asp:Legend LegendStyle="Table" TextWrapThreshold="6" TableStyle="Wide" IsTextAutoFit="true"
+                        Docking="Bottom" Name="Default" IsDockedInsideChartArea="false" Font="Segoe UI, 8pt"
+                        Alignment="Center">
+                    </asp:Legend>
+                </Legends>
+                <ChartAreas>
+                    <asp:ChartArea Name="ChartArea1" BorderColor="64, 64, 64, 64" BorderDashStyle="NotSet"
+                        BackSecondaryColor="White">
+                        <AxisY LineColor="64, 64, 64, 64" IsLabelAutoFit="True">
+                            <MajorGrid Interval="Auto" LineColor="64, 64, 64, 64" />
+                            <MajorTickMark Interval="1" Enabled="False" />
+                        </AxisY>
+                        <AxisX LineColor="64, 64, 64, 64">
+                            <LabelStyle Interval="1" />
+                            <MajorGrid LineColor="64, 64, 64, 64" />
+
+                        </AxisX>
+                    </asp:ChartArea>
+                </ChartAreas>
+            </asp:Chart>
+            <asp:HiddenField ID="hdnColorPalette" runat="server" />
+        </td>
+    </tr>
+    <tr id="trErrorChart" runat="server" visible="false">
+        <td>
+            <asp:Label ID="lblErrorChart" runat="server" style="font-family:'Segoe UI'; font-size:12px; color:gray;">Error In Chart</asp:Label><br />
+        </td>
+    </tr>
+</table>
+
+
+<%--/* Chart Div Design Start */--%>
+
+<%--/* Tooltip Chart Div Css Start */--%>
+<style type="text/css">
+    .fadingTooltip
+    {
+        /*border-color: blue;
+            border-right: darkgray 1px outset;
+            border-top: darkgray 1px outset;
+            font-size: 12pt;
+            border-left: darkgray 1px outset;
+            width: auto;
+            color: white;
+            border-bottom: darkgray 1px outset;
+            height: auto;
+            background-color: white;
+            margin: 3px 3px 3px 3px;
+            padding: 3px 3px 3px 3px;
+            border-bottom-width: 3px 3px 3px 3px;*/
+        background-color: transparent;
+        background-origin: content-box;
+        border: 1px solid;
+        border-color: #94BFE9;
+    }
+</style>
+
+<%--/* End */--%>
+
+<%--/* Tooltip Chart Scripts Start */--%>
+
+<script type="text/javascript">
+    var fadingTooltip;
+    var wnd_height, wnd_width;
+    var tooltip_height, tooltip_width;
+    var tooltip_shown = false;
+    var transparency = 100;
+    var timer_id = 1;
+    var tooltiptext;
+
+    window.onload = WindowLoading;
+    window.onresize = UpdateWindowSize;
+    document.onmousemove = AdjustToolTipPosition;
+
+    function DisplayTooltip(tooltip_text) {
+      
+        fadingTooltip.innerHTML = tooltip_text;
+        tooltip_shown = (tooltip_text != "") ? true : false;
+        if (tooltip_text != "") {
+            // Get tooltip window height
+            tooltip_height = (fadingTooltip.style.pixelHeight) ? fadingTooltip.style.pixelHeight : fadingTooltip.offsetHeight;
+            transparency = 0;
+            ToolTipFading();
+        }
+        else {
+            clearTimeout(timer_id);
+            fadingTooltip.style.visibility = "hidden";
+        }
+    }
+
+    function AdjustToolTipPosition(e) {
+        if (tooltip_shown) {
+            var ev;
+            if (e)
+                ev = e;
+            else
+                ev = event;
+
+            fadingTooltip.style.visibility = "visible";
+            offset_y = (ev.clientY + tooltip_height - document.body.scrollTop + 30 >= wnd_height) ? -15 - tooltip_height : 20;
+            fadingTooltip.style.left = Math.min(wnd_width - tooltip_width - 10, Math.max(3, ev.clientX + 6)) + document.body.scrollLeft + 'px';
+            fadingTooltip.style.top = ev.clientY + offset_y + document.body.scrollTop + 'px';
+        }
+    }
+
+    function WindowLoading() {
+        fadingTooltip = document.getElementById('fadingTooltip');
+
+        // Get tooltip  window width				
+        tooltip_width = (fadingTooltip.style.pixelWidth) ? fadingTooltip.style.pixelWidth : fadingTooltip.offsetWidth;
+
+        // Get tooltip window height
+        tooltip_height = (fadingTooltip.style.pixelHeight) ? fadingTooltip.style.pixelHeight : fadingTooltip.offsetHeight;
+
+        UpdateWindowSize();
+    }
+
+    function ToolTipFading() {
+        if (transparency <= 100) {
+            fadingTooltip.style.filter = "alpha(opacity=" + transparency + ")";
+            fadingTooltip.style.opacity = transparency / 100;
+            transparency += 5;
+            timer_id = setTimeout('ToolTipFading()', 35);
+        }
+    }
+
+    function UpdateWindowSize() {
+        wnd_height = document.body.clientHeight;
+        wnd_width = document.body.clientWidth;
+    }
+</script>
+
+<%--/* End */--%>
+
+<%--/* Tooltip Chart Loading Div Design Start */--%>
+<div class="fadingTooltip" id="fadingTooltip" style="z-index: 999; visibility: hidden; position: absolute">
+</div>
+<%--/* End */--%>

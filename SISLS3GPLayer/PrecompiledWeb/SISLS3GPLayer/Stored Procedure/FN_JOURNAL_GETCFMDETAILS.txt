@@ -1,0 +1,101 @@
+﻿create or replace
+FUNCTION "FN_JOURNAL_GETCFMDETAILS" 
+(                                                    
+      P_Task_ID  Number
+     ,P_LOB_ID  Number :=NULL                                        
+     
+)                                                    
+Return TBL_OBJ_LA_CFM_Det                                                    
+as 
+  TempTbl TBL_OBJ_LA_CFM_Det; 
+  d_LOB_ID Number;
+  d_Task_ID Number;
+Begin 
+    
+    d_LOB_ID := P_LOB_ID; 
+    d_Task_ID := P_TASK_ID;
+    
+--Payment Re and Asset Verifi                                
+  IF((P_Task_ID=54)OR(P_Task_ID=52)OR(P_Task_ID=77) OR(P_Task_ID=96)OR(P_Task_ID=112))Then                              
+    Begin                                
+       d_LOB_ID := NULL;
+    End;
+  End if;
+        
+  IF(d_Task_ID=84) Then                               
+    Begin                                
+      d_Task_ID:=75;
+    End;
+  End If;
+    
+    Select OBJ_LA_JOURNAL_CFM_DETAILS(SlNO ,GL_Code  , SL_Code  , 0 , Account_Flag  ,                                
+           Acc_Type , Txn_Type ,Account_Code_Desc,CashFlow_ID ,Flow_Type,CashFlowFlag_Code,
+           Account_Identifier)                                     
+   Bulk Collect INTO TempTbl       
+    From (      
+          SELECT ROWNUM SlNO,
+            tbl_CFM_Det.*
+          FROM
+                (SELECT CFM.CashFlow_ID,
+                  ASM.GL_Code ,
+                  ASM.SL_Code ,
+                  AC.Account_Flag ,
+                  CFF.Account_Identifier,
+                  Debit_Type_ID AS Acc_Type,
+                  0             AS Txn_Type,
+                  Flow_Type,
+                  CFF.CashFlow_Flag_ID AS CashFlowFlag_Code ,
+                  AC.Account_Code_Desc
+                FROM S3G_ORG_CashFlowMaster CFM
+                INNER JOIN S3G_ORG_CashFlowFlag CFF
+                ON CFM.CashFlow_Flag_ID=CFF.CashFlow_Flag_ID
+                INNER JOIN S3G_ORG_CashFlowMasterDebit CFMD
+                ON CFM.CashFlow_ID=CFMD.CashFlow_ID
+                Inner Join S3g_Org_Cashflowmasterpgmmap Cfmp
+                ON CFMP.CashFlow_ID=CFM.CashFlow_ID
+                Inner Join S3g_Sysad_Accountsetupmaster Asm
+                ON ASM.Account_Setup_ID=CFMD.Account_Setup_ID--Account_Setup_ID changed on 28-may-2019-Sathish R Instead of CFMC.GL_Account_Code
+                INNER JOIN S3G_SYSAD_AccountCodeDesc AC
+                ON AC.Account_Code_Desc_ID=ASM.Account_Code_Desc_ID
+                WHERE CFMP.Program_ID     =d_Task_ID      
+                AND CFMP.Is_Post          =1
+                AND CFM.Is_Active         =1
+                AND ASM.IS_ACTIVE=1
+                AND (D_LOB_ID IS NULL OR CFM.LOB_ID=D_LOB_ID)
+             
+             UNION ALL
+                  SELECT CFM.CashFlow_ID,
+                  ASM.GL_Code ,
+                  ASM.SL_Code ,
+                  AC.Account_Flag ,
+                  CFF.Account_Identifier,
+                  Credit_Type_ID AS Acc_Type,
+                  1              AS Txn_Type,
+                  Flow_Type,
+                  CFF.CashFlow_Flag_ID AS CashFlowFlag_Code ,
+                  AC.Account_Code_Desc
+                FROM S3G_ORG_CashFlowMaster CFM
+                INNER JOIN S3G_ORG_CashFlowFlag CFF
+                ON CFM.CashFlow_Flag_ID=CFF.CashFlow_Flag_ID
+                INNER JOIN S3G_ORG_CashFlowMasterCredit CFMC
+                ON CFM.CashFlow_ID=CFMC.CashFlow_ID
+                Inner Join S3g_Org_Cashflowmasterpgmmap Cfmp
+                ON CFMP.CashFlow_ID=CFM.CashFlow_ID
+                Inner Join S3g_Sysad_Accountsetupmaster Asm
+                ON ASM.Account_Setup_ID=CFMC.Account_Setup_ID--Account_Setup_ID changed on 28-may-2019-Sathish R Instead of CFMC.GL_Account_Code
+                INNER JOIN S3G_SYSAD_AccountCodeDesc AC
+                ON AC.Account_Code_Desc_ID=ASM.Account_Code_Desc_ID
+                WHERE CFMP.PROGRAM_ID     =D_TASK_ID     
+                AND CFMP.IS_POST          =1
+                AND CFM.IS_ACTIVE         =1
+                AND ASM.IS_ACTIVE=1
+                AND (D_LOB_ID IS NULL OR CFM.LOB_ID=D_LOB_ID)
+             
+              
+              )tbl_CFM_Det
+            ORDER BY CashFlow_ID,Txn_Type
+            );                                    
+              
+    Return  TempTbl;                                                  
+                                                    
+End FN_Journal_GetCFMDetails;

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="163217fa-2304-41c9-a9f1-c64d3696f1d0" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:3220/LoanAdmin/ContractMgtServices.svc?wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="ContractMgtServices2.xsd" MetadataType="Schema" ID="3dc0fe14-cae9-458e-b514-fbef73681625" SourceId="1" SourceUrl="http://localhost:3220/LoanAdmin/ContractMgtServices.svc?xsd=xsd3" />
+    <MetadataFile FileName="ContractMgtServices3.xsd" MetadataType="Schema" ID="6cfa94e3-668f-457b-95c1-321ce0353ace" SourceId="1" SourceUrl="http://localhost:3220/LoanAdmin/ContractMgtServices.svc?xsd=xsd1" />
+    <MetadataFile FileName="ContractMgtServices.wsdl" MetadataType="Wsdl" ID="5f23f174-eac9-4dac-a89a-7b68c5924f31" SourceId="1" SourceUrl="http://localhost:3220/LoanAdmin/ContractMgtServices.svc?wsdl" />
+    <MetadataFile FileName="ContractMgtServices.xsd" MetadataType="Schema" ID="8f1ac646-20f4-46d5-b7d1-9edc75d73c44" SourceId="1" SourceUrl="http://localhost:3220/LoanAdmin/ContractMgtServices.svc?xsd=xsd2" />
+    <MetadataFile FileName="ContractMgtServices1.xsd" MetadataType="Schema" ID="21e70534-ea6f-42ee-ad81-85f799e0abad" SourceId="1" SourceUrl="http://localhost:3220/LoanAdmin/ContractMgtServices.svc?xsd=xsd0" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

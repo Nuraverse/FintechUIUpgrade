@@ -1,0 +1,631 @@
+﻿create or replace
+PROCEDURE S3G_FACT_REGULAR_INT_POST
+(     
+     P_COMPANY_ID NUMBER:=NULL
+    ,P_LOCATION_ID NUMBER:=NULL
+    ,P_PA_SA_REF_ID number:=null
+    ,P_CUT_OFF_DATE VARCHAR2:=null
+    ,P_TRAN_TYPE NUMBER:=NULL--0 -Query Mode--1--Transaction Mode
+    ,P_SCHEDULEJOB_STATUS_ID int:=null
+    ,P_JOBPOST_TYPE int:=null
+    ,P_APPLICATION_NUMBER OUT varchar2
+    ,P_ErrorCode OUT NUMBER
+)      
+as      
+ 
+  D_COUNT number:=0;
+  D_CUT_OFF_DATE date;
+  D_CREATED_BY number;
+  D_INCOME_RECOGNITION_ID number;
+  D_INCOME_RECOGNITION_NUMBER varchar2(50);
+  D_TASK_ID               number;
+  D_JOURNAL_ENTRY       number;
+  D_ERRORCODE number;
+  P_ERRORMSG varchar(600);
+  D_FINANCIAL_MONTH     varchar2(6);
+  D_USER_CODE varchar(50);
+  D_IRHEADER_ID number;
+  D_ACCOUNT_COUNT number;
+  D_TOTAL_BRANCH_INETERST_AMOUNT NUMBER;
+  
+  D_ODIID number;
+  D_REGULAR_DENOMINATOR number;
+  D_NO_DAYS number;
+  D_FIRST_DAY_OF_MONTH date;
+  D_MEMO_LINK_KEY number;
+  D_MEMODISTINCTNO number;
+  D_TYPEDESC     varchar2(100);
+
+begin    
+  --CREATED BY:SATHISH R
+  --CREATED ON:12-MAR-2019
+  --USE:FACTORING MONTH END JOB ACTIVITY
+  
+
+
+
+  
+  D_CUT_OFF_DATE:=FN_TODATE(P_CUT_OFF_DATE);
+  d_TASK_ID               := 114;--INCOME RECOGNIZATION PROGRAM
+           
+           
+           
+           
+  if(P_JOBPOST_TYPE=16)then--P_JOBPOST_TYPE START
+  BEGIN
+  
+ -- IF(P_TRAN_TYPE=1)then--P_TRAN_TYPE=1 START
+    BEGIN
+   
+     
+    SELECT COUNT(1) INTO D_COUNT  FROM S3G_TEMP_FAC_INCOME_DET WHERE SCHEDULEJOB_STATUS_ID=P_SCHEDULEJOB_STATUS_ID AND JOB_POST_STATUS=1;
+    IF(D_COUNT>0)THEN
+      begin
+        P_ErrorCode:=1;
+        P_APPLICATION_NUMBER:='Income already Posted';
+        RETURN;
+      end;
+    END IF;
+   
+    
+
+     select USER_ID into D_CREATED_BY from S3G_SYSAD_USERMASTER where UPPER(USER_CODE)='SYSADM';
+     
+     
+    -------------GET DEFAULT CREATED BY USER START-----------------------------
+     
+     SELECT DEFAULT_USER_CODE INTO D_USER_CODE FROM S3G_ORG_GLOBALPARAMSETUP
+     WHERE COMPANY_ID = p_COMPANY_ID;
+     
+     SELECT USER_ID INTO D_CREATED_BY FROM S3G_SYSAD_USERMASTER 
+     WHERE USER_CODE = D_USER_CODE AND IS_ACTIVE = 1;
+     
+     -------------GET DEFAULT CREATED BY USER END-------------------------------
+
+     
+     
+     
+     
+     select TO_CHAR(JOB_CUT_OFF_DATE, 'YYYYMM'),JOB_CUT_OFF_DATE into D_FINANCIAL_MONTH,D_CUT_OFF_DATE   
+     FROM S3G_TEMP_FAC_INCOME_DET WHERE SCHEDULEJOB_STATUS_ID=P_SCHEDULEJOB_STATUS_ID AND ROWNUM<2;
+      
+      
+      
+
+      
+       for I in( select LOCATION_ID  from S3G_TEMP_FAC_INCOME_DET where SCHEDULEJOB_STATUS_ID=P_SCHEDULEJOB_STATUS_ID group by LOCATION_ID)
+          LOOP----Location Wise Loop Start
+          begin 
+      
+      D_ACCOUNT_COUNT:=0;
+      select count(1),sum(nvl(INETERST_AMOUNT,0)) into D_ACCOUNT_COUNT,d_TOTAL_BRANCH_INETERST_AMOUNT from S3G_TEMP_FAC_INCOME_DET where SCHEDULEJOB_STATUS_ID=P_SCHEDULEJOB_STATUS_ID and LOCATION_ID=i.LOCATION_ID;
+      
+      
+      
+      
+      
+      D_INCOME_RECOGNITION_NUMBER := ' '; 
+      S3G_OR_GET_DOCCTRLNO(P_COMPANY_ID ,'CIR',1,4, i.LOCATION_ID,D_INCOME_RECOGNITION_NUMBER);
+      
+      IF(D_INCOME_RECOGNITION_NUMBER='-1' OR D_INCOME_RECOGNITION_NUMBER='-2')THEN
+        begin
+            P_ErrorCode:=2;
+            RETURN;
+        end;  
+      END IF;
+      
+      
+      begin--INC HDR START
+          SELECT SEQ_LAD_IRHDR.NEXTVAL INTO D_IRHEADER_ID FROM DUAL;
+          INSERT INTO S3G_LAD_IRHdr        
+          (IRHEADER_ID,Company_ID, LOB_ID , CutOff_Date ,Frequency_Type        
+          ,Created_Date , Created_By, Schedule_Type)        
+          VALUES        
+          (D_IRHEADER_ID ,p_COMPANY_ID,4 ,D_CUT_OFF_DATE      
+          ,4 ,SYSTIMESTAMP ,D_CREATED_BY, NULL); 
+      end;--INC HDR END
+
+      
+      
+      
+      
+      
+        begin--Income Header Start
+        SELECT SEQ_LAD_INCOMERECOG.NEXTVAL INTO d_INCOME_RECOGNITION_ID FROM DUAL;
+          INSERT
+          INTO S3G_LAD_INCOMERECOG
+            (
+              INCOME_RECOGNITION_ID,
+              COMPANY_ID ,
+              LOB_ID ,
+              LOCATION_CODE,
+              LOCATION_ID ,
+              INCOME_RECOGNITION_NO ,
+              FREQUENCY_TYPE_CODE ,
+              FREQUENCY_TYPE ,
+              INCOME_RECOGNITION_DATE ,
+              CUTOFF_DATE ,
+              CREATED_BY ,
+              CREATED_ON,
+              PROCESS_MONTH,
+              IRHEADER_ID,
+              NOOF_ACCOUNTS,
+              IR_AMOUNT
+            )
+          SELECT d_INCOME_RECOGNITION_ID,
+            P_COMPANY_ID ,
+            4,--p_LOB_ID ,
+            FN_GET_LOCATIONCODE(i.LOCATION_ID) ,
+            i.LOCATION_ID ,
+            d_INCOME_RECOGNITION_NUMBER ,
+            8 ,
+            4,--d_FREQUENCY_CODE ,
+            SYSTIMESTAMP ,
+            D_CUT_OFF_DATE ,
+            D_CREATED_BY ,
+            systimestamp,
+            D_FINANCIAL_MONTH,
+            D_IRHEADER_ID,
+            D_ACCOUNT_COUNT,
+            d_TOTAL_BRANCH_INETERST_AMOUNT
+          from DUAL;
+         end;--Income Header End
+         
+      
+         
+         begin--INSERT INCOME DTL START
+                    INSERT
+                INTO S3G_LAD_INCOMERECOGDET
+                  (
+                    INCOMERECOGNITIONDETAILS_ID,
+                    COMPANY_ID ,
+                    INCOME_RECOGNITION_ID ,
+                    CUTOFF_VALUE_DATE ,
+                    NOOFDAYS ,
+                    INTEREST_AMOUNT ,
+                    INCOME_AMOUNT ,
+                    PRINCIPAL_OUTSTANDING,
+                    ACCOUNT_DATE,
+                    PA_SA_REF_ID,
+                    PANUM,
+                    SANUM
+                  )
+                SELECT SEQ_LAD_INCOMERECOGDET.NEXTVAL,
+                  P_COMPANY_ID COMPANY_ID,
+                  D_INCOME_RECOGNITION_ID AS INCOME_RECOGNITION_ID,
+                  D_CUT_OFF_DATE,
+                  TMP.NO_OF_DAYS,
+                  TMP.INETERST_AMOUNT,
+                  TMP.INETERST_AMOUNT,
+                  TMP.OS_BAL,
+                  sysdate,
+                  TMP.PA_SA_REF_ID,
+                  PASA.PANUM,
+                  PASA.panum||'DUMMY'
+                  
+                from S3G_TEMP_FAC_INCOME_DET TMP
+                inner join S3G_LAD_ACCPASADET PASA
+                ON PASA.PA_SA_REF_ID=TMP.PA_SA_REF_ID
+                WHERE TMP.SCHEDULEJOB_STATUS_ID=P_SCHEDULEJOB_STATUS_ID and TMP.LOCATION_ID=i.LOCATION_ID;
+             
+            
+             
+         end;--INSERT INCOME DTL END
+         
+         
+          BEGIN--JOURNAL POSTING VALIDATION START
+          SELECT FN_Journal_Entry(p_Company_ID,d_TASK_ID)
+          into D_JOURNAL_ENTRY
+          from DUAL;
+          
+          
+      IF (d_Journal_Entry = 1) THEN
+        BEGIN --Journal Validation Start
+          LA_JV_Vali(d_INCOME_RECOGNITION_ID,d_TASK_ID,p_Company_ID ,4,P_LOCATION_ID,D_CREATED_BY, 1 ,1 ,D_ERRORCODE ,p_ErrorMsg);
+          IF (D_ERRORCODE > 0 ) THEN
+           begin
+              P_ERRORCODE:=3;
+              P_APPLICATION_NUMBER:='Journal Validation Error ==>'||P_ERRORMSG;
+              RETURN;
+           END;
+          END IF;
+          LA_JV_INC_REG(d_INCOME_RECOGNITION_ID,D_CREATED_BY,1,1, D_ERRORCODE,P_ERRORMSG);
+          IF (D_ERRORCODE>0 ) THEN
+           begin
+              P_ERRORCODE:=4;
+              P_APPLICATION_NUMBER:='Journal Income Error'||P_ERRORMSG;
+              RETURN;
+
+            
+            RETURN;
+           END;
+          end if;
+          
+          
+          
+          S3G_SA_UPD_GBLLOBBRNLOCK(P_COMPANY_ID,4,D_FINANCIAL_MONTH,'DISCOUNT_CHARGES',i.LOCATION_ID);
+         
+        end;
+      END IF;
+          
+       END;--JOURNAL POSTING VALIDATION END
+       
+       
+       end;
+       end loop;--Location Wise Loop End
+         
+         
+         
+          
+          BEGIN --UPDATE FUNDS IN USE START     
+            MERGE INTO  S3G_LAD_ACCPASADET TARGET
+            USING(
+            SELECT SUM(INETERST_AMOUNT) AS INETERST_AMOUNT,PA_SA_REF_ID,max(JOB_CUT_OFF_DATE) as JOB_CUT_OFF_DATE FROM S3G_TEMP_FAC_INCOME_DET WHERE SCHEDULEJOB_STATUS_ID=P_SCHEDULEJOB_STATUS_ID
+            GROUP BY PA_SA_REF_ID
+            )TBL ON (TBL.PA_SA_REF_ID=TARGET.PA_SA_REF_ID)
+            WHEN MATCHED THEN 
+            UPDATE SET FUNDS_IN_USE=FUNDS_IN_USE+INETERST_AMOUNT,LAST_FAC_INCOME_DATE=tbl.JOB_CUT_OFF_DATE;
+          end; --UPDATE FUNDS IN USE END      
+       
+       
+--       begin--Post Differenctial Service Charge Start
+--           S3G_FACT_DIFFERNTIAL_INT(P_COMPANY_ID,null,null,D_CUT_OFF_DATE,P_TRAN_TYPE,D_INCOME_RECOGNITION_NUMBER,D_OUT_DIFF_INT,d_INCOME_RECOGNITION_ID);
+--       end;--Post Differenctial Service Charge Start
+--  
+--  
+--       BEGIN--Post Differenctial Service Charge Start
+--           S3G_FACT_LOC_INTEREST(P_COMPANY_ID,null,null,D_CUT_OFF_DATE,P_TRAN_TYPE,D_INCOME_RECOGNITION_NUMBER,d_INCOME_RECOGNITION_ID);
+--       end;--Post Differenctial Service Charge Start
+         
+         UPDATE S3G_TEMP_FAC_INCOME_DET SET JOB_POST_STATUS=1   WHERE SCHEDULEJOB_STATUS_ID=P_SCHEDULEJOB_STATUS_ID;
+         
+     end ;--P_TRAN_TYPE=1 END
+  --END IF;--end
+  
+  end;
+  END IF;----P_JOBPOST_TYPE END
+   
+  P_ErrorCode:=0;   
+  P_APPLICATION_NUMBER:='Income Posted Sucessfully';  
+  
+  if(P_JOBPOST_TYPE=15)then--FAC ODI POSTING
+  begin
+          --S3G_LAD_ODIBREAKUP
+          
+          
+          BEGIN
+              
+              IF(D_CUT_OFF_DATE IS NULL)THEN
+              BEGIN
+                  SELECT LAST_DAY(SYSDATE) INTO D_CUT_OFF_DATE FROM DUAL;
+              END;
+              END IF;
+                  SELECT ADD_MONTHS((LAST_DAY(SYSDATE)+1),-1)
+                  INTO D_FIRST_DAY_OF_MONTH
+                  FROM DUAL;
+                  select extract(day from LAST_DAY(sysdate)) into D_NO_DAYS from DUAL;
+              END;
+          
+          
+          --IF(P_TRAN_TYPE=1)THEN
+          BEGIN--P_TRANSACTION_TYPE     
+          
+          
+          FOR LM IN(SELECT LOCATION_ID FROM S3G_TMP_INVOICE_DTLS_ODI WHERE SCHEDULEJOB_STATUS_ID=P_SCHEDULEJOB_STATUS_ID
+          GROUP BY LOCATION_ID
+          )
+          LOOP --LM LOOP
+          BEGIN
+               
+          
+          
+          BEGIN----------INSERT ODI START--------------
+          
+          
+            -------------GET DEFAULT CREATED BY USER START-----------------------------
+           
+           SELECT DEFAULT_USER_CODE INTO D_USER_CODE FROM S3G_ORG_GLOBALPARAMSETUP
+           WHERE COMPANY_ID = p_COMPANY_ID;
+           
+           SELECT USER_ID INTO D_CREATED_BY FROM S3G_SYSAD_USERMASTER 
+           WHERE USER_CODE = D_USER_CODE AND IS_ACTIVE = 1;
+     
+            -------------GET DEFAULT CREATED BY USER END-------------------------------
+          
+          
+          
+          
+            SELECT SEQ_LAD_ODICalculatns.NEXTVAL INTO d_ODIID FROM DUAL;
+                 
+                 BEGIN--ODI HEADER INSERT START 
+                   insert into S3G_LAD_ODICALCULATNS 
+                      (ODI_CALCULATION_ID,COMPANY_ID,LOB_ID,LOCATION_ID, GRACE_PERIOD,ODI_INTREST_RATE,ODI_CALCULATION_DATE,
+                       ODI_CALCULATION_LEVEL,LAST_CALCULATION_STATUS, CREATED_BY,CREATED_ON,
+                       TXN_ID,DONIMINATOR,LOCATION_CODE)                          
+                    
+                    SELECT 
+                     D_ODIID,
+                     P_COMPANY_ID,
+                     4,
+                     LOCATION_ID,
+                     0, 
+                     0,
+                     D_CUT_OFF_DATE, 
+                     'A',
+                     '1' ,
+                     D_CREATED_BY, 
+                     systimestamp,
+                     1,
+                     D_REGULAR_DENOMINATOR,
+                     FN_GET_LOCATIONCODE(LOCATION_ID)
+                     from S3G_TMP_INVOICE_DTLS_ODI WHERE SCHEDULEJOB_STATUS_ID=P_SCHEDULEJOB_STATUS_ID AND LOCATION_ID=LM.LOCATION_ID
+                     GROUP BY LOCATION_ID
+                     ;
+                  END;--ODI HEADER INSERT END 
+                  
+                  
+                  BEGIN--ODI DETAIL INSERT START 
+                    insert into S3G_LAD_ODICALCULATNDET
+                    (COMPANY_ID,LOB_ID,LOCATION_ID, ODI_CALCULATION_ID,PANUM,SANUM,
+                     ODI_AMOUNT,DUE_DATE,COLLECTION_DATE,DUE_AMOUNT,LAST_CALCULATED_DATE,PA_SA_REF_ID,LOCATION_CODE)                          
+                     
+                     SELECT                           
+                     P_COMPANY_ID,4,ODI.LOCATION_ID,D_ODIID, PASA.PANUM,PASA.SANUM, 
+                     nvl(ODI.PENAL_INTEREST,0) ,SYSTIMESTAMP,SYSTIMESTAMP,0,SYSDATE,ODI.PA_SA_REF_ID,FN_GET_LOCATIONCODE(ODI.LOCATION_ID)
+                     FROM S3G_TMP_INVOICE_DTLS_ODI ODI 
+                     INNER JOIN S3G_LAD_ACCPASADET PASA
+                     ON PASA.PA_SA_REF_ID=ODI.PA_SA_REF_ID
+                     WHERE ODI.SCHEDULEJOB_STATUS_ID=P_SCHEDULEJOB_STATUS_ID AND ODI.LOCATION_ID=LM.LOCATION_ID
+                     
+                     ;
+                      
+                  END;--ODI DETAIL INSERT END
+          
+          END;----------INSERT ODI END--------------
+          
+          
+          BEGIN--INSERT ODI BREAKUP START
+                   begin
+                    insert into S3G_LAD_ODIBreakup
+                    (
+                      ODIBREAKUP_ID,
+                      FACTORING_INV_LOAD_DETAILS_ID,
+                      ODI_AMOUNT,
+                      ODI_CALCULATION_ID,
+                      ODI_CHARGEABLE_AMOUNT,
+                      ODI_FROM_DATE,
+                      ODI_GAP_DAYS,
+                      ODI_RATE,
+                      ODI_TO_DATE,
+                      PA_SA_REF_ID
+                      )
+                      select SEQ_S3G_LAD_ODIBreakup.NEXTVAL,tbl.*
+                      from
+                      (select 
+                      FACTORING_INV_LOAD_DETAILS_ID,
+                      nvl(sum(PENAL_INTEREST),0),
+                      d_ODIID,--ODI_CALCULATION_ID,
+                      sum(INVOICE_OS),
+                      D_FIRST_DAY_OF_MONTH,
+                      sum(NO_DAYS),
+                      max(PENAL_INTEREST_RATE),
+                      max(CUT_OFF_DATE),
+                      PA_SA_REF_ID
+                      FROM  S3G_TMP_INVOICE_DTLS_ODI WHERE SCHEDULEJOB_STATUS_ID=P_SCHEDULEJOB_STATUS_ID AND LOCATION_ID=LM.LOCATION_ID
+                      group by FACTORING_INV_LOAD_DETAILS_ID,PA_SA_REF_ID)tbl
+                      ;
+                      
+                   
+                 END;
+               END;
+             
+             BEGIN  --Update GPS Month Lock START
+                      BEGIN--Update GPS Month Lock Start
+                        SELECT TO_CHAR(D_CUT_OFF_DATE,'YYYYMM') INTO D_FINANCIAL_MONTH FROM DUAL;    
+                        S3G_SA_UPD_GBLLOBBRNLOCK(P_COMPANY_ID,4,D_FINANCIAL_MONTH,'ODI',LM.LOCATION_ID);
+                      END;--Update GPS Month Lock End
+              END; --Update GPS Month Lock End
+               
+               
+               
+               BEGIN--MEMO INSERT START
+                  
+                  ---------MEMEO UPDATE START
+                  merge into S3G_CLN_MEMOBKNG TARGET
+                  using
+                  (
+                  select SUM(STG4.PENAL_INTEREST) as PENAL_INTEREST,STG4.PA_SA_REF_ID,MEMEOBOOK.MEMO_LINK_KEY from S3G_TMP_INVOICE_DTLS_ODI STG4   
+                  inner join S3G_CLN_MEMOBKNG MEMEOBOOK
+                  on MEMEOBOOK.PA_SA_REF_ID=STG4.PA_SA_REF_ID
+                  WHERE MEMO_LINK_KEY IS NOT NULL AND MEMEOBOOK.MEMO_TYPE=24--ODI
+                  AND SCHEDULEJOB_STATUS_ID=P_SCHEDULEJOB_STATUS_ID AND STG4.LOCATION_ID=LM.LOCATION_ID
+                  GROUP BY STG4.PA_SA_REF_ID,MEMEOBOOK.MEMO_LINK_KEY
+                  )TBL on(TBL.PA_SA_REF_ID=TARGET.PA_SA_REF_ID and TBL.MEMO_LINK_KEY=TARGET.MEMO_LINK_KEY)
+                  when matched then
+                  update set DUE_AMOUNT=nvl(DUE_AMOUNT,0)+PENAL_INTEREST;
+                  ----------MEMEO UPDATE END
+                  
+                  
+                  BEGIN------------MEMEO DISTINCT NUMBER START
+                        insert into TMP_CLN_MEMODISTINCT(MEMO_TYPE, DESCRIPTION, GL_ACCOUNT, 
+                         SL_ACCOUNT, DISTINCT_NUMBER)
+                          SELECT   
+                              A.Memo_Type
+                              ,B.Lookup_Description as Description
+                              ,A.GL_Account
+                              ,A.SL_Account
+                              ,A.Distinct_Number 
+                            
+                             FROM   S3G_CLN_MemoMast A
+                             INNER JOIN S3G_LAD_LookupTypeDet B     
+                             ON A.Memo_Type_Code = B.LookupType_Code 
+                             AND A.Memo_Type = B.Lookup_Code
+                             INNER JOIN s3g_sysad_accountsetupmaster C
+                             ON C.GL_CODE = A.GL_Account and C.COMPANY_ID = A.COMPANY_ID and C.SL_CODE is null
+                             INNER JOIN s3g_sysad_accountcodedesc D 
+                             ON D.ACCOUNT_CODE_DESC_ID = C.ACCOUNT_CODE_DESC_ID 
+                             LEFT JOIN s3g_sysad_accountsetupmaster E
+                             ON E.SL_CODE = A.SL_Account and E.COMPANY_ID = A.COMPANY_ID 
+                             AND E.GL_CODE = A.GL_Account
+                             LEFT JOIN s3g_sysad_accountcodedesc F
+                             ON F.ACCOUNT_CODE_DESC_ID = E.ACCOUNT_CODE_DESC_ID 
+                            WHERE   A.Memo_Is_Active = 1 AND A.LOB_ID =4 
+                                    and a.LOCATION_CODE is null and a.COMPANY_ID =1 
+                                    AND A.Memo_Type_Code = B.LookupType_Code 
+                                    and a.MEMO_TYPE = B.LOOKUP_CODE 
+                                    AND A.IS_ACTIVE=1
+                                    and a.MEMO_TYPE_CODE = 36;
+                  
+                      select max(DISTINCT_NUMBER) into D_MEMODISTINCTNO from TMP_CLN_MEMODISTINCT;
+                   END;------------MEMEO DISTINCT NUMBER END
+                   
+                   IF(D_MEMODISTINCTNO IS NULL)THEN
+                    P_ERRORCODE:=3;
+                    P_APPLICATION_NUMBER:='Memo Cash Flow not Defined';
+                     RETURN;
+                   END IF;
+                  
+                  
+                    INSERT
+                    INTO S3G_CLN_MemoBkng
+                      (
+                        MEMO_LINK_KEY,
+                        COMPANY_ID,
+                        LOB_ID,
+                        LOCATION_CODE,
+                        CUSTOMER_ID,
+                        PANUM,
+                        SANUM,
+                        MEMO_TYPE_CODE,
+                        MEMO_TYPE,
+                        DUE_AMOUNT,
+                        RECEIVED_AMOUNT,
+                        TXN_ID,
+                        LOCATION_ID,
+                        PA_SA_REF_ID,
+                        LAST_CALCULATED_DATE
+                      )
+                      
+                      
+                      SELECT SEQ_CLN_MemoBkng.NEXTVAL,T.* FROM(
+                        select 
+                        P_COMPANY_ID,
+                        4,
+                        FN_GET_LOCATIONCODE(STG4.LOCATION_id),
+                        ac.CUSTOMER_ID,
+                        ac.PANUM,
+                        ac.PANUM||'DUMMY',
+                        36,
+                        24,
+                        SUM(STG4.PENAL_INTEREST),
+                        0,
+                        1,
+                        STG4.LOCATION_ID,
+                        STG4.PA_SA_REF_ID,
+                         sysdate
+                         from S3G_TMP_INVOICE_DTLS_ODI STG4
+                         inner join s3g_lad_accpasadet pasa
+                         on pasa.PA_SA_REF_ID=STG4.PA_SA_REF_ID
+                         inner join s3g_lad_acccreation ac
+                         on ac.panum=pasa.panum
+                         left join S3G_CLN_MEMOBKNG MEMEOBOOK
+                         on (MEMEOBOOK.PA_SA_REF_ID=STG4.PA_SA_REF_ID and MEMO_LINK_KEY is null and MEMEOBOOK.MEMO_TYPE=24)
+                         WHERE 
+                          SCHEDULEJOB_STATUS_ID=P_SCHEDULEJOB_STATUS_ID AND STG4.LOCATION_ID=LM.LOCATION_ID
+                        
+                         group by STG4.PA_SA_REF_ID,MEMEOBOOK.MEMO_LINK_KEY,STG4.LOCATION_ID,STG4.PANUM,STG4.LOCATION_CODE,STG4.SCHEDULEJOB_STATUS_ID,STG4.LOCATION_ID,ac.CUSTOMER_ID,ac.PANUM
+                         )T
+                         ;
+                      
+                      
+                       INSERT INTO S3G_CLN_MemoDtl --MEMO_BOOKING_NO - SEQ_CLN_MEMODTL
+                        (
+                          MEMO_BOOKING_NO,
+                          COMPANY_ID,
+                          MEMO_LINK_KEY,
+                          MEMO_DOCUMENT_TYPE,
+                          MEMO_VALUE_DATE,
+                          MEMO_BOOKING_DATE,
+                          MEMO_TYPE_CODE,
+                          MEMO_TYPE,
+                          DUE_AMOUNT,
+                          RECEIVED_AMOUNT,
+                          DOC_REF_NO,
+                          STATUS,
+                          CREATED_BY,
+                          CREATED_ON,
+                          REMARKS,
+                          MEMO_DISTINCT_NUMBER,
+                          MEMO_FLAG
+                        )
+                       SELECT
+                          SEQ_CLN_MEMODTL.NEXTVAL,TBL.*
+                          FROM
+                          (SELECT 
+                          P_COMPANY_ID,
+                          MEMEOBOOK.MEMO_LINK_KEY,
+                          'ODI',
+                          D_CUT_OFF_DATE AS MEMO_VALUE_DATE,
+                          D_CUT_OFF_DATE,
+                          36,
+                          24,
+                          SUM(nvl(STG.PENAL_INTEREST,0)),
+                          0,
+                          d_ODIID,
+                          1,
+                          D_CREATED_BY,
+                          SYSDATE,
+                          D_TYPEDESC,
+                          D_MEMODISTINCTNO,
+                          1 AS MEMO_FLAG--MEMO Booking
+                       from S3G_TMP_INVOICE_DTLS_ODI STG
+                       inner join S3G_CLN_MEMOBKNG MEMEOBOOK
+                       on MEMEOBOOK.PA_SA_REF_ID=STG.PA_SA_REF_ID
+                       WHERE 
+                       SCHEDULEJOB_STATUS_ID=P_SCHEDULEJOB_STATUS_ID AND STG.LOCATION_ID=LM.LOCATION_ID
+                       GROUP BY MEMEOBOOK.PA_SA_REF_ID,MEMEOBOOK.MEMO_LINK_KEY
+                       )TBL
+                       ;
+                       
+                      
+              END;--MEMO INSERT END
+               
+               
+                  BEGIN --UPDATE FUNDS IN USE START     
+                    MERGE INTO  S3G_LAD_ACCPASADET TARGET
+                    USING(
+                    SELECT SUM(PENAL_INTEREST) AS PENAL_INTEREST,PA_SA_REF_ID FROM S3G_TMP_INVOICE_DTLS_ODI STG
+                    WHERE SCHEDULEJOB_STATUS_ID=P_SCHEDULEJOB_STATUS_ID AND STG.LOCATION_ID=LM.LOCATION_ID
+                    group by PA_SA_REF_ID
+                    )TBL on (TBL.PA_SA_REF_ID=TARGET.PA_SA_REF_ID)
+                    when matched then 
+                    update set FUNDS_IN_USE=FUNDS_IN_USE+PENAL_INTEREST,AVAILABLE_FUNDS=AVAILABLE_FUNDS-PENAL_INTEREST,
+                    LAST_ODI_DATE=D_CUT_OFF_DATE
+                    ;
+                  end; --UPDATE FUNDS IN USE END      
+                   
+                 END; 
+                END LOOP;
+                     
+                end;--P_TRANSACTION_TYPE
+         -- end if;
+               
+         
+              merge into S3G_LAD_FACTRNGINVLOADINGDET TARGET
+              USING
+              (
+               SELECT FACTORING_INV_LOAD_DETAILS_ID,FACTORING_INV_LOAD_ID,max(CUT_OFF_DATE) as CUT_OFF_DATE FROM S3G_TMP_INVOICE_DTLS_ODI WHERE SCHEDULEJOB_STATUS_ID=P_SCHEDULEJOB_STATUS_ID
+               GROUP BY FACTORING_INV_LOAD_DETAILS_ID,FACTORING_INV_LOAD_ID
+              )TBL ON (TBL.FACTORING_INV_LOAD_DETAILS_ID=TARGET.FACTORING_INV_LOAD_DETAILS_ID AND TBL.FACTORING_INV_LOAD_ID=TARGET.FACTORING_INV_LOAD_ID)
+              WHEN MATCHED THEN 
+              UPDATE
+              SET LAST_ODI_DATE=TBL.CUT_OFF_DATE;
+         
+              UPDATE S3G_TMP_INVOICE_DTLS_ODI SET JOB_POST_STATUS=1   WHERE SCHEDULEJOB_STATUS_ID=P_SCHEDULEJOB_STATUS_ID;   
+      P_ERRORCODE:=0;   
+      P_APPLICATION_NUMBER:='ODI Posted Sucessfully';  
+  end;
+  end if;
+  
+  
+End S3G_FACT_REGULAR_INT_POST;

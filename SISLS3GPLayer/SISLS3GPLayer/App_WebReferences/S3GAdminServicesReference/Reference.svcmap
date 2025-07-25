@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="6bf1941f-5573-4e7c-8681-fba3ffe7ffc5" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:3220/S3GAdminServices.svc?wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="S3GAdminServices.xsd" MetadataType="Schema" ID="4fcde6ac-3e9d-48a1-8ce3-45a8bff6a6ce" SourceId="1" SourceUrl="http://localhost:3220/S3GAdminServices.svc?xsd=xsd2" />
+    <MetadataFile FileName="S3GAdminServices1.xsd" MetadataType="Schema" ID="7187d4a4-abbf-4dff-babf-d5e49938ec94" SourceId="1" SourceUrl="http://localhost:3220/S3GAdminServices.svc?xsd=xsd4" />
+    <MetadataFile FileName="S3GAdminServices2.xsd" MetadataType="Schema" ID="fb3f6cbc-2ed1-4bea-86c4-2ded695fb8d8" SourceId="1" SourceUrl="http://localhost:3220/S3GAdminServices.svc?xsd=xsd3" />
+    <MetadataFile FileName="S3GAdminServices.wsdl" MetadataType="Wsdl" ID="d204dd4f-8647-4f6d-b919-cb76a07dab29" SourceId="1" SourceUrl="http://localhost:3220/S3GAdminServices.svc?wsdl" />
+    <MetadataFile FileName="S3GAdminServices3.xsd" MetadataType="Schema" ID="f869e26a-2669-47c4-b9a0-8a3f649a8320" SourceId="1" SourceUrl="http://localhost:3220/S3GAdminServices.svc?xsd=xsd0" />
+    <MetadataFile FileName="S3GAdminServices4.xsd" MetadataType="Schema" ID="5fa50333-efe2-41ee-aeca-caa98ba16cb7" SourceId="1" SourceUrl="http://localhost:3220/S3GAdminServices.svc?xsd=xsd1" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

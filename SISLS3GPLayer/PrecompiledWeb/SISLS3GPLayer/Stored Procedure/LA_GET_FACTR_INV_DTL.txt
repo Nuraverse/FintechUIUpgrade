@@ -1,0 +1,305 @@
+﻿create or replace
+PROCEDURE "LA_GET_FACTR_INV_DTL" 
+(
+  P_Company_Id In Number  
+, P_Fil_Id In Number
+, P_Outtbl Out Sys_Refcursor
+,P_OUTTBL1 OUT SYS_REFCURSOR
+,P_Outtbl2 Out Sys_Refcursor
+,P_OUTTBL3 OUT SYS_REFCURSOR
+) AS
+
+
+
+D_LOADTYPE INT;
+D_COUNT INT;
+D_REQUEST_NO INT;
+d_PA_SA_REF_ID number;
+begin
+
+EXECUTE IMMEDIATE ('Alter session set NLS_COMP = LINGUISTIC');
+EXECUTE IMMEDIATE ('Alter session set NLS_SORT = BINARY_CI');
+
+
+
+OPEN P_OUTTBL2 FOR
+select 'test' as dummy from dual;
+
+
+
+ select LOAD_TYPE,PA_SA_REF_ID into D_LOADTYPE,d_PA_SA_REF_ID
+ from S3G_LAD_FACTRNGINVLOADING
+ where FACTORING_INV_LOAD_ID=P_Fil_Id;
+
+
+ 
+ select COUNT(1)  into  D_COUNT
+ FROM S3G_LAD_PAYMENTREQSTDET
+ WHERE PA_SA_REF_ID=d_PA_SA_REF_ID AND ROWNUM<2;
+ 
+ IF(D_COUNT>0)THEN
+BEGIN
+ select REQUEST_NO  into  D_REQUEST_NO
+ FROM S3G_LAD_PAYMENTREQSTDET
+ WHERE PA_SA_REF_ID=d_PA_SA_REF_ID AND ROWNUM<2;
+  END;
+ END IF;
+ 
+ 
+ OPEN P_OUTTBL FOR  
+   SELECT              
+  FIL.Fil_No,              
+  FIL.Fil_Date,              
+   FIL.LOB_ID, (LOB.LOB_Code||' - '||LOB.LOB_Name) As LOB_Name,                    
+  lm.Location_ID,lccat.LocationCat_Description as Location_Name,
+  AD.Creation_Date,           
+  FIL.PANum,              
+  FIL.SANum,              
+  FIL.CREDIT_DAYS,              
+  S3G_FN_GETGPSDECIMALFORMAT(FIL.INVOICE_LOAD_VALUE, P_COMPANY_ID)AS INVOICE_LOAD_VALUE,              
+  S3G_FN_GETGPSDECIMALFORMAT((select             
+     NVL(SUM(PRD.Amount),0)            
+  FROM            
+    s3g_lad_pymntreqst pr,            
+    S3G_LAD_PaymentReqstDet PRD            
+  WHERE            
+    PR.Request_No = PRD.Request_No             
+    AND PR.Pmt_Voucher_StatusCode = 9            
+    AND PR.Pmt_Voucher_status <> 4            
+    AND PRD.PANum = AD.PANum            
+    --AND PRD.SANum = AD.SANum         
+    AND PR.Pmt_Voucher_status = 3), P_COMPANY_ID) as OutStandingAmount,              
+  '' Customer_ID,              
+  '' Customer_Name,           
+  '' Customer_Code,             
+  '' Comm_Address1 ,              
+  '' Comm_Address2 ,              
+  '' Comm_City ,              
+  '' Comm_State ,              
+  '' Comm_Country,              
+  '' Comm_Pincode,              
+  '' Comm_Mobile,              
+  '' Comm_Telephone ,              
+  '' COMM_EMAIL ,          
+   '' Comm_Website ,              
+              
+ -- NVL(AOT.Margin_Percentage,0) as Margin,       
+      
+              
+  S3G_FN_GETGPSDECIMALFORMAT(NVL((select             
+   SUM(FID.Invoice_Amount)            
+   FROM            
+   S3G_LAD_FactrngInvLoading FILT,            
+   S3G_LAD_FactrngInvLoadingDet FID            
+   WHERE            
+   FILT.Factoring_Inv_Load_ID = FID.Factoring_Inv_Load_ID            
+   AND FILT.Company_ID = FIL.Company_ID            
+   AND FILT.LOB_ID = FIL.LOB_ID            
+   AND FILT.LOCATION_id = FIL.LOCATION_id --FILT.Branch_ID = FIL.Branch_ID            
+   AND FILT.PANum = FIL.PANum ),0),P_COMPANY_ID) as InvoicedAmount,    
+          
+            
+ S3G_FN_GETGPSDECIMALFORMAT(  NVL(AD.Finance_Amount,0) -  NVL((select             
+   SUM(FID.INVOICE_AMOUNT)            
+   FROM            
+   S3G_LAD_FactrngInvLoading FILT,            
+   S3G_LAD_FactrngInvLoadingDet FID            
+   WHERE            
+   FILT.Factoring_Inv_Load_ID = FID.Factoring_Inv_Load_ID            
+   AND FILT.Company_ID = FIL.Company_ID            
+   AND FILT.LOB_ID = FIL.LOB_ID            
+   and filt.LOCATION_id = fil.LOCATION_id --FILT.Branch_ID = FIL.Branch_ID            
+   and FILT.PANUM = FIL.PANUM ),0)
+   +
+   (case when CUST.CREDITTYPE=0
+                          then 0 else
+                          (SELECT NVL(SUM(NVL(factdet.invoice_amount,0)),0) 
+                  FROM s3g_lad_fact_retire RETHDR
+                  INNER JOIN s3g_lad_factrnginvloading FACTHDR
+                  ON rethdr.fact_inv_id=facthdr.factoring_inv_load_id
+                  INNER JOIN s3g_lad_factrnginvloadingdet FACTDET
+                  on FACTHDR.FACTORING_INV_LOAD_ID=FACTDET.FACTORING_INV_LOAD_ID
+                  where FACTHDR.CUSTOMER_ID=AC.Customer_ID)  end
+                          )
+    +
+    nvl((Select Abs(sum(TRANSACTION_AMOUNT)) As  Transaction_Amount
+    From S3g_Cln_Dmdds4 Where Panum=FIL.PANUM
+    And Transaction_Code=1
+    Group By Panum),0)
+                  
+                          
+  , P_Company_Id) as CreditAvailable,            
+            
+              
+  S3G_FN_GETGPSDECIMALFORMAT(NVL((select             
+    SUM(PRD.Amount)            
+  FROM            
+   s3g_lad_pymntreqst pr,            
+    S3G_LAD_PaymentReqstDet PRD         
+  WHERE            
+    PR.Request_No = PRD.Request_No             
+    AND PR.Pmt_Voucher_StatusCode = 9            
+    AND PR.Pmt_Voucher_status != 4            
+    AND PRD.PANum = AD.PANum     
+    AND PR.Pmt_Voucher_status = 3                
+    --AND PRD.SANum = AD.SANum            
+  ),0),P_COMPANY_ID) as USED_INVOICE,            
+  --cast(DT.AMOUNT as numeric)as AMOUNT,          
+  S3G_FN_GETGPSDECIMALFORMAT(  NVL(AD.Finance_Amount,0), P_COMPANY_ID) as Credit_Limit ,            
+  lt. lookup_description as status,              
+  NVL(            
+  (select 'false'            
+     from S3G_LAD_PymntReqst pr,            
+          S3G_LAD_PaymentReqstDet prd            
+  WHERE   PR.Request_No = PRD.Request_No             
+          AND PR.Pmt_Voucher_StatusCode = 9            
+          AND PR.Pmt_Voucher_status != 4            
+          And Prd.Panum = Ad.Panum            
+          and ad.sanum =  (case when prd.sanum = ' '      
+                                THEN PRD.PANum || 'DUMMY'      
+                                else prd.sanum  end)        
+          and PR.PMT_VOUCHER_STATUS = 3  and rownum<2           
+  ),'true') AS CAN_MODIFY ,CAST(BILL_TYPE AS INT)BILL_TYPE,FIL.LOAD_TYPE,
+  FIL.ERROR_FILE_PATH,FIL.UPLOADED_FILE_PATH,
+  FIL.MARGIN_PERCENTAGE AS Margin            
+from               
+S3G_ORG_CustMaster CM              
+inner join S3G_LAD_FactrngInvLoading FIL on FIL.Customer_ID=CM.Customer_ID
+      inner join S3G_LAD_FACTRNGINVLOADINGDET FDT  
+       ON FDT.FACTORING_INV_LOAD_ID = FIL.FACTORING_INV_LOAD_ID
+INNER JOIN S3G_SYSAD_LocationMaster lm ON FIL.Location_id= lm. Location_id 
+inner join S3G_SYSAD_LocationCategory LCCAT ON  lccat.Location_Category_ID =lm.Location_ID   
+Inner Join S3g_Sysad_Lobmaster Lob  On Lob.Lob_Id =  Fil.Lob_Id  And Lob.Lob_Code='FT'            
+inner join S3G_LAD_ACCCREATION AC on AC.PANUM=FIL.PANUM         
+inner join S3G_ORG_CustMaster CUST on AC.Customer_ID=CUST.Customer_ID
+inner join S3G_LAD_AccPASADet AD on FIL.PANum=AD.PANum              
+inner join S3G_LAD_AccOfferROIDet AOT on FIL.PANum = AOT.PANum            
+Inner Join S3g_Lad_Lookuptypedet Lt On Lt.Lookuptype_Code=Ac.Pa_Statustype_Code 
+and LT.LOOKUP_CODE=AC.PA_STATUS_CODE 
+--inner join S3G_LAD_PAYMENTREQSTDET DT 
+--ON FDT.Factoring_Inv_Load_Details_ID = DT.Asset_ID
+--INNER JOIN S3G_LAD_PYMNTREQST PR on PR.Request_No=DT.Request_No                     
+where FIL.Factoring_Inv_Load_ID=P_FIL_ID               
+AND FIL.COMPANY_ID=P_COMPANY_ID AND NVL(FIL.SANUM,AD.SANUM) = AD.SANUM;
+d('D_LOADTYPE==>'||D_LOADTYPE);
+IF(D_LOADTYPE=1) THEN
+
+      Open P_OUTTBL1 For
+      
+      select                
+      row_Number() over(order by FILD.Invoice_No ) as SNo,                
+      FILD.Invoice_No as InvoiceNO,                
+      FILD.Invoice_Date as InvoiceDate, 
+      fild.party_id as "Party_ID",
+--      cm.CUSTOMER_CODE || ' - ' || cm.CUSTOMER_name as PartyName,  
+      FILD.PARTY_NAME as PartyName,
+      FILD.MATURITY_DATE AS MATURITYDATE,                
+      FILD.INVOICE_AMOUNT AS INVOICEAMOUNT,                
+      FILD.Eligible_Amount as EligibleAmount,
+      FILD.FACTORING_INV_LOAD_DETAILS_ID  
+      --CAST(AMOUNT AS NUMERIC)AS AMOUNT  
+      ,(Case When Exists(Select 'X' From S3g_Lad_Paymentreqstdet 
+                  Where Panum = Fil.Panum And 
+                  (CASE WHEN SANum = '' THEN PANum || 'DUMMY' ELSE SANum END ) = FIL.SANUM 
+                  AND Asset_ID = FILD.Factoring_Inv_Load_Details_ID) 
+           THEN 1
+           ELSE 0 END) AS "Lock"
+           , NVL(DT.AMOUNT,0) as AMOUNT,
+          CASE WHEN DT.AMOUNT>0 THEN 0 ELSE 1 END as DelStatus
+      from S3G_LAD_FactrngInvLoadingDet FILD                
+      inner join S3G_LAD_FACTRNGINVLOADING FIL                
+      on FIL.FACTORING_INV_LOAD_ID=FILD.FACTORING_INV_LOAD_ID
+      LEFT join S3G_LAD_PAYMENTREQSTDET DT 
+      on FILD.FACTORING_INV_LOAD_DETAILS_ID = DT.ASSET_ID
+      LEFT JOIN S3G_LAD_PYMNTREQST PR on PR.Request_No=DT.Request_No 
+      And FIL.Company_ID=P_Company_ID
+--      inner join S3G_ORG_EntityMaster ENT
+--      ON ent.entity_id=fild.party_id
+    inner join s3g_org_custmaster cm
+    on cm.customer_id=fild.party_id
+      Where FIL.FACTORING_INV_LOAD_ID=P_FIL_ID; 
+else
+      
+       open P_OUTTBL1 for
+       select rownum as IDCOLUMN,
+       FILD.INVOICE_NO as "Invoice_No",                
+      getuserdateformat(FILD.Invoice_Date,P_Company_ID) as "Date", 
+      FILD.PARTY_ID as "Party_ID",
+      Cm.CUSTOMER_CODE || ' - ' || Cm.CUSTOMER_NAME as "Party_Name",                                     
+      FILD.INVOICE_AMOUNT AS "Invoice_Amount",                            
+      1 as "IS_SELECT",
+      0 as "IS_REMOVE",
+       FILD.FACTORING_INV_LOAD_DETAILS_ID as "Factoring_Inv_Load_Details_ID",
+       (Case When Exists(Select 'X' From S3g_Lad_Paymentreqstdet 
+                  Where Panum = Fil.Panum And 
+                  (CASE WHEN SANum = '' THEN PANum || 'DUMMY' ELSE SANum END ) = FIL.SANUM 
+                  AND Asset_ID = FILD.Factoring_Inv_Load_Details_ID) 
+           THEN 1
+           ELSE 0 END) AS "Lock"          
+           , NVL(DT.AMOUNT,0) as AMOUNT,
+          CASE WHEN DT.AMOUNT>0 THEN 0 ELSE 1 END as DelStatus
+      from                 
+      S3G_LAD_FactrngInvLoadingDet FILD                
+      inner join S3G_LAD_FactrngInvLoading FIL                
+      on FIL.Factoring_Inv_Load_ID=FILD.Factoring_Inv_Load_ID 
+      LEFT join S3G_LAD_PAYMENTREQSTDET DT 
+      on FILD.FACTORING_INV_LOAD_DETAILS_ID = DT.ASSET_ID
+      LEFT JOIN S3G_LAD_PYMNTREQST PR on PR.Request_No=DT.Request_No
+      And FIL.Company_ID=P_Company_ID
+--      inner join S3G_ORG_EntityMaster ENT
+--      ON ent.entity_id=fild.party_id
+      Inner Join S3g_Org_Custmaster Cm
+      on cm.customer_id=fild.party_id
+      where FIL.FACTORING_INV_LOAD_ID=P_FIL_ID;
+       
+
+END IF;
+OPEN P_OUTTBL2 FOR
+SELECT ROWNUM AS SNO,0 AS DELSTATUS                
+           ,Cast(Dt.Amount As Numeric)As Amount       
+          ,(SELECT FDT.Eligible_Amount - SUM(PDT.Amount) + DT.Amount  
+                      FROM S3G_LAD_FactrngInvLoadingDet FDT      
+                     INNER JOIN S3G_LAD_PaymentReqstDet PDT  
+                     ON PDT.ASSET_ID = FDT.FACTORING_INV_LOAD_DETAILS_ID  
+                     INNER JOIN S3G_LAD_PYMNTREQST  PRT   
+                          ON PRT.REQUEST_NO=PDT.REQUEST_NO                         
+                         AND PRT.PMT_VOUCHER_STATUS  NOT IN(4,5)
+                         where PDT.ASSET_ID = DT.ASSET_ID
+                     GROUP BY FDT.ELIGIBLE_AMOUNT) AS ACTUALAMOUNT    
+         ,DT.Description,DT.Ref_DocNo as RefDocNo ,             
+         (CASE WHEN PR.Pay_To_Type_Code = 1 THEN FDT.Party_Name   
+                    WHEN PR.Pay_To_Type_Code = 12 THEN Cust.Customer_Name END)  
+           AS FLOW_TYPE   
+         ,NVL(DT.PAY_CODE,0) AS CASHFLOW_ID               
+         ,FDT.INVOICE_NO AS ASSET , DT.PAY_TO_NAME, DT.PAY_TO_ADDRESS                 
+    from                     
+       S3G_LAD_PaymentReqstDet DT  
+       INNER JOIN S3G_LAD_PYMNTREQST PR   
+       on PR.Request_No=DT.Request_No   
+       INNER JOIN S3G_LAD_FACTRNGINVLOADINGDET FDT  
+       ON FDT.Factoring_Inv_Load_Details_ID = DT.Asset_ID   
+       INNER JOIN S3G_LAD_FACTRNGINVLOADING FIV    
+       ON FDT.Factoring_Inv_Load_ID = FIV.Factoring_Inv_Load_ID    
+       INNER JOIN S3G_ORG_CustMaster CUST  
+       ON FIV.CUSTOMER_ID = CUST.CUSTOMER_ID                   
+       where PR.REQUEST_NO=D_REQUEST_NO 
+       AND PR.COMPANY_ID=P_COMPANY_ID
+       AND PR.PMT_VOUCHER_STATUS NOT IN(4,5) AND PAY_ADJUST_TYPE = -1 ; 
+       
+       
+  Open P_Outtbl3 For
+  Select Rownum As "SNo", Det.Invoice_No As "Invoice_No",S3G_FN_GETGPSDECIMALFORMAT(Charge.Charge_Amount,P_COMPANY_ID) As "Charge_Amount",
+  Charge.Cashflow_Flag_Id As Charge_Cashflow_Flag_Id,
+  Cfl.Cashflowflag_Desc as Charge_Cashflow
+  From S3g_Lad_Factrnginvcharges Charge
+  Inner Join S3g_Lad_Factrnginvloadingdet Det
+  On Det.Factoring_Inv_Load_Details_Id=Charge.Factoring_Inv_Load_Details_Id
+  Inner Join S3g_Org_Cashflowflag Cfl
+  on Cfl.CASHFLOW_FLAG_ID=Charge.CASHFLOW_FLAG_ID
+  Where Det.Factoring_Inv_Load_Id=P_Fil_Id
+  order by Charge.S3G_LAD_FACTRNGINVCHARGES_ID
+  ;
+  
+  
+       
+END;

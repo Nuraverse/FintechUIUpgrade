@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/S3GBusEntity.ApplicationProcess" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/S3GBusEntity.ApplicationProcess" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="ApplicationProcess">
+    <xs:sequence>
+      <xs:element name="_x003C_AUDITOR_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_Account_Status_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Accounting_IRR_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_Application_Number_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_Application_Process_ID_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Arear_Advance_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Asset_Margin_Amount_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_Asset_Margin_Percentage_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_Branch_ID_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Business_IRR_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_Business_Offer_Number_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_Business_Source_Id_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_CREDIT_PERIOD_DAYS_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_CRM_ID_x003E_k__BackingField" type="xs:long" />
+      <xs:element name="_x003C_Company_ID_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Company_IRR_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_Constitution_ID_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Contract_Type_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Covenants_Terms_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_Covenants_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Created_By_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Credit_Limit_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_Credit_Purpose_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Customer_ID_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_DEBT_PURCHASE_LIMIT_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_DELAY_CHARGE_AMOUNT_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_DELAY_CHARGE_GRACE_DAYS_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_DELAY_CHARGE_RATE_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_DISCOUNT_RATE_LOC_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_DISGP_PERIOD_DAYS_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Date_x003E_k__BackingField" type="xs:dateTime" />
+      <xs:element name="_x003C_DealTransfer_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Deal_Type_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Dealer_Commission_Amount_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_Dealer_Commission_Applicable_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Dealer_Commission_Basis_Rate_Amount_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Dealer_Commission_Rate_Amount_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Dealer_Id_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Dealer_Sales_Persion_Id_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Dealer_Scheme_Name_Id_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Debt_Collector_Name_Id_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Delay_Days_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Discount_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_EVALUATOR_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_Employer_Bank_Name_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_Existence_of_First_Charge_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Existence_of_Second_Charge_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Facility_End_Date_x003E_k__BackingField" type="xs:dateTime" />
+      <xs:element name="_x003C_Facility_Start_Date_x003E_k__BackingField" type="xs:dateTime" />
+      <xs:element name="_x003C_Finance_Amount_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_First_Installment_Date_x003E_k__BackingField" type="xs:dateTime" />
+      <xs:element name="_x003C_GRACE_PERIOD_DAYS_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_GenRemarks_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_INSURANCE_AMOUNT_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_INSURANCE_COMPANY_RATE_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_INSURANCE_COVERAGE_DAY_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_INSURANCE_PAYABLE_AMOUNT_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_INVOICE_CAP_VALUE_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_Income_Book_Start_Date_x003E_k__BackingField" type="xs:dateTime" />
+      <xs:element name="_x003C_InstallmentRoundofPosition_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Insurance_Amount_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_LOB_CODE_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_LOB_ID_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Lead_Other_Source_Name_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_Lead_Source_Name_Id_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Lead_Source_Type_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Lease_Type_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Life_Insurance_Applicable_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Life_Insurance_Company_Tax_Amount_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_Life_Insurance_Customer_Tax_Amount_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_Life_Insurance_Entity_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Life_Insurance_Premium_Comapny_Rate_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_Life_Insurance_Premium_Company_Amount_WT_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_Life_Insurance_Premium_Company_Amount_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_Life_Insurance_Premium_Customer_Amount_WT_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_Life_Insurance_Premium_Customer_Amount_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_Life_Insurance_Premium_Customer_Rate_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_Life_Insurance_Tax_Rate_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_Loan_Type_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_MLA_Applicable_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_MLA_Number_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_MLA_Validity_From_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_MLA_Validity_To_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_Margin_Amount_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_No_of_Days_to_be_considered_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Offer_Date_x003E_k__BackingField" type="xs:dateTime" />
+      <xs:element name="_x003C_Offer_Margin_Amount_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_Offer_Margin_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_Offer_Residual_Value_Amount_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_Offer_Residual_Value_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_Over_Due_Charges_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_PENAL_RATE_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_PNTD_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_PREPAYMENT_LIMIT_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_Payment_RuleCard_ID_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Pricing_Id_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Product_ID_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Program_ID_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Program_PK_ID_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_RESUL_PERIOD_DAYS_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Refinance_Contract_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_RelationShipManager_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_RemarksFWC_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_Repayment_Mode_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Residual_Value_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_Risk_AML_Classification_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_Risk_Document_No_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_Risk_Quality_Value_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Risk_Rating_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Risk_Remarks_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_Risk_Score_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Rootback_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Sales_Person_ID_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Seller_Code_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_Seller_Name_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_Stage_Status_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Start_Date_delay_rate_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_Start_delay_charges_Applicable_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Start_delay_charges_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_Status_ID_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_Sub_Location_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Tentative_Account_Date_x003E_k__BackingField" type="xs:dateTime" />
+      <xs:element name="_x003C_Tenure_Type_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Tenure_x003E_k__BackingField" type="xs:decimal" />
+      <xs:element name="_x003C_XMLCovenants_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XMLDealTransfer_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XMLLienAccount_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XMLRepayDetailsOthers_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XMLRepaymentStructure_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XML_ALERT_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XML_AssetDetails_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XML_AssetLoanDetails_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XML_Collateral_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XML_Constitution_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XML_FollowDetail_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XML_Guarantor_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XML_Inflow_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XML_Invoice_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XML_Moratorium_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XML_OutFlow_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XML_PDD_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XML_ROIRULE_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XML_Repayment_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_XmlAdditionalInfo_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_intFBDate_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_strXMLAppraisalInfoPropmoter_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_strXMLAppraisalInfo_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_strXMLCustomerMap_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_strXMLDiscountRateforUtilization_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_strXMLOtherCharges_x003E_k__BackingField" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ApplicationProcess" nillable="true" type="tns:ApplicationProcess" />
+</xs:schema>

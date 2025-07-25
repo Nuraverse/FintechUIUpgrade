@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="847e4ce0-cf44-4d19-8224-36a3de7c0f30" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:1788/SysAdmin/SystemAdminMgtService.svc?wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="SystemAdminMgtService.xsd" MetadataType="Schema" ID="b6ba418b-7268-489e-8dcf-d5e895151774" SourceId="1" SourceUrl="http://localhost:1788/SysAdmin/SystemAdminMgtService.svc?xsd=xsd2" />
+    <MetadataFile FileName="SystemAdminMgtService1.xsd" MetadataType="Schema" ID="70b25722-fe47-4ff4-9b05-038c8938b6f7" SourceId="1" SourceUrl="http://localhost:1788/SysAdmin/SystemAdminMgtService.svc?xsd=xsd3" />
+    <MetadataFile FileName="SystemAdminMgtService2.xsd" MetadataType="Schema" ID="90622fc7-adec-48b1-b380-29620212d0ce" SourceId="1" SourceUrl="http://localhost:1788/SysAdmin/SystemAdminMgtService.svc?xsd=xsd0" />
+    <MetadataFile FileName="SystemAdminMgtService3.xsd" MetadataType="Schema" ID="e12ca1f4-beaa-4299-9ddf-098793d0959f" SourceId="1" SourceUrl="http://localhost:1788/SysAdmin/SystemAdminMgtService.svc?xsd=xsd1" />
+    <MetadataFile FileName="SystemAdminMgtService.wsdl" MetadataType="Wsdl" ID="d204f8c3-4c8a-45d5-9b54-58c41797f439" SourceId="1" SourceUrl="http://localhost:1788/SysAdmin/SystemAdminMgtService.svc?wsdl" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="91a48828-a933-4c14-9637-db24561e36ef" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:3220/FileTrack/FileTrackMgtServices.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="FileTrackMgtServices.wsdl" MetadataType="Wsdl" ID="83aadd48-be31-40f5-a162-3d465df8eb8a" SourceId="1" SourceUrl="http://localhost:3220/FileTrack/FileTrackMgtServices.svc?wsdl" />
+    <MetadataFile FileName="FileTrackMgtServices.xsd" MetadataType="Schema" ID="aab4a642-9021-4ca8-8829-5b4b6ee03198" SourceId="1" SourceUrl="http://localhost:3220/FileTrack/FileTrackMgtServices.svc?xsd=xsd0" />
+    <MetadataFile FileName="FileTrackMgtServices1.xsd" MetadataType="Schema" ID="7f657859-59ac-429c-9ea7-81dc4f256fe7" SourceId="1" SourceUrl="http://localhost:3220/FileTrack/FileTrackMgtServices.svc?xsd=xsd1" />
+    <MetadataFile FileName="FileTrackMgtServices2.xsd" MetadataType="Schema" ID="9e22b5b8-3512-4756-9671-962c5e4cbcbd" SourceId="1" SourceUrl="http://localhost:3220/FileTrack/FileTrackMgtServices.svc?xsd=xsd2" />
+    <MetadataFile FileName="FileTrackMgtServices3.xsd" MetadataType="Schema" ID="18b90e05-9f48-47d7-9adc-9f2c9ce10357" SourceId="1" SourceUrl="http://localhost:3220/FileTrack/FileTrackMgtServices.svc?xsd=xsd3" />
+    <MetadataFile FileName="FileTrackMgtServices.disco" MetadataType="Disco" ID="3d078d1f-7808-4dde-8e70-09570abf9b25" SourceId="1" SourceUrl="http://localhost:3220/FileTrack/FileTrackMgtServices.svc?disco" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

@@ -1,0 +1,812 @@
+create or replace
+PROCEDURE "S3G_LAD_TRAN_COMMON_INS_APPR" 
+(
+         P_LOB_ID IN NUMBER := nULL
+        ,P_Location_ID IN NUMBER:=nULL
+        ,P_Approval_ID IN NUMBER :=NULL         
+        ,P_Task_Number IN VARCHAR2:=NULL 
+        ,P_Task_Type IN VARCHAR2  :=NULL        
+        ,P_Task_Status_Type_Code IN NUMBER :=NULL         
+        ,P_Task_Status_Code  IN VARCHAR2 :=NULL
+        ,P_APPROVAL_SERIAL_NUMBER in varchar2:=NULL
+        ,P_TASK_STATUSDATE  IN VARCHAR2 :=NULL
+        ,P_Remarks IN VARCHAR2 :=NULL
+        ,P_Password IN VARCHAR2  :=NULL      
+        ,P_CREATED_BY IN NUMBER :=NULL
+        ,P_COMPANY_ID IN NUMBER:=NULL
+        ,P_CUSTOMERID IN NUMBER:=0
+        ,P_IMAGE_PATH VARCHAR2:=NULL                            
+        ,P_IS_mobile int :=null
+        ,P_ACTION_ID NUMBER:=NULL  
+        ,P_ENTITY_TYPE NUMBER:=NULL
+        ,P_XML_APPROVALDETAILS clob:= null
+        ,P_TASK_APPROVAL_NO OUT varchar2
+        ,P_ERRORCODE OUT NUMBER 
+        ,p_Is_ForceApproval Number      --Added on 06-Dec-2018
+--        ,P_ERRORMSG OUT VARCHAR2
+--        ,P_OUTTBL OUT SYS_REFCURSOR
+)
+AS 
+D_HDR_ID NUMBER;
+D_Constdoc_Xml Sys.Xmltype;
+D_LOCATION_ID NUMBER;
+D_TASK_APPROVAL_NO NUMBER;
+D_Document_Type_Code Varchar2(15);
+ d_RESULTSET SYS_REFCURSOR;
+D_APPROVAL_SERIAL_NUMBER NUMBER;
+D_APPROVAL_ID NUMBER;
+D_DOCUMENT_ID NUMBER;
+D_ERROR_CODE NUMBER;
+D_COUNT int;
+D_COL13_VARCHAR_MESSEGE VARCHAR(2000);
+
+
+D_APPLICATION_NUMBER VARCHAR(500);
+D_PANUM VARCHAR(500);
+D_INVOICE_AMOUNT  NUMBER;
+D_MARGIN_PERCENTAGE number(25,4);
+P_ERRORMSG VARCHAR(100);
+D_ACCOUNT_NO VARCHAR(100);
+Begin
+delete from TMP_TBL_LAD_COMMON;
+EXECUTE IMMEDIATE ('Alter session set NLS_COMP = LINGUISTIC');
+EXECUTE IMMEDIATE ('Alter session set NLS_SORT = BINARY_CI');
+
+D_Document_Type_Code:='CAPR';
+--P_ErrorCode:=0;
+IF(P_Location_ID IS NOT NULL AND P_Location_ID>0)THEN
+  BEGIN
+      D_LOCATION_ID := P_Location_ID;
+  END;
+ELSE
+  BEGIN
+      D_LOCATION_ID := NULL;
+  END;
+end if;
+
+if(P_TASK_TYPE='PRAP')then
+  Begin
+    -- To Validate Approval Details for Pricing
+    S3G_LAD_GET_PRICAPPR_VALIDATE(P_TASK_NUMBER,P_APPROVAL_ID,P_APPROVAL_SERIAL_NUMBER,P_TASK_TYPE,P_ACTION_ID,P_COMPANY_ID
+    ,P_XML_APPROVALDETAILS,P_CREATED_BY,P_TASK_STATUS_CODE
+    ,p_Is_ForceApproval
+    );--, d_RESULTSET
+  END;
+elsIF(P_TASK_TYPE='APAP')THEN
+  begin
+    -- To Validate Approval Details With All Approval Screens.
+    S3G_LAD_GET_APPR_VALIDATE(P_TASK_NUMBER,P_APPROVAL_ID,P_APPROVAL_SERIAL_NUMBER,P_TASK_TYPE,P_ACTION_ID,P_COMPANY_ID
+    ,P_XML_APPROVALDETAILS,P_CREATED_BY,P_TASK_STATUS_CODE,p_Is_ForceApproval);--, d_RESULTSET
+  end;
+elsIF(P_TASK_TYPE='FINAPPR')THEN
+  begin
+    -- To Validate Approval Details With All Approval Screens.
+    S3G_LAD_GET_FINV_VALIDATE(P_TASK_NUMBER,P_APPROVAL_ID,P_APPROVAL_SERIAL_NUMBER,P_TASK_TYPE,P_ACTION_ID,P_COMPANY_ID
+    ,P_XML_APPROVALDETAILS,P_CREATED_BY,P_TASK_STATUS_CODE);--, d_RESULTSET
+  end;
+elsIF(P_TASK_TYPE='PAAP')THEN--Payment Approval
+  begin
+    S3G_LAD_GET_PYMTAPPR_VALIDATE(P_TASK_NUMBER,P_APPROVAL_ID,P_APPROVAL_SERIAL_NUMBER,P_TASK_TYPE,P_ACTION_ID,P_COMPANY_ID,
+    P_ENTITY_TYPE,P_XML_APPROVALDETAILS,P_CREATED_BY,P_TASK_STATUS_CODE);
+  END;
+elsIF(P_TASK_TYPE='ROPCCN')THEN-- ROP CASE CANCELLATION APPROVAL
+  begin
+    S3G_LAD_GET_ROP_APPR_VALIDATE(P_TASK_NUMBER,P_APPROVAL_ID,P_APPROVAL_SERIAL_NUMBER,P_TASK_TYPE,P_ACTION_ID,P_COMPANY_ID,
+    P_ENTITY_TYPE,P_XML_APPROVALDETAILS,P_CREATED_BY,P_TASK_STATUS_CODE);
+  END;
+elsIF(P_TASK_TYPE='NOCT')THEN-- NOC APPROVAL
+  BEGIN
+  S3G_LAD_GET_NOCT_APPR_VALIDATE(P_TASK_NUMBER,P_APPROVAL_ID,P_APPROVAL_SERIAL_NUMBER,P_TASK_TYPE,P_ACTION_ID,P_COMPANY_ID,
+  P_ENTITY_TYPE,P_XML_APPROVALDETAILS,P_CREATED_BY,P_TASK_STATUS_CODE);
+  END;
+END IF;
+
+
+SELECT COUNT(1) INTO D_COUNT FROM TMP_TBL_LAD_COMMON WHERE COL8_NUM > 0;
+
+if(D_COUNT>0) then
+BEGIN-----------Validation Part
+    
+    IF(P_Task_Type='PRAP')THEN-- Pricing Approval
+    BEGIN
+        
+        merge into TMP_TBL_LAD_COMMON DEST using
+        (   
+            select
+            PRC.BUSINESS_OFFER_NUMBER
+            , PRC.Pricing_ID
+            from TMP_TBL_LAD_COMMON TMP
+            inner join S3G_ORG_PRICING PRC
+            On PRC.Pricing_ID = TMP.COL3_NUM
+        )
+        src on (dest.COL3_NUM = src.Pricing_ID)
+        when matched then
+        update set DEST.COL21_VARCHAR = SRC.BUSINESS_OFFER_NUMBER;
+        
+        --Added on 06-Dec-2018 Starts here
+        --No Need to check Authorization Sequence
+        IF(P_IS_FORCEAPPROVAL = 1) THEN
+        Begin
+        
+            Update TMP_TBL_LAD_COMMON Set COL8_NUM = 0 Where COL8_NUM = 3;
+        
+        END;
+        End IF;
+        
+        --Added on 06-Dec-2018 Ends here
+    
+        update TMP_TBL_LAD_COMMON
+          set COL13_VARCHAR = case when COL8_NUM = 1 then 'Invalid Password.'
+              when COL8_NUM = 2 then 'Authorization Rule Card not defined for this combination.'
+              when COL8_NUM = 3 then 'Approval should be in sequence as defined in Rule Card'
+              when COL8_NUM = 4 then 'Approval Already done for this business offer number'
+              when COL8_NUM = 5 then 'Approver not having access to approve the Check List.'
+              when COL8_NUM = 15 then 'Action allowed for Level 4 and above user only.'
+              when COL8_NUM = 16 then '3 and 5 level users can only approve.'
+              when COL8_NUM = 20 then 'Checklist Approval Details Approved Failed.'
+              when COL8_NUM = 30 then 'Pre Disbursement Documents yet to collect.'      --Added on 08-Oct-2018 
+              end;
+      
+         
+          SELECT COUNT('X') INTO P_ErrorCode FROM TMP_TBL_LAD_COMMON
+          Where COL8_NUM > 0;
+          
+          IF(P_ErrorCode > 0) Then
+          Begin
+          
+              select replace(WM_CONCAT(COL21_VARCHAR || ' - ' || COL13_VARCHAR) ,',' , '\n') into P_TASK_APPROVAL_NO 
+              FROM TMP_TBL_LAD_COMMON
+              WHERE COL8_NUM > 0;
+              
+              P_ErrorCode := 1;
+              
+              Return;
+          
+          end;
+          End IF;
+    
+    END;
+    END IF;
+
+    IF(P_Task_Type='APAP')THEN-- Application Approval
+      BEGIN
+        
+        merge into TMP_TBL_LAD_COMMON DEST using
+        (   
+            select
+            PRC.APPLICATION_NUMBER
+            , PRC.APPLICATION_PROCESS_ID
+            from TMP_TBL_LAD_COMMON TMP
+            inner join S3G_ORG_AppProc PRC
+            On PRC.APPLICATION_PROCESS_ID = TMP.COL3_NUM
+        )
+        src on (dest.COL3_NUM = src.APPLICATION_PROCESS_ID)
+        when matched then
+        update set DEST.COL21_VARCHAR = SRC.APPLICATION_NUMBER;
+      
+       BEGIN
+          IF(P_IS_FORCEAPPROVAL = 1) THEN
+            BEGIN
+              UPDATE TMP_TBL_LAD_COMMON SET COL8_NUM = 0 WHERE COL8_NUM = 3;
+            END;
+          END IF;
+        END;
+        
+       UPDATE TMP_TBL_LAD_COMMON
+        SET COL13_VARCHAR =
+          CASE
+            WHEN COL8_NUM = 1
+            THEN 'Invalid Password.'
+            WHEN COL8_NUM = 2
+            THEN 'Authorization Rule Card not defined for this combination.'
+            WHEN COL8_NUM = 3
+            THEN 'Approval should be in sequence as defined in Rule Card'
+            WHEN COL8_NUM = 4
+            THEN 'Approval Already done for this Proposal No'
+            WHEN COL8_NUM = 5
+            THEN 'Approver not having access to approve the Proposal No.'
+            WHEN COL8_NUM = 15
+            THEN 'Action allowed for Level 4 and above user only.'
+            WHEN COL8_NUM = 16
+            THEN '3 and 5 level users can only approve.'
+            WHEN COL8_NUM = 20
+            THEN 'Proposal Approval Details Approved Failed.'
+          
+          END;
+      
+          SELECT COUNT('X') INTO P_ErrorCode FROM TMP_TBL_LAD_COMMON
+          Where COL8_NUM > 0;
+          
+          IF(P_ErrorCode > 0) Then
+          Begin
+              select replace(WM_CONCAT(COL21_VARCHAR || ' - ' || COL13_VARCHAR) ,',' , '\n') into P_TASK_APPROVAL_NO 
+              FROM TMP_TBL_LAD_COMMON
+              WHERE COL8_NUM > 0;
+              P_ErrorCode := 1;
+              Return;
+          end;
+          End IF;
+    
+    END;    
+   end if;
+      
+     IF(P_Task_Type='FINAPPR')THEN-- FACTORING INVOICE APPROVAL ERROR MESSEGE RETURN PART
+     BEGIN
+        
+        merge into TMP_TBL_LAD_COMMON DEST using
+        (   
+            select
+            PRC.INVOICE_NO
+            , PRC.FACTORING_INV_LOAD_DETAILS_ID
+            from TMP_TBL_LAD_COMMON TMP
+            inner join S3G_LAD_FACTRNGINVLOADINGDET PRC
+            On PRC.FACTORING_INV_LOAD_DETAILS_ID = TMP.COL3_NUM
+        )
+        src on (dest.COL3_NUM = src.FACTORING_INV_LOAD_DETAILS_ID)
+        when matched then
+        update set DEST.COL21_VARCHAR = SRC.INVOICE_NO;
+    
+        update TMP_TBL_LAD_COMMON
+          set COL13_VARCHAR = case when COL8_NUM = 1 then 'Invalid Password.'
+              when COL8_NUM = 2 then 'Authorization Rule Card not defined for this combination.'
+              when COL8_NUM = 3 then 'Approval should be in sequence as defined in Rule Card'
+              when COL8_NUM = 4 then 'Approval Already done for this business offer number'
+              when COL8_NUM = 5 then 'Approver not having access to approve the Check List.'
+              when COL8_NUM = 15 then 'Action allowed for Level 4 and above user only.'
+              when COL8_NUM = 16 then '3 and 5 level users can only approve.'
+              when COL8_NUM = 20 then 'Checklist Approval Details Approved Failed.'
+           
+              end;
+      
+         
+          SELECT COUNT('X') INTO P_ErrorCode FROM TMP_TBL_LAD_COMMON
+          Where COL8_NUM > 0;
+          
+          IF(P_ErrorCode > 0) Then
+          Begin
+          
+              select replace(WM_CONCAT(COL21_VARCHAR || ' - ' || COL13_VARCHAR) ,',' , '\n') into P_TASK_APPROVAL_NO 
+              FROM TMP_TBL_LAD_COMMON
+              WHERE COL8_NUM > 0;
+              
+              P_ErrorCode := 1;
+              
+              Return;
+          
+          end;
+          End IF;
+    
+    end;
+    END IF;  
+     
+     IF(P_Task_Type='PAAP')THEN-- Payment Approval
+      BEGIN
+        merge into TMP_TBL_LAD_COMMON DEST using
+        (   
+            select
+            PRC.PAYMENT_REQUEST_NO
+            , PRC.REQUEST_NO
+            from TMP_TBL_LAD_COMMON TMP
+            inner join S3G_LAD_PYMNTREQST PRC
+            On PRC.REQUEST_NO = TMP.COL3_NUM
+        )
+        src on (dest.COL3_NUM = src.REQUEST_NO)
+        when matched then
+        update set DEST.COL21_VARCHAR = SRC.PAYMENT_REQUEST_NO;
+    
+        update TMP_TBL_LAD_COMMON
+        set COL13_VARCHAR = case when COL8_NUM = 1 then 'Invalid Password.'
+              when COL8_NUM = 2 then 'Authorization Rule Card not defined for this combination.'
+              when COL8_NUM = 3 then 'Approval should be in sequence as defined in Rule Card'
+              when COL8_NUM = 4 then 'Approval Already done for this Payment Request number'
+              when COL8_NUM = 5 then 'Approver not having access to approve the Payment.'
+              when COL8_NUM = 6 then 'Payment Cheque has been Hold.'
+              when COL8_NUM = 15 then 'Action allowed for Level 4 and above user only.'
+              when COL8_NUM = 16 then '3 and 5 level users can only approve.'
+              when COL8_NUM = 20 then 'Payment Approval Details Approved Failed.'
+        end;
+      
+        SELECT COUNT('X') INTO P_ErrorCode 
+        FROM TMP_TBL_LAD_COMMON
+        Where COL8_NUM > 0;
+        IF(P_ErrorCode > 0) Then
+          Begin
+            select replace(WM_CONCAT(COL21_VARCHAR || ' - ' || COL13_VARCHAR) ,',' , '\n') into P_TASK_APPROVAL_NO 
+            FROM TMP_TBL_LAD_COMMON
+            WHERE COL8_NUM > 0;
+            P_ErrorCode := 1;
+            Return;
+          end;
+        End IF;
+     end;
+    END IF;
+    
+      IF(P_Task_Type='ROPCCN')THEN-- ROP CANCELLATION APPROVAL
+      BEGIN
+        merge into TMP_TBL_LAD_COMMON DEST using
+        (   
+            select
+            CMC.CASE_CANCEL_NUMBER
+            ,CMC.CASE_CANCEL_ID
+            from TMP_TBL_LAD_COMMON TMP
+            inner join S3G_LR_CASEMASTER_CANCEL CMC
+            On CMC.CASE_CANCEL_ID = TMP.COL3_NUM
+        )
+        src on (dest.COL3_NUM = src.CASE_CANCEL_ID)
+        when matched then
+        update set DEST.COL21_VARCHAR = SRC.CASE_CANCEL_NUMBER;
+    
+        update TMP_TBL_LAD_COMMON
+        set COL13_VARCHAR = case when COL8_NUM = 1 then 'Invalid Password.'
+              when COL8_NUM = 2 then 'Authorization Rule Card not defined for this combination.'
+              WHEN COL8_NUM = 3 THEN 'Approval should be in sequence as defined in Rule Card'
+              WHEN COL8_NUM = 4 THEN 'Approval Already done for this ROP Cancellation Request'
+              when COL8_NUM = 5 then 'Approver not having access to approve the ROP Cancellation.'
+              when COL8_NUM = 15 then 'Action allowed for Level 4 and above user only.'
+              WHEN COL8_NUM = 16 THEN '3 and 5 level users can only approve.'
+              when COL8_NUM = 20 then 'ROP Cancellation Approval Details Approved Failed.'
+        end;
+      
+        SELECT COUNT('X') INTO P_ErrorCode 
+        FROM TMP_TBL_LAD_COMMON
+        Where COL8_NUM > 0;
+        IF(P_ErrorCode > 0) Then
+          Begin
+            select replace(WM_CONCAT(COL21_VARCHAR || ' - ' || COL13_VARCHAR) ,',' , '\n') into P_TASK_APPROVAL_NO 
+            FROM TMP_TBL_LAD_COMMON
+            WHERE COL8_NUM > 0;
+            P_ErrorCode := 1;
+            Return;
+          end;
+        End IF;
+     end;
+    END IF; 
+ 
+       IF(P_Task_Type='NOCT')THEN-- NOC APPROVAL
+      BEGIN
+        merge into TMP_TBL_LAD_COMMON DEST using
+        (   
+            select
+            NOC.NOC_NUMBER
+            ,NOC.NOCTERMINATN_ID
+            from TMP_TBL_LAD_COMMON TMP
+            inner join S3G_LAD_NOCTerminatn NOC
+            On NOC.NOCTERMINATN_ID = TMP.COL3_NUM
+        )
+        src on (dest.COL3_NUM = src.NOCTERMINATN_ID)
+        when matched then
+        update set DEST.COL21_VARCHAR = SRC.NOC_NUMBER;
+    
+        update TMP_TBL_LAD_COMMON
+        set COL13_VARCHAR = case when COL8_NUM = 1 then 'Invalid Password.'
+              when COL8_NUM = 2 then 'Authorization Rule Card not defined for this combination.'
+              WHEN COL8_NUM = 3 THEN 'Approval should be in sequence as defined in Rule Card'
+              WHEN COL8_NUM = 4 THEN 'Approval Already done for this NOC Request'
+              when COL8_NUM = 5 then 'Approver not having access to approve the NOC.'
+              when COL8_NUM = 15 then 'Action allowed for Level 4 and above user only.'
+              WHEN COL8_NUM = 16 THEN '3 and 5 level users can only approve.'
+              when COL8_NUM = 20 then 'NOC Approval Details Approved Failed.'
+        end;
+      
+        SELECT COUNT('X') INTO P_ErrorCode 
+        FROM TMP_TBL_LAD_COMMON
+        Where COL8_NUM > 0;
+        IF(P_ErrorCode > 0) Then
+          Begin
+            select replace(WM_CONCAT(COL21_VARCHAR || ' - ' || COL13_VARCHAR) ,',' , '\n') into P_TASK_APPROVAL_NO 
+            FROM TMP_TBL_LAD_COMMON
+            WHERE COL8_NUM > 0;
+            P_ErrorCode := 1;
+            Return;
+          end;
+        End IF;
+     end;
+    END IF; 
+    
+end;
+END IF;
+
+  BEGIN
+    IF(P_Task_Type='PRAP')THEN-- Pricing Approval
+      BEGIN
+        FOR Track IN 
+        ( SELECT 
+        COL1_NUM as APPROVAL_SERIAL_NUMBER,
+        COL2_NUM as APPROVAL_ID,
+        COL3_NUM as DOCUMENT_ID,
+        COL7_NUM AS TOTAL_APPROVAL
+        ,COL11_VARCHAR
+        ,COL12_VARCHAR
+        , COL19_NUM
+        FROM TMP_TBL_LAD_COMMON
+        )
+        LOOP
+        begin
+        
+          S3G_OR_INS_PRICGAPPR(TRACK.DOCUMENT_ID,TRACK.APPROVAL_ID,TRACK.APPROVAL_SERIAL_NUMBER,P_ACTION_ID
+              ,Track.COL12_VARCHAR
+              ,P_PASSWORD
+              ,P_CREATED_BY,P_COMPANY_ID,TRACK.TOTAL_APPROVAL
+              ,TRACK.COL11_VARCHAR
+              ,Track.Col19_Num
+              ,P_TASK_STATUSDATE
+              ,p_Is_ForceApproval     --Added on 06-Dec-2018
+              );
+              
+          P_ERRORCODE:=0;
+          
+          P_TASK_APPROVAL_NO:='Approval Done Successfully.';
+        
+        END;
+        
+        END LOOP;  
+        
+    END;
+    END IF;
+
+--Pricing (Checklist) Approval Ends here
+
+
+      IF(P_Task_Type='APAP')THEN-- Application Approval
+          BEGIN
+          FOR Track IN 
+          ( SELECT 
+          COL1_NUM as APPROVAL_SERIAL_NUMBER,
+          COL2_NUM as APPROVAL_ID,
+          COL3_NUM AS DOCUMENT_ID,
+          COL7_NUM AS TOTAL_APPROVAL,
+          COL12_VARCHAR,Col19_Num
+          from TMP_TBL_LAD_COMMON)
+            LOOP
+            
+            BEGIN
+            
+            --Dp_Auto_Tran('Line199-COMMON_INS_APP--S3G_OR_INS_APPAPPRV START');
+                S3G_OR_INS_APPAPPRV
+                (
+                 TRACK.DOCUMENT_ID,
+                 TRACK.APPROVAL_ID,
+                 TRACK.APPROVAL_SERIAL_NUMBER,
+                 P_ACTION_ID,
+                 TRACK.COL12_VARCHAR,
+                 P_PASSWORD,
+                 P_CREATED_BY,
+                 P_COMPANY_ID,
+                 TRACK.TOTAL_APPROVAL,
+                 P_ERRORCODE
+                 ,D_ACCOUNT_NO
+                 ,TRACK.COL19_NUM
+                 ,P_TASK_STATUSDATE
+                 ,p_Is_ForceApproval     --Added on 06-Dec-2018
+                );
+            
+                IF(P_ERRORCODE<>0)THEN
+               -- Dp_Auto_Tran('Line199-COMMON_INS_APP-Creation -Activation_JVError-');
+                   select APPLICATION_NUMBER into P_TASK_APPROVAL_NO 
+                   from S3G_ORG_APPPROC where APPLICATION_PROCESS_ID=TRACK.DOCUMENT_ID;
+                   return;
+                END IF;
+            
+            
+                begin
+                  IF(P_ERRORCODE=0)THEN
+                       
+                      
+                        SELECT APPLICATION_NUMBER INTO D_APPLICATION_NUMBER 
+                        from S3G_ORG_APPPROC where APPLICATION_PROCESS_ID=TRACK.DOCUMENT_ID
+                       
+                        ;
+                      
+                       
+                       
+                       IF(D_ACCOUNT_NO IS  NULL)THEN
+                        UPDATE   TMP_TBL_LAD_COMMON SET COL22_VARCHAR='Application Approved Successfully \n'||'Application No( '||D_APPLICATION_NUMBER||') '
+                        WHERE COL3_NUM=TRACK.DOCUMENT_ID;
+                        
+                       ELSE
+                        UPDATE   TMP_TBL_LAD_COMMON SET COL22_VARCHAR='Application Approved ,Account Created & Activated  Successfully. \n  Application No( '||D_APPLICATION_NUMBER||')<==>' ||'Account No( '||D_ACCOUNT_NO||')' 
+                        WHERE COL3_NUM=TRACK.DOCUMENT_ID;
+                       
+                       
+                       end if;
+                       
+                      
+                        
+                     
+                      
+                        
+                      
+                  end if;
+                end;
+            
+            
+                  
+                  
+                  
+            END;
+            
+            END LOOP;  
+            
+              P_ErrorCode:=0;
+              SELECT REPLACE(WM_CONCAT(COL22_VARCHAR) ,',' , '\n') INTO P_TASK_APPROVAL_NO 
+              FROM TMP_TBL_LAD_COMMON;
+            
+          end;
+      END IF;
+      
+       IF(P_Task_Type='FINAPPR')THEN-- FACTORING INVOICE APPROVAL
+          begin
+          --Dp_Auto_Tran('FINAPPR-START');
+           
+          FOR Track IN 
+          ( SELECT 
+          COL1_NUM as APPROVAL_SERIAL_NUMBER,
+          COL2_NUM as APPROVAL_ID,
+          COL3_NUM AS DOCUMENT_ID,
+          COL7_NUM AS TOTAL_APPROVAL,
+          COL12_VARCHAR
+          from TMP_TBL_LAD_COMMON)
+            LOOP
+            
+            BEGIN
+            
+            --Dp_Auto_Tran('Line199-COMMON_INS_APP--S3G_OR_INS_APPAPPRV START');
+              --DP_AUTO_TRAN('FINAPPR-LOOP START');
+              --Dp_Auto_Tran('TRACK.DOCUMENT_ID==>'||TRACK.DOCUMENT_ID);
+                S3G_OR_INS_FINVAPPR
+                (
+                 TRACK.DOCUMENT_ID,
+                 TRACK.APPROVAL_ID,
+                 TRACK.APPROVAL_SERIAL_NUMBER,
+                 P_ACTION_ID,
+                 TRACK.COL12_VARCHAR,
+                 P_PASSWORD,
+                 P_CREATED_BY,
+                 P_COMPANY_ID,
+                 TRACK.TOTAL_APPROVAL,
+                 P_ERRORCODE
+                );
+               -- Dp_Auto_Tran('FINAPPR-P_ERRORCODE=0');
+                IF(P_ERRORCODE>0)THEN
+               -- Dp_Auto_Tran('Line199-COMMON_INS_APP-Creation -Activation_JVError-');
+                 --Dp_Auto_Tran('FINAPPR-P_ERRORCODE>0==>'||P_ERRORCODE);
+                   select INVOICE_NO into P_TASK_APPROVAL_NO 
+                   from S3G_LAD_FACTRNGINVLOADINGDET where FACTORING_INV_LOAD_DETAILS_ID=TRACK.DOCUMENT_ID;
+                   return;
+                END IF;
+            
+               IF(P_ERRORCODE=0)THEN
+                 BEGIN--POST SERVICE CHARGE
+                 
+                 
+                 
+                 
+                     SELECT COUNT(1) INTO D_COUNT FROM S3G_LAD_FACTRNGINVLOADINGDET LOADDET
+                     INNER JOIN TMP_TBL_LAD_COMMON TRANTEMP
+                     ON TRANTEMP.COL3_NUM=LOADDET.FACTORING_INV_LOAD_DETAILS_ID
+                     WHERE FACTORING_INV_LOAD_DETAILS_ID=TRACK.DOCUMENT_ID
+                     AND LOADDET.STATUS_ID=2--APPROVED
+                     ;
+                     
+                     IF(D_COUNT>0)THEN
+                        BEGIN
+                          LA_JV_FAC_INV_CHARGE(P_TASK_NUMBER,P_CREATED_BY,1,1,P_ERRORCODE,P_ERRORMSG);
+                          if(P_ERRORCODE>0)then
+                            begin
+                              P_ERRORCODE:=1;
+                              P_TASK_APPROVAL_NO:=P_ERRORMSG;
+                              return;
+                            end;
+                          end if;
+                        END;
+                     END IF;
+                      
+                  
+                 END;
+               END IF;
+            
+                  P_ErrorCode:=0;
+                  P_TASK_APPROVAL_NO:='Approval Done Successfully.';
+                  
+            END;
+            
+            END LOOP; 
+            
+            begin--Un Approved Invoices to be Cancelled 
+            update S3G_LAD_FACTRNGINVLOADINGDET set STATUS_ID=5     
+            where   FACTORING_INV_LOAD_ID=P_TASK_NUMBER and STATUS_ID<>2 ;     
+            end;
+            
+          END;
+      END IF;
+      
+      IF(P_Task_Type='PAAP')THEN-- Payment Approval
+        BEGIN
+          FOR Track IN 
+          ( 
+            SELECT 
+            COL1_NUM as APPROVAL_SERIAL_NUMBER,
+            COL2_NUM as APPROVAL_ID,
+            COL3_NUM as DOCUMENT_ID,
+            COL7_NUM AS TOTAL_APPROVAL
+            ,COL11_VARCHAR
+            ,COL12_VARCHAR
+            ,COL19_NUM
+--            COL1_NUM as APPROVAL_SERIAL_NUMBER,
+--            COL2_NUM as APPROVAL_ID,
+--            COL3_NUM AS DOCUMENT_ID,
+--            COL7_NUM AS TOTAL_APPROVAL,
+--            COL12_VARCHAR
+            from TMP_TBL_LAD_COMMON
+          )
+          LOOP
+            begin
+--              D('TRACK.DOCUMENT_ID-' || TRACK.DOCUMENT_ID || 'TRACK.APPROVAL_ID-' || TRACK.APPROVAL_ID || 'TRACK.APPROVAL_SERIAL_NUMBER-' 
+--              || TRACK.APPROVAL_SERIAL_NUMBER || '-P_ACTION_ID-' 
+--              || P_ACTION_ID 
+--              || 'TRACK.COL12_VARCHAR-' 
+--              || TRACK.COL12_VARCHAR || 
+--              '-P_PASSWORD-' 
+--              || P_PASSWORD
+--              || 
+--              '-P_CREATED_BY-' 
+--              || P_CREATED_BY || 'TRACK.TOTAL_APPROVAL-' || TRACK.TOTAL_APPROVAL);
+              
+              S3G_LAD_INS_PYMTAPPRV
+                (
+                 TRACK.DOCUMENT_ID,
+                 TRACK.APPROVAL_ID,
+                 TRACK.APPROVAL_SERIAL_NUMBER,
+                 P_ACTION_ID,
+                 TRACK.COL12_VARCHAR,
+                 P_PASSWORD,
+                 P_CREATED_BY,
+                 P_COMPANY_ID,
+                 TRACK.TOTAL_APPROVAL,
+                 TRACK.COL11_VARCHAR,
+                 Track.Col19_Num,
+                 P_TASK_STATUSDATE,
+                 P_ERRORCODE
+                );
+              IF(P_ERRORCODE>0)THEN
+               BEGIN
+                   SELECT PAYMENT_REQUEST_NO INTO P_TASK_APPROVAL_NO 
+                   from S3G_LAD_PYMNTREQST where REQUEST_NO=TRACK.DOCUMENT_ID;
+                   return;
+               END;
+              END IF;
+               IF(P_ERRORCODE=0)THEN
+                BEGIN
+                  P_ERRORCODE:=0;          
+                  P_TASK_APPROVAL_NO:='Approval Done Successfully.';
+                END;
+              END IF;
+            END;        
+          END LOOP;  
+          
+        END;
+      END IF;
+      
+      IF(P_Task_Type='ROPCCN')THEN-- ROP CASE CANCELLATION APPROVAL
+        BEGIN
+
+          FOR Track IN 
+          ( 
+            SELECT 
+            COL1_NUM as APPROVAL_SERIAL_NUMBER,
+            COL2_NUM as APPROVAL_ID,
+            COL3_NUM AS DOCUMENT_ID,
+            COL7_NUM AS TOTAL_APPROVAL,
+            COL12_VARCHAR,
+            COL19_NUM
+            from TMP_TBL_LAD_COMMON
+          )
+          LOOP
+            BEGIN
+              S3G_LAD_INS_ROPCANCEL_APPROVAL
+              (
+                 P_COMPANY_ID,
+                 TRACK.DOCUMENT_ID,
+                 TRACK.APPROVAL_ID,
+                 TRACK.APPROVAL_SERIAL_NUMBER,
+                 TRACK.COL12_VARCHAR,
+                 P_ACTION_ID,
+--                 P_PASSWORD,
+                 P_CREATED_BY,
+                 TRACK.TOTAL_APPROVAL,
+                 TRACK.COL19_NUM,
+                 P_ERRORCODE
+                );
+              IF(P_ERRORCODE>0)THEN
+               BEGIN
+                   SELECT CASE_CANCEL_NUMBER INTO P_TASK_APPROVAL_NO 
+                   from S3G_LR_CASEMASTER_CANCEL where CASE_CANCEL_ID=TRACK.DOCUMENT_ID;
+                   return;
+               END;
+              END IF;
+               IF(P_ERRORCODE=0)THEN
+                BEGIN
+                  P_ERRORCODE:=0;          
+                  P_TASK_APPROVAL_NO:='Approval Done Successfully.';
+                END;
+              END IF;
+            END;        
+          END LOOP;  
+          
+        END;
+      END IF;
+      
+      IF(P_Task_Type='NOCT')THEN-- NOC APPROVAL
+        BEGIN
+          D(P_ACTION_ID || 'NOCT');
+          FOR Track IN 
+          ( 
+            SELECT 
+            COL1_NUM as APPROVAL_SERIAL_NUMBER,
+            COL2_NUM as APPROVAL_ID,
+            COL3_NUM AS DOCUMENT_ID,
+            COL7_NUM AS TOTAL_APPROVAL,
+            COL12_VARCHAR,
+            COL19_NUM
+            from TMP_TBL_LAD_COMMON
+          )
+          LOOP
+            BEGIN
+              S3G_LAD_INS_NOC_APPROVAL
+              (
+                 P_COMPANY_ID,
+                 TRACK.DOCUMENT_ID,
+                 TRACK.APPROVAL_ID,
+                 TRACK.APPROVAL_SERIAL_NUMBER,
+                 TRACK.COL12_VARCHAR,
+                 P_ACTION_ID,
+--                 P_PASSWORD,
+                 P_CREATED_BY,
+                 TRACK.TOTAL_APPROVAL,
+                 TRACK.COL19_NUM,
+                 P_ERRORCODE
+                );
+              IF(P_ERRORCODE>0)THEN
+               BEGIN
+                   SELECT NOC_NUMBER INTO P_TASK_APPROVAL_NO 
+                   from S3G_LAD_NOCTerminatn where NOCTERMINATN_ID=TRACK.DOCUMENT_ID;
+                   return;
+               END;
+              END IF;
+               IF(P_ERRORCODE=0)THEN
+                BEGIN
+                  P_ERRORCODE:=0;          
+                  P_TASK_APPROVAL_NO:='Approval Done Successfully.';
+                END;
+              END IF;
+            END;        
+          END LOOP;  
+          
+        END;
+      END IF;
+      
+       --Added on 15-Nov-2018 Starts here
+      
+      If(P_Task_Type = 'CHA')Then-- CHEQUE RETURN APPROVAL
+      BEGIN
+      
+          S3g_Cln_Ins_Chqrtnapvl(P_LOB_ID
+          ,P_Location_ID
+          ,P_Task_Statusdate
+          ,P_Approval_ID
+          ,P_CREATED_BY
+          ,P_COMPANY_ID
+          ,P_IS_mobile
+          ,P_ACTION_ID
+          ,P_XML_APPROVALDETAILS
+          ,P_Task_Approval_No
+          ,P_ErrorCode);
+      
+      
+      End;
+      END IF;
+      
+      --Added on 15-Nov-2018 Ends Here
+      
+  end;
+END S3G_LAD_TRAN_COMMON_INS_APPR;

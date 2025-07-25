@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="d41ef0f7-d760-4014-8edf-cd1fe83c3a74" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:1788/FinancialAccounting/AccountMgtService.svc?wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="AccountMgtService1.xsd" MetadataType="Schema" ID="1efeb54a-3978-4627-9177-e2c46d06ebf0" SourceId="1" SourceUrl="http://localhost:1788/FinancialAccounting/AccountMgtService.svc?xsd=xsd0" />
+    <MetadataFile FileName="AccountMgtService3.xsd" MetadataType="Schema" ID="d184ce9d-a6a4-4f81-8bd5-04a76bdb45c4" SourceId="1" SourceUrl="http://localhost:1788/FinancialAccounting/AccountMgtService.svc?xsd=xsd2" />
+    <MetadataFile FileName="AccountMgtService.wsdl" MetadataType="Wsdl" ID="f06ad260-5a43-484a-b502-55b41e8f6b8e" SourceId="1" SourceUrl="http://localhost:1788/FinancialAccounting/AccountMgtService.svc?wsdl" />
+    <MetadataFile FileName="AccountMgtService.xsd" MetadataType="Schema" ID="a70561eb-d1e2-47dc-be6c-28afb79186a4" SourceId="1" SourceUrl="http://localhost:1788/FinancialAccounting/AccountMgtService.svc?xsd=xsd1" />
+    <MetadataFile FileName="AccountMgtService2.xsd" MetadataType="Schema" ID="cb6f61b6-9f94-43fc-890f-e1c7d9d39b04" SourceId="1" SourceUrl="http://localhost:1788/FinancialAccounting/AccountMgtService.svc?xsd=xsd3" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

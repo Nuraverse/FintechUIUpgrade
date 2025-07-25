@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="InsuranceMgtServices" targetNamespace="http://tempuri.org/InsuranceMgtServices.xsd" xmlns:mstns="http://tempuri.org/InsuranceMgtServices.xsd" xmlns="http://tempuri.org/InsuranceMgtServices.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="S3G_Ver_1_12ConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="S3G_Ver_1_12ConnectionString (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.S3GBusEntity.Properties.Settings.GlobalReference.Default.S3G_Ver_1_12ConnectionString" Provider="System.Data.SqlClient" />
+        </Connections>
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="InsuranceMgtServices" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="InsuranceMgtServices" msprop:Generator_UserDSName="InsuranceMgtServices">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="S3G_INS_AssetInsuranceEntry" msprop:Generator_UserTableName="S3G_INS_AssetInsuranceEntry" msprop:Generator_RowEvArgName="S3G_INS_AssetInsuranceEntryRowChangeEvent" msprop:Generator_TableVarName="tableS3G_INS_AssetInsuranceEntry" msprop:Generator_TablePropName="S3G_INS_AssetInsuranceEntry" msprop:Generator_RowDeletingName="S3G_INS_AssetInsuranceEntryRowDeleting" msprop:Generator_RowChangingName="S3G_INS_AssetInsuranceEntryRowChanging" msprop:Generator_RowDeletedName="S3G_INS_AssetInsuranceEntryRowDeleted" msprop:Generator_RowEvHandlerName="S3G_INS_AssetInsuranceEntryRowChangeEventHandler" msprop:Generator_TableClassName="S3G_INS_AssetInsuranceEntryDataTable" msprop:Generator_RowChangedName="S3G_INS_AssetInsuranceEntryRowChanged" msprop:Generator_RowClassName="S3G_INS_AssetInsuranceEntryRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Account_Ins_ID" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnAccount_Ins_ID" msprop:Generator_ColumnPropNameInRow="Account_Ins_ID" msprop:Generator_ColumnPropNameInTable="Account_Ins_IDColumn" msprop:Generator_UserColumnName="Account_Ins_ID" type="xs:long" />
+              <xs:element name="Company_ID" msprop:Generator_ColumnVarNameInTable="columnCompany_ID" msprop:Generator_ColumnPropNameInRow="Company_ID" msprop:Generator_ColumnPropNameInTable="Company_IDColumn" msprop:Generator_UserColumnName="Company_ID" type="xs:int" />
+              <xs:element name="LOB_ID" msprop:Generator_ColumnVarNameInTable="columnLOB_ID" msprop:Generator_ColumnPropNameInRow="LOB_ID" msprop:Generator_ColumnPropNameInTable="LOB_IDColumn" msprop:Generator_UserColumnName="LOB_ID" type="xs:int" />
+              <xs:element name="Branch_ID" msprop:Generator_ColumnVarNameInTable="columnBranch_ID" msprop:Generator_ColumnPropNameInRow="Branch_ID" msprop:Generator_ColumnPropNameInTable="Branch_IDColumn" msprop:Generator_UserColumnName="Branch_ID" type="xs:int" />
+              <xs:element name="Customer_ID" msprop:Generator_ColumnVarNameInTable="columnCustomer_ID" msprop:Generator_ColumnPropNameInRow="Customer_ID" msprop:Generator_ColumnPropNameInTable="Customer_IDColumn" msprop:Generator_UserColumnName="Customer_ID" type="xs:int" />
+              <xs:element name="PANum" msprop:Generator_ColumnVarNameInTable="columnPANum" msprop:Generator_ColumnPropNameInRow="PANum" msprop:Generator_ColumnPropNameInTable="PANumColumn" msprop:Generator_UserColumnName="PANum">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="SANum" msprop:Generator_ColumnVarNameInTable="columnSANum" msprop:Generator_ColumnPropNameInRow="SANum" msprop:Generator_ColumnPropNameInTable="SANumColumn" msprop:Generator_UserColumnName="SANum" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Ins_Done_By" msprop:Generator_ColumnVarNameInTable="columnIns_Done_By" msprop:Generator_ColumnPropNameInRow="Ins_Done_By" msprop:Generator_ColumnPropNameInTable="Ins_Done_ByColumn" msprop:Generator_UserColumnName="Ins_Done_By" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Ins_Company_Name" msprop:Generator_ColumnVarNameInTable="columnIns_Company_Name" msprop:Generator_ColumnPropNameInRow="Ins_Company_Name" msprop:Generator_ColumnPropNameInTable="Ins_Company_NameColumn" msprop:Generator_UserColumnName="Ins_Company_Name" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Ins_Company_Address" msprop:Generator_ColumnVarNameInTable="columnIns_Company_Address" msprop:Generator_ColumnPropNameInRow="Ins_Company_Address" msprop:Generator_ColumnPropNameInTable="Ins_Company_AddressColumn" msprop:Generator_UserColumnName="Ins_Company_Address">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="100" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Pay_Type" msprop:Generator_ColumnVarNameInTable="columnPay_Type" msprop:Generator_ColumnPropNameInRow="Pay_Type" msprop:Generator_ColumnPropNameInTable="Pay_TypeColumn" msprop:Generator_UserColumnName="Pay_Type" type="xs:int" minOccurs="0" />
+              <xs:element name="Installment_From_Date" msprop:Generator_ColumnVarNameInTable="columnInstallment_From_Date" msprop:Generator_ColumnPropNameInRow="Installment_From_Date" msprop:Generator_ColumnPropNameInTable="Installment_From_DateColumn" msprop:Generator_UserColumnName="Installment_From_Date" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="Installment_To_Date" msprop:Generator_ColumnVarNameInTable="columnInstallment_To_Date" msprop:Generator_ColumnPropNameInRow="Installment_To_Date" msprop:Generator_ColumnPropNameInTable="Installment_To_DateColumn" msprop:Generator_UserColumnName="Installment_To_Date" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="Account_Link_Key" msprop:Generator_ColumnVarNameInTable="columnAccount_Link_Key" msprop:Generator_ColumnPropNameInRow="Account_Link_Key" msprop:Generator_ColumnPropNameInTable="Account_Link_KeyColumn" msprop:Generator_UserColumnName="Account_Link_Key" type="xs:int" minOccurs="0" />
+              <xs:element name="UserId" msprop:Generator_ColumnVarNameInTable="columnUserId" msprop:Generator_ColumnPropNameInRow="UserId" msprop:Generator_ColumnPropNameInTable="UserIdColumn" msprop:Generator_UserColumnName="UserId" type="xs:string" minOccurs="0" />
+              <xs:element name="XmlPolicyDetails" msprop:Generator_ColumnVarNameInTable="columnXmlPolicyDetails" msprop:Generator_ColumnPropNameInRow="XmlPolicyDetails" msprop:Generator_ColumnPropNameInTable="XmlPolicyDetailsColumn" msprop:Generator_UserColumnName="XmlPolicyDetails" type="xs:string" minOccurs="0" />
+              <xs:element name="Ins_Company_Address2" msprop:Generator_ColumnVarNameInTable="columnIns_Company_Address2" msprop:Generator_ColumnPropNameInRow="Ins_Company_Address2" msprop:Generator_ColumnPropNameInTable="Ins_Company_Address2Column" msprop:Generator_UserColumnName="Ins_Company_Address2" type="xs:string" minOccurs="0" />
+              <xs:element name="Ins_Company_City" msprop:Generator_ColumnVarNameInTable="columnIns_Company_City" msprop:Generator_ColumnPropNameInRow="Ins_Company_City" msprop:Generator_ColumnPropNameInTable="Ins_Company_CityColumn" msprop:Generator_UserColumnName="Ins_Company_City" type="xs:string" />
+              <xs:element name="Ins_Company_State" msprop:Generator_ColumnVarNameInTable="columnIns_Company_State" msprop:Generator_ColumnPropNameInRow="Ins_Company_State" msprop:Generator_ColumnPropNameInTable="Ins_Company_StateColumn" msprop:Generator_UserColumnName="Ins_Company_State" type="xs:string" />
+              <xs:element name="Ins_Company_Pin" msprop:Generator_ColumnVarNameInTable="columnIns_Company_Pin" msprop:Generator_ColumnPropNameInRow="Ins_Company_Pin" msprop:Generator_ColumnPropNameInTable="Ins_Company_PinColumn" msprop:Generator_UserColumnName="Ins_Company_Pin" type="xs:string" />
+              <xs:element name="Ins_Company_Country" msprop:Generator_ColumnVarNameInTable="columnIns_Company_Country" msprop:Generator_ColumnPropNameInRow="Ins_Company_Country" msprop:Generator_ColumnPropNameInTable="Ins_Company_CountryColumn" msprop:Generator_UserColumnName="Ins_Company_Country" type="xs:string" />
+              <xs:element name="Ins_Company_Telephone" msprop:Generator_ColumnVarNameInTable="columnIns_Company_Telephone" msprop:Generator_ColumnPropNameInRow="Ins_Company_Telephone" msprop:Generator_ColumnPropNameInTable="Ins_Company_TelephoneColumn" msprop:Generator_UserColumnName="Ins_Company_Telephone" type="xs:string" />
+              <xs:element name="Ins_Company_Mobile" msprop:Generator_ColumnVarNameInTable="columnIns_Company_Mobile" msprop:Generator_ColumnPropNameInRow="Ins_Company_Mobile" msprop:Generator_ColumnPropNameInTable="Ins_Company_MobileColumn" msprop:Generator_UserColumnName="Ins_Company_Mobile" type="xs:long" minOccurs="0" />
+              <xs:element name="Ins_Company_Email_ID" msprop:Generator_ColumnVarNameInTable="columnIns_Company_Email_ID" msprop:Generator_ColumnPropNameInRow="Ins_Company_Email_ID" msprop:Generator_ColumnPropNameInTable="Ins_Company_Email_IDColumn" msprop:Generator_UserColumnName="Ins_Company_Email_ID" type="xs:string" />
+              <xs:element name="Ins_Company_Web_Site" msprop:Generator_ColumnVarNameInTable="columnIns_Company_Web_Site" msprop:Generator_ColumnPropNameInRow="Ins_Company_Web_Site" msprop:Generator_ColumnPropNameInTable="Ins_Company_Web_SiteColumn" msprop:Generator_UserColumnName="Ins_Company_Web_Site" type="xs:string" />
+              <xs:element name="Ins_Company_Id" msprop:Generator_ColumnVarNameInTable="columnIns_Company_Id" msprop:Generator_ColumnPropNameInRow="Ins_Company_Id" msprop:Generator_ColumnPropNameInTable="Ins_Company_IdColumn" msprop:Generator_UserColumnName="Ins_Company_Id" type="xs:string" minOccurs="0" />
+              <xs:element name="Insurance_Type" msprop:Generator_ColumnVarNameInTable="columnInsurance_Type" msprop:Generator_ColumnPropNameInRow="Insurance_Type" msprop:Generator_ColumnPropNameInTable="Insurance_TypeColumn" msprop:Generator_UserColumnName="Insurance_Type" type="xs:string" minOccurs="0" />
+              <xs:element name="Address_ID" msprop:Generator_ColumnVarNameInTable="columnAddress_ID" msprop:Generator_ColumnPropNameInRow="Address_ID" msprop:Generator_ColumnPropNameInTable="Address_IDColumn" msprop:Generator_UserColumnName="Address_ID" type="xs:int" minOccurs="0" />
+              <xs:element name="AINSE_x0020_Date" msprop:Generator_ColumnVarNameInTable="columnAINSE_Date" msprop:Generator_ColumnPropNameInRow="AINSE_Date" msprop:Generator_ColumnPropNameInTable="AINSE_DateColumn" msprop:Generator_UserColumnName="AINSE Date" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="Mail_ID" msprop:Generator_ColumnVarNameInTable="columnMail_ID" msprop:Generator_ColumnPropNameInRow="Mail_ID" msprop:Generator_ColumnPropNameInTable="Mail_IDColumn" msprop:Generator_UserColumnName="Mail_ID" type="xs:int" minOccurs="0" />
+              <xs:element name="Program_ID" msprop:Generator_ColumnVarNameInTable="columnProgram_ID" msprop:Generator_ColumnPropNameInRow="Program_ID" msprop:Generator_ColumnPropNameInTable="Program_IDColumn" msprop:Generator_UserColumnName="Program_ID" type="xs:int" minOccurs="0" />
+              <xs:element name="Doc_ID" msprop:Generator_ColumnVarNameInTable="columnDoc_ID" msprop:Generator_ColumnPropNameInRow="Doc_ID" msprop:Generator_ColumnPropNameInTable="Doc_IDColumn" msprop:Generator_UserColumnName="Doc_ID" type="xs:int" minOccurs="0" />
+              <xs:element name="From_User" msprop:Generator_ColumnVarNameInTable="columnFrom_User" msprop:Generator_ColumnPropNameInRow="From_User" msprop:Generator_ColumnPropNameInTable="From_UserColumn" msprop:Generator_UserColumnName="From_User" type="xs:string" minOccurs="0" />
+              <xs:element name="To_User" msprop:Generator_ColumnVarNameInTable="columnTo_User" msprop:Generator_ColumnPropNameInRow="To_User" msprop:Generator_ColumnPropNameInTable="To_UserColumn" msprop:Generator_UserColumnName="To_User" type="xs:string" minOccurs="0" />
+              <xs:element name="CC_User" msprop:Generator_ColumnVarNameInTable="columnCC_User" msprop:Generator_ColumnPropNameInRow="CC_User" msprop:Generator_ColumnPropNameInTable="CC_UserColumn" msprop:Generator_UserColumnName="CC_User" type="xs:string" minOccurs="0" />
+              <xs:element name="BCC_User" msprop:Generator_ColumnVarNameInTable="columnBCC_User" msprop:Generator_ColumnPropNameInRow="BCC_User" msprop:Generator_ColumnPropNameInTable="BCC_UserColumn" msprop:Generator_UserColumnName="BCC_User" type="xs:string" minOccurs="0" />
+              <xs:element name="Subject" msprop:Generator_ColumnVarNameInTable="columnSubject" msprop:Generator_ColumnPropNameInRow="Subject" msprop:Generator_ColumnPropNameInTable="SubjectColumn" msprop:Generator_UserColumnName="Subject" type="xs:string" minOccurs="0" />
+              <xs:element name="Body" msprop:Generator_ColumnVarNameInTable="columnBody" msprop:Generator_ColumnPropNameInRow="Body" msprop:Generator_ColumnPropNameInTable="BodyColumn" msprop:Generator_UserColumnName="Body" type="xs:string" minOccurs="0" />
+              <xs:element name="Status" msprop:Generator_ColumnVarNameInTable="columnStatus" msprop:Generator_ColumnPropNameInRow="Status" msprop:Generator_ColumnPropNameInTable="StatusColumn" msprop:Generator_UserColumnName="Status" type="xs:int" minOccurs="0" />
+              <xs:element name="MessageType" msprop:Generator_ColumnVarNameInTable="columnMessageType" msprop:Generator_ColumnPropNameInRow="MessageType" msprop:Generator_ColumnPropNameInTable="MessageTypeColumn" msprop:Generator_UserColumnName="MessageType" type="xs:string" minOccurs="0" />
+              <xs:element name="Created_By" msprop:Generator_ColumnVarNameInTable="columnCreated_By" msprop:Generator_ColumnPropNameInRow="Created_By" msprop:Generator_ColumnPropNameInTable="Created_ByColumn" msprop:Generator_UserColumnName="Created_By" type="xs:string" minOccurs="0" />
+              <xs:element name="Created_On" msprop:Generator_ColumnVarNameInTable="columnCreated_On" msprop:Generator_ColumnPropNameInRow="Created_On" msprop:Generator_ColumnPropNameInTable="Created_OnColumn" msprop:Generator_UserColumnName="Created_On" type="xs:string" minOccurs="0" />
+              <xs:element name="Scheduled_Date" msprop:Generator_ColumnVarNameInTable="columnScheduled_Date" msprop:Generator_ColumnPropNameInRow="Scheduled_Date" msprop:Generator_ColumnPropNameInTable="Scheduled_DateColumn" msprop:Generator_UserColumnName="Scheduled_Date" type="xs:string" minOccurs="0" />
+              <xs:element name="Mail_Send_Date" msprop:Generator_ColumnVarNameInTable="columnMail_Send_Date" msprop:Generator_ColumnPropNameInRow="Mail_Send_Date" msprop:Generator_ColumnPropNameInTable="Mail_Send_DateColumn" msprop:Generator_UserColumnName="Mail_Send_Date" type="xs:string" minOccurs="0" />
+              <xs:element name="Schedule_Type" msprop:Generator_ColumnVarNameInTable="columnSchedule_Type" msprop:Generator_ColumnPropNameInRow="Schedule_Type" msprop:Generator_ColumnPropNameInTable="Schedule_TypeColumn" msprop:Generator_UserColumnName="Schedule_Type" type="xs:string" minOccurs="0" />
+              <xs:element name="Mail_Language" msprop:Generator_ColumnVarNameInTable="columnMail_Language" msprop:Generator_ColumnPropNameInRow="Mail_Language" msprop:Generator_ColumnPropNameInTable="Mail_LanguageColumn" msprop:Generator_UserColumnName="Mail_Language" type="xs:string" minOccurs="0" />
+              <xs:element name="Modified_By" msprop:Generator_ColumnVarNameInTable="columnModified_By" msprop:Generator_ColumnPropNameInRow="Modified_By" msprop:Generator_ColumnPropNameInTable="Modified_ByColumn" msprop:Generator_UserColumnName="Modified_By" type="xs:string" minOccurs="0" />
+              <xs:element name="Modified_On" msprop:Generator_ColumnVarNameInTable="columnModified_On" msprop:Generator_ColumnPropNameInRow="Modified_On" msprop:Generator_ColumnPropNameInTable="Modified_OnColumn" msprop:Generator_UserColumnName="Modified_On" type="xs:string" minOccurs="0" />
+              <xs:element name="Is_Active" msprop:Generator_ColumnVarNameInTable="columnIs_Active" msprop:Generator_ColumnPropNameInRow="Is_Active" msprop:Generator_ColumnPropNameInTable="Is_ActiveColumn" msprop:Generator_UserColumnName="Is_Active" type="xs:int" minOccurs="0" />
+              <xs:element name="Is_Attachment" msprop:Generator_ColumnVarNameInTable="columnIs_Attachment" msprop:Generator_ColumnPropNameInRow="Is_Attachment" msprop:Generator_ColumnPropNameInTable="Is_AttachmentColumn" msprop:Generator_UserColumnName="Is_Attachment" type="xs:int" minOccurs="0" />
+              <xs:element name="Status_Message" msprop:Generator_ColumnVarNameInTable="columnStatus_Message" msprop:Generator_ColumnPropNameInRow="Status_Message" msprop:Generator_ColumnPropNameInTable="Status_MessageColumn" msprop:Generator_UserColumnName="Status_Message" type="xs:string" minOccurs="0" />
+              <xs:element name="Mail_Attach_ID" msprop:Generator_ColumnVarNameInTable="columnMail_Attach_ID" msprop:Generator_ColumnPropNameInRow="Mail_Attach_ID" msprop:Generator_ColumnPropNameInTable="Mail_Attach_IDColumn" msprop:Generator_UserColumnName="Mail_Attach_ID" type="xs:int" minOccurs="0" />
+              <xs:element name="Attachment_Path" msprop:Generator_ColumnVarNameInTable="columnAttachment_Path" msprop:Generator_ColumnPropNameInRow="Attachment_Path" msprop:Generator_ColumnPropNameInTable="Attachment_PathColumn" msprop:Generator_UserColumnName="Attachment_Path" type="xs:string" minOccurs="0" />
+              <xs:element name="Attachment_FileName" msprop:Generator_ColumnVarNameInTable="columnAttachment_FileName" msprop:Generator_ColumnPropNameInRow="Attachment_FileName" msprop:Generator_ColumnPropNameInTable="Attachment_FileNameColumn" msprop:Generator_UserColumnName="Attachment_FileName" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="S3G_INS_AssetInsuranceClaim" msprop:Generator_UserTableName="S3G_INS_AssetInsuranceClaim" msprop:Generator_RowEvArgName="S3G_INS_AssetInsuranceClaimRowChangeEvent" msprop:Generator_TableVarName="tableS3G_INS_AssetInsuranceClaim" msprop:Generator_TablePropName="S3G_INS_AssetInsuranceClaim" msprop:Generator_RowDeletingName="S3G_INS_AssetInsuranceClaimRowDeleting" msprop:Generator_RowChangingName="S3G_INS_AssetInsuranceClaimRowChanging" msprop:Generator_RowDeletedName="S3G_INS_AssetInsuranceClaimRowDeleted" msprop:Generator_RowEvHandlerName="S3G_INS_AssetInsuranceClaimRowChangeEventHandler" msprop:Generator_TableClassName="S3G_INS_AssetInsuranceClaimDataTable" msprop:Generator_RowChangedName="S3G_INS_AssetInsuranceClaimRowChanged" msprop:Generator_RowClassName="S3G_INS_AssetInsuranceClaimRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Ins_Claim_ID" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnIns_Claim_ID" msprop:Generator_ColumnPropNameInRow="Ins_Claim_ID" msprop:Generator_ColumnPropNameInTable="Ins_Claim_IDColumn" msprop:Generator_UserColumnName="Ins_Claim_ID" type="xs:int" />
+              <xs:element name="Company_ID" msprop:Generator_ColumnVarNameInTable="columnCompany_ID" msprop:Generator_ColumnPropNameInRow="Company_ID" msprop:Generator_ColumnPropNameInTable="Company_IDColumn" msprop:Generator_UserColumnName="Company_ID" type="xs:int" />
+              <xs:element name="LOB_ID" msprop:Generator_ColumnVarNameInTable="columnLOB_ID" msprop:Generator_ColumnPropNameInRow="LOB_ID" msprop:Generator_ColumnPropNameInTable="LOB_IDColumn" msprop:Generator_UserColumnName="LOB_ID" type="xs:int" />
+              <xs:element name="Branch_ID" msprop:Generator_ColumnVarNameInTable="columnBranch_ID" msprop:Generator_ColumnPropNameInRow="Branch_ID" msprop:Generator_ColumnPropNameInTable="Branch_IDColumn" msprop:Generator_UserColumnName="Branch_ID" type="xs:int" />
+              <xs:element name="Customer_ID" msprop:Generator_ColumnVarNameInTable="columnCustomer_ID" msprop:Generator_ColumnPropNameInRow="Customer_ID" msprop:Generator_ColumnPropNameInTable="Customer_IDColumn" msprop:Generator_UserColumnName="Customer_ID" type="xs:int" />
+              <xs:element name="ICN_No" msprop:Generator_ColumnVarNameInTable="columnICN_No" msprop:Generator_ColumnPropNameInRow="ICN_No" msprop:Generator_ColumnPropNameInTable="ICN_NoColumn" msprop:Generator_UserColumnName="ICN_No">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="25" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="ICN_Date" msprop:Generator_ColumnVarNameInTable="columnICN_Date" msprop:Generator_ColumnPropNameInRow="ICN_Date" msprop:Generator_ColumnPropNameInTable="ICN_DateColumn" msprop:Generator_UserColumnName="ICN_Date" type="xs:dateTime" />
+              <xs:element name="PANum" msprop:Generator_ColumnVarNameInTable="columnPANum" msprop:Generator_ColumnPropNameInRow="PANum" msprop:Generator_ColumnPropNameInTable="PANumColumn" msprop:Generator_UserColumnName="PANum">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="SANum" msprop:Generator_ColumnVarNameInTable="columnSANum" msprop:Generator_ColumnPropNameInRow="SANum" msprop:Generator_ColumnPropNameInTable="SANumColumn" msprop:Generator_UserColumnName="SANum" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="UserId" msprop:Generator_ColumnVarNameInTable="columnUserId" msprop:Generator_ColumnPropNameInRow="UserId" msprop:Generator_ColumnPropNameInTable="UserIdColumn" msprop:Generator_UserColumnName="UserId" type="xs:string" minOccurs="0" />
+              <xs:element name="Is_Active" msprop:Generator_ColumnVarNameInTable="columnIs_Active" msprop:Generator_ColumnPropNameInRow="Is_Active" msprop:Generator_ColumnPropNameInTable="Is_ActiveColumn" msprop:Generator_UserColumnName="Is_Active" type="xs:boolean" minOccurs="0" />
+              <xs:element name="XmlPolicyClaimDetails" msprop:Generator_ColumnVarNameInTable="columnXmlPolicyClaimDetails" msprop:Generator_ColumnPropNameInRow="XmlPolicyClaimDetails" msprop:Generator_ColumnPropNameInTable="XmlPolicyClaimDetailsColumn" msprop:Generator_UserColumnName="XmlPolicyClaimDetails" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:S3G_INS_AssetInsuranceEntry" />
+      <xs:field xpath="mstns:Account_Ins_ID" />
+    </xs:unique>
+    <xs:unique name="S3G_INS_AssetInsuranceClaim_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:S3G_INS_AssetInsuranceClaim" />
+      <xs:field xpath="mstns:Ins_Claim_ID" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>

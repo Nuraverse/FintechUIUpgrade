@@ -1,0 +1,270 @@
+﻿ private void funrPriCalculateLIP(DataTable dtRepaymentStructure)
+    {
+
+        try
+        {
+
+
+            decimal decTototalUMFC = Convert.ToDecimal(dtRepaymentStructure.Compute("sum(charge)", "1=1").ToString());
+            decimal decTotalRepayable = Convert.ToDecimal(dtRepaymentStructure.Compute("sum(InstallmentAmount)", "1=1").ToString());
+
+
+            //Insurance Start Struct add Start--by sathish R
+            decimal decSumInsuranceAmount = 0;
+            decimal decInsurancePerInstallment = 0;
+            decimal decInsurancePerInstallmentRoundoff = 0;
+            decimal decInsuranceDecimalDifference = 0;
+            decimal decLIPDiffIncome = 0;
+            decLIPDiffIncome = Convert.ToDecimal(txtLifeInsuranceCustomerPremiumAmount.Text) - Convert.ToDecimal(txtLifeInsuranceCompanyAmount.Text);
+
+            decimal decLipAppr = Convert.ToDecimal(txtLifeInsuranceCustomerPremiumAmount.Text) / decTotalRepayable;
+
+            if (txtLifeInsuranceCustomerPremiumAmount.Text != string.Empty)
+            {
+                decSumInsuranceAmount = Convert.ToDecimal(txtLifeInsuranceCustomerPremiumAmount.Text);
+
+                decInsurancePerInstallment = decSumInsuranceAmount / dtRepaymentStructure.Rows.Count;
+                decInsurancePerInstallmentRoundoff = Math.Round(decInsurancePerInstallment);
+
+                decInsuranceDecimalDifference = decSumInsuranceAmount - decInsurancePerInstallmentRoundoff * dtRepaymentStructure.Rows.Count;
+
+
+                int iGridRowCount = dtRepaymentStructure.Rows.Count;
+
+                if (decTototalUMFC > 0)
+                {
+
+                    foreach (DataRow drRepay in dtRepaymentStructure.Rows)
+                    {
+                        drRepay["FINANCE_CHARGE_WIT_INS"] = Convert.ToDecimal(drRepay["Charge"]).ToString();
+                    }
+
+                    //foreach (DataRow drRepay in dtRepaymentStructure.Rows)
+                    //{
+                    //    drRepay["INSURANCE_AMT"] = Math.Round(Convert.ToDecimal(drRepay["Charge"]) / decTototalUMFC * Convert.ToDecimal(txtLifeInsuranceCustomerPremiumAmount.Text), 3);
+                    //}
+
+
+                    foreach (DataRow drRepay in dtRepaymentStructure.Rows)
+                    {
+                        //drRepay["INSURANCE_AMT"] = Math.Round(decInsurancePerInstallmentRoundoff, 3).ToString(Funsetsuffix());
+                        drRepay["INSURANCE_AMT"] = Math.Round(Convert.ToDecimal(drRepay["InstallmentAmount"]) * decLipAppr, 3).ToString(Funsetsuffix());
+                    }
+
+                    //foreach (DataRow drRepay in dtRepaymentStructure.Rows)
+                    //{
+                    //    drRepay["EMI"] = Math.Round(Convert.ToDecimal(drRepay["Charge"]) + Convert.ToDecimal(drRepay["PrincipalAmount"]) + Convert.ToDecimal(drRepay["INSURANCE_AMT"]), 3).ToString(Funsetsuffix());
+                    //}
+
+                    //foreach (DataRow drRepay in dtRepaymentStructure.Rows)
+                    //{
+                    //    //drRepay["INSURANCE_AMT"] = Math.Round(decInsurancePerInstallmentRoundoff, 3).ToString(Funsetsuffix());
+                    //    drRepay["InstallmentAmount"] = Math.Round(Convert.ToDecimal(drRepay["EMI"]) - Convert.ToDecimal(drRepay["INSURANCE_AMT"]), 3).ToString(Funsetsuffix());
+                    //}
+                    foreach (DataRow drRepay in dtRepaymentStructure.Rows)
+                    {
+                        drRepay["EMI"] = Math.Round(Convert.ToDecimal(drRepay["InstallmentAmount"]), 3).ToString(Funsetsuffix());
+                    }
+                    foreach (DataRow drRepay in dtRepaymentStructure.Rows)
+                    {
+                        drRepay["InstallmentAmount"] = Math.Round(Convert.ToDecimal(drRepay["EMI"]) - Convert.ToDecimal(drRepay["INSURANCE_AMT"]), 3).ToString(Funsetsuffix());
+                    }
+                    foreach (DataRow drRepay in dtRepaymentStructure.Rows)
+                    {
+                        if (Convert.ToDecimal(drRepay["Charge"]) > 0)
+                        {
+                            drRepay["Charge"] = Math.Round(Convert.ToDecimal(drRepay["Charge"]) - Convert.ToDecimal(drRepay["INSURANCE_AMT"]), 3).ToString(Funsetsuffix());
+                        }
+                        else
+                        {
+
+                            dtRepaymentStructure.Rows[dtRepaymentStructure.Rows.Count - 1]["Charge"] = Math.Round(Convert.ToDecimal(dtRepaymentStructure.Rows[dtRepaymentStructure.Rows.Count - 1]["Charge"]) - Convert.ToDecimal(drRepay["INSURANCE_AMT"]), 3).ToString(Funsetsuffix());
+                        }
+                    }
+
+
+                    decimal decTotalInsCust = Convert.ToDecimal(dtRepaymentStructure.Compute("sum(INSURANCE_AMT)", "1=1").ToString());
+                    decimal decLIPDiff = Convert.ToDecimal(txtLifeInsuranceCustomerPremiumAmount.Text) - decTotalInsCust;
+                    dtRepaymentStructure.Rows[dtRepaymentStructure.Rows.Count - 1]["INSURANCE_AMT"] = Convert.ToDecimal(dtRepaymentStructure.Rows[dtRepaymentStructure.Rows.Count - 1]["INSURANCE_AMT"]) + decLIPDiff;
+                    dtRepaymentStructure.Rows[dtRepaymentStructure.Rows.Count - 1]["Charge"] = Convert.ToDecimal(dtRepaymentStructure.Rows[dtRepaymentStructure.Rows.Count - 1]["Charge"]) - decLIPDiff;
+                    dtRepaymentStructure.Rows[dtRepaymentStructure.Rows.Count - 1]["InstallmentAmount"] = Convert.ToDecimal(dtRepaymentStructure.Rows[dtRepaymentStructure.Rows.Count - 1]["InstallmentAmount"]) - decLIPDiff;    
+
+                    //Difference Charge Start
+
+
+
+
+
+                    //if (ddlInstallmentRoundOff.SelectedValue == "1")
+                    //{
+                    //    dtRepaymentStructure.Rows[0]["Charge"] = Math.Round(decInsurancePerInstallmentRoundoff, 3) + (Convert.ToDecimal(txtLifeInsuranceCustomerPremiumAmount.Text) - Convert.ToDecimal(dtRepaymentStructure.Compute("sum(INSURANCE_AMT)", "1=1").ToString()));
+                    //    dtRepaymentStructure.AcceptChanges();
+                    //}
+                    //else
+                    //{
+                    //    dtRepaymentStructure.Rows[dtRepaymentStructure.Rows.Count - 1]["Charge"] = Math.Round(decInsurancePerInstallmentRoundoff, 3) + (Convert.ToDecimal(txtLifeInsuranceCustomerPremiumAmount.Text) - Convert.ToDecimal(dtRepaymentStructure.Compute("sum(INSURANCE_AMT)", "1=1").ToString()));
+                    //    dtRepaymentStructure.AcceptChanges();
+                    //}
+
+
+                    //foreach (DataRow drRepay in dtRepaymentStructure.Rows)
+                    //{
+                    //    //drRepay["INSURANCE_AMT"] = Math.Round(decInsurancePerInstallmentRoundoff, 3).ToString(Funsetsuffix());
+                    //    drRepay["EMI"] = Math.Round(Convert.ToDecimal(drRepay["InstallmentAmount"]) + Convert.ToDecimal(drRepay["INSURANCE_AMT"]), 3).ToString(Funsetsuffix());
+                    //}
+
+                    //if (ddlInstallmentRoundOff.SelectedValue == "1")
+                    //{
+                    //    dtRepaymentStructure.Rows[0]["INSURANCE_AMT"] = Math.Round(decInsurancePerInstallmentRoundoff, 3) + (Convert.ToDecimal(txtLifeInsuranceCustomerPremiumAmount.Text) - Convert.ToDecimal(dtRepaymentStructure.Compute("sum(INSURANCE_AMT)", "1=1").ToString()));
+                    //    dtRepaymentStructure.AcceptChanges();
+                    //}
+                    //else
+                    //{
+                    //    dtRepaymentStructure.Rows[dtRepaymentStructure.Rows.Count - 1]["INSURANCE_AMT"] = Math.Round(decInsurancePerInstallmentRoundoff, 3) + (Convert.ToDecimal(txtLifeInsuranceCustomerPremiumAmount.Text) - Convert.ToDecimal(dtRepaymentStructure.Compute("sum(INSURANCE_AMT)", "1=1").ToString()));
+                    //    dtRepaymentStructure.AcceptChanges();
+                    //}
+                    decTototalUMFC = Convert.ToDecimal(dtRepaymentStructure.Compute("sum(charge)", "1=1").ToString());
+                    foreach (DataRow drRepay in dtRepaymentStructure.Rows)
+                    {
+
+                        //drRepay["INSURANCE_PAYABLE"] = Math.Round(Convert.ToDecimal(drRepay["INSURANCE_AMT"]) / Convert.ToDecimal(txtLifeInsuranceCustomerPremiumAmount.Text) * Convert.ToDecimal(txtLifeInsuranceCompanyAmount.Text), 3);
+                        drRepay["INSURANCE_PAYABLE"] = Math.Round((decLIPDiffIncome * Convert.ToDecimal(drRepay["Charge"])) / (decTototalUMFC), 3);
+
+                    }
+
+                    //Adjus Decimal Difference
+                    decimal decTotalInsCompany = Convert.ToDecimal(dtRepaymentStructure.Compute("sum(INSURANCE_PAYABLE)", "1=1").ToString());
+                    decimal decLIPDiffCompany = Convert.ToDecimal(txtLifeInsuranceCompanyAmount.Text) - decTotalInsCompany;
+                    dtRepaymentStructure.Rows[dtRepaymentStructure.Rows.Count - 1]["INSURANCE_PAYABLE"] = Convert.ToDecimal(dtRepaymentStructure.Rows[dtRepaymentStructure.Rows.Count - 1]["INSURANCE_PAYABLE"]) + decLIPDiffCompany;
+                    //dtRepaymentStructure.Rows[dtRepaymentStructure.Rows.Count - 1]["InstallmentAmount"] = Convert.ToDecimal(dtRepaymentStructure.Rows[dtRepaymentStructure.Rows.Count - 1]["InstallmentAmount"]) - decLIPDiff;    
+
+
+
+                    //foreach (DataRow drRepay in dtRepaymentStructure.Rows)
+                    //{
+                    //    drRepay["INSURANCE_PAYABLE"] = Convert.ToDecimal(drRepay["INSURANCE_AMT"].ToString()) - Convert.ToDecimal(drRepay["INSURANCE_PAYABLE"]);
+
+                    //}
+
+
+
+                    foreach (DataRow drRepay in dtRepaymentStructure.Rows)
+                    {
+                        drRepay["INSURANCE_INCOME"] = Convert.ToDecimal(drRepay["INSURANCE_AMT"]) - Convert.ToDecimal(drRepay["INSURANCE_PAYABLE"]);
+                    }
+                    foreach (DataRow drRepay in dtRepaymentStructure.Rows)
+                    {
+                        drRepay["FINANCE_CHARGE_WITHOUT_INS"] = Convert.ToDecimal(drRepay["Charge"]) - Convert.ToDecimal(drRepay["INSURANCE_AMT"]);
+                    }
+
+                    //dtRepaymentStructure.Rows[dtRepaymentStructure.Rows.Count - 1]["LIC_CUS"] = decInsurancePerInstallmentRoundoff + decInsuranceDecimalDifference;
+                    dtRepaymentStructure.AcceptChanges();
+
+
+                }
+                if (decTototalUMFC == 0)
+                {
+                    //UMFC Zero Lip Customer
+                    #region
+                    decimal decLipCustomerPerInstallment = 0;
+                    decimal decLipCustomerPerInstallmentRoundoff = 0;
+                    decimal decLipCustomerDecimalDifference = 0;
+
+                    decLipCustomerPerInstallment = Convert.ToDecimal(txtLifeInsuranceCustomerPremiumAmount.Text) / dtRepaymentStructure.Rows.Count;
+                    decLipCustomerPerInstallmentRoundoff = Math.Round(decLipCustomerPerInstallment);
+                    decLipCustomerDecimalDifference = Convert.ToDecimal(txtLifeInsuranceCustomerPremiumAmount.Text) - decLipCustomerPerInstallmentRoundoff * dtRepaymentStructure.Rows.Count;
+
+                    foreach (DataRow drRepay in dtRepaymentStructure.Rows)
+                    {
+                        drRepay["INSURANCE_AMT"] = Math.Round(decLipCustomerPerInstallmentRoundoff, 3).ToString(Funsetsuffix());
+                    }
+                    dtRepaymentStructure.Rows[dtRepaymentStructure.Rows.Count - 1]["INSURANCE_AMT"] = Math.Round(decLipCustomerPerInstallmentRoundoff, 3) + (Convert.ToDecimal(txtLifeInsuranceCustomerPremiumAmount.Text) - Convert.ToDecimal(dtRepaymentStructure.Compute("sum(INSURANCE_AMT)", "1=1").ToString()));
+                    dtRepaymentStructure.AcceptChanges();
+
+                    #endregion
+
+
+
+                    //UMFC Zero Lip Company
+                    #region
+                    decimal decLipCompanyPerInstallment = 0;
+                    decimal decLipCompanyPerInstallmentRoundoff = 0;
+                    decimal decLipCompanyDecimalDifference = 0;
+
+                    decLipCompanyPerInstallment = Convert.ToDecimal(txtLifeInsuranceCompanyAmount.Text) / dtRepaymentStructure.Rows.Count;
+                    decLipCompanyPerInstallmentRoundoff = Math.Round(decLipCompanyPerInstallment);
+                    decLipCompanyDecimalDifference = Convert.ToDecimal(txtLifeInsuranceCompanyAmount.Text) - decLipCompanyPerInstallmentRoundoff * dtRepaymentStructure.Rows.Count;
+
+                    foreach (DataRow drRepay in dtRepaymentStructure.Rows)
+                    {
+                        drRepay["INSURANCE_PAYABLE"] = Math.Round(decLipCompanyPerInstallment, 3);
+                    }
+                    //dtRepaymentStructure.Rows[dtRepaymentStructure.Rows.Count - 1]["INSURANCE_PAYABLE"] = decLipCompanyPerInstallmentRoundoff + decLipCompanyPerInstallment;
+
+                    dtRepaymentStructure.Rows[dtRepaymentStructure.Rows.Count - 1]["INSURANCE_PAYABLE"] = Math.Round(decLipCompanyPerInstallment, 3) + (Convert.ToDecimal(txtLifeInsuranceCompanyAmount.Text) - Convert.ToDecimal(dtRepaymentStructure.Compute("sum(INSURANCE_PAYABLE)", "1=1").ToString()));
+
+                    dtRepaymentStructure.AcceptChanges();
+
+                    #endregion
+
+                }
+
+            }
+
+            //Insurance Start Struct add End
+    #endregion
+
+
+
+            #region
+            //Repayment Details Insurance  Start
+
+
+            //DataTable dtRepaymentCashFlow3 = ((DataSet)ViewState["InflowDDL"]).Tables[3];
+            //DataRow[] dr7 = dtRepaymentCashFlow3.Select("CashFlow_Flag_ID='" + 108 + "'");//Insurance to Customer
+            //if (dr7.Length > 0)
+            //{
+            //    DataTable dtRepaymentDealCommission = FunPriGroupRepayDetailsInsurance(dtRepaymentStructure, Convert.ToInt32(dr7.CopyToDataTable().Rows[0]["CASH_FLOW_ID"]), dr7.CopyToDataTable().Rows[0]["CashFlow_Description"].ToString(), false, false, false, "", (dr7.CopyToDataTable().Rows[0]["CashFlow_Flag_ID"]).ToString());
+            //    dtRepaymentDealCommission.AcceptChanges();
+            //    if (dtRepaymentDealCommission.Rows.Count > 0)
+            //    {
+            //        foreach (DataRow dr6 in dtRepaymentDealCommission.Rows)
+            //        {
+            //            DtRepayGrid = (DataTable)ViewState["DtRepayGrid"];
+            //            DataRow dr = DtRepayGrid.NewRow();
+
+            //            dr["slno"] = dr6["slno"];
+            //            dr["CashFlow"] = dr6["CashFlow"];
+            //            dr["CashFlow_Flag_ID"] = dr6["CashFlow_Flag_ID"];
+            //            dr["Amount"] = dr6["Amount"];
+            //            dr["PerInstall"] = dr6["PerInstall"];
+            //            dr["Breakup"] = dr6["Breakup"];
+            //            dr["FromInstall"] = dr6["FromInstall"];
+            //            dr["ToInstall"] = dr6["ToInstall"];
+            //            dr["FromDate"] = dr6["FromDate"];
+            //            dr["ToDate"] = dr6["ToDate"];
+            //            dr["FlowDesc"] = dr6["FlowDesc"];
+            //            dr["CashFlowId"] = dr6["CashFlowId"];
+            //            dr["TotalPeriodInstall"] = dr6["TotalPeriodInstall"];
+            //            DtRepayGrid.Rows.Add(dr);
+            //            ViewState["DtRepayGrid"] = DtRepayGrid;
+
+            //        }
+            //    }
+
+            //}
+            //else
+            //{
+            //    Utility.FunShowAlertMsg(this, "Life Insurance Payment Cash Flow not Defined against Bill Generation Program");
+            //    return;
+
+            //}
+
+            //gvRepaymentDetails.DataSource = (DataTable)ViewState["DtRepayGrid"];
+            //gvRepaymentDetails.DataBind();
+        }
+        catch (Exception ex)
+        {
+            ClsPubCommErrorLogDB.CustomErrorRoutine(ex);
+        }
+    }
